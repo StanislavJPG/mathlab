@@ -1,5 +1,53 @@
-{% extends "calculator/index.html" %}
+{% extends "explainme/index.html" %}
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'explainme.css' %}" rel="stylesheet">
+<title>Solve Example</title>
+{% endblock %}
 
 {% block content %}
-<h1 style="font-size: 155px;">SOLVE EXAMPLE</h1>
+<div style="margin-top: 50px;">
+    <script>
+        function getRightCalculation(example, tofind, type) {
+          var encodedExample = encodeURIComponent(example);
+          window.location.href = `/solvexample/?example=${encodedExample}&to-find=${tofind}&type=${type}`;
+        }
+    </script>
+    <h1 style="text-align: center; font-size: 50px;">SOLVE EXAMPLE</h1>
+    <div style="text-align: center;">
+        <div style="font-size: 20px; margin-top: 20px;">
+            <a href="/solvexample">Вирази з невідомими змінними</a> |
+            <a href="/solvexample/percents">Вирази з відсотками</a>
+        </div>
+        <form class="input-form">
+            <p class="indications"><button>Відкрити вказівники</button></p>
+            <input class="form-control" id="example" type="text" placeholder="Введіть приклад" required>
+            <p>
+            <input class="form-control" id="tofind" type="text" placeholder="Невідомий(мі) аргумент(и)" required>
+                <select class="form-select" id="type" name="Виберіть тип прикладу" required>
+                    <option>Рівняння</option>
+                    <option>Нерівність</option>
+                    <option>Система</option>
+                </select>
+            </p>
+        </form>
+        <button onclick="getRightCalculation(
+        document.getElementById('example').value,
+        document.getElementById('tofind').value,
+        document.getElementById('type').value)">Розв'язати приклад</button>
+        {% if example is not none %}
+            <p style="font-size: 50px;">Приклад: {{ example }}</p>
+        {% if type == 'Рівняння' or type == 'Система' %}
+            {% for x in solved_example %}
+                <p style="font-size: 50px;">{{ tofind }}
+                    <a style="font-size: 25px;">{{ x|first }}</a> = {{ x|slice:"1:2"|first }}
+                </p>
+            {% endfor %}
+        {% else %}
+            <p style="font-size: 50px;">{{ solved_example }}
+            </p>
+        {% endif %}
+        {% endif %}
+    </div>
+</div>
 {% endblock %}

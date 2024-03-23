@@ -14,17 +14,31 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+from mathlab.views import page_not_found
 from django.contrib import admin
 from django.urls import path, include
+from rest_framework import permissions
+from drf_yasg.views import get_schema_view
+from drf_yasg import openapi
 
-from .views import page_not_found
+
+schema_view = get_schema_view(
+    openapi.Info(
+        title="My API",
+        default_version='v1',
+        description="Swagger"
+    ),
+    public=True,
+    permission_classes=[permissions.AllowAny],
+)
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('explainme/', include('explainme.urls')),
-    path('solvexample/', include('solvexample.urls')),
-    path('calculator/', include('calculator.urls')),
-    path('graphbuilder', include('graphbuilder.urls'))
+    path('admin/', admin.site.urls, name='admin'),
+    path('', include('explainme.urls'), name='explain me'),
+    path('', include('solvexample.urls'), name='solve example'),
+    path('', include('graphbuilder.urls'), name='graphs builder'),
+    path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
 

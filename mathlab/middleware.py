@@ -1,9 +1,10 @@
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
-from django.utils.decorators import async_only_middleware
 
 
-@async_only_middleware
 class AsyncMiddleware:
+    async_capable = True
+    sync_capable = False
+
     def __init__(self, get_response):
         self.get_response = get_response
         if iscoroutinefunction(self.get_response):

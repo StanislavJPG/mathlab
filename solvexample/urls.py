@@ -5,6 +5,7 @@ from .views import *
 
 
 urlpatterns = [
-    path('solvexample/', index),
-    path('solvexample/percents', index)
+    path('solvexample/equations/', equations),
+    path('solvexample/percents/', percents),
+    path('solvexample/matrix/', matrix),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

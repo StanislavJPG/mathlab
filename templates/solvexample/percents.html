@@ -1,0 +1,16 @@
+{% extends "./equations.html" %}
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'explainme.css' %}" rel="stylesheet">
+<title>Знайти відсоток</title>
+{% endblock %}
+
+{% block content %}
+<form class="input-form">
+    <input class="form-control" id="example" type="text" placeholder="Введіть приклад">
+    <p>
+    <input class="form-control" id="tofind" type="text" placeholder="Невідомий(мі) аргумент(и)">
+    </p>
+
+</form>
+{% endblock %}

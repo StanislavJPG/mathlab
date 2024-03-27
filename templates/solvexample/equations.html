@@ -1,0 +1,76 @@
+{% extends "explainme/index.html" %}
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
+<title>Вирази з невідомими аргументами</title>
+{% endblock %}
+
+{% block tasks %}
+<div style="margin-top: 50px;">
+    <h1 style="text-align: center; font-size: 50px;">Вирази з невідомими аргументами</h1>
+    <div style="text-align: center;">
+        <div class="choice-calculation-type">
+            <a class="btn btn-primary" href="/solvexample/equations/">Вирази з невідомими аргументами</a>
+            <a class="btn btn-primary" href="/solvexample/percents/">Знайти відсоток</a>
+            <a class="btn btn-primary" href="/solvexample/matrix/">Операції з матрицями</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+<div style="text-align: center;">
+    <form class="input-form">
+        <p class="indications"><button class="btn btn-outline-primary" type="button" id="showPopupButton">Відкрити вказівники</button></p>
+        <div id="popupContainer" class="popup-container">
+    <div class="popup-content">
+        <span class="close" id="closePopup">&times;</span>
+        <h3>Синтаксис вводу математичних операцій на сайті</h3>
+        <blockquote class="blockquote">
+          <p class="mb-0">"**" - Піднесення до квадрату. Приклад: "x**2"</p>
+          <p class="mb-0">Second</p>
+          <p class="mb-0">Third</p>
+        </blockquote>
+        </div>
+    </div>
+        <input class="form-control" id="example" type="text" placeholder="Введіть приклад">
+        <p>
+        <input class="form-control" id="tofind" type="text" placeholder="Невідомий(мі) аргумент(и) (перелік через кому)">
+            <select class="form-select" id="type" name="Виберіть тип прикладу">
+                <option>Рівняння</option>
+                <option>Нерівність</option>
+                <option>Система</option>
+                <option>Система нерівностей</option>
+                <option>Первісна</option>
+                <option>Похідна</option>
+            </select>
+        </p>
+    </form>
+    <button class="btn btn-outline-primary" style="margin-top: 20px;" onclick="getRightCalculation(
+        document.getElementById('example').value,
+        document.getElementById('tofind').value,
+        document.getElementById('type').value)">Розв'язати приклад</button>
+        {% if example is not none %}
+            <p style="margin-top: 30px; font-size: 30px;">Приклад: {{ example }}</p>
+             <p style="margin-top: 30px; font-size: 30px;">Розв'язок:</p>
+        {% if type == 'Нерівність' %}
+                <p style="font-size: 30px;">
+                    {{ solved_example }}
+                </p>
+        {% else %}
+            {% for x in solved_example %}
+                {% if type == 'Похідна' %}
+                <p style="font-size: 30px;">
+                    f'({{ x.result|first }}) = {{ x.result|slice:"1:2"|first }}
+                </p>
+                {% else %}
+                <p style="font-size: 30px;">
+                    {{ x.result|first }}<a style="font-size: 15px;">{{ x.key }}</a>
+                    = {{ x.result|slice:"1:2"|first }}
+                </p>
+                {% endif %}
+            {% endfor %}
+        {% endif %}
+        {% endif %}
+</div>
+<script src="{% static 'solvexample.js' %}"></script>
+{% endblock %}

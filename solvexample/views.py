@@ -1,7 +1,6 @@
 from adrf.decorators import api_view
 from django.shortcuts import render
 from rest_framework.request import Request
-
 from solvexample.service import MathOperations
 
 
@@ -11,16 +10,16 @@ def equations(request: Request):
     to_find = request.GET.get('to-find')
     operation_type = request.GET.get('type')
 
-    if example and to_find:
+    try:
         math_solving = MathOperations(example, operation_type, to_find)
         result = math_solving.solve_equation()
         context = {
-                    'solved_example': result,
-                    'tofind': to_find,
-                    'example': str(math_solving),
-                    'type': operation_type
-                   }
-    else:
+            'solved_example': result,
+            'tofind': to_find,
+            'example': str(math_solving),
+            'type': operation_type
+        }
+    except AttributeError:
         context = {}
 
     return render(
@@ -36,22 +35,28 @@ def percents(request: Request):
 
 
 def matrix(request: Request):
-    matrix_a = request.GET.get('matrixA')
-    matrix_b = request.GET.get('matrixB')
+    matrix_a = f"[{request.GET.get('matrixA')}]"
+    matrix_b = f"[{request.GET.get('matrixB')}]"
     operator = request.GET.get('operator')
 
-    if matrix_a and matrix_b:
-        matrix_solving = MathOperations(example=[matrix_a, matrix_b],
+    if eval(matrix_a)[0] and eval(matrix_b)[0]:
+        matrices = []
+        for single_matrix in [matrix_a, matrix_b]:
+            matrices.append(list(eval(single_matrix.replace('\n', ''))))
+
+        matrix_solving = MathOperations(example=matrices,
                                         operation_type=operator).matrix()
+
         context = {
-                    'matrix_a': matrix_a,
-                    'matrix_b': matrix_b,
-                    'operator': operator,
-                    'solved_example': matrix_solving
-                  }
+            'matrix_a': matrix_a,
+            'matrix_b': matrix_b,
+            'operator': operator,
+            'solved_example': matrix_solving
+        }
     else:
         context = {}
 
     return render(request=request,
                   template_name='solvexample/matrix.html',
                   context=context)
+

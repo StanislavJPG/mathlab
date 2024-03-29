@@ -32,9 +32,9 @@
         </blockquote>
         </div>
     </div>
-        <input class="form-control" id="example" type="text" placeholder="Введіть приклад">
+        <input class="form-control" id="example" type="text" placeholder="Введіть приклад" maxlength="120">
         <p>
-        <input class="form-control" id="tofind" type="text" placeholder="Невідомий(мі) аргумент(и) (перелік через кому)">
+        <input class="form-control" id="tofind" type="text" placeholder="Невідомий(мі) аргумент(и) (перелік через кому)" maxlength="120">
             <select class="form-select" id="type" name="Виберіть тип прикладу">
                 <option>Рівняння</option>
                 <option>Нерівність</option>
@@ -53,9 +53,9 @@
             <p style="margin-top: 30px; font-size: 30px;">Приклад: {{ example }}</p>
              <p style="margin-top: 30px; font-size: 30px;">Розв'язок:</p>
         {% if type == 'Нерівність' %}
-                <p style="font-size: 30px;">
-                    {{ solved_example }}
-                </p>
+            <div class="search-results">
+                {{ solved_example }}
+            </div>
         {% else %}
             {% for x in solved_example %}
                 {% if type == 'Похідна' %}

@@ -1,7 +1,20 @@
 function getRightCalculation(example, tofind, type) {
   var encodedExample = encodeURIComponent(example);
-  window.location.href = `/solvexample/equations/?example=${encodedExample}&to-find=${tofind}&type=${type}`;
+  var url = `/solvexample/equations/?example=${encodedExample}&to-find=${tofind}&type=${type}`;
+
+  fetch(url)
+    .then(response => {
+      if (response.status === 200) {
+        window.location.href = url;
+      } else {
+        throw new Error('Response status is not 200');
+      }
+    })
+    .catch(error => {
+      alert('Помилка. Перевірте правильність введених прикладів');
+    });
 }
+
 
 
 document.getElementById("showPopupButton").addEventListener("click", function() {
@@ -16,22 +29,47 @@ function getRightCalculationForMatrix(matrixA, matrixB, operator) {
   var encodedMatrixA = encodeURIComponent(matrixA);
   var encodedMatrixB = encodeURIComponent(matrixB);
   var encodedOperator = encodeURIComponent(operator);
-  window.location.href = `/solvexample/matrix/?matrixA=${encodedMatrixA}&matrixB=${encodedMatrixB}&operator=${encodedOperator}`;
+  var url = `/solvexample/matrix/?matrixA=${encodedMatrixA}&matrixB=${encodedMatrixB}&operator=${encodedOperator}`;
+
+  fetch(url)
+    .then(response => {
+      if (response.status === 200) {
+        window.location.href = url;
+      } else {
+        throw new Error('Response status is not 200');
+      }
+    })
+    .catch(error => {
+      alert('Помилка. Перевірте правильність введених матриць');
+    });
 }
 
 
-function checkIsItMathSymbol(matrixA, matrixB, symbol) {
-  if (typeof symbol === "string") {
-    if (['+', '-', '**', '*', '>', '<', '>=', '<=', '=='].includes(symbol)) {
-      getRightCalculationForMatrix(matrixA, matrixB, symbol);
-    } else {
-      alert('Тільки математичні символи дій над матрицями!')
-      throw new Error('Only symbols');
+
+function checkIsItMathSymbol() {
+    var matrixA = document.getElementById('matrixA').value;
+    var matrixB = document.getElementById('matrixB').value;
+    var selectedOperation;
+
+    var radioButtons = document.getElementsByName('option');
+    for (var i = 0; i < radioButtons.length; i++) {
+        if (radioButtons[i].checked) {
+            selectedOperation = radioButtons[i].value;
+            break;
+        }
     }
-  } else {
-    alert('Тільки математичні символи дій над матрицями!')
-    throw new Error('Only symbols');
-  }
+    if (typeof selectedOperation === "string") {
+        if (['+', '-', '*'].includes(selectedOperation)) {
+            getRightCalculationForMatrix(matrixA, matrixB, selectedOperation);
+        } else {
+            alert('Тільки математичні символи дій над матрицями!')
+            throw new Error('Only symbols');
+        }
+    } else {
+        alert('Тільки математичні символи дій над матрицями!')
+        throw new Error('Only symbols');
+    }
 }
+
 
 

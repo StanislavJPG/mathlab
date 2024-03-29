@@ -4,40 +4,35 @@
 {% load static %}
 <div style="text-align: center;" xmlns="http://www.w3.org/1999/html">
     <form class="input-form">
-        <p class="indications"><button class="btn btn-outline-primary" type="button" id="showPopupButton">Відкрити вказівники</button></p>
-        <div id="popupContainer" class="popup-container">
-    <div class="popup-content">
-        <span class="close" id="closePopup">&times;</span>
-        <h3>Синтаксис вводу математичних операцій на сайті</h3>
-        <blockquote class="blockquote">
-          <p class="mb-0">"**" - Піднесення до квадрату. Приклад: "x**2"</p>
-          <p class="mb-0">Second</p>
-          <p class="mb-0">Third</p>
-        </blockquote>
-        </div>
-    </div>
         <div class="matrix-container">
             <textarea class="form-control matrix"
                       placeholder="[a, b, c, d, e, f],&#10;[g, h, i, j, k, l],&#10;[m, n, o, p, q, r]"
                       id="matrixA" maxlength="100"></textarea>
-            <input class="form-control matrix" id="symbol" style="width: 37px; height: 37px;" type="text" placeholder="+">
+            <input id="option-plus" class="form-control special" style="width: 37px; height: 37px;" type="radio" name="option" value="+">
+            <label for="option-plus">+</label>
+
+            <input id="option-minus" class="form-control special" style="width: 37px; height: 37px;" type="radio" name="option" value="-">
+            <label for="option-minus">-</label>
+
+            <input id="option-multiply" class="form-control special" style="width: 37px; height: 37px;" type="radio" name="option" value="*">
+            <label for="option-multiply">*</label>
             <textarea class="form-control matrix"
                       placeholder="[a, b, c, d, e, f],&#10;[g, h, i, j, k, l],&#10;[m, n, o, p, q, r]"
                       id="matrixB" maxlength="100"></textarea>
         </div>
     </form>
-    <button class="btn btn-outline-primary" style="margin-top: 20px;" onclick="checkIsItMathSymbol(
-        document.getElementById('matrixA').value,
-        document.getElementById('matrixB').value,
-        document.getElementById('symbol').value)">Розв'язати приклад</button>
+    <button class="btn btn-outline-primary" style="margin-top: 20px;" onclick="checkIsItMathSymbol()">Розв'язати приклад</button>
+    {% if solved_example is not none %}
     <div style="margin-top: 30px;">
-        <p style="margin-top: 30px; font-size: 30px;">Приклад: {{ matrix_a }}{{ operator }}{{ matrix_b }}</p>
+        <p style="margin-top: 30px; font-size: 30px;">Приклад: {{ matrix_a }} {{ operator }} {{ matrix_b }}</p>
+        <p style="margin-top: 30px; font-size: 30px;">Розв'язок:</p>
         <p style="margin-top: 30px; font-size: 30px;">
         {% for i in solved_example %}
-            | {{ i }} |<br />
+             {{ i }} <br />
         {% endfor %}
         </p>
     </div>
+    {% endif %}
 </div>
 <script src="{% static 'solvexample.js' %}"></script>
 {% endblock %}

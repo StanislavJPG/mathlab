@@ -14,13 +14,12 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
-from mathlab.views import page_not_found
+from mathlab.views import page_not_found, server_error
 from django.contrib import admin
 from django.urls import path, include
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
-
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -43,3 +42,4 @@ urlpatterns = [
 
 
 handler404 = page_not_found
+handler500 = server_error

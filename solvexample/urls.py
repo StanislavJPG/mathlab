@@ -9,3 +9,4 @@ urlpatterns = [
     path('solvexample/percents/', percents),
     path('solvexample/matrix/', matrix),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
+

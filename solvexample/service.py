@@ -61,22 +61,18 @@ class MathOperations(AbstractMathOperations):
         return solved_example
 
     def matrix(self):
-        matrix_a = Matrix([eval(norm_v) for norm_v in
-                          [fm.split(',\n') for fm in self.example][0]][0])
+        matrix_a = Matrix(self.example[0])
+        matrix_b = Matrix(self.example[1])
 
-        matrix_b = Matrix([eval(norm_v) for norm_v in
-                          [fm.split(',\n') for fm in self.example][1]][0])
+        if len(matrix_a) == 1:
+            matrix_a = self.example[0]
 
-        if self.operation_type in ['+', '-']:
-            solved_example = eval(f'{matrix_a}{self.operation_type}{matrix_b}')
+        if len(matrix_b) == 1:
+            matrix_b = self.example[1][0]
 
-        elif self.operation_type == '*':
-            solved_example = matrix_a.multiply(matrix_b)
+        solved_example = eval(f'{matrix_a}{self.operation_type}{matrix_b}')
 
-        else:
-            solved_example = None
-
-        return eval(str(solved_example)[7: -1])
+        return eval(str(solved_example)[8:-2])
 
     def __str__(self) -> str:
         self.example = self.example.replace('**', '^')

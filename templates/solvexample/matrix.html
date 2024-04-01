@@ -1,5 +1,24 @@
 {% extends "./equations.html" %}
 
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
+<title>Операції з Матрицями</title>
+{% endblock %}
+
+
+{% block tasks %}
+<div style="margin-top: 50px;">
+    <h1 style="text-align: center; font-size: 50px;">Операції з Матрицями</h1>
+    <div style="text-align: center;">
+        <div class="choice-calculation-type">
+            <a class="btn btn-primary" href="/solvexample/equations/">Вирази з невідомими аргументами</a>
+            <a class="btn btn-primary" href="/solvexample/percents/">Знайти відсоток</a>
+            <a class="btn btn-primary" href="/solvexample/matrix/">Операції з матрицями</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
 {% block content %}
 {% load static %}
 <div style="text-align: center;" xmlns="http://www.w3.org/1999/html">
@@ -23,14 +42,29 @@
     </form>
     <button class="btn btn-outline-primary" style="margin-top: 20px;" onclick="checkIsItMathSymbol()">Розв'язати приклад</button>
     {% if solved_example is not none %}
-    <div style="margin-top: 30px;">
-        <p style="margin-top: 30px; font-size: 30px;">Приклад: {{ matrix_a }} {{ operator }} {{ matrix_b }}</p>
-        <p style="margin-top: 30px; font-size: 30px;">Розв'язок:</p>
-        <p style="margin-top: 30px; font-size: 30px;">
+    <p style="margin-top: 30px; margin-bottom: -30px; font-size: 30px;"><b>Приклад:</b></p>
+    <div class="users-matrix">
+        <a style="margin-top: 30px; font-size: 30px;">
+            {% for a in matrix_a %}
+            {{ a }} <br />
+            {% endfor %}
+        </a>
+        <a style="margin-top: 30px; font-size: 30px;">
+            &nbsp;{{ operator }}&nbsp;
+        </a>
+        <a style="margin-top: 30px; font-size: 30px;">
+            {% for b in matrix_b %}
+            {{ b }} <br />
+            {% endfor %}
+        </a>
+    </div>
+    <div>
+        <p style="margin-top: 30px; font-size: 30px;"><b>Розв'язок:</b></p>
+        <a style="margin-top: 30px; font-size: 30px;">
         {% for i in solved_example %}
              {{ i }} <br />
         {% endfor %}
-        </p>
+        </a>
     </div>
     {% endif %}
 </div>

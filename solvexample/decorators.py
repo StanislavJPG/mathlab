@@ -42,15 +42,17 @@ class ToUserFriendlyAppearance:
     @staticmethod
     def matrix(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrap(self: MathOperations) -> list | str:
-            ...
+        def wrap(self: MathOperations) -> list:
+            return eval(str(func(self))[8:-2])
 
         return wrap
 
     @staticmethod
     def percents(func: Callable) -> Callable:
         @functools.wraps(func)
-        def wrap(self: MathOperations) -> list | str:
-            ...
+        def wrap(self: MathOperations) -> str:
+            if self.operation_type == 'від числа x':
+                return str(round(func(self), 3)) + '%'
+            return func(self)
 
         return wrap

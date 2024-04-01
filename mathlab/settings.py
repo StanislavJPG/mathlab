@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     'explainme.apps.ExplainmeConfig',
     'solvexample.apps.SolvexampleConfig',
     'graphbuilder.apps.GraphbuilderConfig',
+    'forum.apps.ForumConfig',
 ]
 
 SWAGGER_SETTINGS = {

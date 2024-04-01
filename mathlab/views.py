@@ -1,10 +1,12 @@
-from django.shortcuts import render
 from django.http import HttpResponseNotFound, HttpResponseServerError
+from django.template import loader
 
 
 def page_not_found(request, exception):
-    return HttpResponseNotFound('<h1>Сторінку не знайдено</h1>')
+    template = loader.get_template('error/404.html')
+    return HttpResponseNotFound(template.render())
 
 
 def server_error(request, *args, **kwargs):
-    return HttpResponseServerError(request, 'error/500.html')
+    template = loader.get_template('error/500.html')
+    return HttpResponseServerError(template.render())

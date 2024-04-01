@@ -71,5 +71,22 @@ function checkIsItMathSymbol() {
     }
 }
 
+function getRightPercentsCalculation(example, percent, num, type) {
+  var encodedExample = encodeURIComponent(example);
+  var url = `/solvexample/percents/?example=${example}&percent=${percent}&num=${num}&type=${type}`;
+
+  fetch(url)
+    .then(response => {
+      if (response.status === 200) {
+        window.location.href = url;
+      } else {
+        throw new Error('Response status is not 200');
+      }
+    })
+    .catch(error => {
+      alert('Помилка. Перевірте правильність введених прикладів');
+    });
+}
+
 
 

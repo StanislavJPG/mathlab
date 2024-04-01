@@ -1,32 +1,22 @@
 from sympy import *
 from sympy.abc import *
-from abc import ABC, abstractmethod
 
 from .decorators import ToUserFriendlyAppearance
+from typing import Union
 
 
-class AbstractMathOperations(ABC):
-    @abstractmethod
-    def solve_equation(self) -> str | dict | tuple:
-        ...
-
-    @abstractmethod
-    def __str__(self) -> str:
-        ...
-
-
-class MathOperations(AbstractMathOperations):
+class MathOperations:
 
     def __init__(self, example: str | list,
-                 operation_type: str,
-                 to_find: str = None) -> None:
+                 operation_type: str = None,
+                 to_find: str | int | float = None) -> None:
         self.example = example
         self.to_find = to_find
         self.operation_type = operation_type
         self.__ARGS_VALIDATOR = [f'{to_find}*', f'*{to_find}', f'* {to_find}']
 
     @ToUserFriendlyAppearance.equations
-    def solve_equation(self) -> str | dict | tuple | list:
+    def solve_equation(self) -> Union[str, dict, tuple, list]:
         self.example = self.example.replace('=', '-')
         symbols_ = symbols(self.to_find)
 
@@ -60,7 +50,8 @@ class MathOperations(AbstractMathOperations):
 
         return solved_example
 
-    def matrix(self):
+    @ToUserFriendlyAppearance.matrix
+    def solve_matrix(self) -> MutableDenseMatrix:
         matrix_a = Matrix(self.example[0])
         matrix_b = Matrix(self.example[1])
 
@@ -72,7 +63,19 @@ class MathOperations(AbstractMathOperations):
 
         solved_example = eval(f'{matrix_a}{self.operation_type}{matrix_b}')
 
-        return eval(str(solved_example)[8:-2])
+        return solved_example
+
+    @ToUserFriendlyAppearance.percents
+    def solve_percent(self) -> float:
+        try:
+            self.example[1] = self.example[1].replace('%', '')
+            if self.operation_type == 'від числа x':
+                return (float(self.to_find) * float(self.example[1])) / float(self.example[0])
+
+            # otherwise it calculates number from percent
+            return (float(self.example[0]) / 100) * float(self.example[1])
+        except ValueError:
+            raise ValueError('Must be a valid arguments')
 
     def __str__(self) -> str:
         self.example = self.example.replace('**', '^')

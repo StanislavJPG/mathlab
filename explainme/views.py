@@ -1,10 +1,10 @@
-from adrf.decorators import api_view
+import asyncio
+
 from django.shortcuts import render
 
 from explainme.scraper import ExplainmeScraper
 
 
-@api_view()
 async def index(request):
     topic = request.GET.get('topic', '')
 
@@ -18,3 +18,5 @@ async def index(request):
         context = {}
 
     return render(request, 'explainme/index.html', context=context)
+
+

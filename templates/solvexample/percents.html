@@ -1,20 +1,19 @@
 {% extends "./equations.html" %}
 
-{% block head %}
 {% load static %}
-<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
+{% block head %}
 <title>Операції з відсотками</title>
 {% endblock %}
 
-
 {% block tasks %}
+<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
 <div style="margin-top: 50px;">
     <h1 style="text-align: center; font-size: 50px;">Операції з відсотками</h1>
     <div style="text-align: center;">
         <div class="choice-calculation-type">
-            <a class="btn btn-primary" href="/solvexample/equations/">Вирази з невідомими аргументами</a>
-            <a class="btn btn-primary" href="/solvexample/percents/">Знайти відсоток</a>
-            <a class="btn btn-primary" href="/solvexample/matrix/">Операції з матрицями</a>
+            <a class="btn btn-primary" href="{% url 'equations' %}">Вирази з невідомими аргументами</a>
+            <a class="btn btn-primary" href="{% url 'percents' %}">Знайти відсоток</a>
+            <a class="btn btn-primary" href="{% url 'matrices' %}">Операції з матрицями</a>
         </div>
     </div>
 </div>

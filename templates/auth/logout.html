@@ -1,0 +1,18 @@
+{% extends "explainme/index.html" %}
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'login.css' %}" rel="stylesheet">
+<title>Вийти з профілю</title>
+{% endblock %}
+{% block content %}
+
+<div style="margin-top: 200px; text-align: -webkit-center; margin-bottom: 200px;">
+    <div id="formContent">
+        <form method="POST" action="{% url 'logout_view' %}">
+            {% csrf_token %}
+            <input style="margin-top:40px;" type="submit" class="fadeIn fourth" value="Вихід">
+        </form>
+    </div>
+</div>
+
+{% endblock %}

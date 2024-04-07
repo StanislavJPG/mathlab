@@ -1,4 +1,5 @@
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
+from django.utils.deprecation import MiddlewareMixin
 
 
 class AsyncMiddleware:
@@ -13,3 +14,11 @@ class AsyncMiddleware:
     async def __call__(self, request):
         response = await self.get_response(request)
         return response
+
+
+class TokenMiddleware(MiddlewareMixin):
+    @staticmethod
+    def process_request(request):
+        if request.user.is_authenticated:
+            token = request.user.auth_token.key
+            request.META['HTTP_AUTHORIZATION'] = f'Token {token}'

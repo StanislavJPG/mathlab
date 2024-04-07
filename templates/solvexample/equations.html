@@ -1,18 +1,18 @@
 {% extends "explainme/index.html" %}
-{% block head %}
 {% load static %}
-<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
+{% block head %}
 <title>Вирази з невідомими аргументами</title>
 {% endblock %}
 
 {% block tasks %}
+<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
 <div style="margin-top: 50px;">
     <h1 style="text-align: center; font-size: 50px;">Вирази з невідомими аргументами</h1>
     <div style="text-align: center;">
         <div class="choice-calculation-type">
-            <a class="btn btn-primary" href="/solvexample/equations/">Вирази з невідомими аргументами</a>
-            <a class="btn btn-primary" href="/solvexample/percents/">Знайти відсоток</a>
-            <a class="btn btn-primary" href="/solvexample/matrix/">Операції з матрицями</a>
+            <a class="btn btn-primary" href="{% url 'equations' %}">Вирази з невідомими аргументами</a>
+            <a class="btn btn-primary" href="{% url 'percents' %}">Знайти відсоток</a>
+            <a class="btn btn-primary" href="{% url 'matrices' %}">Операції з матрицями</a>
         </div>
     </div>
 </div>
@@ -33,6 +33,7 @@
             <p class="mb-0"><b>"sqrt"</b> - Корінь квадратний. Приклад: "sqrt(x)"</p>
             <p class="mb-0"><b>"**"</b> - Квадрат. Приклад: "x**2"</p>
             <p class="mb-0"><b>"log"</b> - Логарифм. Приклад: "log(x)"</p>
+            <p class="mb-0"><b>"abs"</b> - Модуль. Приклад: "abs(x)"</p>
         </blockquote>
         <h3>Синтаксис вводу прикладів</h3>
             <p class="mb-0"><b>"x, y"</b> - Перерахунок обчислень через кому <br />(наприклад, для системи)</p>

@@ -19,10 +19,12 @@ from django.conf.urls.static import static
 
 from mathlab.views import page_not_found, server_error
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
+
+from users.views import Login
 
 schema_view = get_schema_view(
     openapi.Info(
@@ -41,6 +43,7 @@ urlpatterns = [
     path('', include('solvexample.urls'), name='solve example'),
     path('', include('graphbuilder.urls'), name='graphs builder'),
     path('swagger/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
+    path('', include('users.urls'), name='users'),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 

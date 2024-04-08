@@ -1,6 +1,9 @@
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.views import PasswordResetView
+from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -69,4 +72,8 @@ class Logout(APIView):
         return HttpResponseRedirect('/solvexample/equations')
 
 
+class ResetPassword(SuccessMessageMixin, PasswordResetView):
+    template_name = 'auth/password_reset.html'
+    email_template_name = 'auth/password_reset_email.html'
+    success_url = reverse_lazy('equations')
 

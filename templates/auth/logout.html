@@ -10,6 +10,7 @@
     <div id="formContent">
         <form method="POST" action="{% url 'logout_view' %}">
             {% csrf_token %}
+            <h1 class="display-4" style="font-size: 33px;">Ви бажаєте вийти з профілю?</h1>
             <input style="margin-top:40px;" type="submit" class="fadeIn fourth" value="Вихід">
         </form>
     </div>

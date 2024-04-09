@@ -7,9 +7,14 @@ from django.urls import reverse_lazy
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework.views import APIView
+from rest_framework import renderers
+from rest_framework.views import APIView as GeneralAPIView
 
 from users.models import CustomUser as User
+
+
+class APIView(GeneralAPIView):
+    renderer_classes = [renderers.HTMLFormRenderer]
 
 
 class Register(APIView):
@@ -75,5 +80,12 @@ class Logout(APIView):
 class ResetPassword(SuccessMessageMixin, PasswordResetView):
     template_name = 'auth/password_reset.html'
     email_template_name = 'auth/password_reset_email.html'
+
+    success_message = "Ми відправили вам інструкції щодо налаштування вашого пароля,"\
+                      "якщо обліковий запис існує з введеною вами електронною адресою."\
+                      "Ви повинні отримати їх незабаром."\
+                      "Якщо ви не отримаєте електронного листа, будь ласка, переконайтеся,"\
+                      "що ви ввели адресу, з якою зареєстровані, або ж перевірте папку Спам."
+
     success_url = reverse_lazy('equations')
 

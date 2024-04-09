@@ -17,7 +17,7 @@ Including another URLconf
 from django.conf import settings
 from django.conf.urls.static import static
 
-from mathlab.views import page_not_found, server_error
+from mathlab.views import page_not_found, server_error, unauthorized
 from django.contrib import admin
 from django.urls import path, include, re_path
 from rest_framework import permissions
@@ -49,3 +49,4 @@ urlpatterns = [
 
 handler404 = page_not_found
 handler500 = server_error
+handler401 = unauthorized

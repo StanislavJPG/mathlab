@@ -18,6 +18,7 @@
   <div style="margin-top: 200px; text-align: -webkit-center; margin-bottom: 200px;">
     <div id="formContent">
       <form method="POST" action="{% url 'login_view' %}">
+          {% csrf_token %}
         <input type="email" id="email" class="fadeIn second" name="email" style="margin-top: 45px;" placeholder="Пошта">
         <input type="password" id="password" class="fadeIn third" name="password" placeholder="Пароль">
         <input type="submit" class="fadeIn fourth" value="Вхід">

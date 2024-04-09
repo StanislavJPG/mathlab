@@ -1,5 +1,7 @@
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
+from django.contrib.auth import logout
 from django.utils.deprecation import MiddlewareMixin
+from rest_framework.authtoken.models import Token
 
 
 class AsyncMiddleware:
@@ -16,9 +18,24 @@ class AsyncMiddleware:
         return response
 
 
+class NoTokenFoundException(Exception):
+    ...
+
+
 class TokenMiddleware(MiddlewareMixin):
+    """
+        Token authorization middleware
+    """
     @staticmethod
     def process_request(request):
         if request.user.is_authenticated:
-            token = request.user.auth_token.key
-            request.META['HTTP_AUTHORIZATION'] = f'Token {token}'
+            try:
+                token = request.user.auth_token.key
+                request.META['HTTP_AUTHORIZATION'] = f'Token {token}'
+            except Token.DoesNotExist:
+                """
+                    NoTokenFoundException() will be raised if token does not exist == 500 error
+                """
+                logout(request)
+                raise NoTokenFoundException()
+

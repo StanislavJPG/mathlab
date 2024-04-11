@@ -1,5 +1,6 @@
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.contrib.auth import logout
+from django.http import Http404
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.authtoken.models import Token
 
@@ -38,4 +39,17 @@ class TokenMiddleware(MiddlewareMixin):
                 """
                 logout(request)
                 raise NoTokenFoundException()
+
+
+class AccessControl(MiddlewareMixin):
+    """
+        Access Control to admin's manageable pages
+    """
+    @staticmethod
+    def process_request(request):
+        if "admin" in request.path_info or "auth" in request.path_info:
+            if request.user.is_superuser:
+                ...
+            else:
+                raise Http404()
 

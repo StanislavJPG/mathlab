@@ -3,7 +3,7 @@ from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
 from django.http import HttpResponseRedirect
 from django.shortcuts import render
-from django.urls import reverse_lazy
+from django.urls import reverse_lazy, reverse
 from rest_framework.authtoken.models import Token
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated, AllowAny
@@ -39,7 +39,7 @@ class Register(APIView):
         auth_creds = authenticate(request, email=email, password=password)
         login(request, auth_creds)
 
-        return HttpResponseRedirect('/solvexample/equations')
+        return HttpResponseRedirect(reverse('forum-base'))
 
 
 class Login(APIView):
@@ -62,7 +62,7 @@ class Login(APIView):
         auth_creds = authenticate(request, email=email, password=password)
         login(request, auth_creds)
 
-        return HttpResponseRedirect('/solvexample/equations')
+        return HttpResponseRedirect(reverse('forum-base'))
 
 
 class Logout(APIView):
@@ -74,7 +74,7 @@ class Logout(APIView):
     def post(self, request):
         logout(request)
 
-        return HttpResponseRedirect('/solvexample/equations')
+        return HttpResponseRedirect(reverse('forum-base'))
 
 
 class ResetPassword(SuccessMessageMixin, PasswordResetView):
@@ -87,5 +87,5 @@ class ResetPassword(SuccessMessageMixin, PasswordResetView):
                       "Якщо ви не отримаєте електронного листа, будь ласка, переконайтеся,"\
                       "що ви ввели адресу, з якою зареєстровані, або ж перевірте папку Спам."
 
-    success_url = reverse_lazy('equations')
+    success_url = reverse_lazy('forum-base')
 

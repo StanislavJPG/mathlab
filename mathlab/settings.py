@@ -9,7 +9,6 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
-
 from pathlib import Path
 import os
 from dotenv import load_dotenv
@@ -26,7 +25,7 @@ load_dotenv()
 SECRET_KEY = os.getenv('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1']
 
@@ -51,6 +50,7 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
 ]
 
+
 SWAGGER_SETTINGS = {
     'SECURITY_DEFINITIONS': {
         'Basic': {
@@ -68,7 +68,8 @@ MIDDLEWARE = [
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mathlab.middleware.AsyncMiddleware',
-    'mathlab.middleware.TokenMiddleware'
+    'mathlab.middleware.TokenMiddleware',
+    'mathlab.middleware.AccessControl'
 ]
 
 ROOT_URLCONF = 'mathlab.urls'

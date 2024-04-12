@@ -2,19 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-class Rang(models.Model):
-    rang_title = models.CharField('rang title', max_length=30)
-
-    def __str__(self):
-        return f'{self.rang_title}'
-
-
-class Score(models.Model):
-    score = models.IntegerField('score')
-    rang = models.ForeignKey(Rang, on_delete=models.CASCADE, null=True)
-
-    def __str__(self):
-        return f'{self.score}'
+class Image(models.Model):
+    image = models.CharField('image', max_length=255, null=False)
 
 
 class CustomUser(AbstractUser):
@@ -22,11 +11,10 @@ class CustomUser(AbstractUser):
     last_name = None
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField("email address", blank=True, unique=True)
-    score = models.ForeignKey(
-        Score,
-        on_delete=models.CASCADE,
-        null=True
-    )
+    score = models.IntegerField('score', null=False, default=0)
+    image = models.ForeignKey(Image,
+                              on_delete=models.CASCADE,
+                              null=True)
     EMAIL_FIELD = "email"
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["username"]

@@ -1,10 +1,48 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'forum/forum_base_page.html' %}
 
-</body>
-</html>
+{% block head %}
+{% load static %}
+<link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
+<title>Створити обговорення</title>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block content %}
+<div class="base-content">
+    <h1 class="display-5">Створити питання на форумі</h1>
+    <form method="post" action="{% url 'forum-q-creation' %}">
+        <span>Тема питання *</span>
+        <input style="width: 620px; margin-bottom: 15px;" class="form-control" placeholder="Тема питання (не більше 85 символів)" maxlength="85">
+        <span>Категорія питання *</span>
+        <select style="margin-bottom: 15px;" class="form-select">
+            <option value="">Графіки функцій</option>
+            <option value="">Матриці</option>
+            <option value="">Рівняння</option>
+            <option value="">Нерівності</option>
+            <option value="">Системи</option>
+            <option value="">Вища математика</option>
+            <option value="">Теорії ймовірностей</option>
+            <option value="">Комбінаторика</option>
+            <option value="">Дискретна математика</option>
+            <option value="">Початкова математика</option>
+            <option value="">Відсотки</option>
+            <option value="">Тригонометрія</option>
+            <option value="">Геометрія</option>
+            <option value="">Ймовірність і статистика</option>
+            <option value="">Алгоритми</option>
+            <option value="">Інше</option>
+        </select>
+        <span>Питання *</span>
+        <p>
+            <textarea class="form-control textarea" placeholder="Питання" minlength="15"></textarea>
+        </p>
+        <div style="text-align: center;">
+            <button type="submit" class="btn btn-dark">Створити запитання</button>
+        </div>
+    </form>
+
+</div>
+{% endblock %}
+

@@ -1,8 +1,14 @@
+import logging
+
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.contrib.auth import logout
 from django.http import Http404
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.authtoken.models import Token
+
+from mathlab.settings import DEFAULT_ADMIN_TOKEN
+
+logger = logging.getLogger(__name__)
 
 
 class AsyncMiddleware:

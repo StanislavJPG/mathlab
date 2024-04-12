@@ -1,6 +1,6 @@
 from rest_framework import serializers
 
-from users.models import Rang, Score, CustomUser as User
+from users.models import CustomUser as User
 
 
 class UserSerializer(serializers.ModelSerializer):
@@ -8,14 +8,3 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-
-class RangSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Rang
-        fields = '__all__'
-
-
-class ScoreSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Score
-        fields = '__all__'

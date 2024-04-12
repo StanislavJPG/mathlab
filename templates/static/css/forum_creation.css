@@ -1,0 +1,13 @@
+.base-content {
+    width: 700px;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 100px;
+    padding: 40px;
+    background-color: #eee;
+}
+textarea {
+    width: 620px;
+    height: 400px;
+    resize: none;
+}

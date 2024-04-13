@@ -15,6 +15,7 @@ class CustomUser(AbstractUser):
     image = models.ForeignKey(Image,
                               on_delete=models.CASCADE,
                               null=True)
+
     EMAIL_FIELD = "email"
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = ["username"]

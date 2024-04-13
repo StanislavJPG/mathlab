@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'graphbuilder.apps.GraphbuilderConfig',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
+    'forum.templatetags.filters',
 ]
 
 
@@ -70,7 +71,7 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'mathlab.middleware.AsyncMiddleware',
     'mathlab.middleware.TokenMiddleware',
-    'mathlab.middleware.AccessControl'
+    'mathlab.middleware.AccessControl',
 ]
 
 ROOT_URLCONF = 'mathlab.urls'

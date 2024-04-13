@@ -11,3 +11,15 @@ textarea {
     height: 400px;
     resize: none;
 }
+
+.checkboxes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px;
+}
+
+.form-check {
+    margin-top: 10px;
+    margin-right: 10px;
+}

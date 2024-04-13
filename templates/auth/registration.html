@@ -17,7 +17,7 @@
     <div id="formContent">
     <form method="POST" action="{% url 'register_view' %}">
         {% csrf_token %}
-        <input type="text" id="username" class="fadeIn third" name="username" placeholder="Ім'я">
+        <input type="text" id="username" class="fadeIn third" name="username" placeholder="Нікнейм">
         <input type="email" id="email" class="fadeIn second" name="email" placeholder="Пошта">
         <input type="password" id="password" class="fadeIn third" name="password" placeholder="Пароль">
         <input type="submit" class="fadeIn fourth" value="Зареєструватись">

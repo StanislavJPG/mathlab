@@ -21,15 +21,17 @@
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            {% if user.image is none %}
+            {% if user_content.image is none %}
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
               class="rounded-circle img-fluid" style="width: 150px;">
             {% else %}
             <img src="{{ user.image_id }}" alt="avatar"
               class="rounded-circle img-fluid" style="width: 150px;">
             {% endif %}
-            <h5 class="my-3">{{ user.username }}</h5>
-            <p class="text-muted mb-1"><b>Володар математики</b></p>
+            <h5 class="my-3">{{ user_content.username }}</h5>
+            <div style="margin-bottom: 1rem !important;">
+              <p class="text-muted mb-1"><b>Володар математики</b></p>
+            </div>
             <div class="d-flex justify-content-center mb-2">
               <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
               <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
@@ -45,7 +47,7 @@
                 <p class="mb-0">Нікнейм</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.username }}</p>
+                <p class="text-muted mb-0">{{ user_content.username }}</p>
               </div>
             </div>
             <hr>
@@ -54,7 +56,7 @@
                 <p class="mb-0">Пошта</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.email }}</p>
+                <p class="text-muted mb-0">{{ user_content.email }}</p>
               </div>
             </div>
             <hr>
@@ -63,7 +65,7 @@
                 <p class="mb-0">Бали</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">{{ user.score }}</p>
+                <p class="text-muted mb-0">{{ user_content.score }}</p>
               </div>
             </div>
             <hr>

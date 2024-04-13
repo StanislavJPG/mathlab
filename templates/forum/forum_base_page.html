@@ -15,7 +15,11 @@
           <li><a href="{% url 'equations' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
           <li><a href="{% url 'forum-base' %}" class="nav-link px-2 link-dark">Форум</a></li>
           <li><a href="{% url 'forum-topics' %}" class="nav-link px-2 link-dark">Теми</a></li>
+            {% if user.is_authenticated %}
           <li><a href="{% url 'forum-q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+            {% else %}
+          <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+            {% endif %}
         </ul>
         <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
           <input type="search" class="form-control" style="text-align: left; margin: 5px;" placeholder="Пошук..." aria-label="Search">
@@ -33,7 +37,7 @@
               {% if user.is_authenticated %}
                <li><a class="dropdown-item" href="{% url 'forum-q-creation' %}">Задати питання...</a></li>
             <li><a class="dropdown-item" href="#">Налаштування</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum-profile' %}">Профіль</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum-profile' user_id=user.id %}">Профіль</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
               {% else %}
@@ -58,11 +62,16 @@
 {% block body %}
 <body>
     <div class="block-body">
-        <h1 style="text-align: center;" class="display-4">Топ запитань</h1>
+        <h1 style="text-align: center;" class="display-4">Останні запитання</h1>
+        {% if user.is_authenticated %}
         <a type="submit" style="margin-bottom: 25px;" href="{% url 'forum-q-creation' %}" class="btn btn-outline-dark">Задати своє питання</a>
+        {% else %}
+        <a type="submit" style="margin-bottom: 25px;" href="{% url 'login_view' %}" class="btn btn-outline-dark">Задати своє питання</a>
+        {% endif %}
     </div>
 </body>
 {% endblock %}
+
 
 {% block content %}
 <div>
@@ -72,29 +81,41 @@
         <a href="" class="btn btn-outline-dark a">На тому тижні</a>
     </div>
     <div class="base-content">
+        <div style="border-top: 1px solid #858383;"></div>
+        {% for post in posts %}
         <div style="text-align: left;">
             <div class="question">
                 <div style="transform: translateX(130px);">
                     <div class="base-title-info">
-                        <a href="" class="title">Не можу зрозуміти суть тригонометрії...Не можу зрозуміти суть</a>
+                        <a href="" class="title">{{ post.title }}</a>
                         <div class="watch">
-                            <span class="a-base">3 лайків</span>
-                            <span class="a-base">6 коментарів</span>
+                            <span class="a-base">{{ post.likes }} вподобань</span>
+                            <span class="a-base">5 коментарів</span>
                         </div>
                     </div>
                     <div style="margin-top: 10px;" class="description">
                         <div class="some">
                             <div class="topics">
-                                <a href="" class="a-topic">Тригонометрія</a>
-                                <a href="" class="a-topic">Інше</a>
+                            {% for сategory in post.categories %}
+                                <a href="" class="a-topic">{{ сategory }}</a>
+                            {% endfor %}
                             </div>
                             <div style="transform: translateX(-100px); font-size: 14px;">
-                                <span><a style="text-decoration: none; margin-bottom: 15px;" href="">ShokkGM</a> запитав 3 дні 2 години тому</span>
+                                {% load filters %}
+                                <span><a style="text-decoration: none; margin-bottom: 15px;"
+                                         href="{% url 'forum-profile' user_id=post.user|index:1 %}">{{ post.user|index:0 }}
+                                </a> запитав {{ post.created_at|timesince|translate }} тому</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
+        </div>
+        <div style="border-top: 1px solid #858383;"></div>
+        {% endfor %}
+        <div style="text-align: center; margin-top: 30px; margin-bottom: -15px;">
+            <button type="submit" class="btn btn-dark btn-sm">Назад</button>
+            <button type="submit" class="btn btn-dark btn-sm">Далі</button>
         </div>
     </div>
 </div>

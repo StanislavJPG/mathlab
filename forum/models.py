@@ -1,3 +1,4 @@
+from django.contrib.auth import get_user_model
 from django.db import models
 from django.utils import timezone
 
@@ -12,11 +13,11 @@ class Category(models.Model):
 
 
 class Post(models.Model):
-    category = models.ForeignKey(Category, on_delete=models.CASCADE)
     title = models.CharField('title', max_length=85)
-    content = models.TextField('content')
+    content = models.TextField('content', max_length=2000)
     created_at = models.DateTimeField(default=timezone.now)
-    user = models.ForeignKey(User, on_delete=models.CASCADE, null=False)
+    user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
+    categories = models.ManyToManyField(Category)
     likes = models.IntegerField('likes', default=0)
 
     class Meta:

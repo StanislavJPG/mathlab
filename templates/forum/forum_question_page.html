@@ -1,10 +1,69 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
+{% extends 'forum/forum_base_page.html' %}
 
-</body>
-</html>
+{% block head %}
+{% load static %}
+{% load filters %}
+<script src="{% static 'error_btn_listener.js' %}"></script>
+<link type="text/css" href="{% static 'forum_question.css' %}" rel="stylesheet">
+<title>{{ post.title }}</title>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block content %}
+<div class="base-content">
+    {% if error_msg %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div id="form_errors">
+            <strong>{{ error_msg }}</strong>
+        </div>
+        <button id="closeButton" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    {% endif %}
+    <div>
+        <h1 class="display-5 title">
+            {{ post.title }}
+        </h1>
+        <div class="types">
+            <span class="span-base"><b>Створено</b> {{ post.created_at|timesince|translate }} тому</span>
+            <span class="span-base"><b>Модифіковано</b> {{ post.modified_at|timesince|translate }} тому</span>
+            <span class="span-base"><b>Переглянуто</b> {{ post.post_views }} разів</span>
+            <span class="span-base"><b>Вподобало</b> 10 людей</span>
+        </div>
+        <div class="d_line"></div>
+        <div class="interact">
+            <a style="margin-bottom: 15px;" href="" target="_blank" class="nav-link px-2 text-muted">
+            <img width="35" height="40" src="{% static 'like.png' %}"></a>
+            <a href="" target="_blank" class="nav-link px-2 text-muted">
+            <img width="35" height="40" src="{% static 'dislike.png' %}"></a>
+        </div>
+        <div>
+            <div class="question-content">
+                <p class="text-justify">
+                    {{ post.content }}
+                </p>
+                <div class="topics">
+                    {% for сategory in post.categories %}
+                    <a href="" class="a-topic">{{ сategory }}</a>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        <div class="comment">
+            <h1 style="font-size: 20px;">Ваша відповідь</h1>
+            <textarea name="content" class="form-control textarea" placeholder="Відповідь" minlength="15" maxlength="2000"></textarea>
+            <div style="margin-top: 10px;">
+                <button class="btn btn-dark">Створити коментар</button>
+            </div>
+        </div>
+    </div>
+
+    <form method="post" action="">
+
+    </form>
+</div>
+{% endblock %}
+

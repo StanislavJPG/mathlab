@@ -16,15 +16,13 @@
 }
 
 .sort-by {
-    width: 380px;
-    text-align: center;
+    width: 500px;
     padding: 5px;
     border-radius: 10px;
-    margin-right: 100px;
     margin: auto;
     margin-top: 40px;
     margin-bottom: -55px;
-    transform: translateX(55%);
+    transform: translateX(26%);
 }
 
 .question {
@@ -45,7 +43,7 @@
 }
 
 .title {
-    font-size: 18px;
+    font-size: 16px;
     text-align: left;
     transform: translateX(-17%);
     text-decoration: none;
@@ -85,6 +83,7 @@
     font-size: 13px;
     text-decoration: none;
     color: black;
+    background: floralwhite;
 }
 
 .watch {

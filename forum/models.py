@@ -18,7 +18,10 @@ class Post(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
     categories = models.ManyToManyField(Category)
-    likes = models.IntegerField('likes', default=0)
+    modified_at = models.DateTimeField(default=timezone.now)
+    post_likes = models.ManyToManyField(get_user_model(), related_name='liked_posts')
+    post_dislikes = models.ManyToManyField(get_user_model(), related_name='disliked_posts')
+    post_views = models.IntegerField(default=0, null=True, blank=True)
 
     class Meta:
         ordering = ('title',)

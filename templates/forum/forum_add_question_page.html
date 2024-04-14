@@ -2,6 +2,7 @@
 
 {% block head %}
 {% load static %}
+<script src="{% static 'error_btn_listener.js' %}"></script>
 <link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
 <title>Створити обговорення</title>
 {% endblock %}
@@ -11,10 +12,17 @@
 
 {% block content %}
 <div class="base-content">
-    <h1 class="display-5">Створити питання на форумі</h1>
-    {% if form.errors %}
-    <h1>OSJKDOPAKSDOKASOPDK</h1>
+    {% if error_msg %}
+    <div class="alert alert-danger alert-dismissible" role="alert">
+        <div id="form_errors">
+            <strong>{{ error_msg }}</strong>
+        </div>
+        <button id="closeButton" type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
     {% endif %}
+    <h1 class="display-5">Створити питання на форумі</h1>
     <form method="post" action="{% url 'forum-q-creation' %}">
         {% csrf_token %}
         <div style="margin-bottom: 5px;">
@@ -34,7 +42,7 @@
         {% endfor %}
         </div>
         <div style="margin-bottom: 5px;">
-            <span>Питання *</span>
+            <span>Опишіть ваше Питання *</span>
         </div>
         <p>
             <textarea name="content" id="content" class="form-control textarea" placeholder="Питання" minlength="15" maxlength="2000"></textarea>

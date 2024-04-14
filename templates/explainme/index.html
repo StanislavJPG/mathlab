@@ -12,7 +12,7 @@
       <li class="nav-item"><a href="{% url 'equations' %}" class="nav-link active" aria-current="page">Розв'яжи приклад</a></li>
       <li class="nav-item"><a href="{% url 'explainme' %}" class="nav-link">Поясни тему</a></li>
       <li class="nav-item"><a href="{% url 'graphbuilder' %}" class="nav-link">Побудуй графік</a></li>
-      <li class="nav-item"><a href="{% url 'forum-base' %}" class="nav-link">Форум</a></li>
+      <li class="nav-item"><a href="{% url 'forum-base' %}?sort=popular&page=1" class="nav-link">Форум</a></li>
   </ul>
 </header>
 {% endblock %}

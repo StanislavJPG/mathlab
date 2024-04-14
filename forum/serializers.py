@@ -15,6 +15,7 @@ class PostSerializer(serializers.ModelSerializer):
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
+        representation['modified_at'] = datetime.fromisoformat(representation['modified_at'])
         representation['categories'] = Category.objects.filter(pk__in=representation['categories'])
         representation['user'] = (CustomUser.objects.get(pk=representation['user']), representation['user'])
         return representation

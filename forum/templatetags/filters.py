@@ -16,5 +16,13 @@ def index(indexable, i):
     return indexable[i]
 
 
+@register.filter
+def url_hyphens_replace(value: str):
+    value = value.replace(' ', '-')
+    value = value.replace('?', '-')
+    return value
+
+
 register.filter("translate", translate)
 register.filter("index", index)
+register.filter('hyphens_add', url_hyphens_replace)

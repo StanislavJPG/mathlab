@@ -90,10 +90,10 @@
                 <div style="transform: translateX(130px);">
                     <div class="base-title-info">
                         {% load filters %}
-                        <a target="_blank" href="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}" class="title">{{ post.title }}</a>
+                        <a href="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}" class="title">{{ post.title }}</a>
                         <div class="watch">
                             <span class="a-base">{{ post.likes }} вподобань</span>
-                            <span class="a-base">5 коментарів</span>
+                            <span class="a-base">{{ post.comments_quantity }} коментарів</span>
                         </div>
                     </div>
                     <div style="margin-top: 10px;" class="description">
@@ -106,7 +106,7 @@
                             <div style="transform: translateX(-100px); font-size: 14px;">
                                 <span><a style="text-decoration: none; margin-bottom: 15px;"
                                          href="{% url 'forum-profile' user_id=post.user|index:1 username=post.user|index:0 %}">{{ post.user|index:0 }}
-                                </a> запитав {{ post.created_at|timesince|translate }} тому</span>
+                                </a> запитав {{ post.created_at|timesince }} тому</span>
                             </div>
                         </div>
                     </div>

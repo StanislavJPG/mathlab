@@ -5,12 +5,13 @@ from django.db.models import F
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from django.utils import timezone
+from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
-from forum.models import Post, Category
-from forum.serializers import PostSerializer
+from forum.models import Post, Category, Comment
+from forum.serializers import PostSerializer, CommentSerializer
 from users.models import CustomUser as User
 from users.serializers import UserSerializer
 
@@ -127,18 +128,71 @@ class QuestionCreationView(APIView):
         return HttpResponseRedirect('/forum/?sort=newest&page=1')
 
 
-class QuestionView(APIView):
+class QuestionView(viewsets.ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, q_id: int, title: str):
+        try:
+            page = int(request.GET.get('page'))
+        except TypeError:
+            page = 1
+
+        if page > 0:
+            offset = (page - 1) * 6
+        else:
+            raise Http404()
+
         if 'post_viewed_{}'.format(q_id) not in request.session:
             Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
             request.session['post_viewed_{}'.format(q_id)] = True
 
-        post = Post.objects.filter(pk=q_id)
-        serializer = PostSerializer(post, many=True)
+        post = Post.objects.get(pk=q_id)
+        comments = Comment.objects.filter(post=post).order_by('created_at')[offset:offset+6]
+
+        post_serializer = PostSerializer(post)
+        comments_serializer = CommentSerializer(comments, many=True)
 
         return render(request, 'forum/forum_question_page.html',
                       context={
-                          'post': serializer.data[0]
+                          'post': post_serializer.data,
+                          'comments': comments_serializer.data,
+                          'pages': len(Comment.objects.filter(post=post)),
                       })
+
+    def create_comment(self, request, q_id: int, title: str):
+        comment = request.POST.get('comment')
+
+        if len(comment) >= 15:
+            user = get_object_or_404(get_user_model(), pk=request.user.id)
+            post = get_object_or_404(Post, pk=q_id)
+
+            comm_creation = Comment.objects.create(comment=comment, post=post, user=user)
+            comm_creation.save()
+
+        return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
+
+    def create_rate(self, request, q_id: int, title: str):
+        like = request.POST.get('like')
+        dislike = request.POST.get('dislike')
+        post = Post.objects.get(pk=q_id)
+
+        likes_counter = post.post_likes.filter(pk=request.user.id).count()
+        dislikes_counter = post.post_dislikes.filter(pk=request.user.id).count()
+
+        if like and not dislike:
+            if likes_counter == 1:
+                ...
+            elif likes_counter == 0 and dislikes_counter == 1:
+                post.post_dislikes.remove(request.user.id)
+
+            post.post_likes.add(request.user.id)
+
+        else:
+            if dislikes_counter == 1:
+                ...
+            elif dislikes_counter == 0 and likes_counter == 1:
+                post.post_likes.remove(request.user.id)
+
+            post.post_dislikes.add(request.user.id)
+
+        return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')

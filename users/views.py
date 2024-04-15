@@ -5,16 +5,10 @@ from django.http import HttpResponseRedirect
 from django.shortcuts import render
 from django.urls import reverse_lazy, reverse
 from rest_framework.authtoken.models import Token
-from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated, AllowAny
-from rest_framework import renderers
-from rest_framework.views import APIView as GeneralAPIView
+from rest_framework.views import APIView
 
 from users.models import CustomUser as User
-
-
-class APIView(GeneralAPIView):
-    renderer_classes = [renderers.HTMLFormRenderer]
 
 
 class Register(APIView):
@@ -28,10 +22,12 @@ class Register(APIView):
         username = request.POST.get('username')
         password = request.POST.get('password')
 
-        user = User.objects.filter(email=email).first()
+        user_by_email = User.objects.filter(email=email).first()
+        user_by_name = User.objects.filter(username=username).first()
 
-        if user:
-            raise AuthenticationFailed('User with that email is already exists.')
+        if user_by_email or user_by_name:
+            return render(request, 'auth/registration.html',
+                          context={'error_msg': 'Користувач з цією поштою або нікнеймом вже зареєстрований.'})
 
         created_user = User.objects.create_user(username=username, email=email, password=password)
         Token.objects.create(user=created_user)
@@ -54,10 +50,12 @@ class Login(APIView):
         user = User.objects.filter(email=email).first()
 
         if not user:
-            raise AuthenticationFailed('User is not exists.')
+            return render(request, 'auth/login.html',
+                          context={'error_msg': 'Цього користувача не існує.'})
 
         if not user.check_password(password):
-            raise AuthenticationFailed('Password is not correct.')
+            return render(request, 'auth/login.html',
+                          context={'error_msg': 'Перевірте правильність введеного паролю.'})
 
         auth_creds = authenticate(request, email=email, password=password)
         login(request, auth_creds)

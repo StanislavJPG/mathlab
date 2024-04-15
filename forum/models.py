@@ -34,10 +34,11 @@ class Post(models.Model):
 
 
 class Comment(models.Model):
-    comment = models.TextField('comment')
+    comment = models.TextField('comment', max_length=2000)
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
+    modified_at = models.DateTimeField(default=None, null=True)
 
     def __str__(self):
         return f'{self.comment}'

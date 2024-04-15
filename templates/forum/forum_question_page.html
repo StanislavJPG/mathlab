@@ -28,17 +28,22 @@
             {{ post.title }}
         </h1>
         <div class="types">
-            <span class="span-base"><b>Створено</b> {{ post.created_at|timesince|translate }} тому</span>
-            <span class="span-base"><b>Модифіковано</b> {{ post.modified_at|timesince|translate }} тому</span>
+            <span class="span-base"><b>Створено</b> {{ post.created_at|timesince }} тому</span>
+            <span class="span-base"><b>Модифіковано</b> {{ post.modified_at|timesince }} тому</span>
             <span class="span-base"><b>Переглянуто</b> {{ post.post_views }} разів</span>
-            <span class="span-base"><b>Вподобало</b> 10 людей</span>
         </div>
         <div class="d_line"></div>
         <div class="interact">
-            <a style="margin-bottom: 15px;" href="" target="_blank" class="nav-link px-2 text-muted">
-            <img width="35" height="40" src="{% static 'like.png' %}"></a>
-            <a href="" target="_blank" class="nav-link px-2 text-muted">
-            <img width="35" height="40" src="{% static 'dislike.png' %}"></a>
+            <form method="post" action="{% url 'forum-q-rate' q_id=post.id title=post.title|hyphens_add %}">
+                <input type="hidden" name="like" value="like">
+                {{ post.likes }}<button type="submit" style="margin-bottom: 15px;" class="nav-link px-2 text-muted">
+                <img width="35" height="40" src="{% static 'like.png' %}"></button>
+            </form>
+            <form method="post" action="{% url 'forum-q-rate' q_id=post.id title=post.title|hyphens_add %}">
+                <input type="hidden" name="dislike" value="dislike">
+                {{ post.dislikes }}<button type="submit" class="nav-link px-2 text-muted">
+                <img width="35" height="40" src="{% static 'dislike.png' %}"></button>
+            </form>
         </div>
         <div>
             <div class="question-content">
@@ -53,17 +58,66 @@
             </div>
         </div>
         <div class="comment">
-            <h1 style="font-size: 20px;">Ваша відповідь</h1>
-            <textarea name="content" class="form-control textarea" placeholder="Відповідь" minlength="15" maxlength="2000"></textarea>
-            <div style="margin-top: 10px;">
-                <button class="btn btn-dark">Створити коментар</button>
+            <div>
+                <h1 class="display-4" style="font-size: 23px; margin-top: 70px; margin-bottom: 10px;">Відповідей: {{ pages }}</h1>
+                <div class="sort">
+                    <div class="dropdown" style="margin-top: 5px; margin-bottom: 50px; ">
+                      <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" style="font-size: 10px;">
+                        Сортувати за:
+                      </button>
+                      <ul class="dropdown-menu">
+                        <li><a style="font-size: 15px;" class="dropdown-item"
+                               href="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}">Популярні</a></li>
+
+                        <li><a style="font-size: 15px;" class="dropdown-item"
+                               href="#">Найновіші</a></li>
+                      </ul>
+                    </div>
+                </div>
             </div>
+            {% for comment in comments %}
+            <div>
+                <div class="full-answer">
+                    <div class="types">
+                        <span class="span-base"><b>Автор</b><a style="text-decoration: none;" href=""> {{ comment.user }} </a> |
+                            <b>Магістр математики</b></span>
+                        <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
+                        {% if comment.modified_at is not none %}
+                        <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>
+                        {% endif %}
+                    </div>
+                    <div class="d_line"></div>
+                    <div class="interact">
+                        5<a style="margin-bottom: 15px;" href="" target="_blank" class="nav-link px-2 text-muted">
+                        <img width="35" height="40" src="{% static 'like.png' %}"></a>
+                        1<a href="" target="_blank" class="nav-link px-2 text-muted">
+                        <img width="35" height="40" src="{% static 'dislike.png' %}"></a>
+                    </div>
+                    <div style="margin-bottom: 150px;">
+                        <div class="question-content">
+                        <p style="text-align: justify;">
+                            {{ comment.comment }}
+                        </p>
+                    </div>
+                </div>
+            </div>
+            {% endfor %}
+                {% if pages > 6 %}
+                    {% for page in pages|page_convert:6 %}
+                    <a class="btn btn-dark" href="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}?page={{ page }}"
+                       type="submit">{{ page }}</a>
+                    {% endfor %}
+                {% endif %}
+                <form method="post" action="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}">
+            <h1 style="font-size: 20px; margin-top: 150px;">Ваша відповідь</h1>
+            <textarea name="comment" class="form-control textarea" placeholder="Відповідь (не менше 15 символів)" minlength="15" maxlength="2000"></textarea>
+            <div style="margin-top: 10px;">
+                <button type="submit" class="btn btn-dark">Створити коментар</button>
+            </div>
+            </form>
         </div>
     </div>
-
-    <form method="post" action="">
-
-    </form>
+</div>
 </div>
 {% endblock %}
 

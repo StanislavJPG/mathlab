@@ -12,7 +12,7 @@ html, body {
 }
 
 .display-5.title {
-    font-size: 22px;
+    font-size: 25px;
     width: 1000px;
     text-align: left;
     margin: auto;
@@ -89,4 +89,17 @@ html, body {
     text-align: -webkit-center;
     margin-top: 60px;
     margin-bottom: 60px;
+}
+
+.answer {
+    margin: auto;
+    margin-top: 15px;
+    width: 45%;
+}
+
+.sort {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    width: 230px;
 }

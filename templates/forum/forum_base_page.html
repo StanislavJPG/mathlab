@@ -14,7 +14,6 @@
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'equations' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
           <li><a href="{% url 'forum-base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
-          <li><a href="{% url 'forum-topics' %}" class="nav-link px-2 link-dark">Теми</a></li>
             {% if user.is_authenticated %}
           <li><a href="{% url 'forum-q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
             {% else %}
@@ -27,10 +26,10 @@
 
         <div class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-              {% if user.image_id is none %}
+              {% if profile_image is none %}
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo" width="32" height="32" class="rounded-circle">
               {% else %}
-            <img src="{{ user.image_id }}" alt="mdo" width="32" height="32" class="rounded-circle">
+            <img src="{% static profile_image %}" alt="mdo" width="32" height="32" class="rounded-circle">
               {% endif %}
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
@@ -119,7 +118,7 @@
             {% if page > 1 %}
             <a type="submit" href="{{ url }}{{ page|add:'-1' }}" class="btn btn-dark btn-sm">Назад</a>
             {% endif %}
-            {% if posts|length > 2 %}
+            {% if posts|length > 10 %}
             <a type="submit" href="{{ url }}{{ page|add:'1' }}" class="btn btn-dark btn-sm">Далі</a>
             {% endif %}
         </div>

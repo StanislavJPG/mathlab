@@ -36,8 +36,12 @@ class CommentSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         if representation['modified_at']:
             representation['modified_at'] = datetime.fromisoformat(representation['modified_at'])
+        comment = Comment.objects.get(pk=instance.id)
 
+        representation['likes'] = comment.likes.count()
+        representation['dislikes'] = comment.dislikes.count()
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
+        representation['user_id'] = representation['user']
         representation['user'] = get_object_or_404(get_user_model(), pk=representation['user'])
         return representation
 

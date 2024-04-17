@@ -9,6 +9,7 @@ from rest_framework.permissions import IsAuthenticated, AllowAny
 from rest_framework.views import APIView
 
 from users.models import CustomUser as User
+from users.serializers import ProfileSerializer
 
 
 class Register(APIView):
@@ -67,7 +68,9 @@ class Logout(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        return render(request, 'auth/logout.html')
+        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+
+        return render(request, 'auth/logout.html', context={'profile_image': image_serializer})
 
     def post(self, request):
         logout(request)

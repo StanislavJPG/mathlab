@@ -1,9 +1,11 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
+from django.urls import reverse
 from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
@@ -12,8 +14,8 @@ from rest_framework.views import APIView
 
 from forum.models import Post, Category, Comment
 from forum.serializers import PostSerializer, CommentSerializer
-from users.models import CustomUser as User
-from users.serializers import UserSerializer
+from users.models import CustomUser as User, ProfileImage
+from users.serializers import UserSerializer, ProfileSerializer
 
 
 class ForumBaseView(APIView):
@@ -22,10 +24,16 @@ class ForumBaseView(APIView):
     def get(self, request):
         page = int(request.GET.get('page', 1))
         sort = request.GET.get('sort')
+        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
         if page and sort:
             # if url has an arguments
             address_args = request.build_absolute_uri().split('/')[4][0:-1]
+            context = {
+                'page': page,
+                'url': address_args,
+                'profile_image': image_serializer
+            }
 
             if page > 0:
                 offset = (page - 1) * 10
@@ -35,41 +43,31 @@ class ForumBaseView(APIView):
             if sort == 'last-week':
                 end_date = timezone.now()
                 start_date = end_date - timedelta(days=7)
-                posts = Post.objects.filter(created_at__gte=start_date, created_at__lt=end_date
+                posts = Post.objects.filter(created_at__lte=start_date
                                             ).order_by('-created_at')[offset:offset + 10]
                 serializer = PostSerializer(posts, many=True)
-
-                return render(request, 'forum/forum_base_page.html',
-                              context={
-                                  'posts': serializer.data,
-                                  'page': page,
-                                  'url': address_args
-                              })
-
-            if sort == 'popular':
-                # maybe add comments later///////
-                # sort_by = '-likes'
-                sort_by = '-created_at'
-
-            elif sort == 'interest':
-                # sort_by = '-likes'
-                sort_by = '-created_at'
-
-            elif sort == 'newest':
-                sort_by = '-created_at'
-
+                context['posts'] = serializer.data
             else:
-                raise Http404()
+                posts = Post.objects.all().order_by('-created_at')[offset:offset + 10]
+                serializer = PostSerializer(posts, many=True)
 
-            posts = Post.objects.all().order_by(sort_by)[offset:offset + 10]
-            serializer = PostSerializer(posts, many=True)
+                if sort == 'popular':
+                    sorted_posts = sorted(serializer.data, key=lambda x: x['comments_quantity'], reverse=True)
+
+                elif sort == 'interest':
+                    sorted_posts = sorted(serializer.data, key=lambda x: x['likes'], reverse=True)
+
+                elif sort == 'newest':
+                    sorted_posts = serializer.data
+
+                else:
+                    raise Http404()
+
+                context['posts'] = sorted_posts
 
             return render(request, 'forum/forum_base_page.html',
-                          context={
-                              'posts': serializer.data,
-                              'page': page,
-                              'url': address_args
-                          })
+                          context=context)
+
         return HttpResponseRedirect('/forum/?sort=popular&page=1')
 
 
@@ -84,14 +82,28 @@ class ProfileView(APIView):
         try:
             user = User.objects.filter(pk=user_id)
             user_serializer = UserSerializer(user, many=True)
+            image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
 
             return render(request, 'forum/user/profile.html',
-                          context={'user_content': user_serializer.data[0]})
+                          context={
+                              'user_content': user_serializer.data[0],
+                              'profile_image': image_serializer
+                          })
         except IndexError:
             raise Http404()
 
-    def post(self, request):
-        ...
+    def post(self, request, user_id: int, username: str):
+        image = request.FILES['image']
+        user = get_object_or_404(get_user_model(), pk=request.user.id)
+
+        try:
+            i = ProfileImage.objects.get(user=user)
+            i.image = image
+        except ObjectDoesNotExist:
+            i = ProfileImage(image=image, user=user)
+        i.save()
+
+        return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))
 
 
 class QuestionCreationView(APIView):
@@ -102,8 +114,12 @@ class QuestionCreationView(APIView):
                   'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше')
 
     def get(self, request):
+        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         return render(request, 'forum/forum_add_question_page.html',
-                      context={'categories': enumerate(self.categories, start=1)})
+                      context={
+                          'categories': enumerate(self.categories, start=1),
+                          'profile_image': image_serializer
+                      })
 
     def post(self, request):
         title = request.POST.get('title')
@@ -132,6 +148,7 @@ class QuestionView(viewsets.ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, q_id: int, title: str):
+        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         try:
             page = int(request.GET.get('page'))
         except TypeError:
@@ -157,6 +174,7 @@ class QuestionView(viewsets.ViewSet):
                           'post': post_serializer.data,
                           'comments': comments_serializer.data,
                           'pages': len(Comment.objects.filter(post=post)),
+                          'profile_image': image_serializer
                       })
 
     def create_comment(self, request, q_id: int, title: str):
@@ -171,7 +189,7 @@ class QuestionView(viewsets.ViewSet):
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
-    def create_rate(self, request, q_id: int, title: str):
+    def create_post_rate(self, request, q_id: int, title: str):
         like = request.POST.get('like')
         dislike = request.POST.get('dislike')
         post = Post.objects.get(pk=q_id)
@@ -194,5 +212,37 @@ class QuestionView(viewsets.ViewSet):
                 post.post_likes.remove(request.user.id)
 
             post.post_dislikes.add(request.user.id)
+
+        return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
+
+    def create_comment_rate(self, request, q_id: int, title: str):
+        like = request.POST.get('like')
+        dislike = request.POST.get('dislike')
+        comm_id = request.POST.get('comm_id')
+        user_id = int(request.POST.get('user_id'))
+
+        comments = Comment.objects.filter(pk=comm_id, post=q_id, user=user_id).prefetch_related(
+            'likes', 'dislikes')
+
+        for comment in comments:
+            likes_counter = comment.likes.count()
+            dislikes_counter = comment.dislikes.count()
+            print(likes_counter)    # HEREEEEEEEEE
+
+            if like and not dislike:
+                if likes_counter == 1:
+                    ...
+                elif likes_counter == 0 and dislikes_counter == 1:
+                    comment.dislikes.remove(request.user.id)
+
+                comment.likes.add(request.user.id)
+
+            else:
+                if dislikes_counter == 1:
+                    ...
+                elif dislikes_counter == 0 and likes_counter == 1:
+                    comment.likes.remove(request.user.id)
+
+                comment.dislikes.add(request.user.id)
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')

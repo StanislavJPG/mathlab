@@ -38,6 +38,8 @@ class Comment(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     post = models.ForeignKey(Post, on_delete=models.CASCADE)
     created_at = models.DateTimeField(default=timezone.now)
+    likes = models.ManyToManyField(get_user_model(), related_name='liked_comments', default=0)
+    dislikes = models.ManyToManyField(get_user_model(), related_name='disliked_comments', default=0)
     modified_at = models.DateTimeField(default=None, null=True)
 
     def __str__(self):

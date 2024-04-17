@@ -21,16 +21,25 @@
       <div class="col-lg-4">
         <div class="card mb-4">
           <div class="card-body text-center">
-            {% if user_content.image is none %}
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            {% else %}
-            <img src="{{ user.image_id }}" alt="avatar"
-              class="rounded-circle img-fluid" style="width: 150px;">
-            {% endif %}
+            <form method="post" enctype="multipart/form-data">
+              {% csrf_token %}
+              <label style="cursor: pointer;" for="image">
+                {% if profile_image is none %}
+                <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp"
+                     alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                {% else %}
+                <img src="{% static profile_image %}" alt="avatar"
+                  class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
+                {% endif %}
+              </label>
+              <p>
+                <input type="file" id="image" name="image" style="display: none;">
+                <button class="btn btn-primary" type="submit">Змінити фото</button>
+              </p>
+            </form>
             <h5 class="my-3">{{ user_content.username }}</h5>
             <div style="margin-bottom: 1rem !important;">
-              <p class="text-muted mb-1"><b>Володар математики</b></p>
+              <p class="text-muted mb-1"><b>{{ user_content.rank }}</b></p>
             </div>
             <div class="d-flex justify-content-center mb-2">
               <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
@@ -71,10 +80,10 @@
             <hr>
             <div class="row">
               <div class="col-sm-3">
-                <p class="mb-0">Рейтинг</p>
+                <p class="mb-0">Звання</p>
               </div>
               <div class="col-sm-9">
-                <p class="text-muted mb-0">Володар математики</p>
+                <p class="text-muted mb-0">{{ user_content.rank }}</p>
               </div>
             </div>
           </div>

@@ -27,6 +27,25 @@ class PostSerializer(serializers.ModelSerializer):
         return representation
 
 
+class CommentLastActionsSerializer(serializers.ModelSerializer):
+    """
+    the only goal of using this serializer is some cases
+    instead of default CommentSerializer
+    it's reduce a quantity of database queries
+    """
+
+    class Meta:
+        model = Comment
+        fields = '__all__'
+
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['created_at'] = datetime.fromisoformat(representation['created_at'])
+        representation['comm_id'] = representation['id']
+        representation['title'] = representation['comment']
+        return representation
+
+
 class CommentSerializer(serializers.ModelSerializer):
     class Meta:
         model = Comment

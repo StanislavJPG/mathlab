@@ -1,11 +1,9 @@
 from datetime import timedelta
 
 from django.contrib.auth import get_user_model
-from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import F
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.urls import reverse
 from django.utils import timezone
 from rest_framework import viewsets
 from rest_framework.generics import get_object_or_404
@@ -14,8 +12,8 @@ from rest_framework.views import APIView
 
 from forum.models import Post, Category, Comment
 from forum.serializers import PostSerializer, CommentSerializer
-from users.models import CustomUser as User, ProfileImage
-from users.serializers import UserSerializer, ProfileSerializer
+from forum.service import make_rate
+from users.serializers import ProfileSerializer
 
 
 class ForumBaseView(APIView):
@@ -75,37 +73,6 @@ def forum_topics(request):
     return render(request, 'forum/forum_topics_page.html')
 
 
-class ProfileView(APIView):
-    permission_classes = [IsAuthenticatedOrReadOnly]
-
-    def get(self, request, user_id: int, username: str):
-        try:
-            user = User.objects.filter(pk=user_id)
-            user_serializer = UserSerializer(user, many=True)
-            image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
-
-            return render(request, 'forum/user/profile.html',
-                          context={
-                              'user_content': user_serializer.data[0],
-                              'profile_image': image_serializer
-                          })
-        except IndexError:
-            raise Http404()
-
-    def post(self, request, user_id: int, username: str):
-        image = request.FILES['image']
-        user = get_object_or_404(get_user_model(), pk=request.user.id)
-
-        try:
-            i = ProfileImage.objects.get(user=user)
-            i.image = image
-        except ObjectDoesNotExist:
-            i = ProfileImage(image=image, user=user)
-        i.save()
-
-        return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))
-
-
 class QuestionCreationView(APIView):
     permission_classes = [IsAuthenticated]
     categories = ('Графіки функцій', 'Матриці', 'Рівняння', 'Нерівності',
@@ -149,6 +116,11 @@ class QuestionView(viewsets.ViewSet):
 
     def get(self, request, q_id: int, title: str):
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+
+        order_by = request.GET.get('order-by')
+        if order_by not in ('created_at', 'popular', None):
+            raise Http404()
+
         try:
             page = int(request.GET.get('page'))
         except TypeError:
@@ -164,18 +136,24 @@ class QuestionView(viewsets.ViewSet):
             request.session['post_viewed_{}'.format(q_id)] = True
 
         post = Post.objects.get(pk=q_id)
-        comments = Comment.objects.filter(post=post).order_by('created_at')[offset:offset+6]
-
         post_serializer = PostSerializer(post)
+
+        comments = Comment.objects.filter(post=post).order_by('-created_at')[offset:offset+6]
         comments_serializer = CommentSerializer(comments, many=True)
 
+        context = {
+            'post': post_serializer.data,
+            'comments': comments_serializer.data,
+            'pages': Comment.objects.filter(post=post).count(),
+            'profile_image': image_serializer
+        }
+
+        if order_by == 'popular' or order_by is None:
+            # popular is sort by comment likes
+            context['comments'] = sorted(comments_serializer.data, key=lambda x: x['likes'], reverse=True)
+
         return render(request, 'forum/forum_question_page.html',
-                      context={
-                          'post': post_serializer.data,
-                          'comments': comments_serializer.data,
-                          'pages': len(Comment.objects.filter(post=post)),
-                          'profile_image': image_serializer
-                      })
+                      context=context)
 
     def create_comment(self, request, q_id: int, title: str):
         comment = request.POST.get('comment')
@@ -202,6 +180,8 @@ class QuestionView(viewsets.ViewSet):
                 ...
             elif likes_counter == 0 and dislikes_counter == 1:
                 post.post_dislikes.remove(request.user.id)
+            else:
+                make_rate(post.user.id, score=10)
 
             post.post_likes.add(request.user.id)
 
@@ -220,29 +200,31 @@ class QuestionView(viewsets.ViewSet):
         dislike = request.POST.get('dislike')
         comm_id = request.POST.get('comm_id')
         user_id = int(request.POST.get('user_id'))
+        curr_user = request.user.id
 
         comments = Comment.objects.filter(pk=comm_id, post=q_id, user=user_id).prefetch_related(
             'likes', 'dislikes')
 
-        for comment in comments:
-            likes_counter = comment.likes.count()
-            dislikes_counter = comment.dislikes.count()
-            print(likes_counter)    # HEREEEEEEEEE
+        for comment_rate in comments:
+            likes_by_current_user = comment_rate.likes.filter(pk=curr_user).count()
+            dislikes_by_current_user = comment_rate.dislikes.filter(pk=curr_user).count()
 
             if like and not dislike:
-                if likes_counter == 1:
+                if likes_by_current_user == 1:
                     ...
-                elif likes_counter == 0 and dislikes_counter == 1:
-                    comment.dislikes.remove(request.user.id)
+                elif likes_by_current_user == 0 and dislikes_by_current_user == 1:
+                    comment_rate.dislikes.remove(curr_user)
+                else:
+                    make_rate(user_id, score=5)
 
-                comment.likes.add(request.user.id)
+                comment_rate.likes.add(curr_user)
 
             else:
-                if dislikes_counter == 1:
+                if dislikes_by_current_user == 1:
                     ...
-                elif dislikes_counter == 0 and likes_counter == 1:
-                    comment.likes.remove(request.user.id)
+                elif dislikes_by_current_user == 0 and likes_by_current_user == 1:
+                    comment_rate.likes.remove(curr_user)
 
-                comment.dislikes.add(request.user.id)
+                comment_rate.dislikes.add(curr_user)
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')

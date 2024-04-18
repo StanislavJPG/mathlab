@@ -4,7 +4,9 @@
     margin-top: 60px;
     margin-bottom: 100px;
     padding: 40px;
-    background-color: #eee;
+    background-color: ghostwhite;
+    border: solid 1px;
+    border-radius: 10px;
 }
 textarea {
     width: 620px;

@@ -1,15 +1,18 @@
-from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
+from django.core.exceptions import ObjectDoesNotExist
+from django.http import HttpResponseRedirect, Http404
+from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
 from rest_framework.authtoken.models import Token
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
-from users.models import CustomUser as User
-from users.serializers import ProfileSerializer
+from forum.models import Post, Comment
+from forum.serializers import PostSerializer, CommentLastActionsSerializer
+from users.models import CustomUser as User, ProfileImage
+from users.serializers import ProfileSerializer, UserSerializer
 
 
 class Register(APIView):
@@ -90,3 +93,41 @@ class ResetPassword(SuccessMessageMixin, PasswordResetView):
 
     success_url = reverse_lazy('forum-base')
 
+
+class ProfileView(APIView):
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
+    def get(self, request, user_id: int, username: str):
+        try:
+            user = User.objects.filter(pk=user_id)
+            posts_by_user = Post.objects.filter(user=user_id)[:7]
+            comments_by_user = Comment.objects.filter(user=user_id)[:7]
+
+            user_serializer = UserSerializer(user, many=True)
+            image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
+            post_serializer = PostSerializer(posts_by_user, many=True)
+            comments_serializer = CommentLastActionsSerializer(comments_by_user, many=True)
+            all_actions = sorted(post_serializer.data + comments_serializer.data, key=lambda x: x['created_at'],
+                                 reverse=True)
+
+            return render(request, 'forum/user/profile.html',
+                          context={
+                              'user_content': user_serializer.data[0],
+                              'all_actions': all_actions,
+                              'profile_image': image_serializer
+                          })
+        except IndexError:
+            raise Http404()
+
+    def post(self, request, user_id: int, username: str):
+        image = request.FILES['image']
+        user = get_object_or_404(get_user_model(), pk=request.user.id)
+
+        try:
+            curr_user_img = ProfileImage.objects.get(user=user)
+            curr_user_img.image = image
+        except ObjectDoesNotExist:
+            curr_user_img = ProfileImage(image=image, user=user)
+        curr_user_img.save()
+
+        return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))

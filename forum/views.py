@@ -1,18 +1,19 @@
-from datetime import timedelta
-
 from django.contrib.auth import get_user_model
+from django.core.cache import cache
 from django.db.models import F
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
-from django.utils import timezone
 from rest_framework import viewsets
+from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
-from forum.models import Post, Category, Comment
-from forum.serializers import PostSerializer, CommentSerializer
-from forum.service import make_rate
+from .models import Post, Category, Comment
+from .serializers import PostSerializer, CommentSerializer
+from .service import make_rate
+from .templatetags.filters import url_hyphens_replace
+from .utils import make_offset, sort_posts, sort_comments, delete_keys_matching_pattern
 from users.serializers import ProfileSerializer
 
 
@@ -20,57 +21,48 @@ class ForumBaseView(APIView):
     permission_classes = [AllowAny]
 
     def get(self, request):
-        page = int(request.GET.get('page', 1))
-        sort = request.GET.get('sort')
-        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+        order_by = request.GET.get('sort')
 
-        if page and sort:
-            # if url has an arguments
-            address_args = request.build_absolute_uri().split('/')[4][0:-1]
-            context = {
-                'page': page,
-                'url': address_args,
-                'profile_image': image_serializer
-            }
+        if order_by:
+            page = int(request.GET.get('page'))
+            cached_data = cache.get(f'base_page.{page}.{order_by}', None)
+            offset = make_offset(request, limit=10)
 
-            if page > 0:
-                offset = (page - 1) * 10
+            image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+            if not cached_data:
+                address_args = request.build_absolute_uri().split('/')[4][0:-1]
+                context = {
+                    'page': page,
+                    'url': address_args,
+                    'profile_image': image_serializer
+                }
+
+                posts = Post.objects.all()[offset:offset + 10]
+                post_serializer = PostSerializer(posts, many=True)
+
+                context['posts'] = sort_posts(order_by, post_serializer, offset)
+                cache.set(f'base_page.{page}.{order_by}', context, 120)
             else:
-                raise Http404()
-
-            if sort == 'last-week':
-                end_date = timezone.now()
-                start_date = end_date - timedelta(days=7)
-                posts = Post.objects.filter(created_at__lte=start_date
-                                            ).order_by('-created_at')[offset:offset + 10]
-                serializer = PostSerializer(posts, many=True)
-                context['posts'] = serializer.data
-            else:
-                posts = Post.objects.all().order_by('-created_at')[offset:offset + 10]
-                serializer = PostSerializer(posts, many=True)
-
-                if sort == 'popular':
-                    sorted_posts = sorted(serializer.data, key=lambda x: x['comments_quantity'], reverse=True)
-
-                elif sort == 'interest':
-                    sorted_posts = sorted(serializer.data, key=lambda x: x['likes'], reverse=True)
-
-                elif sort == 'newest':
-                    sorted_posts = serializer.data
-
-                else:
-                    raise Http404()
-
-                context['posts'] = sorted_posts
+                context = cached_data
 
             return render(request, 'forum/forum_base_page.html',
                           context=context)
 
         return HttpResponseRedirect('/forum/?sort=popular&page=1')
 
+    def post(self, request):
+        post_id = int(request.POST.get('post_id'))
+        post = Post.objects.select_related('user').get(pk=post_id)
 
-def forum_topics(request):
-    return render(request, 'forum/forum_topics_page.html')
+        if post.user.id == request.user.id:
+            # only post owner can delete his post
+            post.delete()
+            cache.clear()
+        else:
+            raise PermissionDenied()
+
+        delete_keys_matching_pattern('base_page*')
+        return HttpResponseRedirect('/forum/?sort=popular&page=1')
 
 
 class QuestionCreationView(APIView):
@@ -107,6 +99,7 @@ class QuestionCreationView(APIView):
 
         post_creation.categories.add(*categories)
         post_creation.save()
+        delete_keys_matching_pattern(f'base_page*')
 
         return HttpResponseRedirect('/forum/?sort=newest&page=1')
 
@@ -115,42 +108,37 @@ class QuestionView(viewsets.ViewSet):
     permission_classes = [IsAuthenticatedOrReadOnly]
 
     def get(self, request, q_id: int, title: str):
-        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+        order_by = request.GET.get('order_by')
+        cached_data = cache.get(f'question.{q_id}.{title}.{order_by}', None)
 
-        order_by = request.GET.get('order-by')
-        if order_by not in ('created_at', 'popular', None):
-            raise Http404()
+        if not cached_data:
+            image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
-        try:
-            page = int(request.GET.get('page'))
-        except TypeError:
-            page = 1
+            post = Post.objects.get(pk=q_id)
+            post_serializer = PostSerializer(post)
 
-        if page > 0:
-            offset = (page - 1) * 6
+            if url_hyphens_replace(post_serializer.data['title']) != title:
+                raise Http404()
+
+            offset = make_offset(request, limit=6)
+
+            if 'post_viewed_{}'.format(q_id) not in request.session:
+                Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
+                request.session['post_viewed_{}'.format(q_id)] = True
+
+            context = {
+                'post': post_serializer.data,
+                'pages': Comment.objects.filter(post=post).count(),
+                'profile_image': image_serializer
+            }
+
+            comments = Comment.objects.filter(post=post)[offset:offset + 6]
+            comments_serializer = CommentSerializer(comments, many=True)
+
+            context['comments'] = sort_comments(order_by, comments_serializer)
+            cache.set(f'question.{q_id}.{title}.{order_by}', context, 120)
         else:
-            raise Http404()
-
-        if 'post_viewed_{}'.format(q_id) not in request.session:
-            Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
-            request.session['post_viewed_{}'.format(q_id)] = True
-
-        post = Post.objects.get(pk=q_id)
-        post_serializer = PostSerializer(post)
-
-        comments = Comment.objects.filter(post=post).order_by('-created_at')[offset:offset+6]
-        comments_serializer = CommentSerializer(comments, many=True)
-
-        context = {
-            'post': post_serializer.data,
-            'comments': comments_serializer.data,
-            'pages': Comment.objects.filter(post=post).count(),
-            'profile_image': image_serializer
-        }
-
-        if order_by == 'popular' or order_by is None:
-            # popular is sort by comment likes
-            context['comments'] = sorted(comments_serializer.data, key=lambda x: x['likes'], reverse=True)
+            context = cached_data
 
         return render(request, 'forum/forum_question_page.html',
                       context=context)
@@ -164,6 +152,7 @@ class QuestionView(viewsets.ViewSet):
 
             comm_creation = Comment.objects.create(comment=comment, post=post, user=user)
             comm_creation.save()
+            delete_keys_matching_pattern(f'question.{q_id}*')
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
@@ -181,7 +170,7 @@ class QuestionView(viewsets.ViewSet):
             elif likes_counter == 0 and dislikes_counter == 1:
                 post.post_dislikes.remove(request.user.id)
             else:
-                make_rate(post.user.id, score=10)
+                make_rate(request, post.user.id, score=10)
 
             post.post_likes.add(request.user.id)
 
@@ -193,6 +182,7 @@ class QuestionView(viewsets.ViewSet):
 
             post.post_dislikes.add(request.user.id)
 
+        delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
     def create_comment_rate(self, request, q_id: int, title: str):
@@ -215,7 +205,7 @@ class QuestionView(viewsets.ViewSet):
                 elif likes_by_current_user == 0 and dislikes_by_current_user == 1:
                     comment_rate.dislikes.remove(curr_user)
                 else:
-                    make_rate(user_id, score=5)
+                    make_rate(request, user_id, score=5)
 
                 comment_rate.likes.add(curr_user)
 
@@ -227,4 +217,16 @@ class QuestionView(viewsets.ViewSet):
 
                 comment_rate.dislikes.add(curr_user)
 
+        delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
+
+    def delete_comment(self, request, q_id: int, title: str, c_id: int):
+        comment = Comment.objects.select_related('user').get(pk=c_id)
+        if comment.user.id == request.user.id:
+            comment.delete()
+        else:
+            raise PermissionDenied()
+
+        delete_keys_matching_pattern(f'question.{q_id}*')
+        return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
+

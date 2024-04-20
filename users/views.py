@@ -1,6 +1,7 @@
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
+from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
@@ -76,7 +77,11 @@ class Logout(APIView):
         return render(request, 'auth/logout.html', context={'profile_image': image_serializer})
 
     def post(self, request):
-        logout(request)
+        try:
+            logout(request)
+            cache.clear()
+        finally:
+            cache.exit()
 
         return HttpResponseRedirect(reverse('forum-base'))
 
@@ -99,23 +104,30 @@ class ProfileView(APIView):
 
     def get(self, request, user_id: int, username: str):
         try:
-            user = User.objects.filter(pk=user_id)
-            posts_by_user = Post.objects.filter(user=user_id)[:7]
-            comments_by_user = Comment.objects.filter(user=user_id)[:7]
+            cached_data = cache.get(f'profile.{user_id}.{username}')
+            if not cached_data:
+                user = User.objects.get(pk=user_id)
+                posts_by_user = Post.objects.filter(user=user_id)[:7]
+                comments_by_user = Comment.objects.filter(user=user_id)[:7]
 
-            user_serializer = UserSerializer(user, many=True)
-            image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
-            post_serializer = PostSerializer(posts_by_user, many=True)
-            comments_serializer = CommentLastActionsSerializer(comments_by_user, many=True)
-            all_actions = sorted(post_serializer.data + comments_serializer.data, key=lambda x: x['created_at'],
-                                 reverse=True)
+                user_serializer = UserSerializer(user)
+                image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
+                post_serializer = PostSerializer(posts_by_user, many=True)
+                comments_serializer = CommentLastActionsSerializer(comments_by_user, many=True)
+
+                all_actions = sorted(post_serializer.data + comments_serializer.data, key=lambda x: x['created_at'],
+                                     reverse=True)
+                context = {
+                    'user_content': user_serializer.data,
+                    'all_actions': all_actions,
+                    'profile_image': image_serializer
+                }
+                cache.set(f'profile.{user_id}.{username}', context, 120)
+            else:
+                context = cached_data
 
             return render(request, 'forum/user/profile.html',
-                          context={
-                              'user_content': user_serializer.data[0],
-                              'all_actions': all_actions,
-                              'profile_image': image_serializer
-                          })
+                          context=context)
         except IndexError:
             raise Http404()
 

@@ -50,6 +50,8 @@ INSTALLED_APPS = [
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
     'forum.templatetags.filters',
+    'django_elasticsearch_dsl',
+    'django_elasticsearch_dsl_drf',
 ]
 
 
@@ -183,3 +185,38 @@ EMAIL_USE_TLS = True
 EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('MAIL_NAME')
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASS')
+
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": "redis://127.0.0.1:6379",
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        }
+    }
+}
+
+# LOGGING = {
+#     'version': 1,
+#     'disable_existing_loggers': False,
+#     'handlers': {
+#         'console': {
+#             'class': 'logging.StreamHandler',
+#         },
+#     },
+#     'loggers': {
+#         'django.db.backends': {
+#             'handlers': ['console'],
+#             'level': 'DEBUG',
+#         },
+#     },
+# }
+
+ELASTICSEARCH_DSL = {
+    'default': {
+        'hosts': os.getenv('ELASTICSEARCH_HOST'),
+        'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
+    }
+}
+

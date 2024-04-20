@@ -2,8 +2,7 @@
 
 {% block head %}
 {% load static %}
-<link type="text/css" href="{% static 'profile.css' %}" rel="stylesheet">
-<title>Мій профіль</title>
+<title xmlns="http://www.w3.org/1999/html">Мій профіль</title>
 {% endblock %}
 
 {% block body %}
@@ -106,7 +105,20 @@
               <a>{{ category }}</a> |
               {% endfor %}
               </p>
-                <div class="progress-bar" role="progressbar" style="width: 72%; margin-bottom: 15px;" aria-valuenow="72"
+              {% if action.comm_id is none %}
+              <form style="margin-top:10px;" method="post" action="{% url 'forum-base' %}">
+                {% csrf_token %}
+                <input type="hidden" name="post_id" value="{{ action.id }}">
+                <button type="submit" class="btn btn-danger btn-sm">Видалити пост</button>
+                {% else %}
+                <form style="margin-top:10px;" method="post" action="{% url 'forum-q-comm-delete' q_id=action.post title=action.title c_id=action.id %}">
+                  {% csrf_token %}
+                  <input type="hidden" name="post_id" value="{{ action.id }}">
+                  <button type="submit" class="btn btn-danger btn-sm">Видалити коментар</button>
+                {% endif %}
+              </form>
+              <div style="border-top: 1px solid #858383;width: 820px;margin: auto;margin-top: 10px;" ></div>
+              <div class="progress-bar" role="progressbar" style="width: 72%; margin-bottom: 15px;" aria-valuenow="72"
                   aria-valuemin="0" aria-valuemax="100"></div>
               {% endfor %}
               </div>

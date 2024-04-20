@@ -1,14 +1,19 @@
 from users.models import CustomUser as User
 
 
-def make_rate(user_id: int, score: int) -> None:
+def make_rate(request, user_id: int, score: int) -> None:
     user = User.objects.get(pk=user_id)
-    user.score += score
-    user.save()
+
+    if user.id != request.user.id:
+        user.score += score
+        user.save()
 
 
-def rank_creator_for_serializer(representation: dict) -> str:
-    user_content = representation['score']
+def rank_creator_for_serializer(representation: dict | User) -> str:
+    if isinstance(representation, User):
+        user_content = representation.score
+    else:
+        user_content = representation['score']
 
     if user_content < 50:
         user_content = 'Учень математики'

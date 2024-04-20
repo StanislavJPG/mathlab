@@ -85,13 +85,22 @@
                     <div class="types">
                         <span class="span-base"><b>Автор</b>
                             <a style="text-decoration: none;" href="{% url 'forum-profile' user_id=comment.user_id username=comment.user %}"> {{ comment.user }} </a> |
-                            <b>Магістр математики</b></span>
+                            <b>{{ comment.rank }}</b></span>
                         <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
                         {% if comment.modified_at is not none %}
                         <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>
                         {% endif %}
+                        <div style="margin-left: 15px;">
+                            {% if comment.user.id == user.id %}
+                        <form method="post" action="{% url 'forum-q-comm-delete' c_id=comment.id q_id=post.id title=post.title|hyphens_add %}">
+                            {% csrf_token %}
+                            <input type="hidden" value="{{ comment.id }}">
+                            <button type="submit" class="btn btn-danger btn-sm">Видалити коментарій</button>
+                        </form>
+                            {% endif %}
+                        </div>
                     </div>
-                    <div class="d_line"></div>
+                    <div class="d_line" ></div>
                     <div class="interact">
                         <form method="post" action="{% url 'forum-q-comm-rate' q_id=post.id title=post.title|hyphens_add %}">
                             {% csrf_token %}

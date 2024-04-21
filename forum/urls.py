@@ -1,6 +1,6 @@
 from django.urls import path
 
-from forum.views import ForumBaseView, QuestionCreationView, QuestionView
+from forum.views import ForumBaseView, QuestionCreationView, QuestionView, PostSearchView
 from users.views import ProfileView
 
 urlpatterns = [
@@ -16,4 +16,5 @@ urlpatterns = [
     path('forum/question/comment/delete/<int:q_id>/<str:title>/<int:c_id>/',
          QuestionView.as_view({'post': 'delete_comment'}),
          name='forum-q-comm-delete'),
+    path('forum/search/', PostSearchView.as_view(), name='forum-b-search')
 ]

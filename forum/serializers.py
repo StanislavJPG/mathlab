@@ -41,8 +41,11 @@ class CommentLastActionsSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
+        comment = Comment.objects.get(pk=instance.id)
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['comm_id'] = representation['id']
+        representation['post_title'] = comment.post.title
+        representation['post_id'] = comment.post.id
         representation['title'] = representation['comment']
         return representation
 
@@ -64,6 +67,7 @@ class CommentSerializer(serializers.ModelSerializer):
         representation['user_id'] = representation['user']
         representation['user'] = get_object_or_404(get_user_model(), pk=representation['user'])
         representation['rank'] = rank_creator_for_serializer(representation['user'])
+
         return representation
 
 

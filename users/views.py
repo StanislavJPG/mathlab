@@ -1,3 +1,5 @@
+import os
+
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.views import PasswordResetView
 from django.contrib.messages.views import SuccessMessageMixin
@@ -12,6 +14,7 @@ from rest_framework.views import APIView
 
 from forum.models import Post, Comment
 from forum.serializers import PostSerializer, CommentLastActionsSerializer
+from forum.utils import delete_keys_matching_pattern
 from users.models import CustomUser as User, ProfileImage
 from users.serializers import ProfileSerializer, UserSerializer
 
@@ -111,16 +114,19 @@ class ProfileView(APIView):
                 comments_by_user = Comment.objects.filter(user=user_id)[:7]
 
                 user_serializer = UserSerializer(user)
-                image_serializer = ProfileSerializer.get_profile_image(user_pk=user_id)
                 post_serializer = PostSerializer(posts_by_user, many=True)
                 comments_serializer = CommentLastActionsSerializer(comments_by_user, many=True)
+
+                requested_user_image = ProfileSerializer.get_profile_image(user_pk=user_id)
+                current_user_image = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
                 all_actions = sorted(post_serializer.data + comments_serializer.data, key=lambda x: x['created_at'],
                                      reverse=True)
                 context = {
                     'user_content': user_serializer.data,
                     'all_actions': all_actions,
-                    'profile_image': image_serializer
+                    'profile_image': requested_user_image,
+                    'current_user_image': current_user_image
                 }
                 cache.set(f'profile.{user_id}.{username}', context, 120)
             else:
@@ -137,9 +143,16 @@ class ProfileView(APIView):
 
         try:
             curr_user_img = ProfileImage.objects.get(user=user)
+            old_image_path = curr_user_img.image.path
+            if os.path.exists(old_image_path):
+                os.remove(old_image_path)
+
             curr_user_img.image = image
         except ObjectDoesNotExist:
             curr_user_img = ProfileImage(image=image, user=user)
+
         curr_user_img.save()
+
+        delete_keys_matching_pattern(['profile*', 'user_image*'])
 
         return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))

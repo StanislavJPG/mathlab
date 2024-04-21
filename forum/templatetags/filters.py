@@ -25,7 +25,7 @@ def index(indexable, i):
 def url_hyphens_replace(value: str):
     value = value.replace(' ', '-')
     value = value.replace('?', '-')
-    return value
+    return value.lower()
 
 
 # register.filter("translate", translate)

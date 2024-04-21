@@ -54,7 +54,9 @@ def sort_comments(order_by, serializer):
         raise Http404()
 
 
-def delete_keys_matching_pattern(pattern):
-    keys_to_delete = cache.keys(pattern)
-    for key in keys_to_delete:
-        cache.delete(key)
+def delete_keys_matching_pattern(pattern: str | list):
+    patterns = pattern if isinstance(pattern, list) else [pattern]
+
+    for pattern_key in patterns:
+        keys_to_delete = cache.keys(pattern_key)
+        cache.delete_many(keys_to_delete)

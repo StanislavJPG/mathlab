@@ -20,17 +20,17 @@
           <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
             {% endif %}
         </ul>
-        <form class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3">
-            {% csrf_token %}
-          <input type="search" class="form-control" style="text-align: left; margin: 5px;" placeholder="Пошук..." aria-label="Search">
+        <form action="{% url 'forum-b-search' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
+          <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;" placeholder="Пошук..." aria-label="Search">
+          <input type="hidden" name="page" value="{{ page }}">
         </form>
 
         <div class="dropdown text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-              {% if profile_image is none %}
+              {% if not current_user_image %}
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo" width="32" height="32" class="rounded-circle">
               {% else %}
-            <img src="{% static profile_image %}" alt="mdo" width="32" height="32" class="rounded-circle">
+            <img src="{% static current_user_image %}" alt="mdo" width="32" height="32" class="rounded-circle">
               {% endif %}
           </a>
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
@@ -126,7 +126,7 @@
             {% if page > 1 %}
             <a type="submit" href="{{ url }}{{ page|add:'-1' }}" class="btn btn-dark btn-sm">Назад</a>
             {% endif %}
-            {% if posts|length > 10 %}
+            {% if posts|length >= 10 %}
             <a type="submit" href="{{ url }}{{ page|add:'1' }}" class="btn btn-dark btn-sm">Далі</a>
             {% endif %}
         </div>

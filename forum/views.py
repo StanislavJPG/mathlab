@@ -9,6 +9,7 @@ from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 
+from forum.elasticsearch.documents import PostDocument
 from .models import Post, Category, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .service import make_rate
@@ -28,13 +29,14 @@ class ForumBaseView(APIView):
             cached_data = cache.get(f'base_page.{page}.{order_by}', None)
             offset = make_offset(request, limit=10)
 
-            image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+            current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+
             if not cached_data:
-                address_args = request.build_absolute_uri().split('/')[4][0:-1]
+                address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
                 context = {
                     'page': page,
                     'url': address_args,
-                    'profile_image': image_serializer
+                    'current_user_image': current_user_image_serializer
                 }
 
                 posts = Post.objects.all()[offset:offset + 10]
@@ -70,14 +72,14 @@ class QuestionCreationView(APIView):
     categories = ('Графіки функцій', 'Матриці', 'Рівняння', 'Нерівності',
                   'Системи', 'Вища математика', 'Теорії ймовірностей',
                   'Комбінаторика', 'Дискретна математика', 'Початкова математика', 'Відсотки',
-                  'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше')
+                  'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше', 'Алгебра')
 
     def get(self, request):
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         return render(request, 'forum/forum_add_question_page.html',
                       context={
                           'categories': enumerate(self.categories, start=1),
-                          'profile_image': image_serializer
+                          'current_user_image': image_serializer
                       })
 
     def post(self, request):
@@ -129,7 +131,7 @@ class QuestionView(viewsets.ViewSet):
             context = {
                 'post': post_serializer.data,
                 'pages': Comment.objects.filter(post=post).count(),
-                'profile_image': image_serializer
+                'current_user_image': image_serializer
             }
 
             comments = Comment.objects.filter(post=post)[offset:offset + 6]
@@ -152,7 +154,7 @@ class QuestionView(viewsets.ViewSet):
 
             comm_creation = Comment.objects.create(comment=comment, post=post, user=user)
             comm_creation.save()
-            delete_keys_matching_pattern(f'question.{q_id}*')
+            delete_keys_matching_pattern([f'question.{q_id}*', f'profile.{request.user.id}*'])
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
@@ -230,3 +232,30 @@ class QuestionView(viewsets.ViewSet):
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
+
+class PostSearchView(APIView):
+    permission_classes = [AllowAny]
+
+    def get(self, request):
+        search_pattern = request.GET.get('search_pattern')
+        page = int(request.GET.get('page'))
+        offset = make_offset(request, limit=10)
+        address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
+        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+        cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')
+
+        if not cached_data:
+            post = PostDocument().search().query("match", title=search_pattern)[offset:offset+10]
+            post_queryset = post.to_queryset()
+            post_serializer = PostSerializer(post_queryset, many=True)
+
+            posts = sort_posts('newest', post_serializer, offset)
+            cache.set(f'base_page.search.{search_pattern}.{page}', posts, 120)
+        else:
+            posts = cached_data
+
+        return render(request, 'forum/forum_base_page.html',
+                      context={'posts': posts,
+                               'page': page,
+                               'url': address_args,
+                               'current_user_image': image_serializer})

@@ -89,6 +89,7 @@
           <div class="card-body">
             <p class="mb-4" style="text-align: center;"><b>Останні дії</b></p>
             {% load filters %}
+            <div style="text-align: center;">
             {% for action in all_actions %}
               {% if action.comm_id is none %}
                 Створив Пост
@@ -111,6 +112,7 @@
               <div style="border-top: 1px solid #858383;width: 820px;margin: auto;margin-top: 10px;"></div>
               <div class="progress-bar" role="progressbar" style="width: 72%; margin-bottom: 15px;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
             {% endfor %}
+            </div>
           </div>
         </div>
       </div>

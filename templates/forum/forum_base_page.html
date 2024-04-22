@@ -36,7 +36,7 @@
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
               {% if user.is_authenticated %}
                <li><a class="dropdown-item" href="{% url 'forum-q-creation' %}">Задати питання...</a></li>
-            <li><a class="dropdown-item" href="#">Налаштування</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum-settings' %}">Налаштування</a></li>
             <li><a class="dropdown-item" href="{% url 'forum-profile' user_id=user.id username=user.username %}">Профіль</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
@@ -106,7 +106,7 @@
                             <div style="transform: translateX(-100px); font-size: 14px;">
                                 <span><a style="text-decoration: none; margin-bottom: 15px;"
                                          href="{% url 'forum-profile' user_id=post.user|index:1 username=post.user|index:0 %}">{{ post.user|index:0 }}
-                                </a> запитав {{ post.created_at|timesince }} тому</span>
+                                </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
                                 {% if post.user|index:1 == user.id %}
                                 <form style="margin-top:10px;" method="post" action="{% url 'forum-base' %}">
                                     {% csrf_token %}

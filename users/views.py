@@ -67,6 +67,7 @@ class Login(APIView):
 
         auth_creds = authenticate(request, email=email, password=password)
         login(request, auth_creds)
+        cache.clear()
 
         return HttpResponseRedirect(reverse('forum-base'))
 
@@ -80,11 +81,8 @@ class Logout(APIView):
         return render(request, 'auth/logout.html', context={'profile_image': image_serializer})
 
     def post(self, request):
-        try:
-            logout(request)
-            cache.clear()
-        finally:
-            cache.exit()
+        logout(request)
+        cache.clear()
 
         return HttpResponseRedirect(reverse('forum-base'))
 
@@ -110,8 +108,8 @@ class ProfileView(APIView):
             cached_data = cache.get(f'profile.{user_id}.{username}')
             if not cached_data:
                 user = User.objects.get(pk=user_id)
-                posts_by_user = Post.objects.filter(user=user_id)[:7]
-                comments_by_user = Comment.objects.filter(user=user_id)[:7]
+                posts_by_user = Post.objects.filter(user=user_id).order_by('-created_at')[:5]
+                comments_by_user = Comment.objects.filter(user=user_id).order_by('-created_at')[:5]
 
                 user_serializer = UserSerializer(user)
                 post_serializer = PostSerializer(posts_by_user, many=True)
@@ -156,3 +154,39 @@ class ProfileView(APIView):
         delete_keys_matching_pattern(['profile*', 'user_image*'])
 
         return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))
+
+
+class ChangeUserDataView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+
+        return render(request, 'forum/forum_settings_page.html', context={
+            'current_user_image': current_user_image_serializer
+        })
+
+    def post(self, request):
+        new_username = request.POST.get('username')
+        new_email = request.POST.get('email')
+        user = User.objects.get(username=request.user.username,
+                                email=request.user.email)
+
+        if new_username and new_username != user.username:
+            if User.objects.filter(username=new_username).exclude(email=user.email).exists():
+                error_msg = {'error_msg': 'Користувач з даним нікнеймом вже зареєстрований.'}
+                return render(request, 'forum/forum_settings_page.html', context=error_msg)
+            user.username = new_username
+
+        elif new_email and new_email != user.email:
+            if User.objects.filter(email=new_email).exclude(username=user.username).exists():
+                error_msg = {'error_msg': 'Користувач з даною поштою вже зареєстрований.'}
+                return render(request, 'forum/forum_settings_page.html', context=error_msg)
+            user.email = new_email
+
+        else:
+            error_msg = {'error_msg': 'Заповніть поля, які хочете змінити.'}
+            return render(request, 'forum/forum_settings_page.html', context=error_msg)
+
+        user.save()
+        return HttpResponseRedirect(reverse('forum-settings'))

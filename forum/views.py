@@ -103,7 +103,11 @@ class QuestionCreationView(APIView):
         post_creation.save()
         delete_keys_matching_pattern(f'base_page*')
 
-        return HttpResponseRedirect('/forum/?sort=newest&page=1')
+        created_post = Post.objects.all().order_by('-created_at')[:1].values('id', 'title').get()
+        post_id = created_post['id']
+        post_title = url_hyphens_replace(created_post['title'])
+
+        return HttpResponseRedirect(f'/forum/question/{post_id}/{post_title}')
 
 
 class QuestionView(viewsets.ViewSet):

@@ -3,7 +3,6 @@ import functools
 import re
 from typing import Callable, TYPE_CHECKING
 
-from django.core.cache import cache
 
 if TYPE_CHECKING:
     from explainme.scraper import ExplainmeScraper

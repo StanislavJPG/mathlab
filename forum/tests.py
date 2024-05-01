@@ -1,12 +1,9 @@
-import json
-
 from django.urls import reverse
 from rest_framework import status
 from rest_framework.authtoken.models import Token
 from rest_framework.test import APITestCase, APIClient
 
 from forum.models import Post
-from forum.views import PostSearchView
 from users.models import CustomUser
 
 

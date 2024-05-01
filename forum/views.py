@@ -230,14 +230,14 @@ class QuestionView(viewsets.ViewSet):
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
-    def delete_comment(self, request, q_id: int, title: str, c_id: int):
-        comment = Comment.objects.select_related('user').get(pk=c_id)
+    def delete_comment(self, request, q_id: int, title: str, comment_id: int):
+        comment = Comment.objects.select_related('user').get(pk=comment_id)
         if comment.user.id == request.user.id:
             comment.delete()
         else:
             raise PermissionDenied()
 
-        delete_keys_matching_pattern(f'question.{q_id}*')
+        delete_keys_matching_pattern(f'question.{q_id}*', f'profile.{request.user.id}.*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
 

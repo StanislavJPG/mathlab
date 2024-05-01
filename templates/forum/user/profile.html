@@ -104,13 +104,27 @@
                 <a>{{ category }}</a> |
               {% endfor %}
               </p>
+              {% if not action.comm_id %}
+              {% if user.id == user_content.id %}
               <form style="margin-top:10px;" method="post" action="{% url 'forum-base' %}">
                 {% csrf_token %}
                 <input type="hidden" name="post_id" value="{{ action.id }}">
-                <button type="submit" class="btn btn-danger btn-sm">{% if action.comm_id is none %}Видалити пост{% else %}Видалити коментар{% endif %}</button>
+                <button type="submit" class="btn btn-danger btn-sm">Видалити пост</button>
               </form>
+              {% endif %}
               <div style="border-top: 1px solid #858383;width: 820px;margin: auto;margin-top: 10px;"></div>
               <div class="progress-bar" role="progressbar" style="width: 72%; margin-bottom: 15px;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+              {% else %}
+              {% if user.id == user_content.id %}
+              <form style="margin-top:10px;" method="post"
+                    action="{% url 'forum-q-comm-delete' q_id=action.post_id title=action.post_title|hyphens_add comment_id=action.id %}">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-danger btn-sm">Видалити коментар</button>
+              </form>
+              {% endif %}
+              <div style="border-top: 1px solid #858383;width: 820px;margin: auto;margin-top: 10px;"></div>
+              <div class="progress-bar" role="progressbar" style="width: 72%; margin-bottom: 15px;" aria-valuenow="72" aria-valuemin="0" aria-valuemax="100"></div>
+              {% endif %}
             {% endfor %}
             </div>
           </div>

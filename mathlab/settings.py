@@ -9,8 +9,11 @@ https://docs.djangoproject.com/en/5.0/topics/settings/
 For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
+from datetime import timedelta
 from pathlib import Path
 import os
+
+from celery.schedules import crontab
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -49,6 +52,7 @@ INSTALLED_APPS = [
     'graphbuilder.apps.GraphbuilderConfig',
     'forum.apps.ForumConfig',
     'users.apps.UsersConfig',
+    'math_news.apps.MathNewsConfig',
     'forum.templatetags.filters',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
@@ -136,8 +140,6 @@ AUTH_PASSWORD_VALIDATORS = [
 
 LANGUAGE_CODE = 'en-us'
 
-TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_TZ = True
@@ -186,6 +188,9 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv('MAIL_NAME')
 EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASS')
 
+CELERY_BROKER_URL = "redis://127.0.0.1:6379"
+CELERY_RESULT_BACKEND = "redis://127.0.0.1:6379"
+TIME_ZONE = 'Europe/Kiev'
 
 CACHES = {
     "default": {
@@ -220,3 +225,13 @@ ELASTICSEARCH_DSL = {
     }
 }
 
+CELERY_IMPORTS = [
+    'math_news.tasks',
+]
+
+CELERY_BEAT_SCHEDULE = {
+    'to_find_news': {
+        'task': 'math_news.tasks.let_find_news',
+        'schedule': timedelta(hours=12),
+    },
+}

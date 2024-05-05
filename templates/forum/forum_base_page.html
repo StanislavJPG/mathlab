@@ -12,7 +12,7 @@
           <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="{% url 'equations' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
+          <li><a href="{% url 'base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
           <li><a href="{% url 'forum-base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
             {% if user.is_authenticated %}
           <li><a href="{% url 'forum-q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
@@ -55,7 +55,7 @@
 <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
-    <title>Форум</title>
+    <title>MathLab | Форум</title>
 </head>
 {% endblock %}
 

@@ -149,7 +149,6 @@ class QuestionView(viewsets.ViewSet):
             cache.set(f'question.{q_id}.{title}.{order_by}', context, 120)
         else:
             context = cached_data
-
         return render(request, 'forum/forum_question_page.html',
                       context=context)
 
@@ -162,7 +161,7 @@ class QuestionView(viewsets.ViewSet):
 
             comm_creation = Comment.objects.create(comment=comment, post=post, user=user)
             comm_creation.save()
-            delete_keys_matching_pattern([f'question.{q_id}*', f'profile.{request.user.id}*'])
+            delete_keys_matching_pattern(f'question.{q_id}*', f'profile.{request.user.id}*')
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 

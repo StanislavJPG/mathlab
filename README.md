@@ -5,7 +5,6 @@
 ![MySQL](https://img.shields.io/badge/mysql-4479A1.svg?style=for-the-badge&logo=mysql&logoColor=white)![Python](https://img.shields.io/badge/python-3.11-orange)
 ![Gitea Forks](https://img.shields.io/github/forks/StanislavJPG/mathlab)
 
-### The project is currently under development. It's not finished yet.
 ### **Math equations solver + Mathematical Q/A forum.** 
 **Using:**
 

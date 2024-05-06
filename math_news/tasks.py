@@ -9,7 +9,6 @@ from mathlab.celery import app
 @app.task
 def let_find_news():
     titles = MathNewsSearcher()
-
     try:
         for title in titles:
             MathNews.objects.create(

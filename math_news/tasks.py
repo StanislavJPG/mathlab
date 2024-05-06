@@ -8,16 +8,16 @@ from mathlab.celery import app
 
 @app.task
 def let_find_news():
-    proceed_request = MathNewsSearcher()
-    titles = proceed_request.find_titles()
+    titles = MathNewsSearcher()
 
     try:
         for title in titles:
             MathNews.objects.create(
-                title=title['title'].text,
+                title=title['title'],
                 new_url=title['new_url'],
-                posted=title['posted'].text
+                posted=title['posted'],
+                additional_info=title['add_info']
             )
         return status.HTTP_201_CREATED
     except IntegrityError:
-        return status.HTTP_404_NOT_FOUND
+        return status.HTTP_409_CONFLICT

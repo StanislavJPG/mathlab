@@ -31,15 +31,24 @@
 
 {% block content %}
 <div style="text-align: center;">
-    <h1 class="index">Останні новини з математики</h1>
+    <h1 class="display-4 index">Останні новини зі світу Математики в Україні</h1>
+    {% for new in all_news %}
     <div class="input-form">
-        {% for new in all_news %}
-        <img width="350px" height="250px;" src="{{ img }}">
         <h1 style="margin-top: 20px; font-size: 20px;" class="display-4">
             <a style="text-decoration: none;" target="_blank" href="{{ new.new_url }}">{{ new.title }}</a>
         </h1>
-        {% endfor %}
+        <p style="font-size: 14px;">{{ new.additional_info }}</p>
+        <p style="text-align: right; font-size: 14px;">{{ new.posted }}</p>
     </div>
+    {% endfor %}
+</div>
+<div style="text-align: center;">
+    {% if page > 1 %}
+    <a type="button" href="{% url 'base-math-news' %}?page={{ page|add:-1 }}" class="btn btn-dark">Назад</a>
+    {% endif %}
+    {% if all_news|length == 10 %}
+    <a type="button" href="{% url 'base-math-news' %}?page={{ page|add:1 }}" class="btn btn-dark">Вперед</a>
+    {% endif %}
 </div>
 
 {% endblock %}
@@ -59,7 +68,6 @@
       <li class="nav-item"><a href="https://github.com/StanislavJPG/" target="_blank" class="nav-link px-2 text-muted">
           <img width="34" height="33" src="{% static 'github-mark.png' %}"></a></li>
     </ul>
-
     </footer>
 </div>
 </html>

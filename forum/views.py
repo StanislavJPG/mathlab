@@ -25,9 +25,12 @@ class ForumBaseView(APIView):
         order_by = request.GET.get('sort')
 
         if order_by:
-            page = int(request.GET.get('page'))
+            try:
+                page = int(request.GET.get('page'))
+            except TypeError:
+                page = 1
             cached_data = cache.get(f'base_page.{page}.{order_by}', None)
-            offset = make_offset(request, limit=10)
+            offset = make_offset(page, limit=10)
 
             current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
@@ -120,6 +123,10 @@ class QuestionView(viewsets.ViewSet):
     def get(self, request, q_id: int, title: str):
         order_by = request.GET.get('order_by')
         cached_data = cache.get(f'question.{q_id}.{title}.{order_by}', None)
+        try:
+            page = int(request.GET.get('page'))
+        except TypeError:
+            page = 1
 
         if not cached_data:
             image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
@@ -130,7 +137,7 @@ class QuestionView(viewsets.ViewSet):
             if url_hyphens_replace(post_serializer.data['title']) != title:
                 raise Http404()
 
-            offset = make_offset(request, limit=6)
+            offset = make_offset(page, limit=6)
 
             if 'post_viewed_{}'.format(q_id) not in request.session:
                 Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
@@ -245,8 +252,12 @@ class PostSearchView(APIView):
 
     def get(self, request):
         search_pattern = request.GET.get('search_pattern')
-        page = int(request.GET.get('page'))
-        offset = make_offset(request, limit=10)
+        try:
+            page = int(request.GET.get('page'))
+        except TypeError:
+            page = 1
+
+        offset = make_offset(page, limit=10)
         address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')

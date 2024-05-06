@@ -8,12 +8,7 @@ from forum.models import Post
 from forum.serializers import PostSerializer
 
 
-def make_offset(request, limit):
-    try:
-        page = int(request.GET.get('page'))
-    except TypeError:
-        page = 1
-
+def make_offset(page: int, limit: int):
     if page > 0:
         return (page - 1) * limit
     else:

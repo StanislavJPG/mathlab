@@ -68,6 +68,7 @@ class MathOperations:
     @ToUserFriendlyAppearance.percents
     def solve_percent(self) -> float:
         try:
+            # replace % with '' if user wrote number like so
             self.example[1] = self.example[1].replace('%', '')
             if self.operation_type == 'від числа x':
                 return (float(self.to_find) * float(self.example[1])) / float(self.example[0])

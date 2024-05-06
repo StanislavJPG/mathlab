@@ -25,9 +25,12 @@ class ForumBaseView(APIView):
         order_by = request.GET.get('sort')
 
         if order_by:
-            page = int(request.GET.get('page'))
+            try:
+                page = int(request.GET.get('page'))
+            except TypeError:
+                page = 1
             cached_data = cache.get(f'base_page.{page}.{order_by}', None)
-            offset = make_offset(request, limit=10)
+            offset = make_offset(page, limit=10)
 
             current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
@@ -39,7 +42,8 @@ class ForumBaseView(APIView):
                     'current_user_image': current_user_image_serializer
                 }
 
-                posts = Post.objects.all()[offset:offset + 10]
+                posts = Post.objects.select_related('user').prefetch_related(
+                    'post_likes', 'post_dislikes', 'categories')[offset:offset + 10]
                 post_serializer = PostSerializer(posts, many=True)
 
                 context['posts'] = sort_posts(order_by, post_serializer, offset)
@@ -103,7 +107,14 @@ class QuestionCreationView(APIView):
         post_creation.save()
         delete_keys_matching_pattern(f'base_page*')
 
-        return HttpResponseRedirect('/forum/?sort=newest&page=1')
+        created_post = (Post.objects.select_related('user').prefetch_related(
+            'post_likes', 'post_dislikes', 'categories').order_by('-created_at')[:1]
+                        .values('id', 'title').get())
+
+        post_id = created_post['id']
+        post_title = url_hyphens_replace(created_post['title'])
+
+        return HttpResponseRedirect(f'/forum/question/{post_id}/{post_title}')
 
 
 class QuestionView(viewsets.ViewSet):
@@ -112,6 +123,10 @@ class QuestionView(viewsets.ViewSet):
     def get(self, request, q_id: int, title: str):
         order_by = request.GET.get('order_by')
         cached_data = cache.get(f'question.{q_id}.{title}.{order_by}', None)
+        try:
+            page = int(request.GET.get('page'))
+        except TypeError:
+            page = 1
 
         if not cached_data:
             image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
@@ -122,7 +137,7 @@ class QuestionView(viewsets.ViewSet):
             if url_hyphens_replace(post_serializer.data['title']) != title:
                 raise Http404()
 
-            offset = make_offset(request, limit=6)
+            offset = make_offset(page, limit=6)
 
             if 'post_viewed_{}'.format(q_id) not in request.session:
                 Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
@@ -141,7 +156,6 @@ class QuestionView(viewsets.ViewSet):
             cache.set(f'question.{q_id}.{title}.{order_by}', context, 120)
         else:
             context = cached_data
-
         return render(request, 'forum/forum_question_page.html',
                       context=context)
 
@@ -154,7 +168,7 @@ class QuestionView(viewsets.ViewSet):
 
             comm_creation = Comment.objects.create(comment=comment, post=post, user=user)
             comm_creation.save()
-            delete_keys_matching_pattern([f'question.{q_id}*', f'profile.{request.user.id}*'])
+            delete_keys_matching_pattern(f'question.{q_id}*', f'profile.{request.user.id}*')
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
@@ -222,14 +236,14 @@ class QuestionView(viewsets.ViewSet):
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
-    def delete_comment(self, request, q_id: int, title: str, c_id: int):
-        comment = Comment.objects.select_related('user').get(pk=c_id)
+    def delete_comment(self, request, q_id: int, title: str, comment_id: int):
+        comment = Comment.objects.select_related('user').get(pk=comment_id)
         if comment.user.id == request.user.id:
             comment.delete()
         else:
             raise PermissionDenied()
 
-        delete_keys_matching_pattern(f'question.{q_id}*')
+        delete_keys_matching_pattern(f'question.{q_id}*', f'profile.{request.user.id}.*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
 
@@ -238,8 +252,12 @@ class PostSearchView(APIView):
 
     def get(self, request):
         search_pattern = request.GET.get('search_pattern')
-        page = int(request.GET.get('page'))
-        offset = make_offset(request, limit=10)
+        try:
+            page = int(request.GET.get('page'))
+        except TypeError:
+            page = 1
+
+        offset = make_offset(page, limit=10)
         address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')

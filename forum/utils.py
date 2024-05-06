@@ -8,12 +8,7 @@ from forum.models import Post
 from forum.serializers import PostSerializer
 
 
-def make_offset(request, limit):
-    try:
-        page = int(request.GET.get('page'))
-    except TypeError:
-        page = 1
-
+def make_offset(page: int, limit: int):
     if page > 0:
         return (page - 1) * limit
     else:
@@ -54,8 +49,8 @@ def sort_comments(order_by, serializer):
         raise Http404()
 
 
-def delete_keys_matching_pattern(pattern: str | list):
-    patterns = pattern if isinstance(pattern, list) else [pattern]
+def delete_keys_matching_pattern(*pattern):
+    patterns = pattern if isinstance(pattern, tuple) else [pattern]
 
     for pattern_key in patterns:
         keys_to_delete = cache.keys(pattern_key)

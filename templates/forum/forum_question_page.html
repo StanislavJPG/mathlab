@@ -92,7 +92,7 @@
                         {% endif %}
                         <div style="margin-left: 15px;">
                             {% if comment.user.id == user.id %}
-                        <form method="post" action="{% url 'forum-q-comm-delete' c_id=comment.id q_id=post.id title=post.title|hyphens_add %}">
+                        <form method="post" action="{% url 'forum-q-comm-delete' comment_id=comment.id q_id=post.id title=post.title|hyphens_add %}">
                             {% csrf_token %}
                             <input type="hidden" value="{{ comment.id }}">
                             <button type="submit" class="btn btn-danger btn-sm">Видалити коментарій</button>

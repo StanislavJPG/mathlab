@@ -2,7 +2,7 @@
 
 {% load static %}
 {% block head %}
-<title>Операції з відсотками</title>
+<title>MathLab | Операції з відсотками</title>
 {% endblock %}
 
 {% block tasks %}
@@ -25,9 +25,9 @@
 
         <form class="input-form" style="padding: 10px; width: 400px;">
             <h4 style="margin-top: 10px;">Знайти число від відсотка</h4>
-            <input id="x1" style="text-align: center; width: 100px; margin-top: 10px;" placeholder="Повне число">
+            <input id="x1" style="text-align: center; width: 150px; margin-top: 10px;" placeholder="Повне число">
             <p>
-            <input id="number_by_percent" style="text-align: center; margin-top: 10px; width: 100px;" placeholder="Відсоток, %">
+            <input id="number_by_percent" style="text-align: center; margin-top: 10px; width: 150px;" placeholder="Відсоток, %">
             </p>
              <button type="button"
                     class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
@@ -38,7 +38,11 @@
                              'від відсотка x')">=</button>
             {% if operation_type == 'від відсотка x' %}
             <p style="margin-top: 5px;">
-            <b style="font-size: 25px;"> {{ solved_example }}</b>
+                {% if '%' in percent %}
+            <b style="font-size: 25px;">{{ percent }} від числа {{ example }} = {{ solved_example }}</b>
+                {% else %}
+            <b style="font-size: 25px;">{{ percent }}% від числа {{ example }} = {{ solved_example }}</b>
+                {% endif %}
             </p>
             {% endif %}
         </form>
@@ -51,7 +55,7 @@
                 <blockquote class="blockquote">
                   <p class="mb-0"><b>"Число A"</b> приймає поточне значення, від якого треба шукати відсоток</p>
                   <p class="mb-0"><b>"Відсоток"</b> - поле вводу повного відсотку "Числа A"</p>
-                  <p class="mb-0"><b>"Число B"</b> приймає значення, від якого потрібно знайти відсоток від "Числа А"</p>
+                  <p class="mb-0"><b>"Число B"</b> приймає значення, від якого потрібно знайти відсоток щодо "Числа А"</p>
                 </blockquote>
                 </div>
             </div>

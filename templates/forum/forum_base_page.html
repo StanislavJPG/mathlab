@@ -12,7 +12,7 @@
           <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
         </a>
         <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-          <li><a href="{% url 'equations' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
+          <li><a href="{% url 'base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
           <li><a href="{% url 'forum-base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
             {% if user.is_authenticated %}
           <li><a href="{% url 'forum-q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
@@ -36,7 +36,7 @@
           <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
               {% if user.is_authenticated %}
                <li><a class="dropdown-item" href="{% url 'forum-q-creation' %}">Задати питання...</a></li>
-            <li><a class="dropdown-item" href="#">Налаштування</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum-settings' %}">Налаштування</a></li>
             <li><a class="dropdown-item" href="{% url 'forum-profile' user_id=user.id username=user.username %}">Профіль</a></li>
             <li><hr class="dropdown-divider"></li>
             <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
@@ -55,7 +55,7 @@
 <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
 <head>
     <meta charset="UTF-8">
-    <title>Форум</title>
+    <title>MathLab | Форум</title>
 </head>
 {% endblock %}
 
@@ -106,12 +106,12 @@
                             <div style="transform: translateX(-100px); font-size: 14px;">
                                 <span><a style="text-decoration: none; margin-bottom: 15px;"
                                          href="{% url 'forum-profile' user_id=post.user|index:1 username=post.user|index:0 %}">{{ post.user|index:0 }}
-                                </a> запитав {{ post.created_at|timesince }} тому</span>
+                                </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
                                 {% if post.user|index:1 == user.id %}
                                 <form style="margin-top:10px;" method="post" action="{% url 'forum-base' %}">
                                     {% csrf_token %}
                                     <input type="hidden" name="post_id" value="{{ post.id }}">
-                                    <button type="submit" class="btn btn-danger btn-sm">Видалити пост</button>
+                                    <button style="margin-bottom: 10px;" type="submit" class="btn btn-danger btn-sm">Видалити пост</button>
                                 </form>
                                 {% endif %}
                             </div>

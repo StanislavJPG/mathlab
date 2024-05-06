@@ -1,12 +1,10 @@
-import asyncio
-
 from django.core.cache import cache
 from django.shortcuts import render
 
 from explainme.scraper import ExplainmeScraper
 
 
-async def index(request):
+async def explain_me(request):
     topic = request.GET.get('topic', '')
     if not topic:
         context = {}

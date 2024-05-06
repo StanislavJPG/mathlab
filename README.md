@@ -17,6 +17,8 @@
 
  :small_orange_diamond: **Redis**
 
+ :small_orange_diamond: **Celery**
+
  :small_orange_diamond: **Elasticsearch**
 
  :small_orange_diamond: **BeautifulSoup**

@@ -39,8 +39,7 @@
               <p class="text-muted mb-1"><b>{{ user_content.rank }}</b></p>
             </div>
             <div class="d-flex justify-content-center mb-2">
-              <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-primary">Follow</button>
-              <button type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Message</button>
+              <a href="{% url 'ws-chat' user_id=user_content.id username=user_content.username %}" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати повідомлення</a>
             </div>
           </div>
         </div>

@@ -25,9 +25,9 @@
 
         <form class="input-form" style="padding: 10px; width: 400px;">
             <h4 style="margin-top: 10px;">Знайти число від відсотка</h4>
-            <input id="x1" style="text-align: center; width: 150px; margin-top: 10px;" placeholder="Повне число">
+            <input id="x1" style="text-align: center; width: 150px; margin-top: 10px;" placeholder="Повне число" maxlength="15">
             <p>
-            <input id="number_by_percent" style="text-align: center; margin-top: 10px; width: 150px;" placeholder="Відсоток, %">
+            <input id="number_by_percent" style="text-align: center; margin-top: 10px; width: 150px;" placeholder="Відсоток, %" maxlength="10">
             </p>
              <button type="button"
                     class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
@@ -60,10 +60,10 @@
                 </div>
             </div>
             <h4>Знайти відсоток від числа</h4>
-            <input id="example" style="width: 100px; text-align: center;" placeholder="Число A"> = <input id="percent" style="width: 100px; text-align: center;" placeholder="Відсоток, %">
+            <input id="example" style="width: 100px; text-align: center;" placeholder="Число A" maxlength="10"> = <input id="percent" style="width: 100px; text-align: center;" placeholder="Відсоток, %" maxlength="5">
             ――――――――――――――――――
             <p>
-            <input id="num" style="width: 100px; text-align: center;" placeholder="Число B"> <button type="button"
+            <input id="num" style="width: 100px; text-align: center;" placeholder="Число B" maxlength="15"> <button type="button"
                     class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
                     onclick="getRightPercentsCalculation(
                             document.getElementById('example').value,

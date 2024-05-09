@@ -1,0 +1,21 @@
+{% extends 'forum/forum_base_page.html' %}
+{% load static %}
+
+{% block head %}
+<script src="{% static 'error_btn_listener.js' %}"></script>
+<link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
+<title>MathLab | Чат</title>
+{% endblock %}
+
+{% block body %}
+{% endblock %}
+
+{% block content %}
+<body style="text-align: center; margin-top">
+    <input type="text" id="messageInput" placeholder="Type your message...">
+    <button onclick="sendMessage('{{ user.username }}')">Send</button>
+
+    <script src="{% static 'chat.js' %}"></script>
+    <p class="messageContainer"></p>
+</body>
+{% endblock %}

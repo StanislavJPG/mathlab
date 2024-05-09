@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'forum.templatetags.filters',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
+    'channels'
 ]
 
 
@@ -234,3 +235,14 @@ CELERY_BEAT_SCHEDULE = {
         'schedule': timedelta(hours=12),
     },
 }
+
+CHANNEL_LAYERS = {
+    "default": {
+        "BACKEND": "channels_redis.core.RedisChannelLayer",
+        "CONFIG": {
+            "hosts": [("localhost", 6379)],
+        },
+    },
+}
+
+ASGI_APPLICATION = 'chat.routing.application'

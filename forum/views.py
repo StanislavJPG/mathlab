@@ -4,17 +4,19 @@ from django.db.models import F
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from rest_framework import viewsets
+from rest_framework.decorators import throttle_classes
 from rest_framework.exceptions import PermissionDenied
 from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
+from rest_framework.throttling import UserRateThrottle
 
 from forum.elasticsearch.documents import PostDocument
 from .models import Post, Category, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .service import make_rate
 from .templatetags.filters import url_hyphens_replace
-from .utils import make_offset, sort_posts, sort_comments, delete_keys_matching_pattern
+from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern
 from users.serializers import ProfileSerializer
 
 
@@ -25,19 +27,17 @@ class ForumBaseView(APIView):
         order_by = request.GET.get('sort')
 
         if order_by:
-            try:
-                page = int(request.GET.get('page'))
-            except TypeError:
-                page = 1
+            page = request.GET.get('page')
             cached_data = cache.get(f'base_page.{page}.{order_by}', None)
-            offset = make_offset(page, limit=10)
+            pagination = PaginationCreator(page, limit=10)
+            offset = pagination.get_offset
 
             current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
             if not cached_data:
                 address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
                 context = {
-                    'page': page,
+                    'page': pagination.get_page,
                     'url': address_args,
                     'current_user_image': current_user_image_serializer
                 }
@@ -56,6 +56,7 @@ class ForumBaseView(APIView):
 
         return HttpResponseRedirect('/forum/?sort=popular&page=1')
 
+    @throttle_classes([UserRateThrottle])
     def post(self, request):
         post_id = int(request.POST.get('post_id'))
         post = Post.objects.select_related('user').get(pk=post_id)
@@ -86,6 +87,7 @@ class QuestionCreationView(APIView):
                           'current_user_image': image_serializer
                       })
 
+    @throttle_classes([UserRateThrottle])
     def post(self, request):
         title = request.POST.get('title')
         requested_categories = [int(c) for c in request.POST.getlist('category')]
@@ -123,10 +125,7 @@ class QuestionView(viewsets.ViewSet):
     def get(self, request, q_id: int, title: str):
         order_by = request.GET.get('order_by')
         cached_data = cache.get(f'question.{q_id}.{title}.{order_by}', None)
-        try:
-            page = int(request.GET.get('page'))
-        except TypeError:
-            page = 1
+        page = request.GET.get('page')
 
         if not cached_data:
             image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
@@ -137,7 +136,8 @@ class QuestionView(viewsets.ViewSet):
             if url_hyphens_replace(post_serializer.data['title']) != title:
                 raise Http404()
 
-            offset = make_offset(page, limit=6)
+            pagination = PaginationCreator(page, limit=6)
+            offset = pagination.get_offset
 
             if 'post_viewed_{}'.format(q_id) not in request.session:
                 Post.objects.filter(pk=q_id).update(post_views=F('post_views') + 1)
@@ -159,6 +159,7 @@ class QuestionView(viewsets.ViewSet):
         return render(request, 'forum/forum_question_page.html',
                       context=context)
 
+    @throttle_classes([UserRateThrottle])
     def create_comment(self, request, q_id: int, title: str):
         comment = request.POST.get('comment')
 
@@ -172,6 +173,7 @@ class QuestionView(viewsets.ViewSet):
 
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
+    @throttle_classes([UserRateThrottle])
     def create_post_rate(self, request, q_id: int, title: str):
         like = request.POST.get('like')
         dislike = request.POST.get('dislike')
@@ -201,6 +203,7 @@ class QuestionView(viewsets.ViewSet):
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
+    @throttle_classes([UserRateThrottle])
     def create_comment_rate(self, request, q_id: int, title: str):
         like = request.POST.get('like')
         dislike = request.POST.get('dislike')
@@ -236,6 +239,7 @@ class QuestionView(viewsets.ViewSet):
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
+    @throttle_classes([UserRateThrottle])
     def delete_comment(self, request, q_id: int, title: str, comment_id: int):
         comment = Comment.objects.select_related('user').get(pk=comment_id)
         if comment.user.id == request.user.id:
@@ -252,12 +256,11 @@ class PostSearchView(APIView):
 
     def get(self, request):
         search_pattern = request.GET.get('search_pattern')
-        try:
-            page = int(request.GET.get('page'))
-        except TypeError:
-            page = 1
+        page = request.GET.get('page')
 
-        offset = make_offset(page, limit=10)
+        pagination = PaginationCreator(page, limit=10)
+        offset = pagination.get_offset
+
         address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')
@@ -274,6 +277,6 @@ class PostSearchView(APIView):
 
         return render(request, 'forum/forum_base_page.html',
                       context={'posts': posts,
-                               'page': page,
+                               'page': pagination.get_page,
                                'url': address_args,
                                'current_user_image': image_serializer})

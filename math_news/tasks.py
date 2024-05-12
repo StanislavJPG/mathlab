@@ -19,4 +19,4 @@ def let_find_news():
             )
         return status.HTTP_201_CREATED
     except IntegrityError:
-        return status.HTTP_409_CONFLICT
+        return status.HTTP_500_INTERNAL_SERVER_ERROR

@@ -11,11 +11,30 @@
 {% endblock %}
 
 {% block content %}
+{% load filters %}
+<p class="messageContainer"></p>
+{% for message in messages %}
+<span>{{ message.sender }}</span>
+<time>Написав: {{ message.sent_at|timesince }}</time>
+<p>{{ message.message }}</p>
+{% endfor %}
 <body style="text-align: center; margin-top">
-    <input type="text" id="messageInput" placeholder="Type your message...">
-    <button onclick="sendMessage('{{ user.username }}')">Send</button>
-
+<input class="form-control" style="width: 400px; height: 60px; text-align: center; display: math;"
+       type="text" id="messageInput" placeholder="Ваше повідомлення для {{ username }}...">
+    <button class="btn btn-dark" onclick="sendMessage({{ user.id }}, {{ receiver }})">Відправити</button>
     <script src="{% static 'chat.js' %}"></script>
-    <p class="messageContainer"></p>
 </body>
+<p style="margin-top: 20px;">
+    {% if page > 1 %}
+    <a class="btn btn-dark"
+       href="{% url 'ws-chat' receiver=receiver username=username %}?page={{ page|add:-1 }}"
+       type="submit">Назад</a>
+    {% endif %}
+    {% if message_counter == 8 %}
+    <a class="btn btn-dark"
+       href="{% url 'ws-chat' receiver=receiver username=username %}?page={{ page|add:1 }}"
+    type="submit">Далі</a>
+    {% endif %}
+</p>
+
 {% endblock %}

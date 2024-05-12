@@ -8,11 +8,29 @@ from forum.models import Post
 from forum.serializers import PostSerializer
 
 
-def make_offset(page: int, limit: int):
-    if page > 0:
-        return (page - 1) * limit
-    else:
-        raise Http404()
+class PaginationCreator:
+    def __init__(self, page: str, limit: int):
+        self.page = page
+        self.limit = limit
+
+    @property
+    def get_offset(self):
+        try:
+            page = int(self.page)
+        except TypeError:
+            page = 1
+
+        if page > 0:
+            return (page - 1) * self.limit
+        else:
+            raise Http404()
+
+    @property
+    def get_page(self):
+        try:
+            return int(self.page)
+        except TypeError:
+            return 1
 
 
 def sort_posts(order_by, serializer, offset):

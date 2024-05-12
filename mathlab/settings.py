@@ -44,7 +44,6 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'rest_framework',
-    'djoser',
     'rest_framework.authtoken',
     'explainme.apps.ExplainmeConfig',
     'solvexample.apps.SolvexampleConfig',
@@ -55,7 +54,8 @@ INSTALLED_APPS = [
     'forum.templatetags.filters',
     'django_elasticsearch_dsl',
     'django_elasticsearch_dsl_drf',
-    'channels'
+    'channels',
+    'chat.apps.ChatConfig'
 ]
 
 
@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'mathlab.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mathlab_db',
+        'NAME': 'mathlab_db_dev',
         'USER': 'root',
         'PASSWORD': os.getenv('MYSQL_DB_PASS'),
     }
@@ -176,7 +176,15 @@ REST_FRAMEWORK = {
             'rest_framework.authentication.TokenAuthentication',
             # 'rest_framework.authentication.BasicAuthentication',
             # 'rest_framework.authentication.SessionAuthentication',
-    ]
+    ],
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '200/hour'
+    }
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -202,21 +210,21 @@ CACHES = {
     }
 }
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }
+LOGGING = {
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+        },
+    },
+    'loggers': {
+        'django.db.backends': {
+            'handlers': ['console'],
+            'level': 'DEBUG',
+        },
+    },
+}
 
 ELASTICSEARCH_DSL = {
     'default': {
@@ -227,6 +235,7 @@ ELASTICSEARCH_DSL = {
 
 CELERY_IMPORTS = [
     'math_news.tasks',
+    'chat.tasks'
 ]
 
 CELERY_BEAT_SCHEDULE = {
@@ -234,6 +243,10 @@ CELERY_BEAT_SCHEDULE = {
         'task': 'math_news.tasks.let_find_news',
         'schedule': timedelta(hours=12),
     },
+    'clear_garbage': {
+        'task': 'chat.tasks.clear_deprecated_messages',
+        'schedule': timedelta(days=7)
+    }
 }
 
 CHANNEL_LAYERS = {

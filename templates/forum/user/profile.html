@@ -38,9 +38,11 @@
             <div style="margin-bottom: 1rem !important;">
               <p class="text-muted mb-1"><b>{{ user_content.rank }}</b></p>
             </div>
+            {% if user.is_authenticated and user_content.id != user.id %}
             <div class="d-flex justify-content-center mb-2">
-              <a href="{% url 'ws-chat' user_id=user_content.id username=user_content.username %}" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати повідомлення</a>
+              <a href="{% url 'ws-chat' receiver=user_content.id username=user_content.username %}" type="button" data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати повідомлення</a>
             </div>
+            {% endif %}
           </div>
         </div>
       </div>

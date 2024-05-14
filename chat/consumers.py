@@ -6,7 +6,6 @@ from django.core.cache import cache
 from chat.models import Message
 from django.db.models import Q
 
-from chat.serializer import MessageSerializer
 from users.models import CustomUser
 
 

@@ -4,7 +4,6 @@ from django.core.cache import cache
 from django.core.exceptions import ObjectDoesNotExist
 from rest_framework import serializers
 
-from forum.service import rank_creator_for_serializer
 from users.models import CustomUser as User, ProfileImage
 
 
@@ -29,7 +28,7 @@ class UserSerializer(serializers.ModelSerializer):
         model = User
         fields = '__all__'
 
-    def to_representation(self, instance):
-        representation = super().to_representation(instance)
-        representation['rank'] = rank_creator_for_serializer(representation)
-        return representation
+    # def to_representation(self, instance):
+    #     representation = super().to_representation(instance)
+    #     representation['rank'] = rank_creator_for_serializer(representation)
+    #     return representation

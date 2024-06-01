@@ -107,7 +107,7 @@ class QuestionCreationView(APIView):
 
         post_creation.categories.add(*categories)
         post_creation.save()
-        delete_keys_matching_pattern(f'base_page*')
+        delete_keys_matching_pattern('base_page*')
 
         created_post = (Post.objects.select_related('user').prefetch_related(
             'post_likes', 'post_dislikes', 'categories').order_by('-created_at')[:1]

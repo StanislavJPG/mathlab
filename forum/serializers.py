@@ -5,7 +5,7 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
 from .models import Post, Category, Comment
-from .service import rank_creator_for_serializer
+# from .service import rank_creator_for_serializer
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -66,7 +66,7 @@ class CommentSerializer(serializers.ModelSerializer):
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['user_id'] = representation['user']
         representation['user'] = get_object_or_404(get_user_model(), pk=representation['user'])
-        representation['rank'] = rank_creator_for_serializer(representation['user'])
+        # representation['rank'] = rank_creator_for_serializer(representation['user'])
 
         return representation
 

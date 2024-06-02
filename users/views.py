@@ -107,7 +107,7 @@ class ProfileView(APIView):
         try:
             cached_data = cache.get(f'profile.{user_id}.{username}')
             if not cached_data:
-                user = User.objects.get(pk=user_id)
+                user = User.objects.select_related('rank').get(pk=user_id)
                 posts_by_user = Post.objects.filter(user=user_id).order_by('-created_at')[:5]
                 comments_by_user = Comment.objects.filter(user=user_id).order_by('-created_at')[:5]
 

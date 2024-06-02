@@ -7,17 +7,19 @@ from django.utils import timezone
 from forum.models import Post
 from forum.serializers import PostSerializer
 
+from users.models import CustomUser as User
+
 
 class PaginationCreator:
-    def __init__(self, page: str, limit: int):
+    def __init__(self, page: str, limit: int) -> None:
         self.page = page
         self.limit = limit
 
     @property
-    def get_offset(self):
+    def get_offset(self) -> int:
         try:
             page = int(self.page)
-        except TypeError:
+        except (TypeError, ValueError):
             page = 1
 
         if page > 0:
@@ -26,10 +28,10 @@ class PaginationCreator:
             raise Http404()
 
     @property
-    def get_page(self):
+    def get_page(self) -> int:
         try:
             return int(self.page)
-        except TypeError:
+        except (TypeError, ValueError):
             return 1
 
 
@@ -68,8 +70,16 @@ def sort_comments(order_by, serializer):
 
 
 def delete_keys_matching_pattern(*pattern):
-    patterns = pattern if isinstance(pattern, tuple) else [pattern]
+    patterns = pattern if isinstance(pattern, tuple) else (pattern, )
 
     for pattern_key in patterns:
         keys_to_delete = cache.keys(pattern_key)
         cache.delete_many(keys_to_delete)
+
+
+def make_rate(request, user, score: int) -> None:
+    user = User.objects.get(pk=user) if isinstance(user, int) else user
+
+    if user.id != request.user.id:
+        user.score += score
+        user.save()

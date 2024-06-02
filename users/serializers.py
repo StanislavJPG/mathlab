@@ -26,9 +26,9 @@ class ProfileSerializer:
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = '__all__'
+        exclude = ('password', 'last_login', 'is_superuser', )
 
-    # def to_representation(self, instance):
-    #     representation = super().to_representation(instance)
-    #     representation['rank'] = rank_creator_for_serializer(representation)
-    #     return representation
+    def to_representation(self, instance):
+        representation = super().to_representation(instance)
+        representation['rank'] = instance.rank.rank
+        return representation

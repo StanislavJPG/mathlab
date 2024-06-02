@@ -5,7 +5,6 @@ from rest_framework import serializers
 from rest_framework.generics import get_object_or_404
 
 from .models import Post, Category, Comment
-# from .service import rank_creator_for_serializer
 
 
 class PostSerializer(serializers.ModelSerializer):
@@ -16,15 +15,15 @@ class PostSerializer(serializers.ModelSerializer):
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        post = Post.objects.get(pk=instance.id)
+        post = instance
+
         representation['likes'] = post.post_likes.count()
         representation['dislikes'] = post.post_dislikes.count()
-        representation['comments_quantity'] = len(Comment.objects.filter(post=representation['id']))
+        representation['comments_quantity'] = Comment.objects.filter(post=instance.id).count()
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['modified_at'] = datetime.fromisoformat(representation['modified_at'])
         representation['categories'] = Category.objects.filter(pk__in=representation['categories'])
-        representation['user'] = (get_object_or_404(get_user_model(), pk=representation['user']),
-                                  representation['user'])
+        representation['user'] = post.user
         return representation
 
 
@@ -65,8 +64,7 @@ class CommentSerializer(serializers.ModelSerializer):
         representation['dislikes'] = comment.dislikes.count()
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['user_id'] = representation['user']
-        representation['user'] = get_object_or_404(get_user_model(), pk=representation['user'])
-        # representation['rank'] = rank_creator_for_serializer(representation['user'])
+        representation['user'] = instance.user
 
         return representation
 

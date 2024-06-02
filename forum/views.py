@@ -12,11 +12,11 @@ from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
 
 from forum.elasticsearch.documents import PostDocument
+from users.models import Rank
 from .models import Post, Category, Comment
 from .serializers import PostSerializer, CommentSerializer
-from .service import make_rate
 from .templatetags.filters import url_hyphens_replace
-from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern
+from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern, make_rate
 from users.serializers import ProfileSerializer
 
 
@@ -130,7 +130,7 @@ class QuestionView(viewsets.ViewSet):
         if not cached_data:
             image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
-            post = Post.objects.get(pk=q_id)
+            post = Post.objects.select_related('user').prefetch_related('categories', 'post_likes', 'post_dislikes').get(pk=q_id)
             post_serializer = PostSerializer(post)
 
             if url_hyphens_replace(post_serializer.data['title']) != title:
@@ -149,7 +149,7 @@ class QuestionView(viewsets.ViewSet):
                 'current_user_image': image_serializer
             }
 
-            comments = Comment.objects.filter(post=post)[offset:offset + 6]
+            comments = Comment.objects.select_related('user').filter(post=post)[offset:offset + 6]
             comments_serializer = CommentSerializer(comments, many=True)
 
             context['comments'] = sort_comments(order_by, comments_serializer)
@@ -188,7 +188,7 @@ class QuestionView(viewsets.ViewSet):
             elif likes_counter == 0 and dislikes_counter == 1:
                 post.post_dislikes.remove(request.user.id)
             else:
-                make_rate(request, post.user.id, score=10)
+                make_rate(request, post.user, score=5)
 
             post.post_likes.add(request.user.id)
 
@@ -224,7 +224,7 @@ class QuestionView(viewsets.ViewSet):
                 elif likes_by_current_user == 0 and dislikes_by_current_user == 1:
                     comment_rate.dislikes.remove(curr_user)
                 else:
-                    make_rate(request, user_id, score=5)
+                    make_rate(request, user_id, score=10)
 
                 comment_rate.likes.add(curr_user)
 

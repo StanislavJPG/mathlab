@@ -28,8 +28,9 @@
             {{ post.title }}
         </h1>
         <div class="types">
-            <span class="span-base"><b>Автор</b>
-                <a href="{% url 'forum-profile' user_id=post.user|index:1 username=post.user|index:0 %}">{{ post.user|index:0 }}</a></span>
+            <span class="span-base"><b>Автор:</b>
+                <a style="text-decoration: none;" href="{% url 'forum-profile' user_id=post.user.id username=post.user.username %}">{{ post.user.username }}</a> |
+                <b>{{ post.user.rank.rank }}</b></span>
             <span class="span-base"><b>Створено</b> {{ post.created_at|timesince }} тому</span>
             <span class="span-base"><b>Модифіковано</b> {{ post.modified_at|timesince }} тому</span>
             <span class="span-base"><b>Переглянуто</b> {{ post.post_views }} разів</span>
@@ -83,9 +84,9 @@
             <div>
                 <div class="full-answer">
                     <div class="types">
-                        <span class="span-base"><b>Автор</b>
+                        <span class="span-base"><b>Автор:</b>
                             <a style="text-decoration: none;" href="{% url 'forum-profile' user_id=comment.user_id username=comment.user %}"> {{ comment.user }} </a> |
-                            <b>{{ comment.rank }}</b></span>
+                            <b>{{ comment.user.rank.rank }}</b></span>
                         <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
                         {% if comment.modified_at is not none %}
                         <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>

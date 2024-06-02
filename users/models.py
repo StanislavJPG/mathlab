@@ -2,13 +2,17 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
+class Rank(models.Model):
+    rank = models.CharField(verbose_name='rank', max_length=150, null=False)
+
+
 class CustomUser(AbstractUser):
     first_name = None
     last_name = None
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField("email address", blank=True, unique=True)
     score = models.IntegerField('score', null=False, default=0)
-    rank = models.CharField(verbose_name='rank', max_length=150, null=False, default='Учень математики')
+    rank = models.ForeignKey(Rank, on_delete=models.CASCADE, null=False, default=1)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = 'email'
@@ -33,16 +37,15 @@ class ProfileImage(models.Model):
 
 def rank_creator(sender, instance, **kwargs) -> None:
     if instance.score < 50:
-        instance.rank = 'Учень математики'
-
+        instance.rank = Rank.objects.get(pk=1)
     elif 50 <= instance.score < 100:
-        instance.rank = 'Олімпіадник'
+        instance.rank = Rank.objects.get(pk=2)
 
     elif 100 <= instance.score < 200:
-        instance.rank = 'Вчитель математики'
+        instance.rank = Rank.objects.get(pk=3)
 
     elif 200 <= instance.score < 600:
-        instance.rank = 'Гуру математики'
+        instance.rank = Rank.objects.get(pk=4)
 
     else:
-        instance.rank = 'Володар математики'
+        instance.rank = Rank.objects.get(pk=5)

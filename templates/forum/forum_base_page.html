@@ -105,9 +105,9 @@
                             </div>
                             <div style="transform: translateX(-100px); font-size: 14px;">
                                 <span><a style="text-decoration: none; margin-bottom: 15px;"
-                                         href="{% url 'forum-profile' user_id=post.user|index:1 username=post.user|index:0 %}">{{ post.user|index:0 }}
+                                         href="{% url 'forum-profile' user_id=post.user.id username=post.user.username %}">{{ post.user.username }}
                                 </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
-                                {% if post.user|index:1 == user.id %}
+                                {% if post.user.id == user.id %}
                                 <form style="margin-top:10px;" method="post" action="{% url 'forum-base' %}">
                                     {% csrf_token %}
                                     <input type="hidden" name="post_id" value="{{ post.id }}">

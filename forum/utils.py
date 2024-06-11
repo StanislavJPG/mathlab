@@ -1,13 +1,14 @@
 from datetime import timedelta
 
 from django.core.cache import cache
-from django.http import Http404
+from django.db import transaction
+from django.http import Http404, HttpResponseForbidden
 from django.utils import timezone
 
 from forum.models import Post
 from forum.serializers import PostSerializer
 
-from users.models import CustomUser as User
+from users.models import CustomUser as User, rank_creator
 
 
 class PaginationCreator:
@@ -39,8 +40,11 @@ def sort_posts(order_by, serializer, offset):
     if order_by == 'last-week':
         end_date = timezone.now()
         start_date = end_date - timedelta(days=7)
-        posts = Post.objects.filter(created_at__lte=start_date
-                                    ).order_by('-created_at')[offset:offset + 10]
+        posts = Post.objects.prefetch_related('post_likes', 'post_dislikes', 'categories'
+                                              ).select_related('user'
+                                              ).filter(created_at__lte=start_date
+                                              ).order_by('-created_at')[offset:offset + 10]
+
         serializer = PostSerializer(posts, many=True)
         return serializer.data
 
@@ -77,9 +81,15 @@ def delete_keys_matching_pattern(*pattern):
         cache.delete_many(keys_to_delete)
 
 
-def make_rate(request, user, score: int) -> None:
-    user = User.objects.get(pk=user) if isinstance(user, int) else user
+@transaction.atomic
+def make_rate(request, user: int | User, score: int) -> None:
+    try:
+        user = User.objects.get(pk=user) if isinstance(user, int) else user
 
-    if user.id != request.user.id:
-        user.score += score
-        user.save()
+        if user.id != request.user.id:
+            user.score += score
+            user.save()
+    except Exception:
+        raise HttpResponseForbidden
+    finally:
+        rank_creator(user)

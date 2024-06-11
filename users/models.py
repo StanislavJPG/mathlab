@@ -35,17 +35,15 @@ class ProfileImage(models.Model):
         return f'{self.user}'
 
 
-def rank_creator(sender, instance, **kwargs) -> None:
-    if instance.score < 50:
-        instance.rank = Rank.objects.get(pk=1)
-    elif 50 <= instance.score < 100:
-        instance.rank = Rank.objects.get(pk=2)
+def rank_creator(user_inst) -> None:
+    if user_inst.score < 50:
+        user_inst.rank = Rank.objects.get(pk=1)
+    elif 50 <= user_inst.score < 100:
+        user_inst.rank = Rank.objects.get(pk=2)
+    elif 100 <= user_inst.score < 200:
+        user_inst.rank = Rank.objects.get(pk=3)
 
-    elif 100 <= instance.score < 200:
-        instance.rank = Rank.objects.get(pk=3)
-
-    elif 200 <= instance.score < 600:
-        instance.rank = Rank.objects.get(pk=4)
-
+    elif 200 <= user_inst.score < 600:
+        user_inst.rank = Rank.objects.get(pk=4)
     else:
-        instance.rank = Rank.objects.get(pk=5)
+        user_inst.rank = Rank.objects.get(pk=5)

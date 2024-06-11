@@ -6,6 +6,6 @@ class UsersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
     name = 'users'
 
-    def ready(self):
-        from users.models import rank_creator, CustomUser
-        pre_save.connect(rank_creator, sender=CustomUser)
+    # def ready(self):
+    #     from users.models import rank_creator, CustomUser
+    #     pre_save.connect(rank_creator, sender=CustomUser)

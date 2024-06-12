@@ -40,13 +40,13 @@
             <form method="post" action="{% url 'forum-q-rate' q_id=post.id title=post.title|hyphens_add %}">
                 {% csrf_token %}
                 <input type="hidden" name="like" value="like">
-                {{ post.likes }}<button type="submit" style="margin-bottom: 15px;" class="nav-link px-2 text-muted">
+                <span style="padding: 20px;">{{ post.likes }}</span><button type="submit" style="margin-bottom: 15px;" class="nav-link px-2 text-muted">
                 <img width="35" height="40" src="{% static 'like.png' %}"></button>
             </form>
             <form method="post" action="{% url 'forum-q-rate' q_id=post.id title=post.title|hyphens_add %}">
                 {% csrf_token %}
                 <input type="hidden" name="dislike" value="dislike">
-                {{ post.dislikes }}<button type="submit" class="nav-link px-2 text-muted">
+                <span style="padding: 20px;">{{ post.dislikes }}</span><button type="submit" class="nav-link px-2 text-muted">
                 <img width="35" height="40" src="{% static 'dislike.png' %}"></button>
             </form>
         </div>

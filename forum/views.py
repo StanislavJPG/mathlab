@@ -16,7 +16,8 @@ from forum.elasticsearch.documents import PostDocument
 from .models import Post, Category, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .templatetags.filters import url_hyphens_replace
-from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern, make_rate
+from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern, make_rate, \
+    get_by_tags
 from users.serializers import ProfileSerializer
 
 
@@ -25,10 +26,11 @@ class ForumBaseView(APIView):
 
     def get(self, request):
         order_by = request.GET.get('sort')
+        tags = request.GET.get('tags')
 
         if order_by:
             page = request.GET.get('page')
-            cached_data = cache.get(f'base_page.{page}.{order_by}', None)
+            cached_data = cache.get(f'base_page.{page}.{order_by}.{tags}', None)
             pagination = PaginationCreator(page, limit=10)
             offset = pagination.get_offset
 
@@ -39,15 +41,20 @@ class ForumBaseView(APIView):
                 context = {
                     'page': pagination.get_page,
                     'url': address_args,
-                    'current_user_image': current_user_image_serializer
+                    'current_user_image': current_user_image_serializer,
+                    'categories': Category.CATEGORIES,
+                    'order_by': order_by
                 }
 
                 posts = Post.objects.select_related('user').prefetch_related(
                     'post_likes', 'post_dislikes', 'categories')[offset:offset + 10]
+
+                # using this for get by tags even if tags is None (returning default query in this case)
+                posts = get_by_tags(posts, tags, offset)
                 post_serializer = PostSerializer(posts, many=True)
 
                 context['posts'] = sort_posts(order_by, post_serializer, offset)
-                cache.set(f'base_page.{page}.{order_by}', context, 120)
+                cache.set(f'base_page.{page}.{order_by}.{tags}', context, 120)
             else:
                 context = cached_data
 
@@ -74,16 +81,12 @@ class ForumBaseView(APIView):
 
 class QuestionCreationView(APIView):
     permission_classes = [IsAuthenticated]
-    categories = ('Графіки функцій', 'Матриці', 'Рівняння', 'Нерівності',
-                  'Системи', 'Вища математика', 'Теорії ймовірностей',
-                  'Комбінаторика', 'Дискретна математика', 'Початкова математика', 'Відсотки',
-                  'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше', 'Алгебра')
 
     def get(self, request):
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         return render(request, 'forum/forum_add_question_page.html',
                       context={
-                          'categories': enumerate(self.categories, start=1),
+                          'categories': enumerate(Category.CATEGORIES, start=1),
                           'current_user_image': image_serializer
                       })
 
@@ -92,7 +95,7 @@ class QuestionCreationView(APIView):
         title = request.POST.get('title')
         requested_categories = [int(c) for c in request.POST.getlist('category')]
         content = request.POST.get('content')
-        context = {'categories': enumerate(self.categories, start=1)}
+        context = {'categories': enumerate(Category.CATEGORIES, start=1)}
 
         if len(requested_categories) > 4 or len(requested_categories) < 1:
             context['error_msg'] = 'Менше однієї, або більше чотирьох категорій не приймається.'

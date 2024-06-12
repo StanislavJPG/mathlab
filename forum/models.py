@@ -12,13 +12,18 @@ class Category(models.Model):
     def __str__(self):
         return f'{self.category_name}'
 
+    CATEGORIES: tuple = ('Графіки функцій', 'Матриці', 'Рівняння', 'Нерівності',
+                         'Системи', 'Вища математика', 'Теорії ймовірностей',
+                         'Комбінаторика', 'Дискретна математика', 'Початкова математика', 'Відсотки',
+                         'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше', 'Алгебра')
+
 
 class Post(models.Model):
     title = models.CharField(_('title'), max_length=85)
     content = models.TextField(_('content'), max_length=2000)
     created_at = models.DateTimeField(default=timezone.now)
     user = models.ForeignKey(get_user_model(), on_delete=models.CASCADE, null=False)
-    categories = models.ManyToManyField(Category)
+    categories = models.ManyToManyField(Category, related_name='post_categories', db_index=True)
     modified_at = models.DateTimeField(default=timezone.now)
     post_likes = models.ManyToManyField(get_user_model(), related_name='liked_posts', db_index=True)
     post_dislikes = models.ManyToManyField(get_user_model(), related_name='disliked_posts', db_index=True)

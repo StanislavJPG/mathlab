@@ -1,11 +1,12 @@
-from datetime import timedelta
+from datetime import timedelta, date
 
 from django.core.cache import cache
 from django.db import transaction
 from django.http import Http404, HttpResponseForbidden
 from django.utils import timezone
+from django.db.models import Q
 
-from forum.models import Post
+from forum.models import Post, Category
 from forum.serializers import PostSerializer
 
 from users.models import CustomUser as User, rank_creator
@@ -38,11 +39,16 @@ class PaginationCreator:
 
 def sort_posts(order_by, serializer, offset):
     if order_by == 'last-week':
-        end_date = timezone.now()
-        start_date = end_date - timedelta(days=7)
+        today = date.today()
+        week_ago = today - timedelta(days=7)
+        two_weeks_ago = week_ago - timedelta(days=7)
+
+        # time between gte two weeks ago and lte week ago == last week
         posts = Post.objects.prefetch_related('post_likes', 'post_dislikes', 'categories'
                                               ).select_related('user'
-                                              ).filter(created_at__lte=start_date
+                                              ).filter(
+            Q(created_at__gte=two_weeks_ago) &
+            Q(created_at__lte=week_ago)
                                               ).order_by('-created_at')[offset:offset + 10]
 
         serializer = PostSerializer(posts, many=True)
@@ -59,6 +65,19 @@ def sort_posts(order_by, serializer, offset):
 
     else:
         raise Http404()
+
+
+def get_by_tags(posts: Post, tags: str, offset: int) -> Post:
+    if tags:
+        tags = tags.split(',')
+        posts = Post.objects.select_related('user').prefetch_related(
+            'post_likes', 'post_dislikes', 'categories'
+        ).filter(
+            categories__in=Category.objects.filter(category_name__in=tags).values('id')
+
+        ).distinct()[offset:offset + 10]
+
+    return posts
 
 
 def sort_comments(order_by, serializer):

@@ -25,7 +25,7 @@
           <input type="hidden" name="page" value="{{ page }}">
         </form>
 
-        <div class="dropdown text-end">
+        <div class="dropdown_user text-end">
           <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
               {% if not current_user_image %}
             <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo" width="32" height="32" class="rounded-circle">
@@ -68,6 +68,18 @@
         {% else %}
         <a type="submit" style="margin-bottom: 25px;" href="{% url 'login_view' %}" class="btn btn-outline-dark">Задати своє питання</a>
         {% endif %}
+        <div class="btn-group dropend" style="transform: translateY(-12px);">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Категорія
+            </button>
+            <ul class="dropdown-menu">
+                {% for category in categories %}
+                <li><a class="dropdown-item"
+                       href="{% url 'forum-base' %}?sort={{ order_by }}&page={{ page }}&tags={{ category }}">{{ category }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
     </div>
 </body>
 {% endblock %}

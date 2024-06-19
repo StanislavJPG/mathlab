@@ -12,15 +12,17 @@
 
 {% block content %}
 {% load filters %}
+<div class="base-content" style="margin-bottom: 15px;">
 <p class="messageContainer"></p>
 {% for message in messages %}
 <span>{{ message.sender }}</span>
-<time>Написав: {{ message.sent_at|timesince }}</time>
-<p>{{ message.message }}</p>
+<time>Написав {{ message.sent_at|timesince }} тому:</time>
+<p style="margin-top: 8px;">{{ message.message }}</p>
 {% endfor %}
+</div>
 <body style="text-align: center; margin-top">
 <input class="form-control" style="width: 400px; height: 60px; text-align: center; display: math;"
-       type="text" id="messageInput" placeholder="Ваше повідомлення для {{ username }}...">
+       type="text" id="messageInput" placeholder="Ваше повідомлення для {{ username }}..." maxlength="50">
     <button class="btn btn-dark" onclick="sendMessage({{ user.id }}, {{ receiver }})">Відправити</button>
     <script src="{% static 'chat.js' %}"></script>
 </body>

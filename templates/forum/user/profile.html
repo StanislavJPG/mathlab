@@ -36,7 +36,7 @@
             </form>
             <h5 class="my-3">{{ user_content.username }}</h5>
             <div style="margin-bottom: 1rem !important;">
-              <p class="text-muted mb-1"><b>{{ user_content.rank }}</b></p>
+              <p class="text-muted mb-1"><b>{{ user_content.rank  }}</b></p>
             </div>
             {% if user.is_authenticated and user_content.id != user.id %}
             <div class="d-flex justify-content-center mb-2">
@@ -93,16 +93,17 @@
             <div style="text-align: center;">
             {% for action in all_actions %}
               {% if action.comm_id is none %}
-                Створив Пост
+                Створив Пост:
                 <a class="mt-4 mb-1" href="{% url 'forum-q' q_id=action.id title=action.title|hyphens_add %}" style="font-size: 19px;">{{ action.title }}</a>
               {% else %}
-                Написав коментарій
-                <a class="mt-4 mb-1" href="{% url 'forum-q' q_id=action.post_id title=action.post_title|hyphens_add %}" style="font-size: 19px;">{{ action.title }}</a>
+                Написав коментарій:
+                <a class="mt-4 mb-1" href="{% url 'forum-q' q_id=action.post.id title=action.post.title|hyphens_add %}" style="font-size: 19px;">{{ action.title }}</a>
+                <p>До поста <a href="{% url 'forum-q' q_id=action.post.id title=action.post.title|hyphens_add %}">{{ action.post.title }}</a></p>
               {% endif %}
               об {{ action.created_at }}
               <p>
               {% for category in action.categories %}
-                <a>{{ category }}</a> |
+                <a>{{ category.category_name }}</a> |
               {% endfor %}
               </p>
               {% if not action.comm_id %}
@@ -118,7 +119,7 @@
               {% else %}
               {% if user.id == user_content.id %}
               <form style="margin-top:10px;" method="post"
-                    action="{% url 'forum-q-comm-delete' q_id=action.post_id title=action.post_title|hyphens_add comment_id=action.id %}">
+                    action="{% url 'forum-q-comm-delete' q_id=action.id title=action.title|hyphens_add comment_id=action.id %}">
                 {% csrf_token %}
                 <button type="submit" class="btn btn-danger btn-sm">Видалити коментар</button>
               </form>

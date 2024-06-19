@@ -4,12 +4,12 @@ from django.core.cache import cache
 from django.db import transaction
 from django.http import Http404, HttpResponseForbidden
 from django.utils import timezone
-from django.db.models import Q
+from django.db.models import Q, Count
 
 from forum.models import Post, Category
 from forum.serializers import PostSerializer
 
-from users.models import CustomUser as User, rank_creator
+from users.models import CustomUser as User
 
 
 class PaginationCreator:
@@ -37,21 +37,31 @@ class PaginationCreator:
             return 1
 
 
-def sort_posts(order_by, serializer, offset):
+def sort_posts(order_by, serializer, offset: int, tags: str):
     if order_by == 'last-week':
+        if not tags:
+            tags = Category.CATEGORIES
+        else:
+            tags = tags.split(',')
+
         today = date.today()
         week_ago = today - timedelta(days=7)
         two_weeks_ago = week_ago - timedelta(days=7)
 
         # time between gte two weeks ago and lte week ago == last week
-        posts = Post.objects.prefetch_related('post_likes', 'post_dislikes', 'categories'
-                                              ).select_related('user'
-                                              ).filter(
+        posts = Post.objects.annotate(
+                comments_quantity=Count('comment'),
+                likes=Count('post_likes'),
+                dislikes=Count('post_dislikes')
+            ).prefetch_related('post_likes', 'post_dislikes', 'categories'
+                               ).select_related('user').filter(
             Q(created_at__gte=two_weeks_ago) &
-            Q(created_at__lte=week_ago)
-                                              ).order_by('-created_at')[offset:offset + 10]
+            Q(created_at__lte=week_ago) &
+            Q(categories__in=Category.objects.filter(category_name__in=tags).values('id'))
+                                              ).distinct().order_by('-created_at')[offset:offset + 10]
 
         serializer = PostSerializer(posts, many=True)
+        # print(serializer.data)
         return serializer.data
 
     elif order_by == 'popular':
@@ -67,15 +77,17 @@ def sort_posts(order_by, serializer, offset):
         raise Http404()
 
 
-def get_by_tags(posts: Post, tags: str, offset: int) -> Post:
-    if tags:
-        tags = tags.split(',')
-        posts = Post.objects.select_related('user').prefetch_related(
-            'post_likes', 'post_dislikes', 'categories'
-        ).filter(
-            categories__in=Category.objects.filter(category_name__in=tags).values('id')
-
-        ).distinct()[offset:offset + 10]
+def get_by_tags(tags: str, offset: int) -> Post:
+    tags = tags.split(',')
+    posts = Post.objects.select_related('user').prefetch_related(
+        'post_likes', 'post_dislikes', 'categories'
+    ).annotate(
+        comments_quantity=Count('comment'),
+        likes=Count('post_likes'),
+        dislikes=Count('post_dislikes')
+                ).filter(
+        categories__in=Category.objects.filter(category_name__in=tags).values('id')
+    ).distinct()[offset:offset + 10]
 
     return posts
 
@@ -83,7 +95,7 @@ def get_by_tags(posts: Post, tags: str, offset: int) -> Post:
 def sort_comments(order_by, serializer):
     if order_by == 'popular' or order_by is None:
         # popular is sort by comment likes
-        return sorted(serializer.data, key=lambda x: x['likes'], reverse=True)
+        return sorted(serializer.data, key=lambda x: x['likes_count'], reverse=True)
 
     elif order_by == 'created_at':
         return sorted(serializer.data, key=lambda x: x['created_at'], reverse=True)
@@ -111,4 +123,4 @@ def make_rate(request, user: int | User, score: int) -> None:
     except Exception:
         raise HttpResponseForbidden
     finally:
-        rank_creator(user)
+        user.update_rank()

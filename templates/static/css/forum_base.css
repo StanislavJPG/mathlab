@@ -40,6 +40,16 @@
     flex-wrap: nowrap;
 }
 
+.base-title-info-chat {
+    margin: auto;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
 .a-base {
     margin-top: 3px;
 }

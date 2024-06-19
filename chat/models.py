@@ -10,3 +10,6 @@ class Message(models.Model):
 
     def __str__(self):
         return f'Sender: {self.sender}, while Receiver: {self.receiver}'
+
+    class Meta:
+        indexes = [models.Index(fields=('receiver', 'sender'))]

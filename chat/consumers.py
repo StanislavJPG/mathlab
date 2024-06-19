@@ -18,7 +18,8 @@ class Chat(AsyncWebsocketConsumer):
 
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        message = text_data_json["message"]
+        #check here
+        message = text_data_json["message"] if len(text_data_json["message"]) <= 50 else None
         sender_id = text_data_json['sender_id']
         receiver_id = text_data_json['receiver_id']
         data = {'message': message}

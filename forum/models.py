@@ -7,15 +7,14 @@ from users.models import CustomUser as User
 
 
 class Category(models.Model):
-    category_name = models.CharField('category_name', max_length=100)
-
-    def __str__(self):
-        return f'{self.category_name}'
-
     CATEGORIES: tuple = ('Графіки функцій', 'Матриці', 'Рівняння', 'Нерівності',
                          'Системи', 'Вища математика', 'Теорії ймовірностей',
                          'Комбінаторика', 'Дискретна математика', 'Початкова математика', 'Відсотки',
                          'Тригонометрія', 'Геометрія', 'Ймовірність і статистика', 'Алгоритми', 'Інше', 'Алгебра')
+    category_name = models.CharField('category_name', max_length=100)
+
+    def __str__(self):
+        return f'{self.category_name}'
 
 
 class Post(models.Model):

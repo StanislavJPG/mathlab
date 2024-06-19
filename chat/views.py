@@ -1,5 +1,7 @@
 from django.core.cache import cache
 from django.shortcuts import render
+from django.db.models import Q, F, When, Case, CharField, OuterRef, Subquery
+
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from chat.models import Message
@@ -50,3 +52,58 @@ class ChatView(APIView):
             'message_counter': messages_counter,
             'current_user_image': current_user_image_serializer
         })
+
+
+class ChatListView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        page = request.GET.get('page')
+        pagination = PaginationCreator(page, limit=10)
+        offset = pagination.get_offset
+        cached_data = cache.get(f'chat_list.{page}')
+
+        if not cached_data:
+            current_user_image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+
+            latest_messages_subquery = Message.objects.filter(
+                Q(sender=OuterRef('sender')) & Q(receiver=OuterRef('receiver')) |
+                Q(sender=OuterRef('receiver')) & Q(receiver=OuterRef('sender'))
+            ).annotate(
+                sender_username=F('sender__username'),
+            ).order_by('-sent_at').values(
+                'message', 'sent_at', 'receiver', 'sender_username'
+            )[:1]
+
+            users_chats = Message.objects.filter(
+                Q(sender=request.user.id) | Q(receiver=request.user.id)
+            ).annotate(
+                chatroom_user1=Case(
+                    When(sender__username__lt=F('receiver__username'), then=F('sender__username')),
+                    default=F('receiver__username'),
+                    output_field=CharField()
+                ),
+                chatroom_user2=Case(
+                    When(sender__username__lt=F('receiver__username'), then=F('receiver__username')),
+                    default=F('sender__username'),
+                    output_field=CharField()
+                ),
+                latest_message=Subquery(latest_messages_subquery.values('message')),
+                sent_at_last_message=Subquery(
+                    latest_messages_subquery.values('sent_at')
+                ),
+                receiver_pk=Subquery(latest_messages_subquery.values('receiver')),
+                sender_username=Subquery(latest_messages_subquery.values('sender_username'))
+            ).values('receiver_pk', 'sent_at_last_message', 'sender_username',
+                     'latest_message', 'chatroom_user1', 'chatroom_user2').distinct()[offset:offset+10]
+            context = {
+                'all_chats': users_chats,
+                'page': int(page) if page else 1,
+                'current_user_image': current_user_image_serializer,
+            }
+            cache.set(f'chat_list.{page}', context, 60)
+        else:
+            context = cached_data
+
+        return render(request, 'forum/chat_list.html',
+                      context=context)

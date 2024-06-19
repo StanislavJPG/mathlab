@@ -8,6 +8,8 @@ from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render, get_object_or_404
 from django.urls import reverse_lazy, reverse
+from django.db.models import F, Prefetch
+
 from rest_framework.authtoken.models import Token
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
@@ -107,13 +109,17 @@ class ProfileView(APIView):
         try:
             cached_data = cache.get(f'profile.{user_id}.{username}')
             if not cached_data:
-                user = User.objects.select_related('rank').get(pk=user_id)
-                posts_by_user = Post.objects.filter(user=user_id).order_by('-created_at')[:5]
-                comments_by_user = Comment.objects.filter(user=user_id).order_by('-created_at')[:5]
+                user = User.objects.defer('date_joined', 'is_active',
+                                          'groups', 'user_permissions').prefetch_related(
+                    Prefetch(lookup='post_set', queryset=Post.objects.order_by('-created_at')[:5],
+                             to_attr='recent_posts'),
+                    Prefetch(lookup='comment_set', queryset=Comment.objects.order_by('-created_at')[:5],
+                             to_attr='recent_comments')
+                ).get(pk=user_id)
 
                 user_serializer = UserSerializer(user)
-                post_serializer = PostSerializer(posts_by_user, many=True)
-                comments_serializer = CommentLastActionsSerializer(comments_by_user, many=True)
+                post_serializer = PostSerializer(user.recent_posts, many=True)
+                comments_serializer = CommentLastActionsSerializer(user.recent_comments, many=True)
 
                 requested_user_image = ProfileSerializer.get_profile_image(user_pk=user_id)
                 current_user_image = ProfileSerializer.get_profile_image(user_pk=request.user.id)

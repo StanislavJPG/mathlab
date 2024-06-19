@@ -26,9 +26,10 @@ class ProfileSerializer:
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        exclude = ('password', 'last_login', 'is_superuser', )
+        exclude = ('password', 'last_login', 'is_superuser', 'date_joined',
+                   'is_active', 'groups', 'user_permissions')
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation['rank'] = instance.rank.rank
+        representation['rank'] = instance.get_rank_display()
         return representation

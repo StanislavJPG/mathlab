@@ -2,17 +2,26 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 
 
-class Rank(models.Model):
-    rank = models.CharField(verbose_name='rank', max_length=150, null=False)
-
-
 class CustomUser(AbstractUser):
+    JUNIOR = "JR"
+    OLYMPIC = "OP"
+    TEACHER = "TC"
+    GURU = "GR"
+    MATH_LORD = "LD"
+    RANKS = (
+        (JUNIOR, "Учень математики"),
+        (OLYMPIC, "Олімпіадник"),
+        (TEACHER, "Вчитель математики"),
+        (GURU, "Гуру математики"),
+        (MATH_LORD, "Володар математики")
+    )
+
     first_name = None
     last_name = None
     username = models.CharField(max_length=150, unique=False)
     email = models.EmailField("email address", blank=True, unique=True)
     score = models.IntegerField('score', null=False, default=0)
-    rank = models.ForeignKey(Rank, on_delete=models.CASCADE, null=False, default=1)
+    rank = models.CharField('rank', choices=RANKS, max_length=2, default=JUNIOR)
 
     EMAIL_FIELD = "email"
     USERNAME_FIELD = 'email'
@@ -26,6 +35,19 @@ class CustomUser(AbstractUser):
     def __str__(self):
         return f'{self.username}'
 
+    def update_rank(self):
+        if self.score < 50:
+            self.rank = self.JUNIOR
+        elif 50 <= self.score < 100:
+            self.rank = self.OLYMPIC
+        elif 100 <= self.score < 200:
+            self.rank = self.TEACHER
+        elif 200 <= self.score < 600:
+            self.rank = self.GURU
+        else:
+            self.rank = self.MATH_LORD
+        self.save()
+
 
 class ProfileImage(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
@@ -33,17 +55,3 @@ class ProfileImage(models.Model):
 
     def __str__(self):
         return f'{self.user}'
-
-
-def rank_creator(user_inst) -> None:
-    if user_inst.score < 50:
-        user_inst.rank = Rank.objects.get(pk=1)
-    elif 50 <= user_inst.score < 100:
-        user_inst.rank = Rank.objects.get(pk=2)
-    elif 100 <= user_inst.score < 200:
-        user_inst.rank = Rank.objects.get(pk=3)
-
-    elif 200 <= user_inst.score < 600:
-        user_inst.rank = Rank.objects.get(pk=4)
-    else:
-        user_inst.rank = Rank.objects.get(pk=5)

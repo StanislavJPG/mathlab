@@ -11,7 +11,7 @@
         <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
           <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
         </a>
-        <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
           <li><a href="{% url 'base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
           <li><a href="{% url 'forum-base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
             {% if user.is_authenticated %}
@@ -19,10 +19,17 @@
             {% else %}
           <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
             {% endif %}
-        </ul>
-        <form action="{% url 'forum-b-search' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
-          <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;" placeholder="Пошук..." aria-label="Search">
-          <input type="hidden" name="page" value="{{ page }}">
+          </ul>
+            {% if user.is_authenticated %}
+          <ul class="nav col-md-4 justify-content-end">
+          <li class="nav-item"><a href="{% url 'chat-list' %}?page=1" class="nav-link px-2 text-muted">
+              <img width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
+          </ul>
+            {% endif %}
+
+          <form action="{% url 'forum-b-search' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
+            <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;" placeholder="Пошук..." aria-label="Search">
+            <input type="hidden" name="page" value="{{ page }}">
         </form>
 
         <div class="dropdown_user text-end">
@@ -112,7 +119,8 @@
                         <div class="some">
                             <div class="topics">
                             {% for сategory in post.categories %}
-                                <a href="" class="a-topic">{{ сategory }}</a>
+                                <a href="{% url 'forum-base' %}?sort={{ order_by }}&page={{ page }}&tags={{ сategory.category_name }}"
+                                   class="a-topic">{{ сategory.category_name }}</a>
                             {% endfor %}
                             </div>
                             <div style="transform: translateX(-100px); font-size: 14px;">

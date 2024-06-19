@@ -109,7 +109,7 @@ WSGI_APPLICATION = 'mathlab.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mathlab_db_dev',
+        'NAME': 'mathalb_database',
         'USER': 'root',
         'PASSWORD': os.getenv('MYSQL_DB_PASS'),
     }
@@ -177,14 +177,14 @@ REST_FRAMEWORK = {
             # 'rest_framework.authentication.BasicAuthentication',
             # 'rest_framework.authentication.SessionAuthentication',
     ],
-    'DEFAULT_THROTTLE_CLASSES': [
-        'rest_framework.throttling.AnonRateThrottle',
-        'rest_framework.throttling.UserRateThrottle'
-    ],
-    'DEFAULT_THROTTLE_RATES': {
-        'anon': '100/hour',
-        'user': '200/hour'
-    }
+    # 'DEFAULT_THROTTLE_CLASSES': [
+    #     'rest_framework.throttling.AnonRateThrottle',
+    #     'rest_framework.throttling.UserRateThrottle'
+    # ],
+    # 'DEFAULT_THROTTLE_RATES': {
+    #     'anon': '100/hour',
+    #     'user': '200/hour'
+    # }
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'

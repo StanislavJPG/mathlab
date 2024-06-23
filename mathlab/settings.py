@@ -30,7 +30,7 @@ DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['.onrender.com']
 
 
 # Application definition
@@ -78,6 +78,8 @@ MIDDLEWARE = [
     'mathlab.middleware.AsyncMiddleware',
     'mathlab.middleware.TokenMiddleware',
     'mathlab.middleware.AccessControl',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'mathlab.urls'
@@ -148,6 +150,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
@@ -174,17 +179,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
             'rest_framework.authentication.TokenAuthentication',
-            # 'rest_framework.authentication.BasicAuthentication',
-            # 'rest_framework.authentication.SessionAuthentication',
     ],
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.AnonRateThrottle',
-    #     'rest_framework.throttling.UserRateThrottle'
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'anon': '100/hour',
-    #     'user': '200/hour'
-    # }
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '200/hour'
+    }
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'

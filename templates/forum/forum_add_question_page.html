@@ -2,6 +2,7 @@
 
 {% block head %}
 {% load static %}
+{% load filters %}
 <script src="{% static 'error_btn_listener.js' %}"></script>
 <link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
 <title>MathLab | Створити обговорення</title>
@@ -36,7 +37,7 @@
             <div class="form-check">
               <input class="form-check-input" name="category" type="checkbox" value="{{ num }}" id="flexCheckDefault">
               <label class="form-check-label" for="flexCheckDefault">
-                {{ category }}
+                {{ category|index:1 }}
               </label>
             </div>
         {% endfor %}

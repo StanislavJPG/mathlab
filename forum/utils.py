@@ -5,7 +5,7 @@ from django.db import transaction
 from django.http import Http404, HttpResponseForbidden
 from django.db.models import Q, Count
 
-from forum.models import Post, Category
+from forum.models import Post
 from forum.serializers import PostSerializer
 
 from users.models import CustomUser as User
@@ -39,9 +39,9 @@ class PaginationCreator:
 def sort_posts(order_by, serializer, offset: int, tags: str = None):
     if order_by == 'last-week':
         if not tags:
-            tags = Category.CATEGORIES
+            tags = [x[0] for x in Post.CATEGORY_CHOICES]
         else:
-            tags = tags.split(',')
+            tags = [k for k, v in Post.CATEGORY_CHOICES if v in tags.split(',')]
 
         today = date.today()
         week_ago = today - timedelta(days=7)
@@ -52,12 +52,11 @@ def sort_posts(order_by, serializer, offset: int, tags: str = None):
                 comments_quantity=Count('comment'),
                 likes=Count('post_likes'),
                 dislikes=Count('post_dislikes')
-            ).prefetch_related('post_likes', 'post_dislikes', 'categories'
+            ).prefetch_related('post_likes', 'post_dislikes'
                                ).select_related('user').filter(
             Q(created_at__gte=two_weeks_ago) &
             Q(created_at__lte=week_ago) &
-            Q(categories__in=Category.objects.filter(category_name__in=tags).values('id'))
-                                              ).distinct().order_by('-created_at')[offset:offset + 10]
+            Q(categories__contains=tags)).distinct().order_by('-created_at')[offset:offset + 10]
 
         serializer = PostSerializer(posts, many=True)
         return serializer.data
@@ -76,15 +75,15 @@ def sort_posts(order_by, serializer, offset: int, tags: str = None):
 
 
 def get_by_tags(tags: str, offset: int) -> Post:
-    tags = tags.split(',')
+    tags = [k for k, v in Post.CATEGORY_CHOICES if v in tags.split(',')]
     posts = Post.objects.select_related('user').prefetch_related(
-        'post_likes', 'post_dislikes', 'categories'
+        'post_likes', 'post_dislikes'
     ).annotate(
         comments_quantity=Count('comment'),
         likes=Count('post_likes'),
         dislikes=Count('post_dislikes')
                 ).filter(
-        categories__in=Category.objects.filter(category_name__in=tags).values('id')
+        categories__contains=tags
     ).distinct()[offset:offset + 10]
 
     return posts

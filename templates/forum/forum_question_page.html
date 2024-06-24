@@ -5,7 +5,7 @@
 {% load filters %}
 <script src="{% static 'error_btn_listener.js' %}"></script>
 <link type="text/css" href="{% static 'forum_question.css' %}" rel="stylesheet">
-<title>{{ post.categories|to_beauty_question_title }} - {{ post.title }}</title>
+<title>{{ post.categories|index:0 }} - {{ post.title }}</title>
 {% endblock %}
 
 {% block body %}
@@ -57,8 +57,8 @@
                 </p>
                 <div class="topics">
                     {% for сategory in post.categories %}
-                    <a href="{% url 'forum-base' %}?sort=popular&page=1&tags={{ сategory.category_name }}"
-                       class="a-topic">{{ сategory.category_name }}</a>
+                    <a href="{% url 'forum-base' %}?sort=popular&page=1&tags={{ сategory }}"
+                       class="a-topic">{{ сategory }}</a>
                     {% endfor %}
                 </div>
             </div>

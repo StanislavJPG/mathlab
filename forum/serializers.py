@@ -3,7 +3,7 @@ from datetime import datetime
 
 from rest_framework import serializers
 
-from .models import Post, Category, Comment
+from .models import Post, Comment
 from users.serializers import UserSerializer
 
 
@@ -35,15 +35,14 @@ class CommentSerializer(serializers.ModelSerializer):
                                       post=post, user=user)
 
 
-class CategorySerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Category
-        fields = ('category_name',)
+# class CategorySerializer(serializers.ModelSerializer):
+#     class Meta:
+#         model = Category
+#         fields = ('category_name',)
 
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
-    categories = CategorySerializer(many=True, required=False)
     comments_quantity = serializers.IntegerField(required=False)
     likes = serializers.IntegerField(required=False)
     dislikes = serializers.IntegerField(required=False)
@@ -58,6 +57,7 @@ class PostSerializer(serializers.ModelSerializer):
         representation = super().to_representation(instance)
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['modified_at'] = datetime.fromisoformat(representation['modified_at'])
+        representation['categories']: list = instance.get_foo_categories()
         return representation
 
     def validate(self, attrs):
@@ -71,9 +71,9 @@ class PostSerializer(serializers.ModelSerializer):
         post = Post.objects.create(
             title=validated_data['title'],
             content=validated_data['content'],
-            user=self.context['request'].user
+            user=self.context['request'].user,
+            categories=Post.represent_nums_to_categories(self.context['requested_categories'])
         )
-        post.categories.add(*Category.objects.filter(pk__in=self.context['requested_categories']))
         return post
 
 

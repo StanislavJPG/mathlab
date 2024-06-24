@@ -28,13 +28,7 @@ def url_hyphens_replace(value: str):
     return value.lower()
 
 
-@register.filter
-def to_beauty_question_title(value: list[dict]):
-    return value[0]['category_name']
-
-
 # register.filter("translate", translate)
 register.filter("index", index)
 register.filter('hyphens_add', url_hyphens_replace)
 register.filter('page_convert', page_converter)
-register.filter('to_beauty_question_title', to_beauty_question_title)

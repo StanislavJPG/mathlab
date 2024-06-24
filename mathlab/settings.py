@@ -208,7 +208,7 @@ TIME_ZONE = 'Europe/Kiev'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": os.getenv('REDIS_RENDER_URL'),
+        "LOCATION": "redis://127.0.0.1:6379",
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -258,7 +258,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [(os.getenv('REDIS_RENDER_URL'), 6379)],
+            "hosts": [('127.0.0.1', 6379)],
         },
     },
 }

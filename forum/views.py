@@ -10,12 +10,10 @@ from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import Request
 
-# from forum.elasticsearch.documents import PostDocument
-from .models import Post, Category, Comment
+from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .templatetags.filters import url_hyphens_replace
-from .utils import PaginationCreator, sort_posts, sort_comments, delete_keys_matching_pattern, make_rate, \
-    get_by_tags
+from .utils import PaginationCreator, sort_comments, delete_keys_matching_pattern, make_rate, sort_posts, get_by_tags
 from users.serializers import ProfileSerializer
 
 
@@ -39,7 +37,7 @@ class ForumBaseView(APIView):
                     'page': pagination.get_page,
                     'url': address_args,
                     'current_user_image': current_user_image_serializer,
-                    'categories': Category.CATEGORIES,
+                    'categories': Post.CATEGORY_CHOICES,
                     'order_by': order_by
                 }
 
@@ -48,7 +46,7 @@ class ForumBaseView(APIView):
                     likes=Count('post_likes', distinct=True),
                     dislikes=Count('post_dislikes', distinct=True)
                 ).select_related('user').prefetch_related(
-                    'post_likes', 'post_dislikes', 'categories')[offset:offset + 10]
+                    'post_likes', 'post_dislikes')[offset:offset + 10]
 
                 # using this for get by tags even if tags is None (returning default query in this case)
                 if tags:
@@ -89,7 +87,7 @@ class QuestionCreationView(APIView):
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
         return render(request, 'forum/forum_add_question_page.html',
                       context={
-                          'categories': enumerate(Category.CATEGORIES, start=1),
+                          'categories': enumerate(Post.CATEGORY_CHOICES, start=1),
                           'current_user_image': image_serializer
                       })
 
@@ -126,8 +124,7 @@ class QuestionView(viewsets.ViewSet):
                 likes=Count('post_likes', distinct=True),
                 dislikes=Count('post_dislikes', distinct=True),
                 comments_quantity=Count('comment', distinct=True)
-            ).select_related('user').prefetch_related(
-                'post_likes', 'post_dislikes', 'categories').get(pk=q_id)
+            ).select_related('user').prefetch_related('post_likes', 'post_dislikes').get(pk=q_id)
             post_serializer = PostSerializer(post)
 
             if url_hyphens_replace(post_serializer.data['title']) != title:

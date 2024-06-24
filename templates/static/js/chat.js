@@ -1,4 +1,4 @@
-const chatSocket = new WebSocket('ws://' + '127.0.0.1:8000' + '/ws/chat/');
+const chatSocket = new WebSocket('ws://' + 'mathlab-ytpl.onrender.com:10000' + '/ws/chat/');
 chatSocket.onmessage = function(e) {
     const data = JSON.parse(e.data);
     const message = `${data['sender']} щойно написав: ${data['message']}`;

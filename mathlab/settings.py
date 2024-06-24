@@ -26,13 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv()
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'ASOJFAOSJ-0J1-0U-0js0adja0sj0-21juu0--109U2U0@((@(@'
 DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition

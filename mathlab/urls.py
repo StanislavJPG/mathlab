@@ -5,13 +5,13 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls, name='admin'),
-    path('', include('explainme.urls'), name='explain me'),
-    path('', include('solvexample.urls'), name='solve example'),
-    path('', include('graphbuilder.urls'), name='graphs builder'),
-    path('', include('users.urls'), name='users'),
-    path('', include('forum.urls'), name='forum'),
-    path('', include('math_news.urls'), name='math_news'),
-    path('', include('chat.urls'), name='chat')
+    path('explainme/', include('explainme.urls'), name='explain me'),
+    path('solvexample/', include('solvexample.urls'), name='solve example'),
+    path('graphsbuilder/', include('graphbuilder.urls'), name='graphs builder'),
+    path('users/', include('users.urls'), name='users'),
+    path('forum/', include('forum.urls'), name='forum'),
+    path('mathnews/', include('math_news.urls'), name='math_news'),
+    path('chat/', include('chat.urls'), name='chat')
 ]
 
 handler404 = page_not_found

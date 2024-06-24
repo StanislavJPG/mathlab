@@ -54,8 +54,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'math_news.apps.MathNewsConfig',
     'forum.templatetags.filters',
-    # 'django_elasticsearch_dsl',
-    # 'django_elasticsearch_dsl_drf',
     'channels',
     'chat.apps.ChatConfig'
 ]
@@ -140,13 +138,10 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
-TIME_ZONE = 'Europe/Kiev'
 
 USE_I18N = True
-USE_L10N = True
-USE_TZ = True
 
-DEFAULT_CHARSET = 'utf-8'
+USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)

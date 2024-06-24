@@ -16,6 +16,5 @@ urlpatterns = [
     path('forum/question/comment/delete/<int:q_id>/<str:title>/<int:comment_id>/',
          QuestionView.as_view({'post': 'delete_comment'}),
          name='forum-q-comm-delete'),
-    # path('forum/search/', PostSearchView.as_view(), name='forum-b-search'),
     path('forum/settings/', ChangeUserDataView.as_view(), name='forum-settings')
 ]

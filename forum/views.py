@@ -12,7 +12,7 @@ from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
 from rest_framework.views import Request
 
-from forum.elasticsearch.documents import PostDocument
+# from forum.elasticsearch.documents import PostDocument
 from .models import Post, Category, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .templatetags.filters import url_hyphens_replace
@@ -254,32 +254,32 @@ class QuestionView(viewsets.ViewSet):
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
 
 
-class PostSearchView(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        search_pattern = request.GET.get('search_pattern')
-        page = request.GET.get('page')
-
-        pagination = PaginationCreator(page, limit=10)
-        offset = pagination.get_offset
-
-        address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
-        image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
-        cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')
-
-        if not cached_data:
-            post = PostDocument().search().query("match", title=search_pattern)[offset:offset+10]
-            post_queryset = post.to_queryset()
-            post_serializer = PostSerializer(post_queryset, many=True)
-
-            posts = sort_posts('newest', post_serializer, offset)
-            cache.set(f'base_page.search.{search_pattern}.{page}', posts, 120)
-        else:
-            posts = cached_data
-
-        return render(request, 'forum/forum_base_page.html',
-                      context={'posts': posts,
-                               'page': pagination.get_page,
-                               'url': address_args,
-                               'current_user_image': image_serializer})
+# class PostSearchView(APIView):
+#     permission_classes = [AllowAny]
+#
+#     def get(self, request):
+#         search_pattern = request.GET.get('search_pattern')
+#         page = request.GET.get('page')
+#
+#         pagination = PaginationCreator(page, limit=10)
+#         offset = pagination.get_offset
+#
+#         address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
+#         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+#         cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')
+#
+#         if not cached_data:
+#             post = PostDocument().search().query("match", title=search_pattern)[offset:offset+10]
+#             post_queryset = post.to_queryset()
+#             post_serializer = PostSerializer(post_queryset, many=True)
+#
+#             posts = sort_posts('newest', post_serializer, offset)
+#             cache.set(f'base_page.search.{search_pattern}.{page}', posts, 120)
+#         else:
+#             posts = cached_data
+#
+#         return render(request, 'forum/forum_base_page.html',
+#                       context={'posts': posts,
+#                                'page': pagination.get_page,
+#                                'url': address_args,
+#                                'current_user_image': image_serializer})

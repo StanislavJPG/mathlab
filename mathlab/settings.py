@@ -52,8 +52,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'math_news.apps.MathNewsConfig',
     'forum.templatetags.filters',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     'channels',
     'chat.apps.ChatConfig'
 ]
@@ -138,7 +138,7 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'uk'
 
 USE_I18N = True
 

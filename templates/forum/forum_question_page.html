@@ -137,14 +137,19 @@
                        type="submit">{{ page }}</a>
                     {% endfor %}
                 {% endif %}
+                <h1 style="font-size: 20px; margin-top: 150px;">Ваша відповідь</h1>
+                {% if user.is_authenticated %}
                 <form method="post" action="{% url 'forum-q' q_id=post.id title=post.title|hyphens_add %}">
-            <h1 style="font-size: 20px; margin-top: 150px;">Ваша відповідь</h1>
             <textarea name="comment" class="form-control textarea" placeholder="Відповідь (не менше 15 символів)" minlength="15" maxlength="2000"></textarea>
             <div style="margin-top: 10px;">
                 <button type="submit" class="btn btn-dark">Створити коментар</button>
             </div>
             </form>
-        </div>
+                {% else %}
+                <h1 style="font-size: 20px; margin-top: 50px;"><a style="text-decoration: none;"
+                                                                  href="{% url 'login_view' %}">Авторизуйтесь</a>, щоб залишити відповідь.</h1>
+                {% endif %}
+            </div>
     </div>
 </div>
 </div>

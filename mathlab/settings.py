@@ -24,13 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 load_dotenv()
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = 'ASOJFAOSJ-0J1-0U-0js0adja0sj0-21juu0--109U2U0@((@(@'
 DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['127.0.0.1']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -52,8 +52,6 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'math_news.apps.MathNewsConfig',
     'forum.templatetags.filters',
-    # 'django_elasticsearch_dsl',
-    # 'django_elasticsearch_dsl_drf',
     'channels',
     'chat.apps.ChatConfig'
 ]
@@ -78,6 +76,8 @@ MIDDLEWARE = [
     'mathlab.middleware.AsyncMiddleware',
     'mathlab.middleware.TokenMiddleware',
     'mathlab.middleware.AccessControl',
+    "django.middleware.security.SecurityMiddleware",
+    "whitenoise.middleware.WhiteNoiseMiddleware",
 ]
 
 ROOT_URLCONF = 'mathlab.urls'
@@ -105,6 +105,8 @@ WSGI_APPLICATION = 'mathlab.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
+
+# RENDER DATABASE
 
 DATABASES = {
     'default': {
@@ -150,6 +152,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
+# STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+# STATIC_ROOT = BASE_DIR / "staticfiles"
+
 STATIC_URL = 'static/'
 
 STATICFILES_DIRS = [
@@ -176,17 +181,15 @@ REST_FRAMEWORK = {
     ],
     'DEFAULT_AUTHENTICATION_CLASSES': [
             'rest_framework.authentication.TokenAuthentication',
-            # 'rest_framework.authentication.BasicAuthentication',
-            # 'rest_framework.authentication.SessionAuthentication',
     ],
-    # 'DEFAULT_THROTTLE_CLASSES': [
-    #     'rest_framework.throttling.AnonRateThrottle',
-    #     'rest_framework.throttling.UserRateThrottle'
-    # ],
-    # 'DEFAULT_THROTTLE_RATES': {
-    #     'anon': '100/hour',
-    #     'user': '200/hour'
-    # }
+    'DEFAULT_THROTTLE_CLASSES': [
+        'rest_framework.throttling.AnonRateThrottle',
+        'rest_framework.throttling.UserRateThrottle'
+    ],
+    'DEFAULT_THROTTLE_RATES': {
+        'anon': '100/hour',
+        'user': '200/hour'
+    }
 }
 
 AUTH_USER_MODEL = 'users.CustomUser'
@@ -205,7 +208,7 @@ TIME_ZONE = 'Europe/Kiev'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": os.getenv('REDIS_RENDER_URL'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -228,12 +231,12 @@ CACHES = {
 #     },
 # }
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': os.getenv('ELASTICSEARCH_HOST'),
-        'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
-    }
-}
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': os.getenv('ELASTICSEARCH_HOST'),
+#         'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
+#     }
+# }
 
 CELERY_IMPORTS = [
     'math_news.tasks',
@@ -255,7 +258,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": [(os.getenv('REDIS_RENDER_URL'), 6379)],
         },
     },
 }

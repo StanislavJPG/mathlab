@@ -3,7 +3,6 @@ from datetime import timedelta, date
 from django.core.cache import cache
 from django.db import transaction
 from django.http import Http404, HttpResponseForbidden
-from django.utils import timezone
 from django.db.models import Q, Count
 
 from forum.models import Post, Category
@@ -37,7 +36,7 @@ class PaginationCreator:
             return 1
 
 
-def sort_posts(order_by, serializer, offset: int, tags: str):
+def sort_posts(order_by, serializer, offset: int, tags: str = None):
     if order_by == 'last-week':
         if not tags:
             tags = Category.CATEGORIES
@@ -61,7 +60,6 @@ def sort_posts(order_by, serializer, offset: int, tags: str):
                                               ).distinct().order_by('-created_at')[offset:offset + 10]
 
         serializer = PostSerializer(posts, many=True)
-        # print(serializer.data)
         return serializer.data
 
     elif order_by == 'popular':

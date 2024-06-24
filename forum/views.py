@@ -1,12 +1,10 @@
-from django.contrib.auth import get_user_model
 from django.core.cache import cache
-from django.db.models import F, Q, Count, Sum
+from django.db.models import F, Count
 from django.http import HttpResponseRedirect, Http404
 from django.shortcuts import render
 from rest_framework import viewsets
 from rest_framework.decorators import throttle_classes
 from rest_framework.exceptions import PermissionDenied
-from rest_framework.generics import get_object_or_404
 from rest_framework.permissions import IsAuthenticated, AllowAny, IsAuthenticatedOrReadOnly
 from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
@@ -100,25 +98,17 @@ class QuestionCreationView(APIView):
         title = request.POST.get('title')
         requested_categories = [int(c) for c in request.POST.getlist('category')]
         content = request.POST.get('content')
-        context = {'categories': enumerate(Category.CATEGORIES, start=1)}
+        post = PostSerializer(
+            data={'title': title, 'content': content},
+            context={'request': request, 'requested_categories': requested_categories}
+        )
+        post.is_valid(raise_exception=True)
+        post.save()
 
-        if len(requested_categories) > 4 or len(requested_categories) < 1:
-            context['error_msg'] = 'Менше однієї, або більше чотирьох категорій не приймається.'
-
-            return render(request, 'forum/forum_add_question_page.html',
-                          context=context)
-
-        post_creation = Post.objects.create(title=title, content=content, user=request.user)
-        post_creation.categories.add(*Category.objects.filter(pk__in=requested_categories))
-        post_creation.save()
         delete_keys_matching_pattern('base_page*')
+        url_post_title = url_hyphens_replace(post.data['title'])
 
-        created_post = (Post.objects.select_related('user').prefetch_related(
-            'post_likes', 'post_dislikes', 'categories').order_by('-created_at')[:1].values('id', 'title').get())
-
-        post_title = url_hyphens_replace(created_post['title'])
-
-        return HttpResponseRedirect(f'/forum/question/{created_post["id"]}/{post_title}')
+        return HttpResponseRedirect(f'/forum/question/{post.data["id"]}/{url_post_title}')
 
 
 class QuestionView(viewsets.ViewSet):
@@ -135,7 +125,7 @@ class QuestionView(viewsets.ViewSet):
             post = Post.objects.annotate(
                 likes=Count('post_likes', distinct=True),
                 dislikes=Count('post_dislikes', distinct=True),
-                comments_quantity=Count('comment__post', distinct=False)
+                comments_quantity=Count('comment', distinct=True)
             ).select_related('user').prefetch_related(
                 'post_likes', 'post_dislikes', 'categories').get(pk=q_id)
             post_serializer = PostSerializer(post)
@@ -187,6 +177,8 @@ class QuestionView(viewsets.ViewSet):
     def create_post_rate(self, request, q_id: int, title: str):
         like = request.POST.get('like')
         dislike = request.POST.get('dislike')
+        current_user: Request = request.user.id
+
         reactions_counters = Post.objects.prefetch_related('post_likes', 'post_dislikes').annotate(
             likes_counter=Count('post_likes'),
             dislikes_counter=Count('post_dislikes')
@@ -194,16 +186,16 @@ class QuestionView(viewsets.ViewSet):
         post_reactions_serializer = PostSerializer(reactions_counters)
 
         if like and not dislike:
-            if request.user.id not in post_reactions_serializer.data['post_likes']:
-                if request.user.id in post_reactions_serializer.data['post_dislikes']:
-                    reactions_counters.post_dislikes.remove(request.user.id)
+            if current_user not in post_reactions_serializer.data['post_likes']:
+                if current_user in post_reactions_serializer.data['post_dislikes']:
+                    reactions_counters.post_dislikes.remove(current_user)
                 else:
                     make_rate(request, reactions_counters.user, score=5)
-                reactions_counters.post_likes.add(request.user.id)
+                reactions_counters.post_likes.add(current_user)
         else:
-            if request.user.id not in post_reactions_serializer.data['post_dislikes']:
-                reactions_counters.post_likes.remove(request.user.id)
-                reactions_counters.post_dislikes.add(request.user.id)
+            if current_user not in post_reactions_serializer.data['post_dislikes']:
+                reactions_counters.post_likes.remove(current_user)
+                reactions_counters.post_dislikes.add(current_user)
 
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')
@@ -214,30 +206,27 @@ class QuestionView(viewsets.ViewSet):
         dislike = request.POST.get('dislike')
         comm_id = request.POST.get('comm_id')
         user_id = int(request.POST.get('user_id'))
-        curr_user: Request = request.user.id
+        current_user: Request = request.user.id
 
-        comments = Comment.objects.prefetch_related(
+        comment = Comment.objects.prefetch_related(
             'likes', 'dislikes'
         ).annotate(
-            likes_by_current_user=Count('likes'),
-            dislikes_by_current_user=Count('dislikes')
+            likes_counter=Count('likes'),
+            dislikes_counter=Count('dislikes')
         ).get(pk=comm_id, post=q_id, user=user_id)
-        # FIXXXXXXXXXXXXX
-        if like and not dislike:
-            if comments.likes_by_current_user == 1:
-                ...
-            elif comments.likes_by_current_user == 0 and comments.dislikes_by_current_user == 1:
-                comments.dislikes.remove(curr_user)
-            else:
-                make_rate(request, user_id, score=10)
-            comments.likes.add(curr_user)
+        comment_serializer = CommentSerializer(comment)
 
+        if like and not dislike:
+            if current_user not in comment_serializer.data['likes']:
+                if current_user in comment_serializer.data['dislikes']:
+                    comment.dislikes.remove(current_user)
+                else:
+                    make_rate(request, comment.user, score=10)
+                comment.likes.add(current_user)
         else:
-            if comments.dislikes_by_current_user == 1:
-                ...
-            elif comments.dislikes_by_current_user == 0 and comments.likes_by_current_user == 1:
-                comments.likes.remove(curr_user)
-            comments.dislikes.add(curr_user)
+            if current_user not in comment_serializer.data['dislikes']:
+                comment.likes.remove(current_user)
+                comment.dislikes.add(current_user)
 
         delete_keys_matching_pattern(f'question.{q_id}*')
         return HttpResponseRedirect(f'/forum/question/{q_id}/{title}')

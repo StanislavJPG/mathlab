@@ -14,7 +14,7 @@ class CommentSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Comment
-        exclude = ('likes', 'dislikes')
+        fields = '__all__'
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
@@ -43,7 +43,7 @@ class CategorySerializer(serializers.ModelSerializer):
 
 class PostSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=False)
-    categories = CategorySerializer(many=True)
+    categories = CategorySerializer(many=True, required=False)
     comments_quantity = serializers.IntegerField(required=False)
     likes = serializers.IntegerField(required=False)
     dislikes = serializers.IntegerField(required=False)
@@ -51,12 +51,30 @@ class PostSerializer(serializers.ModelSerializer):
     class Meta:
         model = Post
         fields = '__all__'
+        extra_kwargs = {"post_likes": {"required": False},
+                        "post_dislikes": {"required": False}}
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
         representation['created_at'] = datetime.fromisoformat(representation['created_at'])
         representation['modified_at'] = datetime.fromisoformat(representation['modified_at'])
         return representation
+
+    def validate(self, attrs):
+        if len(self.context['requested_categories']) > 4 or len(self.context['requested_categories']) < 1:
+            raise serializers.ValidationError('Менше однієї, або більше чотирьох категорій не приймається.')
+        elif len(attrs['title']) < 15 or len(attrs['content']) < 15:
+            raise serializers.ValidationError('Довжина питання або опису питання не може бути меншою за 15 символів.')
+        return attrs
+
+    def create(self, validated_data):
+        post = Post.objects.create(
+            title=validated_data['title'],
+            content=validated_data['content'],
+            user=self.context['request'].user
+        )
+        post.categories.add(*Category.objects.filter(pk__in=self.context['requested_categories']))
+        return post
 
 
 class CommentLastActionsSerializer(serializers.ModelSerializer):
@@ -77,4 +95,5 @@ class CommentLastActionsSerializer(serializers.ModelSerializer):
         representation['comm_id'] = representation['id']
         representation['title'] = representation['comment']
         return representation
+
 

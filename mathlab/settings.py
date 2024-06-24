@@ -13,6 +13,8 @@ from datetime import timedelta
 from pathlib import Path
 import os
 
+import dj_database_url
+
 from dotenv import load_dotenv
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -30,7 +32,7 @@ DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['.onrender.com']
+ALLOWED_HOSTS = ['.onrender.com', '127.0.0.1']
 
 
 # Application definition
@@ -52,8 +54,8 @@ INSTALLED_APPS = [
     'users.apps.UsersConfig',
     'math_news.apps.MathNewsConfig',
     'forum.templatetags.filters',
-    'django_elasticsearch_dsl',
-    'django_elasticsearch_dsl_drf',
+    # 'django_elasticsearch_dsl',
+    # 'django_elasticsearch_dsl_drf',
     'channels',
     'chat.apps.ChatConfig'
 ]
@@ -108,13 +110,10 @@ WSGI_APPLICATION = 'mathlab.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
+# RENDER DATABASE
+
 DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mathalb_database',
-        'USER': 'root',
-        'PASSWORD': os.getenv('MYSQL_DB_PASS'),
-    }
+    'default': dj_database_url.parse(os.getenv('DATABASE_RENDER_URL'))
 }
 
 
@@ -206,7 +205,7 @@ TIME_ZONE = 'Europe/Kiev'
 CACHES = {
     "default": {
         "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": "redis://127.0.0.1:6379",
+        "LOCATION": os.getenv('REDIS_RENDER_URL'),
         "OPTIONS": {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         }
@@ -229,12 +228,12 @@ CACHES = {
 #     },
 # }
 
-ELASTICSEARCH_DSL = {
-    'default': {
-        'hosts': os.getenv('ELASTICSEARCH_HOST'),
-        'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
-    }
-}
+# ELASTICSEARCH_DSL = {
+#     'default': {
+#         'hosts': os.getenv('ELASTICSEARCH_HOST'),
+#         'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
+#     }
+# }
 
 CELERY_IMPORTS = [
     'math_news.tasks',
@@ -256,7 +255,7 @@ CHANNEL_LAYERS = {
     "default": {
         "BACKEND": "channels_redis.core.RedisChannelLayer",
         "CONFIG": {
-            "hosts": [("localhost", 6379)],
+            "hosts": [(os.getenv('REDIS_RENDER_URL'), 6379)],
         },
     },
 }

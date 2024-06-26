@@ -51,7 +51,7 @@ class CustomUser(AbstractUser):
 
 class ProfileImage(models.Model):
     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-    image = models.ImageField(upload_to='mathlab/templates/static/profile_pics', blank=True)
+    image = models.ImageField(upload_to='templates/static/profile_pics', blank=True)
 
     def __str__(self):
         return f'{self.user}'

@@ -1,4 +1,5 @@
 import os
+import time
 
 from django.contrib.auth import authenticate, login, logout, get_user_model
 from django.contrib.auth.views import PasswordResetView
@@ -80,7 +81,7 @@ class Logout(APIView):
     def get(self, request):
         image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
 
-        return render(request, 'auth/logout.html', context={'profile_image': image_serializer})
+        return render(request, 'auth/logout.html', context={'current_user_image': image_serializer})
 
     def post(self, request):
         logout(request)
@@ -156,7 +157,7 @@ class ProfileView(APIView):
             curr_user_img = ProfileImage(image=image, user=user)
 
         curr_user_img.save()
-
+        time.sleep(3)
         delete_keys_matching_pattern(['profile*', 'user_image*'])
 
         return HttpResponseRedirect(reverse('forum-profile', kwargs={'user_id': user_id, 'username': username}))

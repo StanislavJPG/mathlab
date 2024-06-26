@@ -1,14 +1,12 @@
 from datetime import timedelta, date
 
+from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank
 from django.core.cache import cache
-from django.db import transaction
-from django.http import Http404, HttpResponseForbidden
+from django.http import Http404
 from django.db.models import Q, Count
 
 from forum.models import Post
 from forum.serializers import PostSerializer
-
-from users.models import CustomUser as User
 
 
 class PaginationCreator:
@@ -74,19 +72,27 @@ def sort_posts(order_by, serializer, offset: int, tags: str = None):
         raise Http404()
 
 
-def get_by_tags(tags: str, offset: int) -> Post:
-    tags = [k for k, v in Post.CATEGORY_CHOICES if v in tags.split(',')]
+def get_by_arguments(tags: str, offset: int, search_pattern: str) -> Post:
     posts = Post.objects.select_related('user').prefetch_related(
         'post_likes', 'post_dislikes'
     ).annotate(
         comments_quantity=Count('comment'),
-        likes=Count('post_likes'),
-        dislikes=Count('post_dislikes')
-                ).filter(
-        categories__contains=tags
-    ).distinct()[offset:offset + 10]
+        likes=Count('post_likes', distinct=True),
+        dislikes=Count('post_dislikes', distinct=True)
+    ).distinct()
 
-    return posts
+    if search_pattern:
+        vector = SearchVector('title')
+        query = SearchQuery(search_pattern)
+        posts = posts.annotate(
+            rank=SearchRank(vector, query)
+        ).order_by('-rank').filter(rank__gt=0)
+
+    if tags:
+        tags = [k for k, v in Post.CATEGORY_CHOICES if v in tags.split(',')]
+        posts = posts.filter(categories__contains=tags)
+
+    return posts[offset:offset + 10]
 
 
 def sort_comments(order_by, serializer):
@@ -107,17 +113,3 @@ def delete_keys_matching_pattern(*pattern):
     for pattern_key in patterns:
         keys_to_delete = cache.keys(pattern_key)
         cache.delete_many(keys_to_delete)
-
-
-@transaction.atomic
-def make_rate(request, user: int | User, score: int) -> None:
-    try:
-        user = User.objects.get(pk=user) if isinstance(user, int) else user
-
-        if user.id != request.user.id:
-            user.score += score
-            user.save()
-    except Exception:
-        raise HttpResponseForbidden
-    finally:
-        user.update_rank()

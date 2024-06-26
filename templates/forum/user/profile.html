@@ -22,17 +22,19 @@
           <div class="card-body text-center">
             <form method="post" enctype="multipart/form-data">
               {% csrf_token %}
-              <label style="cursor: pointer;" for="image">
+              {% if request.user.id == user_content.id %}<label style="cursor: pointer;" for="image">{% endif %}
                 {% if profile_image %}
                   <img src="{% static profile_image %}" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                 {% else %}
                   <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                 {% endif %}
               </label>
+              {% if request.user.id == user_content.id %}
               <p>
                 <input type="file" id="image" name="image" style="display: none;">
                 <button class="btn btn-primary" type="submit">Змінити фото</button>
               </p>
+              {% endif %}
             </form>
             <h5 class="my-3">{{ user_content.username }}</h5>
             <div style="margin-bottom: 1rem !important;">
@@ -103,7 +105,7 @@
               об {{ action.created_at }}
               <p>
               {% for category in action.categories %}
-                <a>{{ category.category_name }}</a> |
+                <a>{{ category.category_name }}</a>
               {% endfor %}
               </p>
               {% if not action.comm_id %}

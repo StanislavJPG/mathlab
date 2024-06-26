@@ -13,7 +13,8 @@ from rest_framework.views import Request
 from .models import Post, Comment
 from .serializers import PostSerializer, CommentSerializer
 from .templatetags.filters import url_hyphens_replace
-from .utils import PaginationCreator, sort_comments, delete_keys_matching_pattern, make_rate, sort_posts, get_by_tags
+from .utils import PaginationCreator, sort_comments, delete_keys_matching_pattern, sort_posts, get_by_arguments
+from users.utils import make_rate
 from users.serializers import ProfileSerializer
 
 
@@ -23,10 +24,11 @@ class ForumBaseView(APIView):
     def get(self, request):
         order_by = request.GET.get('sort')
         tags = request.GET.get('tags')
+        page = request.GET.get('page')
+        search_pattern = request.GET.get('search_pattern')
 
         if order_by:
-            page = request.GET.get('page')
-            cached_data = cache.get(f'base_page.{page}.{order_by}.{tags}', None)
+            cached_data = cache.get(f'base_page.{page}.{order_by}.{tags}.{search_pattern}', None)
             pagination = PaginationCreator(page, limit=10)
             offset = pagination.get_offset
 
@@ -38,24 +40,17 @@ class ForumBaseView(APIView):
                     'url': address_args,
                     'current_user_image': current_user_image_serializer,
                     'categories': Post.CATEGORY_CHOICES,
-                    'order_by': order_by
+                    'order_by': order_by,
+                    'search_pattern': search_pattern,
+                    'tags': tags
                 }
-
-                posts = Post.objects.annotate(
-                    comments_quantity=Count('comment'),
-                    likes=Count('post_likes', distinct=True),
-                    dislikes=Count('post_dislikes', distinct=True)
-                ).select_related('user').prefetch_related(
-                    'post_likes', 'post_dislikes')[offset:offset + 10]
-
                 # using this for get by tags even if tags is None (returning default query in this case)
-                if tags:
-                    posts = get_by_tags(tags, offset)
+                posts = get_by_arguments(tags, offset, search_pattern)
 
-                post_serializer = PostSerializer(posts, many=True)
+                post_serializer = PostSerializer(posts[offset:offset + 10], many=True)
                 context['posts'] = sort_posts(order_by, post_serializer, offset, tags)
 
-                cache.set(f'base_page.{page}.{order_by}.{tags}', context, 120)
+                cache.set(f'base_page.{page}.{order_by}.{tags}.{search_pattern}', context, 120)
             else:
                 context = cached_data
 
@@ -78,6 +73,33 @@ class ForumBaseView(APIView):
 
         delete_keys_matching_pattern('base_page*')
         return HttpResponseRedirect('/forum/?sort=popular&page=1')
+
+    # def get_search(self, request):
+    #     search_pattern = request.GET.get('search_pattern')
+    #     page = request.GET.get('page')
+    #
+    #     pagination = PaginationCreator(page, limit=10)
+    #     offset = pagination.get_offset
+    #
+    #     address_args = request.build_absolute_uri().split('/')[-1].split('page=')[0] + 'page='
+    #     image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
+    #     cached_data = cache.get(f'base_page.search.{search_pattern}.{page}')
+    #
+    #     # if not cached_data:
+    #         # post = PostDocument().search().query("match", title=search_pattern)[offset:offset+10]
+    #         # post_queryset = post.to_queryset()
+    #         # post_serializer = PostSerializer(post_queryset, many=True)
+    #         #
+    #         # posts = sort_posts('newest', post_serializer, offset)
+    #         # cache.set(f'base_page.search.{search_pattern}.{page}', posts, 120)
+    #     # else:
+    #     #     posts = cached_data
+    #
+    #     return render(request, 'forum/forum_base_page.html',
+    #                   context={
+    #                            'page': pagination.get_page,
+    #                            'url': address_args,
+    #                            'current_user_image': image_serializer})
 
 
 class QuestionCreationView(APIView):

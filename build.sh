@@ -6,6 +6,3 @@ pip install -r requirements.txt
 python manage.py collectstatic --no-input
 
 python manage.py migrate
-
-celery -A mathlab worker -l info -P solo
-celery -A mathlab beat -l info

@@ -22,33 +22,34 @@ class MathOperations:
 
         if self.operation_type == 'Система':
             try:
-                solved_example: dict = solve(eval(self.example), symbols_).values()
+                solved_equation: dict = solve(eval(self.example), symbols_).values()
             except NotImplementedError:
-                solved_example: tuple = nsolve(eval(self.example), symbols_, [1, 1])
-                solved_example = solved_example[0]
+                solved_equation: tuple = nsolve(eval(self.example), symbols_, [1, 1])
+                solved_equation = solved_equation[0]
 
         elif self.operation_type == 'Система нерівностей':
             symbols_to_find = self.to_find.split(',')
-            solved_example: list = []
+            solved_equation: list = []
             for single_symbol in symbols_to_find:
                 solving = reduce_inequalities(eval(self.example), symbols(single_symbol))
-                solved_example.append(solving)
-            return solved_example
+                solved_equation.append(solving)
+            return solved_equation
 
         elif self.operation_type == 'Похідна':
             expr = eval(self.example)
-            solved_example: list = [simplify(expr.diff(eval(self.to_find[0])))]
+            solved_equation: list = [simplify(expr.diff(eval(self.to_find[0])))]
 
         elif self.operation_type == 'Первісна':
             expr = eval(self.example)
-            solved_example: list = [str(simplify(integrate(expr, eval(self.to_find), conds='none'))) + ' + C']
+            solved_equation: list = [str(simplify(integrate(expr, eval(self.to_find), conds='none'))) + ' + C']
 
         else:
-            symbol = Symbol(self.to_find)
-            solved_example: str = solve(self.example, symbol)
-            self.example = self.example.replace(' - ', ' = ')
+            to_find = self.to_find
+            symbol = tuple(Symbol(sym) for sym in to_find.split(','))
+            solved_equation: str = solve(self.example, *symbol)
+            self.example = self.example.replace('-', ' = ')
 
-        return solved_example
+        return solved_equation
 
     @ToUserFriendlyAppearance.matrix
     def solve_matrix(self) -> MutableDenseMatrix:

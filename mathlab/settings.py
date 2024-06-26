@@ -245,7 +245,7 @@ CELERY_IMPORTS = [
 CELERY_BEAT_SCHEDULE = {
     'to_find_news': {
         'task': 'math_news.tasks.let_find_news',
-        'schedule': timedelta(minutes=1),
+        'schedule': timedelta(hours=12),
     },
     'clear_garbage': {
         'task': 'chat.tasks.clear_deprecated_messages',

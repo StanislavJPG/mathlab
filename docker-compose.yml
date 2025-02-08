@@ -1,0 +1,42 @@
+version: "3.10"
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - .:/app
+    depends_on:
+      - db
+      - redis
+    env_file:
+      - .env  # Load environment variables from .env
+    command: python -Wd manage.py runserver 0.0.0.0:8000
+
+  db:
+    image: postgres:15
+    restart: unless-stopped
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASS}
+    env_file:
+      - .env
+    ports:
+      - "5432:5433"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:latest
+    restart: always
+    env_file:
+      - .env
+    environment:
+      - REDIS_PASSWORD=${REDIS_PASSWORD}
+    ports:
+      - "${REDIS_PORT}:6379"
+
+volumes:
+  pgdata:

@@ -68,6 +68,7 @@ psycopg = "^3.2.4"
 sympy = "^1.13.3"
 whitenoise = "^6.9.0"
 pre-commit = "^4.1.0"
+watchdog = "^6.0.0"
 
 
 [build-system]

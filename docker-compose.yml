@@ -1,8 +1,7 @@
-version: "3.10"
-
 services:
   web:
     build: .
+    restart: always
     ports:
       - "8000:8000"
     volumes:
@@ -11,8 +10,8 @@ services:
       - db
       - redis
     env_file:
-      - .env  # Load environment variables from .env
-    command: python -Wd manage.py runserver 0.0.0.0:8000
+      - .env
+    command: watchmedo auto-restart --pattern="*.py" --recursive -- python -Wd manage.py runserver 0.0.0.0:8000
 
   db:
     image: postgres:15

@@ -1,33 +1,3 @@
-## Використовуємо офіційний Python-образ
-#FROM python:3.10.12
-#
-## Встановлюємо необхідні пакети та Poetry
-#RUN apt-get update && apt-get install --no-install-recommends -y curl \
-#    && curl -sSL https://install.python-poetry.org | python3 - \
-#    && rm -rf /var/lib/apt/lists/*
-#
-## Додаємо Poetry в глобальний PATH
-#ENV POETRY_HOME="/root/.local"
-#ENV PATH="$POETRY_HOME/bin:$PATH"
-#
-## Встановлюємо робочу директорію
-#WORKDIR /home/dev/mathlab
-#
-## Копіюємо файли залежностей
-#COPY README.md pyproject.toml poetry.lock /home/dev/mathlab/
-#
-## Встановлюємо залежності через Poetry
-#RUN poetry install
-#
-## Копіюємо весь проект
-#COPY . /home/dev/mathlab/
-#
-## Відкриваємо порт
-#EXPOSE 8000
-#
-## Запускаємо Django
-##CMD ["poetry", "run", "python", "manage.py", "runserver", "0.0.0.0:8000"]
-# The base image we want to inherit from
 FROM python:3.10.12
 
 ARG DJANGO_ENV

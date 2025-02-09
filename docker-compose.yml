@@ -5,13 +5,13 @@ services:
     ports:
       - "8000:8000"
     volumes:
-      - .:/app
+      - ./:/mathlab
     depends_on:
       - db
       - redis
     env_file:
       - .env
-    command: python -Wd manage.py runserver 0.0.0.0:8000
+#    command: python -Wd manage.py runserver 0.0.0.0:8000
 
   db:
     image: postgres:15

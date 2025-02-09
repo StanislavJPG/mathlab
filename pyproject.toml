@@ -71,6 +71,9 @@ pre-commit = "^4.1.0"
 watchdog = "^6.0.0"
 
 
+[tool.poetry.group.dev.dependencies]
+django-debug-toolbar = "^5.0.1"
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

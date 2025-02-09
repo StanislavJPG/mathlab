@@ -11,7 +11,7 @@ services:
       - redis
     env_file:
       - .env
-    command: watchmedo auto-restart --pattern="*.py" --recursive -- python -Wd manage.py runserver 0.0.0.0:8000
+    command: python -Wd manage.py runserver 0.0.0.0:8000
 
   db:
     image: postgres:15

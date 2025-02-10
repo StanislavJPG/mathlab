@@ -768,6 +768,59 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-allauth"
+version = "65.4.1"
+description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_allauth-65.4.1.tar.gz", hash = "sha256:60b32aef7dbbcc213319aa4fd8f570e985266ea1162ae6ef7a26a24efca85c8c"},
+]
+
+[package.dependencies]
+asgiref = ">=3.8.1"
+Django = ">=4.2.16"
+
+[package.extras]
+mfa = ["fido2 (>=1.1.2)", "qrcode (>=7.0.0)"]
+openid = ["python3-openid (>=3.0.8)"]
+saml = ["python3-saml (>=1.15.0,<2.0.0)"]
+socialaccount = ["pyjwt[crypto] (>=1.7)", "requests (>=2.0.0)", "requests-oauthlib (>=0.3.0)"]
+steam = ["python3-openid (>=3.0.8)"]
+
+[[package]]
+name = "django-allauth-ui"
+version = "1.5.3"
+description = ""
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_allauth_ui-1.5.3-py3-none-any.whl", hash = "sha256:ac880ce6003b7953fbfc0b04b5e64607b94bd2d778c16cf108fcdb67278955c5"},
+    {file = "django_allauth_ui-1.5.3.tar.gz", hash = "sha256:adb5c142232bc1fc097158e0367eccc3785afd20c97e5d257cc3e04f3ca90fda"},
+]
+
+[package.dependencies]
+django-widget-tweaks = ">=1.5.0,<2.0.0"
+slippers = ">=0.6.2,<0.7.0"
+
+[[package]]
+name = "django-crispy-forms"
+version = "2.3"
+description = "Best way to have Django DRY forms"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_crispy_forms-2.3-py3-none-any.whl", hash = "sha256:efc4c31e5202bbec6af70d383a35e12fc80ea769d464fb0e7fe21768bb138a20"},
+    {file = "django_crispy_forms-2.3.tar.gz", hash = "sha256:2db17ae08527201be1273f0df789e5f92819e23dd28fec69cffba7f3762e1a38"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+
+[[package]]
 name = "django-debug-toolbar"
 version = "5.0.1"
 description = "A configurable set of panels that display various debug information about the current request/response."
@@ -823,6 +876,37 @@ elasticsearch-dsl = "*"
 six = ">=1.9"
 
 [[package]]
+name = "django-filter"
+version = "24.3"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_filter-24.3-py3-none-any.whl", hash = "sha256:c4852822928ce17fb699bcfccd644b3574f1a2d80aeb2b4ff4f16b02dd49dc64"},
+    {file = "django_filter-24.3.tar.gz", hash = "sha256:d8ccaf6732afd21ca0542f6733b11591030fa98669f8d15599b358e24a2cd9c3"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+
+[[package]]
+name = "django-htmx"
+version = "1.22.0"
+description = "Extensions for using Django with htmx."
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "django_htmx-1.22.0-py3-none-any.whl", hash = "sha256:9f1fcf239125a42d6dadc814b3796b8d6faad8ded444a14ae021d0241fa9a40f"},
+    {file = "django_htmx-1.22.0.tar.gz", hash = "sha256:7306e1aba4e407496f30a57ec2e0b2974a9b96c8c6036f7ec6a8b5753ea0abdd"},
+]
+
+[package.dependencies]
+asgiref = ">=3.6"
+django = ">=4.2"
+
+[[package]]
 name = "django-nine"
 version = "0.2.7"
 description = "Version checking library."
@@ -856,6 +940,36 @@ redis = ">=3,<4.0.0 || >4.0.0,<4.0.1 || >4.0.1"
 
 [package.extras]
 hiredis = ["redis[hiredis] (>=3,!=4.0.0,!=4.0.1)"]
+
+[[package]]
+name = "django-tables2"
+version = "2.7.5"
+description = "Table/data-grid framework for Django"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "django_tables2-2.7.5-py3-none-any.whl", hash = "sha256:d9338937797207ffb6f481be2125c5ec3a0bb1858d409c672cc25fc5d654cb22"},
+    {file = "django_tables2-2.7.5.tar.gz", hash = "sha256:fb5dcaa09379cf3947598ec7e1bd5f26ed63aafdee3b23963446763bbeac37bf"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+
+[package.extras]
+tablib = ["tablib"]
+
+[[package]]
+name = "django-widget-tweaks"
+version = "1.5.0"
+description = "Tweak the form field rendering in templates, not in python-level form definitions."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django-widget-tweaks-1.5.0.tar.gz", hash = "sha256:1c2180681ebb994e922c754804c7ffebbe1245014777ac47897a81f57cc629c7"},
+    {file = "django_widget_tweaks-1.5.0-py3-none-any.whl", hash = "sha256:a41b7b2f05bd44d673d11ebd6c09a96f1d013ee98121cb98c384fe84e33b881e"},
+]
 
 [[package]]
 name = "djangorestframework"
@@ -2370,6 +2484,24 @@ files = [
 ]
 
 [[package]]
+name = "slippers"
+version = "0.6.2"
+description = "Build reusable components in Django without writing a single line of Python."
+optional = false
+python-versions = ">=3.8.0"
+groups = ["main"]
+files = [
+    {file = "slippers-0.6.2-py3-none-any.whl", hash = "sha256:739e05f85354becbf0a65daab831eea62557d89e7512042209ab629af4378bca"},
+    {file = "slippers-0.6.2.tar.gz", hash = "sha256:4cb555b8822ba0d404e5405723f5d723994022c29046008ee917081031bc0cf1"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+PyYAML = ">=5.4.0"
+typeguard = ">=2.13.3,<3.0.0"
+typing-extensions = ">=4.4.0"
+
+[[package]]
 name = "sniffio"
 version = "1.3.1"
 description = "Sniff out which async library your code is running under"
@@ -2531,6 +2663,22 @@ files = [
 all = ["twisted (>=20.3.0)", "zope.interface (>=5.2.0)"]
 dev = ["pep8 (>=1.6.2)", "pyenchant (>=1.6.6)", "pytest (>=2.6.4)", "pytest-cov (>=1.8.1)", "sphinx (>=1.2.3)", "sphinx-rtd-theme (>=0.1.9)", "sphinxcontrib-spelling (>=2.1.2)", "tox (>=2.1.1)", "tox-gh-actions (>=2.2.0)", "twine (>=1.6.5)", "wheel"]
 twisted = ["twisted (>=20.3.0)", "zope.interface (>=5.2.0)"]
+
+[[package]]
+name = "typeguard"
+version = "2.13.3"
+description = "Run-time type checker for Python"
+optional = false
+python-versions = ">=3.5.3"
+groups = ["main"]
+files = [
+    {file = "typeguard-2.13.3-py3-none-any.whl", hash = "sha256:5e3e3be01e887e7eafae5af63d1f36c849aaa94e3a0112097312aabfa16284f1"},
+    {file = "typeguard-2.13.3.tar.gz", hash = "sha256:00edaa8da3a133674796cf5ea87d9f4b4c367d77476e185e80251cc13dfbb8c4"},
+]
+
+[package.extras]
+doc = ["sphinx-autodoc-typehints (>=1.2.0)", "sphinx-rtd-theme"]
+test = ["mypy", "pytest", "typing-extensions"]
 
 [[package]]
 name = "typing-extensions"
@@ -2749,4 +2897,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "cbf011d5e381fde324353cc0f45c01662e343f7ceb1f5bd6a9e0230a4c7a034f"
+content-hash = "91909666161d78e25efb061faa19060abb79bdd0eb3f3a8162355b4e05afc890"

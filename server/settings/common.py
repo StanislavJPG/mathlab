@@ -41,6 +41,8 @@ INSTALLED_APPS = [
     "rest_framework",
     "rest_framework.authtoken",
     "channels",
+    # common
+    "server.common",
     # apps
     "server.apps.explainme.apps.ExplainmeConfig",
     "server.apps.solvexample.apps.SolvexampleConfig",
@@ -48,7 +50,6 @@ INSTALLED_APPS = [
     "server.apps.forum.apps.ForumConfig",
     "server.apps.users.apps.UsersConfig",
     "server.apps.math_news.apps.MathNewsConfig",
-    "server.apps.forum.templatetags.filters",
     "server.apps.chat.apps.ChatConfig",
 ]
 
@@ -63,14 +64,15 @@ MIDDLEWARE = [
     "django.contrib.auth.middleware.AuthenticationMiddleware",
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "server.apps.mathlab.middleware.AsyncMiddleware",
-    "server.apps.mathlab.middleware.TokenMiddleware",
-    "server.apps.mathlab.middleware.AccessControl",
     "django.middleware.security.SecurityMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
+    # custom middlewares
+    "server.common.middlewares.AsyncMiddleware",
+    "server.common.middlewares.TokenMiddleware",
+    "server.common.middlewares.AccessControl",
 ]
 
-ROOT_URLCONF = "server.apps.mathlab.urls"
+ROOT_URLCONF = "server.urls.urls"
 
 
 TEMPLATES = [
@@ -90,7 +92,7 @@ TEMPLATES = [
 ]
 
 
-WSGI_APPLICATION = "server.apps.mathlab.wsgi.application"
+WSGI_APPLICATION = "server.settings.wsgi.application"
 
 
 # Database
@@ -142,13 +144,13 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "templates/static/"
+STATIC_URL = "static/"
 
 STATICFILES_DIRS = [
-    BASE_DIR / "templates/static/css",
-    BASE_DIR / "templates/static/js",
-    BASE_DIR / "templates/static/img",
-    BASE_DIR / "templates/static/profile_pics",
+    BASE_DIR / "static/css",
+    BASE_DIR / "static/js",
+    BASE_DIR / "static/img",
+    BASE_DIR / "static/profile_pics",
 ]
 
 

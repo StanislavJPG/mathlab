@@ -14,7 +14,7 @@ from server.apps.forum.models import Comment
 def send_notification(comment_id):
     comment = Comment.objects.select_related("post", "user").get(pk=comment_id)
     html_content = render_to_string(
-        "forum/forum_notification.html", context={"instance": comment}
+        "forum/notification.html", context={"instance": comment}
     )
     text_content = strip_tags(html_content)
 

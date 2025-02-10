@@ -1,3 +1,5 @@
+# TODO: Fully REWORK this!
+
 from datetime import timedelta, date
 
 from django.contrib.postgres.search import SearchVector, SearchQuery, SearchRank

@@ -1,7 +1,6 @@
 # ruff: noqa: F405
 from server.settings.common import *  # noqa: F403
 
-# SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
 ALLOWED_HOSTS = ["*"]

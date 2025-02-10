@@ -1,5 +1,4 @@
 # ruff: noqa: F405
-
 from server.settings.common import *  # noqa: F403
 import os
 
@@ -10,8 +9,8 @@ SECRET_KEY = os.getenv("SECRET_KEY")
 
 CSRF_TRUSTED_ORIGINS = [""]
 
-ALLOWED_HOSTS = ["127.0.0.1"]
+ALLOWED_HOSTS = [""]
 
 # static
-STATIC_ROOT = BASE_DIR / "templates/static/"
+STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

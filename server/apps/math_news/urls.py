@@ -1,7 +1,7 @@
 from django.urls import path
-from .views import NewsView, base_redirect
+
+from server.apps.math_news.views.news import NewsView
 
 urlpatterns = [
-    path("", base_redirect, name="base-redirect"),
     path("news/math/", NewsView.as_view(), name="base-math-news"),
 ]

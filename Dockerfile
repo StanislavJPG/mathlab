@@ -32,9 +32,15 @@ RUN apt-get update \
 
 # set work directory
 WORKDIR /mathlab
+
 COPY pyproject.toml poetry.lock /mathlab/
 
 # Install dependencies:
 RUN poetry install --no-root
 # copy project
-COPY . .
+COPY . /mathlab
+
+# configure env for starting app
+COPY config/entrypoint.sh /mathlab/config/entrypoint.sh
+RUN chmod +x /mathlab/config/entrypoint.sh
+CMD ["sh", "/mathlab/config/entrypoint.sh"]

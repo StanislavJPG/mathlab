@@ -1,19 +1,22 @@
 
 # for docker
-make up:
+up:
 	docker-compose up
 
-make rebuild:
+rebuild:
 	docker-compose build --no-cache
 
-make web:
+soft-rebuild:
+	docker-compose build
+
+web:
 	docker compose run --rm web sh
 	#chmod +x manage.py
 
 # for translation
-make makemessages:
+makemessages:
 	python manage.py makemessages -l en -l uk --ignore=private/node_modules/* --ignore=tmp/* --ignore=private/ --ignore=media/* --ignore=static/* --ignore=docs --ignore=docs_internal --add-location=file --no-obsolete
 
-make compilemessages:
+compilemessages:
 	python manage.py compilemessages
 

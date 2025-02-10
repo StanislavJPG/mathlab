@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<meta charset="utf-8">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css?v=2">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js?v=2"></script>
+{% load static pagination urls %}
+<link rel="icon" type="image/x-icon" href="{% static 'forum-favicon.png' %}">
+
+<header class="p-3 mb-3 border-bottom" style="padding: 0.5rem !important;">
+    <div class="container">
+      <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+        <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+          <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap"><use xlink:href="#bootstrap"></use></svg>
+        </a>
+          <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+          <li><a href="{% url 'mathlab:base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
+          <li><a href="{% url 'forum:base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
+            {% if user.is_authenticated %}
+          <li><a href="{% url 'forum:q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+            {% else %}
+          <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+            {% endif %}
+          </ul>
+            {% if user.is_authenticated %}
+          <ul class="nav col-md-4 justify-content-end">
+          <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1" class="nav-link px-2 text-muted">
+              <img width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
+          </ul>
+            {% endif %}
+
+          <form action="{% url 'forum:base' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
+              <input type="hidden" name="sort" value="{{ order_by }}">
+              <input type="hidden" name="page" value="{{ page }}">
+              <input type="hidden" name="tags" value="{{ tags }}">
+              <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;"
+              placeholder="Пошук..." aria-label="Search">
+          </form>
+
+        <div class="dropdown_user text-end">
+          <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
+              {% if not current_user_image %}
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo" width="32" height="32" class="rounded-circle">
+              {% else %}
+            <img src="{% static current_user_image %}" alt="mdo" width="32" height="32" class="rounded-circle">
+              {% endif %}
+          </a>
+          <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+              {% if user.is_authenticated %}
+               <li><a class="dropdown-item" href="{% url 'forum:q-creation' %}">Задати питання...</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:settings' %}">Налаштування</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:profile' user_id=user.id username=user.username %}">Профіль</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
+              {% else %}
+              <li><a class="dropdown-item" href="{% url 'login_view' %}">Задати питання...</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="{% url 'login_view' %}">Увійти</a></li>
+          {% endif %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </header>
+
+{% block head %}
+<link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
+<head>
+    <meta charset="UTF-8">
+    <title>MathLab | Форум</title>
+</head>
+{% endblock %}
+
+{% block body %}
+<body>
+    <div class="block-body">
+        <h1 style="text-align: center;" class="display-4">Останні запитання</h1>
+        {% if user.is_authenticated %}
+        <a type="submit" style="margin-bottom: 25px;" href="{% url 'forum:q-creation' %}" class="btn btn-outline-dark">Задати своє питання</a>
+        {% else %}
+        <a type="submit" style="margin-bottom: 25px;" href="{% url 'login_view' %}" class="btn btn-outline-dark">Задати своє питання</a>
+        {% endif %}
+        <div class="btn-group dropend" style="transform: translateY(-12px);">
+            <button type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+                Категорія
+            </button>
+            <ul class="dropdown-menu">
+                {% for category in categories %}
+                <li><a class="dropdown-item"
+                       href="{% url 'forum:base' %}?sort={{ order_by }}&page={{ page }}&tags={{ category|index:1 }}">{{ category|index:1 }}</a></li>
+                {% endfor %}
+            </ul>
+        </div>
+
+    </div>
+</body>
+{% endblock %}
+
+
+{% block content %}
+<div>
+    <div class="sort-by">
+        <a style="margin-bottom: 5px; font-size: 13px;"><span>Сортувати за:</span></a>
+        <a href="{% url 'forum:base' %}?sort=popular&page={{ page }}" class="btn btn-outline-dark a">Найпопулярніші</a>
+        <a href="{% url 'forum:base' %}?sort=interest&page={{ page }}" class="btn btn-outline-dark a">Найцікавіші</a>
+        <a href="{% url 'forum:base' %}?sort=newest&page={{ page }}" class="btn btn-outline-dark a">Найновіші</a>
+        <a href="{% url 'forum:base' %}?sort=last-week&page={{ page }}" class="btn btn-outline-dark a">На тому тижні</a>
+    </div>
+    <div class="base-content">
+        <div style="border-top: 1px solid #858383;"></div>
+        {% for post in posts %}
+        <div style="text-align: left;">
+            <div class="question">
+                <div style="transform: translateX(130px);">
+                    <div class="base-title-info">
+                        {% load pagination urls %}
+                        <a href="{% url 'forum:q' q_id=post.id title=post.title|hyphens_add %}" class="title">{{ post.title }}</a>
+                        <div class="watch">
+                            <span class="a-base">{{ post.likes }} вподобань</span>
+                            <span class="a-base">{{ post.comments_quantity }} коментарів</span>
+                        </div>
+                    </div>
+                    <div style="margin-top: 10px;" class="description">
+                        <div class="some">
+                            <div class="topics">
+                            {% for сategory in post.categories %}
+                                <a href="{% url 'forum:base' %}?sort={{ order_by }}&page={{ page }}&tags={{ сategory }}"
+                                   class="a-topic">{{ сategory }}</a>
+                            {% endfor %}
+                            </div>
+                            <div style="transform: translateX(-100px); font-size: 14px;">
+                                <span><a style="text-decoration: none; margin-bottom: 15px;"
+                                         href="{% url 'forum:profile' user_id=post.user.id username=post.user.username %}">{{ post.user.username }}
+                                </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
+                                {% if post.user.id == user.id %}
+                                <form style="margin-top:10px;" method="post" action="{% url 'forum:base' %}">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="post_id" value="{{ post.id }}">
+                                    <button style="margin-bottom: 10px;" type="submit" class="btn btn-danger btn-sm">Видалити пост</button>
+                                </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div style="border-top: 1px solid #858383;"></div>
+        {% endfor %}
+        <div style="text-align: center; margin-top: 30px; margin-bottom: -15px;">
+            {% if page > 1 %}
+            <a type="submit" href="{{ url }}{{ page|add:'-1' }}" class="btn btn-dark btn-sm">Назад</a>
+            {% endif %}
+            {% if posts|length >= 10 %}
+            <a type="submit" href="{{ url }}{{ page|add:'1' }}" class="btn btn-dark btn-sm">Далі</a>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% load static %}
+<div class="container" style="padding: 25px;">
+    <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© Made by StanislavJPG</p>
+    <a href="{% url 'forum:base' %}" class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <svg width="40" height="32"><use xlink:href="#home"></use></svg>
+        <img src="{% static 'forum-logo.png' %}" class="d-inline-block align-top" width="110" height="55" alt="">
+    </a>
+
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="https://linkedin.com/in/stanislav-ruban-a77305278" target="_blank" class="nav-link px-2 text-muted">
+          <img width="34" height="33" src="{% static 'linkedin.png' %}"></a></li>
+      <li class="nav-item"><a href="https://github.com/StanislavJPG/" target="_blank" class="nav-link px-2 text-muted">
+          <img width="34" height="33" src="{% static 'github-mark.png' %}"></a></li>
+    </ul>
+
+    </footer>
+</div>
+</html>

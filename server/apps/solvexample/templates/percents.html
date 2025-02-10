@@ -1,0 +1,82 @@
+{% extends "./equations.html" %}
+
+{% load static %}
+{% block head %}
+<title>MathLab | Операції з відсотками</title>
+{% endblock %}
+
+{% block tasks %}
+<link type="text/css" href="{% static 'solvexample.css' %}" rel="stylesheet">
+<div style="margin-top: 50px;">
+    <h1 style="text-align: center; font-size: 50px;">Операції з відсотками</h1>
+    <div style="text-align: center;">
+        <div class="choice-calculation-type">
+            <a class="btn btn-primary" href="{% url 'mathlab:equations' %}">Вирази з невідомими аргументами</a>
+            <a class="btn btn-primary" href="{% url 'mathlab:percents' %}">Знайти відсоток</a>
+            <a class="btn btn-primary" href="{% url 'mathlab:matrices' %}">Операції з матрицями</a>
+        </div>
+    </div>
+</div>
+{% endblock %}
+{% block content %}
+{% load static %}
+<div style="text-align: center;" xmlns="http://www.w3.org/1999/html">
+    <div class="percents-bar" >
+
+        <form class="input-form" style="padding: 10px; width: 400px;">
+            <h4 style="margin-top: 10px;">Знайти число від відсотка</h4>
+            <input id="x1" style="text-align: center; width: 150px; margin-top: 10px;" placeholder="Повне число" maxlength="15">
+            <p>
+            <input id="number_by_percent" style="text-align: center; margin-top: 10px; width: 150px;" placeholder="Відсоток, %" maxlength="10">
+            </p>
+             <button type="button"
+                    class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
+                    onclick="getRightPercentsCalculation(
+                             document.getElementById('x1').value,
+                             document.getElementById('number_by_percent').value,
+                             null,
+                             'від відсотка x')">=</button>
+            {% if operation_type == 'від відсотка x' %}
+            <p style="margin-top: 5px;">
+                {% if '%' in percent %}
+            <b style="font-size: 25px;">{{ percent }} від числа {{ example }} = {{ solved_example }}</b>
+                {% else %}
+            <b style="font-size: 25px;">{{ percent }}% від числа {{ example }} = {{ solved_example }}</b>
+                {% endif %}
+            </p>
+            {% endif %}
+        </form>
+        <form class="input-form" style="padding: 10px; width: 400px;">
+            <p class="indications"><button class="btn btn-outline-primary" type="button" id="showPopupButton">Відкрити вказівники</button></p>
+                <div id="popupContainer" class="popup-container">
+            <div class="popup-content">
+                <span class="close" id="closePopup">&times;</span>
+                <h3>Пояснення пропорції</h3>
+                <blockquote class="blockquote">
+                  <p class="mb-0"><b>"Число A"</b> приймає поточне значення, від якого треба шукати відсоток</p>
+                  <p class="mb-0"><b>"Відсоток"</b> - поле вводу повного відсотку "Числа A"</p>
+                  <p class="mb-0"><b>"Число B"</b> приймає значення, від якого потрібно знайти відсоток щодо "Числа А"</p>
+                </blockquote>
+                </div>
+            </div>
+            <h4>Знайти відсоток від числа</h4>
+            <input id="example" style="width: 100px; text-align: center;" placeholder="Число A" maxlength="10"> = <input id="percent" style="width: 100px; text-align: center;" placeholder="Відсоток, %" maxlength="5">
+            ――――――――――――――――――
+            <p>
+            <input id="num" style="width: 100px; text-align: center;" placeholder="Число B" maxlength="15"> <button type="button"
+                    class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
+                    onclick="getRightPercentsCalculation(
+                            document.getElementById('example').value,
+                            document.getElementById('percent').value,
+                            document.getElementById('num').value,
+                            'від числа x')">=</button>
+                {% if operation_type == 'від числа x' %}
+                <b style="font-size: 25px;"> {{ solved_example }}</b>
+                {% endif %}
+            </p>
+        </form>
+    </div>
+
+</div>
+<script src="{% static 'solvexample.js' %}"></script>
+{% endblock %}

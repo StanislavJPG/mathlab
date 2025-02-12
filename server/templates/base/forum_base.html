@@ -1,9 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js?v=2"></script>
-<script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
+
 {% load static pagination urls %}
 <link rel="icon" type="image/x-icon" href="{% static 'forum-favicon.png' %}">
 
@@ -17,13 +25,20 @@
   </head>
 {% endblock %}
 
+<style>
+  .bootstrap-select > .dropdown-toggle {
+    border: 1px solid #dee2e6 !important;
+    border-radius: 0.375rem;
+}
+</style>
+
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body %}
-  <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
   <div class="block-body">
   {{ posts|length }}
     <h1 style="text-align: center;" class="display-4">Останні запитання</h1>
     {% if user.is_authenticated %}
-      <a type="submit" style="margin-bottom: 25px;" href="{% url 'forum:q-creation' %}"
+      <a type="submit" style="margin-bottom: 25px;" href="{% url 'forum:question-create' %}"
          class="btn btn-outline-dark">Задати своє питання</a>
     {% else %}
       <a type="submit" style="margin-bottom: 25px;" href="{% url 'login_view' %}" class="btn btn-outline-dark">Задати
@@ -44,7 +59,6 @@
     </div>
 
   </div>
-  </body>
   
   <div>
     <div class="sort-by">
@@ -114,6 +128,7 @@
     </div>
   </div>
 {% endblock body %}
+</body>
 
 {% block footer %}
   <div class="container" style="padding: 25px;">
@@ -142,5 +157,11 @@
 
 {% block page_css %}
 {% endblock page_css %}
+
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>
 
 </html>

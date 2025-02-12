@@ -12,7 +12,7 @@
                 <li><a href="{% url 'mathlab:base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
                 <li><a href="{% url 'forum:base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
                 {% if user.is_authenticated %}
-                    <li><a href="{% url 'forum:q-creation' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+                    <li><a href="{% url 'forum:question-create' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
                 {% else %}
                     <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
                 {% endif %}
@@ -46,7 +46,7 @@
                 </a>
                 <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                     {% if user.is_authenticated %}
-                        <li><a class="dropdown-item" href="{% url 'forum:q-creation' %}">Задати питання...</a></li>
+                        <li><a class="dropdown-item" href="{% url 'forum:question-create' %}">Задати питання...</a></li>
                         <li><a class="dropdown-item" href="{% url 'forum:settings' %}">Налаштування</a></li>
                         <li><a class="dropdown-item"
                                href="{% url 'forum:profile' user_id=user.id username=user.username %}">Профіль</a></li>

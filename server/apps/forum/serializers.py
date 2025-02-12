@@ -3,7 +3,8 @@ from datetime import datetime
 
 from rest_framework import serializers
 
-from .models import Post, Comment
+from .models import Post
+from .models import Comment
 from server.apps.users.serializers import UserSerializer
 
 
@@ -40,10 +41,10 @@ class CommentSerializer(serializers.ModelSerializer):
         )
 
 
-# class CategorySerializer(serializers.ModelSerializer):
+# class categoriesSerializer(serializers.ModelSerializer):
 #     class Meta:
-#         model = Category
-#         fields = ('category_name',)
+#         model = categories
+#         fields = ('categories_name',)
 
 
 class PostSerializer(serializers.ModelSerializer):

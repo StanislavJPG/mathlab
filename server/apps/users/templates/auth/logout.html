@@ -4,9 +4,7 @@
 <link type="text/css" href="{% static 'login.css' %}" rel="stylesheet">
 <title>Вийти з профілю</title>
 {% endblock %}
-{% block content %}
 {% block body %}
-{% endblock %}
 <div style="margin-top: 200px; text-align: -webkit-center; margin-bottom: 200px;">
     <div id="formContent">
         <form method="POST" action="{% url 'logout_view' %}">

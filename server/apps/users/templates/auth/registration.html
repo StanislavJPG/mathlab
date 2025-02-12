@@ -5,9 +5,6 @@
 <title>Зареєструватись</title>
 {% endblock %}
 {% block body %}
-{% endblock %}
-
-{% block content %}
 {% if user.is_authenticated %}
 <div style="margin-top: 250px; text-align: -webkit-center; margin-bottom: 200px;">
     <h1>Ви вже авторизовані...<img src="{% static 'error.png' %}" style="width: 170px;"></h1>

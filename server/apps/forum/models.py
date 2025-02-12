@@ -35,7 +35,7 @@ class Post(models.Model):
     modified_at = models.DateTimeField(default=timezone.now)
     post_likes = models.ManyToManyField(
         get_user_model(), related_name="liked_posts", db_index=True
-    )
+    )  # TODO: Denormilize it
     post_dislikes = models.ManyToManyField(
         get_user_model(), related_name="disliked_posts", db_index=True
     )

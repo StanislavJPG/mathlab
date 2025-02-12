@@ -16,7 +16,7 @@ from rest_framework.views import APIView
 
 from server.apps.forum.models import Post, Comment
 from server.apps.forum.serializers import PostSerializer, CommentLastActionsSerializer
-from server.apps.forum.utils import delete_keys_matching_pattern
+from server.common.utils.cache import delete_keys_matching_pattern
 from server.apps.users.models import CustomUser as User, ProfileImage
 from server.apps.users.serializers import ProfileSerializer, UserSerializer
 

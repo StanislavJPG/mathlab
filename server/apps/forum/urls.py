@@ -1,12 +1,21 @@
 from django.urls import path
 
 from server.apps.forum.views.forum_base import ForumBaseView
-from server.apps.forum.views.questions import QuestionCreationView, QuestionView
+from server.apps.forum.views.questions import (
+    QuestionCreationView,
+    QuestionView,
+    QuestionDeleteView,
+)
 from server.apps.forum.views.profile import ProfileView
 from server.apps.users.views.profile_settings import ChangeUserDataView
 
 urlpatterns = [
     path("", ForumBaseView.as_view(), name="base"),
+    path(
+        "questions/<int:id>/delete",
+        QuestionDeleteView.as_view(),
+        name="question-delete",
+    ),
     path(
         "profile/<int:user_id>/<str:username>",
         ProfileView.as_view(),

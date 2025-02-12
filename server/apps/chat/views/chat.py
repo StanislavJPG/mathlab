@@ -6,7 +6,8 @@ from rest_framework.permissions import IsAuthenticated
 from rest_framework.views import APIView
 from server.apps.chat.models import Message
 from server.apps.chat.serializer import MessageSerializer
-from server.apps.forum.utils import PaginationCreator, delete_keys_matching_pattern
+from server.apps.forum.utils import PaginationCreator
+from server.common.utils.cache import delete_keys_matching_pattern
 from server.apps.users.serializers import ProfileSerializer
 
 

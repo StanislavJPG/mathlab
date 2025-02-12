@@ -1,7 +1,9 @@
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.cache import cache
 from django.db.models import F, Count
-from django.http import HttpResponseRedirect, Http404
+from django.http import HttpResponseRedirect, Http404, HttpResponse
 from django.shortcuts import render
+from django.views.generic import DeleteView
 from rest_framework import viewsets
 from rest_framework.decorators import throttle_classes
 from rest_framework.exceptions import PermissionDenied
@@ -18,7 +20,8 @@ from server.apps.users.utils import make_rate
 from server.apps.users.serializers import ProfileSerializer
 from ..models import Post, Comment
 from ..serializers import PostSerializer, CommentSerializer
-from ..utils import delete_keys_matching_pattern, PaginationCreator, sort_comments
+from ..utils import PaginationCreator, sort_comments
+from server.common.utils.cache import delete_keys_matching_pattern
 
 
 class QuestionCreationView(APIView):
@@ -53,6 +56,21 @@ class QuestionCreationView(APIView):
         return HttpResponseRedirect(
             f"/forum/question/{post.data['id']}/{url_post_title}"
         )
+
+
+class QuestionDeleteView(LoginRequiredMixin, DeleteView):
+    model = Post
+    template_name = "base/forum_base.html"
+    # slug_url_kwarg = 'id'
+    pk_url_kwarg = "id"
+
+    def get_queryset(self):
+        return super().get_queryset().filter(user__id=self.request.user.id)
+
+    def delete(self, request, *args, **kwargs):
+        post = self.get_object()
+        post.delete()
+        return HttpResponse()
 
 
 class QuestionView(viewsets.ViewSet):

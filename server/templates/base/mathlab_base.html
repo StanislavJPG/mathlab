@@ -1,8 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+{% load static %}
+
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
+<script src="https://unpkg.com/hyperscript.org@0.9.14"></script>
 
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css?v=2">
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js?v=2"></script>
@@ -10,7 +14,6 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
-{% load static %}
 <link type="text/css" href="{% static 'explainme.css' %}" rel="stylesheet">
 <link rel="icon" type="image/x-icon" href="{% static 'logo.png' %}">
 {% block header %}
@@ -32,8 +35,8 @@
 
 {% block tasks %} {% endblock tasks %}
 
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-boost="true">
 {% block body %}
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 <div style="text-align: center;">
     <h1 class="display-4 index">Останні новини зі світу Математики в Україні</h1>
     {% for new in all_news %}
@@ -54,8 +57,8 @@
     <a type="button" href="{% url 'mathlab:base-math-news' %}?page={{ page|add:1 }}" class="btn btn-dark">Вперед</a>
     {% endif %}
 </div>
-</body>
 {% endblock body %}
+</body>
 
 {% block footer %}
 <div class="container" style="padding: 25px;">

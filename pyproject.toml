@@ -78,11 +78,14 @@ django-allauth = "^65.4.1"
 django-allauth-ui = "^1.5.3"
 django-braces = "^1.16.0"
 django-lifecycle = "^1.2.4"
-django-extensions = "^3.2.3"
+uuid = "^1.30"
+python-slugify = {extras = ["unicode"], version = "^8.0.4"}
+django-render-block = "^0.10"
 
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^5.0.1"
+django-extensions = "^3.2.3"
 
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]

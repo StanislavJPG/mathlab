@@ -1,10 +1,15 @@
 from django.urls import path
 
+from server.apps.forum.views.comments import (
+    CommentCreateView,
+    CommentDeleteView,
+    CommentQuantityView,
+)
 from server.apps.forum.views.forum_base import ForumBaseView
-from server.apps.forum.views.questions import (
-    QuestionCreateView,
-    QuestionView,
-    QuestionDeleteView,
+from server.apps.forum.views.posts import (
+    PostCreateView,
+    PostView,
+    PostDeleteView,
 )
 from server.apps.forum.views.profile import ProfileView
 from server.apps.users.views.profile_settings import ChangeUserDataView
@@ -14,13 +19,18 @@ urlpatterns = [
     path("", ForumBaseView.as_view(), name="base"),
     # Question posts block
     path(
-        "questions/<int:id>/delete/",
-        QuestionDeleteView.as_view(),
+        "question/<int:pk>/<slug:slug>/",
+        PostView.as_view(),
+        name="question-post-base",
+    ),
+    path(
+        "questions/delete/<uuid:uuid>/",
+        PostDeleteView.as_view(),
         name="question-delete",
     ),
     path(
         "questions/create/",
-        QuestionCreateView.as_view(),
+        PostCreateView.as_view(),
         name="question-create",
     ),
     # path(
@@ -30,20 +40,25 @@ urlpatterns = [
     # ),
     # Question comments block
     path(
-        "forum/question/<int:pk>/<slug:slug>/",
-        QuestionView.as_view(),
-        name="q",
+        "comment/create/<uuid:post_uuid>/",
+        CommentCreateView.as_view(),
+        name="comment-create",
     ),
-    # path(
-    #     "forum/question/comment/delete/<int:q_id>/<str:title>/<int:comment_id>/",
-    #     QuestionView.as_view({"post": "delete_comment"}),
-    #     name="q-comm-delete",
-    # ),
+    path(
+        "comment/delete/<uuid:uuid>/<uuid:post_uuid>/",
+        CommentDeleteView.as_view(),
+        name="comment-delete",
+    ),
     # path(
     #     "forum/question/comment/rate/<int:q_id>/<str:title>/",
     #     QuestionView.as_view({"post": "create_comment_rate"}),
     #     name="q-comm-rate",
     # ),
+    path(
+        "comment/count/<uuid:post_uuid>/",
+        CommentQuantityView.as_view(),
+        name="comments-count",
+    ),
     # Profile block
     path(
         "profile/<int:user_id>/<str:username>",

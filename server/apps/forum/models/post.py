@@ -1,32 +1,32 @@
 from django.db import models
 from django.urls import reverse
-from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
+from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE, BEFORE_SAVE
 
-from server.common.mixins import TimeStampModelMixin
+from slugify import slugify
+
+from server.common.mixins import TimeStampModelMixin, UUIDModelMixin
 
 
-class Post(TimeStampModelMixin, LifecycleModel):
+class Post(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
     title = models.CharField(max_length=85)
     content = models.TextField(max_length=2000)
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
-    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE, null=False)
-
-    likes = models.ManyToManyField(
-        "users.CustomUser", related_name="liked_posts", db_index=True
-    )
-    dislikes = models.ManyToManyField(
-        "users.CustomUser", related_name="disliked_posts", db_index=True
-    )
-
-    likes_counter = models.PositiveSmallIntegerField(default=0)
-    dislikes_counter = models.PositiveSmallIntegerField(default=0)
-    post_views = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
-
+    user = models.ForeignKey("users.CustomUser", on_delete=models.SET_NULL, null=True)
     categories = models.ManyToManyField("forum.PostCategory", related_name="posts")
 
+    likes = models.ManyToManyField("users.CustomUser", related_name="liked_posts")
+    dislikes = models.ManyToManyField("users.CustomUser", related_name="disliked_posts")
+
+    # Denormilized fields
+    likes_counter = models.PositiveSmallIntegerField(default=0)
+    dislikes_counter = models.PositiveSmallIntegerField(default=0)
+
+    post_views = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
+    comments_quantity = models.PositiveSmallIntegerField(default=0)
+
     class Meta:
-        ordering = ("title",)
+        ordering = ("-created_at",)
         verbose_name = "post"
         verbose_name_plural = "posts"
         get_latest_by = "created_at"
@@ -35,7 +35,14 @@ class Post(TimeStampModelMixin, LifecycleModel):
         return f"{self.title} | {self.__class__.__name__} | id - {self.id}"
 
     def get_absolute_url(self):
-        return reverse("forum:q", kwargs={"pk": self.pk, "slug": self.slug})
+        return reverse(
+            "forum:question-post-base", kwargs={"pk": self.pk, "slug": self.slug}
+        )
+
+    @hook(BEFORE_SAVE)
+    def before_save(self):
+        text = slugify(self.title)
+        self.slug = text
 
     @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
     def after_update_likes_and_dislikes(self):

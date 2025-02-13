@@ -1,6 +1,5 @@
 {% extends 'base/forum_base.html' %}
 {% load widget_tweaks %}
-{% load widget_tweaks %}
 
 {% block head %}
   {% load i18n static pagination widget_tweaks %}
@@ -14,7 +13,8 @@
     {% for error in form.errors %}
       {{ error }}
     {% endfor %}
-    <form hx-post="{% url 'forum:question-create' %}" class="row justify-content-md-center">
+    <form method="post" action="{% url 'forum:question-create' %}" class="row justify-content-md-center">
+      {% csrf_token %}
       <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
       <div class="col-md-8">
         <span>{% translate 'Question topic' %} *</span>

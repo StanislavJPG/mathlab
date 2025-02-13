@@ -96,15 +96,15 @@
                 {% for action in all_actions %}
                   {% if action.comm_id is none %}
                     Створив Пост:
-                    <a class="mt-4 mb-1" href="{% url 'forum:q' q_id=action.id title=action.title|hyphens_add %}"
+                    <a class="mt-4 mb-1" href="{% url 'forum:question-post-base' q_id=action.id title=action.title|hyphens_add %}"
                        style="font-size: 19px;">{{ action.title }}</a>
                   {% else %}
                     Написав коментарій:
                     <a class="mt-4 mb-1"
-                       href="{% url 'forum:q' q_id=action.post.id title=action.post.title|hyphens_add %}"
+                       href="{% url 'forum:question-post-base' q_id=action.post.id title=action.post.title|hyphens_add %}"
                        style="font-size: 19px;">{{ action.title }}</a>
                     <p>До поста <a
-                        href="{% url 'forum:q' q_id=action.post.id title=action.post.title|hyphens_add %}">{{ action.post.title }}</a>
+                        href="{% url 'forum:question-post-base' q_id=action.post.id title=action.post.title|hyphens_add %}">{{ action.post.title }}</a>
                     </p>
                   {% endif %}
                   об {{ action.created_at }}

@@ -1,0 +1,8 @@
+{% load i18n static pagination urls widget_tweaks %}
+
+<form hx-post="{% url 'forum:comment-create' post.uuid %}">
+  {{ form.comment|add_class:"form-control w-50" }}
+  <div style="margin-top: 10px;">
+    <button type="submit" class="btn btn-dark">{% translate 'Add comment' %}</button>
+  </div>
+</form>

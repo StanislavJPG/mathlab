@@ -1,68 +1,68 @@
 {% load static pagination urls %}
 
 <header class="p-3 mb-3 border-bottom" style="padding: 0.5rem !important;">
-    <div class="container">
-        <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-            <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
-                <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
-                    <use xlink:href="#bootstrap"></use>
-                </svg>
-            </a>
-            <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
-                <li><a href="{% url 'mathlab:base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
-                <li><a href="{% url 'forum:base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
-                {% if user.is_authenticated %}
-                    <li><a href="{% url 'forum:question-create' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
-                {% else %}
-                    <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
-                {% endif %}
-            </ul>
-            {% if user.is_authenticated %}
-                <ul class="nav col-md-4 justify-content-end">
-                    <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1"
-                                            class="nav-link px-2 text-muted">
-                        <img width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
-                </ul>
-            {% endif %}
+  <div class="container">
+    <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
+      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+        <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
+          <use xlink:href="#bootstrap"></use>
+        </svg>
+      </a>
+      <ul class="nav col-12 col-lg-auto me-lg-auto mb-2 justify-content-center mb-md-0">
+        <li><a href="{% url 'mathlab:base-math-news' %}" class="nav-link px-2 link-secondary">Mathlab</a></li>
+        <li><a href="{% url 'forum:base' %}?sort=popular&page=1" class="nav-link px-2 link-dark">Форум</a></li>
+        {% if user.is_authenticated %}
+          <li><a href="{% url 'forum:question-create' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+        {% else %}
+          <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+        {% endif %}
+      </ul>
+      {% if user.is_authenticated %}
+        <ul class="nav col-md-4 justify-content-end">
+          <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1"
+                                  class="nav-link px-2 text-muted">
+            <img width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
+        </ul>
+      {% endif %}
 
-            <form action="{% url 'forum:base' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
-                <input type="hidden" name="sort" value="{{ order_by }}">
-                <input type="hidden" name="page" value="{{ page }}">
-                <input type="hidden" name="tags" value="{{ tags }}">
-                <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;"
-                       placeholder="Пошук..." aria-label="Search">
-            </form>
+      <form action="{% url 'forum:base' %}" class="col-12 col-lg-auto mb-3 mb-lg-0 me-lg-3" method="get">
+        <input type="hidden" name="sort" value="{{ order_by }}">
+        <input type="hidden" name="page" value="{{ page }}">
+        <input type="hidden" name="tags" value="{{ tags }}">
+        <input type="search" class="form-control" name="search_pattern" style="text-align: left; margin: 5px;"
+               placeholder="Пошук..." aria-label="Search">
+      </form>
 
-            <div class="dropdown_user text-end">
-                <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-                   data-bs-toggle="dropdown" aria-expanded="false">
-                    {% if not current_user_image %}
-                        <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo"
-                             width="32" height="32" class="rounded-circle">
-                    {% else %}
-                        <img src="{% static current_user_image %}" alt="mdo" width="32" height="32"
-                             class="rounded-circle">
-                    {% endif %}
-                </a>
-                <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                    {% if user.is_authenticated %}
-                        <li><a class="dropdown-item" href="{% url 'forum:question-create' %}">Задати питання...</a></li>
-                        <li><a class="dropdown-item" href="{% url 'forum:settings' %}">Налаштування</a></li>
-                        <li><a class="dropdown-item"
-                               href="{% url 'forum:profile' user_id=user.id username=user.username %}">Профіль</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
-                    {% else %}
-                        <li><a class="dropdown-item" href="{% url 'login_view' %}">Задати питання...</a></li>
-                        <li>
-                            <hr class="dropdown-divider">
-                        </li>
-                        <li><a class="dropdown-item" href="{% url 'login_view' %}">Увійти</a></li>
-                    {% endif %}
-                </ul>
-            </div>
-        </div>
+      <div class="dropdown_user text-end">
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
+           data-bs-toggle="dropdown" aria-expanded="false">
+          {% if not current_user_image %}
+            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo"
+                 width="32" height="32" class="rounded-circle">
+          {% else %}
+            <img src="{% static current_user_image %}" alt="mdo" width="32" height="32"
+                 class="rounded-circle">
+          {% endif %}
+        </a>
+        <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+          {% if user.is_authenticated %}
+            <li><a class="dropdown-item" href="{% url 'forum:question-create' %}">Задати питання...</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:settings' %}">Налаштування</a></li>
+            <li><a class="dropdown-item"
+                   href="{% url 'forum:profile' user_id=user.id username=user.username %}">Профіль</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
+          {% else %}
+            <li><a class="dropdown-item" href="{% url 'login_view' %}">Задати питання...</a></li>
+            <li>
+              <hr class="dropdown-divider">
+            </li>
+            <li><a class="dropdown-item" href="{% url 'login_view' %}">Увійти</a></li>
+          {% endif %}
+        </ul>
+      </div>
     </div>
+  </div>
 </header>

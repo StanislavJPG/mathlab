@@ -9,10 +9,7 @@ ALLOWED_HOSTS = ["*"]
 
 SECRET_KEY = "ASOJFAOSJ-0J1-0U-0js0adja0sj0-21juu0--109U2U0@((@(@"
 
-INSTALLED_APPS += [
-    "debug_toolbar",
-    "django_lifecycle_checks",
-]
+INSTALLED_APPS += ["debug_toolbar", "django_lifecycle_checks", "django_extensions"]
 
 MIDDLEWARE += [
     # uncomment to debug

@@ -1,28 +1,21 @@
-from braces.views import FormMessagesMixin
+from braces.views import FormMessagesMixin, LoginRequiredMixin
 
 from django import forms
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, CreateView, DetailView
 
-from server.apps.forum.models import Post, Comment
+from server.apps.forum.models import Post
+from server.common.http import AuthenticatedHttpRequest
 
 
-class QuestionView(LoginRequiredMixin, DetailView):
+class PostView(LoginRequiredMixin, DetailView):
     model = Post
+    context_object_name = "post"
     template_name = "question_page.html"
-    slug_field = "slug"
-    slug_url_kwarg = "slug"
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        comments = Comment.objects.filter(post=self.get_object())
-        context.update({"comments": comments})
-        return context
 
 
-# class QuestionView(viewsets.ViewSet):
+# class View(viewsets.ViewSet):
 #     permission_classes = [IsAuthenticatedOrReadOnly]
 #
 #     def get(self, request, q_id: int, title: str):
@@ -156,7 +149,7 @@ class QuestionView(LoginRequiredMixin, DetailView):
 #         return HttpResponseRedirect(f"/forum/question/{q_id}/{title}")
 
 
-class QuestionCreateForm(forms.ModelForm):  # TODO: Fix M2M SAVING
+class PostCreateForm(forms.ModelForm):  # TODO: Fix M2M SAVING
     class Meta:
         model = Post
         fields = (
@@ -185,16 +178,17 @@ class QuestionCreateForm(forms.ModelForm):  # TODO: Fix M2M SAVING
         self.instance.user = self.user
 
 
-class QuestionCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
     model = Post
     template_name = "add_question_page.html"
-    form_class = QuestionCreateForm
+    form_class = PostCreateForm
     form_valid_message = _("You successfully created a new post.")
     form_invalid_message = _(
         "Error while creating post. Please check for errors and try again."
     )
 
     def get_form_kwargs(self):
+        self.request: AuthenticatedHttpRequest
         kwargs = super().get_form_kwargs()
         kwargs["user"] = self.request.user
         return kwargs
@@ -206,13 +200,11 @@ class QuestionCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
         return response
 
 
-class QuestionDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, DeleteView):
     model = Post
     template_name = "base/forum_base.html"
-    pk_url_kwarg = "id"
-
-    def get_queryset(self):
-        return super().get_queryset().filter(user__id=self.request.user.id)
+    slug_url_kwarg = "uuid"
+    slug_field = "uuid"
 
     def delete(self, request, *args, **kwargs):
         post = self.get_object()

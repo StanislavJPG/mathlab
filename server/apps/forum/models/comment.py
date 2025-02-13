@@ -1,25 +1,37 @@
-from django.contrib.auth import get_user_model
 from django.db import models
-from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE
+from django_lifecycle import (
+    LifecycleModel,
+    hook,
+    AFTER_UPDATE,
+    AFTER_CREATE,
+    AFTER_DELETE,
+)
 
-from server.common.mixins import TimeStampModelMixin
+from server.common.mixins import TimeStampModelMixin, UUIDModelMixin
 
 
-class Comment(TimeStampModelMixin, LifecycleModel):
+class Comment(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
     comment = models.TextField("comment", max_length=2000)
 
-    post = models.ForeignKey("forum.Post", on_delete=models.CASCADE)
-    user = models.ForeignKey("users.CustomUser", on_delete=models.CASCADE)
+    post = models.ForeignKey(
+        "forum.Post", related_name="comments", on_delete=models.CASCADE
+    )
+    user = models.ForeignKey(
+        "users.CustomUser",
+        related_name="comments",
+        on_delete=models.SET_NULL,
+        null=True,
+    )
 
-    likes = models.ManyToManyField(get_user_model(), related_name="liked_comments")
+    likes = models.ManyToManyField("users.CustomUser", related_name="liked_comments")
     dislikes = models.ManyToManyField(
-        get_user_model(), related_name="disliked_comments"
+        "users.CustomUser", related_name="disliked_comments"
     )
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)
 
     class Meta:
-        ordering = ("id",)
+        ordering = ("created_at",)
         verbose_name = "comment"
         verbose_name_plural = "comments"
         get_latest_by = "created_at"
@@ -34,3 +46,9 @@ class Comment(TimeStampModelMixin, LifecycleModel):
     def after_update_likes_and_dislikes(self):
         self.likes_counter = self.likes.count()
         self.dislikes_counter = self.dislikes.count()
+
+    @hook(AFTER_CREATE)
+    @hook(AFTER_DELETE)
+    def after_comments_created_or_deleted(self):
+        self.post.comments_quantity = self.post.comments.count()
+        self.post.save(update_fields=["comments_quantity"])

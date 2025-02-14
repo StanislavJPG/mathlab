@@ -1,13 +1,14 @@
 from django.db import models
 from django.urls import reverse
-from django_lifecycle import LifecycleModel, hook, AFTER_UPDATE, BEFORE_SAVE
+from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
 
 from slugify import slugify
 
-from server.common.mixins import TimeStampModelMixin, UUIDModelMixin
+from server.apps.forum.managers import PostQuerySet
+from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin
 
 
-class Post(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
+class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     title = models.CharField(max_length=85)
     content = models.TextField(max_length=2000)
     slug = models.SlugField(max_length=255, null=True, blank=True)
@@ -15,8 +16,12 @@ class Post(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
     user = models.ForeignKey("users.CustomUser", on_delete=models.SET_NULL, null=True)
     categories = models.ManyToManyField("forum.PostCategory", related_name="posts")
 
-    likes = models.ManyToManyField("users.CustomUser", related_name="liked_posts")
-    dislikes = models.ManyToManyField("users.CustomUser", related_name="disliked_posts")
+    likes = models.ManyToManyField(
+        "users.CustomUser", through="forum.PostLike", related_name="post_likes"
+    )
+    dislikes = models.ManyToManyField(
+        "users.CustomUser", through="forum.PostDislike", related_name="post_dislikes"
+    )
 
     # Denormilized fields
     likes_counter = models.PositiveSmallIntegerField(default=0)
@@ -24,6 +29,8 @@ class Post(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
 
     post_views = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
     comments_quantity = models.PositiveSmallIntegerField(default=0)
+
+    objects = PostQuerySet.as_manager()
 
     class Meta:
         ordering = ("-created_at",)
@@ -44,7 +51,7 @@ class Post(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
         text = slugify(self.title)
         self.slug = text
 
-    @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
-    def after_update_likes_and_dislikes(self):
-        self.likes_counter = self.likes.count()
-        self.dislikes_counter = self.dislikes.count()
+    # @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
+    # def after_update_likes_and_dislikes(self):
+    #     self.likes_counter = self.likes.count()
+    #     self.dislikes_counter = self.dislikes.count()

@@ -1,181 +1,52 @@
 from braces.views import FormMessagesMixin, LoginRequiredMixin
 
-from django import forms
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, CreateView, DetailView
+from django.views.generic import DeleteView, CreateView, DetailView, ListView
+from django_htmx.http import trigger_client_event
+from render_block import render_block_to_string
 
-from server.apps.forum.models import Post
+from server.apps.forum.forms import PostCreateForm
+from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
 
 
-class PostView(LoginRequiredMixin, DetailView):
+class ForumBaseListView(ListView):
+    paginate_by = 3  # TODO: CHANGE TO 10
+    model = Post
+    context_object_name = "posts"
+    template_name = "posts_list.html"
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return super().get_queryset().with_likes_counters()
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context["categories"] = PostCategory.objects.all()
+        return context
+
+
+class PostView(DetailView):
     model = Post
     context_object_name = "post"
     template_name = "question_page.html"
 
-
-# class View(viewsets.ViewSet):
-#     permission_classes = [IsAuthenticatedOrReadOnly]
-#
-#     def get(self, request, q_id: int, title: str):
-#         order_by = request.GET.get("order_by")
-#         page = request.GET.get("page")
-#
-#         image_serializer = ProfileSerializer.get_profile_image(
-#             user_pk=request.user.id
-#         )
-#
-#         post = (
-#             Post.objects.annotate(
-#                 likes=Count("post_likes", distinct=True),
-#                 dislikes=Count("post_dislikes", distinct=True),
-#                 comments_quantity=Count("comment", distinct=True),
-#             )
-#             .select_related("user")
-#             .prefetch_related("post_likes", "post_dislikes")
-#             .get(pk=q_id)
-#         )
-#         post_serializer = PostSerializer(post)
-#
-#         pagination = PaginationCreator(page, limit=6)
-#         offset = pagination.get_offset
-#
-#         if f"post_viewed_{q_id}" not in request.session:
-#             Post.objects.filter(pk=q_id).update(post_views=F("post_views") + 1)
-#             request.session[f"post_viewed_{q_id}"] = True
-#
-#         comments = (
-#             Comment.objects.select_related("user", "post")
-#             .prefetch_related("likes", "dislikes")
-#             .annotate(likes_count=Count("likes"), dislikes_count=Count("dislikes"))
-#             .filter(post=post)[offset : offset + 6]
-#         )
-#
-#         comments_serializer = CommentSerializer(comments, many=True)
-#         context = {
-#             "post": post_serializer.data,
-#             "pages": post.comments_quantity,
-#             "current_user_image": image_serializer,
-#             "comments": sort_comments(order_by, comments_serializer),
-#         }
-#         cache.set(f"question.{q_id}.{title}.{order_by}.{page}", context, 120)
-#         return render(request, "question_page.html", context=context)
-#
-#     @throttle_classes([UserRateThrottle])
-#     def create_comment(self, request, q_id: int, title: str):
-#         comment = request.POST.get("comment")
-#         comment = CommentSerializer(
-#             data={"comment": comment, "post": q_id}, context={"request": request}
-#         )
-#         comment.is_valid(raise_exception=True)
-#         comment.save()
-#
-#         delete_keys_matching_pattern(f"question.{q_id}*", f"profile.{request.user.id}*")
-#         return HttpResponseRedirect(f"/forum/question/{q_id}/{title}")
-#
-#     @throttle_classes([UserRateThrottle])
-#     def create_post_rate(self, request, q_id: int, title: str):
-#         like = request.POST.get("like")
-#         dislike = request.POST.get("dislike")
-#         current_user: Request = request.user.id
-#
-#         reactions_counters = (
-#             Post.objects.prefetch_related("post_likes", "post_dislikes")
-#             .annotate(
-#                 likes_counter=Count("post_likes"),
-#                 dislikes_counter=Count("post_dislikes"),
-#             )
-#             .get(pk=q_id)
-#         )
-#         post_reactions_serializer = PostSerializer(reactions_counters)
-#
-#         if like and not dislike:
-#             if current_user not in post_reactions_serializer.data["post_likes"]:
-#                 if current_user in post_reactions_serializer.data["post_dislikes"]:
-#                     reactions_counters.post_dislikes.remove(current_user)
-#                 else:
-#                     make_rate(request, reactions_counters.user, score=5)
-#                 reactions_counters.post_likes.add(current_user)
-#         else:
-#             if current_user not in post_reactions_serializer.data["post_dislikes"]:
-#                 reactions_counters.post_likes.remove(current_user)
-#                 reactions_counters.post_dislikes.add(current_user)
-#
-#         delete_keys_matching_pattern(f"question.{q_id}*")
-#         return HttpResponseRedirect(f"/forum/question/{q_id}/{title}")
-#
-#     @throttle_classes([UserRateThrottle])
-#     def create_comment_rate(self, request, q_id: int, title: str):
-#         like = request.POST.get("like")
-#         dislike = request.POST.get("dislike")
-#         comm_id = request.POST.get("comm_id")
-#         user_id = int(request.POST.get("user_id"))
-#         current_user: Request = request.user.id
-#
-#         comment = (
-#             Comment.objects.prefetch_related("likes", "dislikes")
-#             .annotate(likes_counter=Count("likes"), dislikes_counter=Count("dislikes"))
-#             .get(pk=comm_id, post=q_id, user=user_id)
-#         )
-#         comment_serializer = CommentSerializer(comment)
-#
-#         if like and not dislike:
-#             if current_user not in comment_serializer.data["likes"]:
-#                 if current_user in comment_serializer.data["dislikes"]:
-#                     comment.dislikes.remove(current_user)
-#                 else:
-#                     make_rate(request, comment.user, score=10)
-#                 comment.likes.add(current_user)
-#         else:
-#             if current_user not in comment_serializer.data["dislikes"]:
-#                 comment.likes.remove(current_user)
-#                 comment.dislikes.add(current_user)
-#
-#         delete_keys_matching_pattern(f"question.{q_id}*")
-#         return HttpResponseRedirect(f"/forum/question/{q_id}/{title}")
-#
-#     @throttle_classes([UserRateThrottle])
-#     def delete_comment(self, request, q_id: int, title: str, comment_id: int):
-#         comment = Comment.objects.select_related("user").get(pk=comment_id)
-#         if comment.user.id == request.user.id:
-#             comment.delete()
-#         else:
-#             raise PermissionDenied()
-#
-#         delete_keys_matching_pattern(
-#             f"question.{q_id}*", f"profile.{request.user.id}.*"
-#         )
-#         return HttpResponseRedirect(f"/forum/question/{q_id}/{title}")
-
-
-class PostCreateForm(forms.ModelForm):  # TODO: Fix M2M SAVING
-    class Meta:
-        model = Post
-        fields = (
-            "title",
-            "content",
-            "categories",
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return (
+            super()
+            .get_queryset()
+            .prefetch_related("comments", "categories")
+            .with_likes_counters()
+            .with_have_rates_per_user(self.request.user.id)
         )
-        widgets = {
-            "title": forms.TextInput(
-                attrs={"placeholder": _("Question topic (maximum 85 characters)")}
-            ),
-            "content": forms.Textarea(
-                attrs={
-                    "placeholder": _("Describe your question here"),
-                }
-            ),
-        }  # trans: Тема питання (не більше 85 символів)
 
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user")
-        super().__init__(*args, **kwargs)
-        # prepare 'categories' field
-        self.fields["categories"].label_from_instance = (
-            lambda obj: obj.get_name_display()
-        )
-        self.instance.user = self.user
+    def get_context_data(self, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        context = super().get_context_data(**kwargs)
+        context["post"] = self.object
+        return context
 
 
 class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
@@ -210,3 +81,66 @@ class PostDeleteView(LoginRequiredMixin, DeleteView):
         post = self.get_object()
         post.delete()
         return HttpResponse()
+
+
+class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
+    model = Post
+    template_name = "question_page.html"
+    slug_field = "uuid"
+    slug_url_kwarg = "uuid"
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return (
+            super()
+            .get_queryset()
+            .with_likes_counters()
+            .with_have_rates_per_user(self.request.user.id)
+        )
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        if not self.request.htmx:
+            return HttpResponse(status=405)
+        return super().dispatch(request, *args, **kwargs)
+
+    def get(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        self.object = self.get_object()
+
+        context = {"post": self.object}
+
+        rendered_block = render_block_to_string(
+            self.template_name,
+            "post_likes_and_dislikes",
+            context=context,
+            request=self.request,
+        )
+        response = HttpResponse(content=rendered_block)
+        return response
+
+    def post(self, request, *args, **kwargs):
+        request: AuthenticatedHttpRequest
+        self.object = self.get_object()
+        likes_manager = self.object.likes
+        dislikes_manager = self.object.dislikes
+
+        is_like = self.request.GET.get("like") == "true"
+
+        if is_like:
+            if likes_manager.filter(id=request.user.id).exists():
+                likes_manager.remove(request.user)
+            else:
+                dislikes_manager.remove(request.user)
+                likes_manager.add(request.user)
+        else:
+            if dislikes_manager.filter(id=request.user.id).exists():
+                dislikes_manager.remove(request.user)
+            else:
+                likes_manager.remove(request.user)
+                dislikes_manager.add(request.user)
+
+        response = HttpResponse()
+        trigger_client_event(response, "postLikesAndDislikesChanged")
+
+        return response

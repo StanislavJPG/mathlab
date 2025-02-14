@@ -43,8 +43,8 @@
                 <a href="{% url 'forum:question-post-base' pk=post.pk slug=post.slug %}"
                    class="title">{{ post.title }}</a>
                 <div class="watch">
-                  <span class="a-base">{{ post.likes_counter }} вподобань</span>
-                  <span class="a-base">{{ post.comments_quantity }} коментарів</span>
+                  <span class="a-base">{{ post.custom_likes_counter }} {% translate 'Likes' %}</span>
+                  <span class="a-base">{{ post.comments_quantity }} {% translate 'Comments' %}</span>
                 </div>
               </div>
               <div style="margin-top: 10px;" class="description">

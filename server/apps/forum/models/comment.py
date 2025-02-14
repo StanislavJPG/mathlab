@@ -2,15 +2,15 @@ from django.db import models
 from django_lifecycle import (
     LifecycleModel,
     hook,
-    AFTER_UPDATE,
     AFTER_CREATE,
     AFTER_DELETE,
 )
 
-from server.common.mixins import TimeStampModelMixin, UUIDModelMixin
+from server.apps.forum.managers import CommentQuerySet
+from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin
 
 
-class Comment(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
+class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     comment = models.TextField("comment", max_length=2000)
 
     post = models.ForeignKey(
@@ -22,13 +22,19 @@ class Comment(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
         on_delete=models.SET_NULL,
         null=True,
     )
-
-    likes = models.ManyToManyField("users.CustomUser", related_name="liked_comments")
-    dislikes = models.ManyToManyField(
-        "users.CustomUser", related_name="disliked_comments"
+    likes = models.ManyToManyField(
+        "users.CustomUser", through="forum.CommentLike", related_name="comment_likes"
     )
+    dislikes = models.ManyToManyField(
+        "users.CustomUser",
+        through="forum.CommentDislike",
+        related_name="comment_dislikes",
+    )
+
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)
+
+    objects = CommentQuerySet.as_manager()
 
     class Meta:
         ordering = ("created_at",)
@@ -41,11 +47,6 @@ class Comment(UUIDModelMixin, TimeStampModelMixin, LifecycleModel):
 
     def get_absolute_url(self):
         raise NotImplementedError  # TODO: change
-
-    @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
-    def after_update_likes_and_dislikes(self):
-        self.likes_counter = self.likes.count()
-        self.dislikes_counter = self.dislikes.count()
 
     @hook(AFTER_CREATE)
     @hook(AFTER_DELETE)

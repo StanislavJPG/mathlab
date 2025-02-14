@@ -1,10 +1,10 @@
 from django.db import models
 
 from server.apps.forum.choices import PostTypeChoices
-from server.common.mixins import TimeStampModelMixin
+from server.common.mixins import TimeStampedModelMixin
 
 
-class PostCategory(TimeStampModelMixin):
+class PostCategory(TimeStampedModelMixin):
     CATEGORY_CHOICES = PostTypeChoices
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
 

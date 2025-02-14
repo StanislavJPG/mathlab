@@ -1,7 +1,9 @@
+import json
 import logging
 
 from asgiref.sync import iscoroutinefunction, markcoroutinefunction
 from django.contrib.auth import logout
+from django.contrib.messages import get_messages
 from django.http import Http404
 from django.utils.deprecation import MiddlewareMixin
 from rest_framework.authtoken.models import Token
@@ -55,3 +57,21 @@ class AccessControl(MiddlewareMixin):
         if "admin" in request.path_info or "auth" in request.path_info:
             if not request.user.is_superuser:
                 raise Http404()
+
+
+class HTMXToastMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        messages = [
+            {"message": message.message, "tags": message.tags}
+            for message in get_messages(request)
+        ]
+
+        if messages:
+            existing_trigger = response.headers.get("HX-Trigger", "{}")
+            existing_data = json.loads(existing_trigger)
+
+            existing_data.setdefault("messages", []).extend(messages)
+
+            response.headers["HX-Trigger"] = json.dumps(existing_data)
+
+        return response

@@ -86,6 +86,7 @@ class CommentDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
         self.object = self.get_object()
         self.object.delete()
         response = HttpResponse()
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         trigger_client_event(response, "commentBlockChanged")
         return response
 

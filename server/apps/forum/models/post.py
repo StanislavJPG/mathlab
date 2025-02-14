@@ -42,9 +42,7 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f"{self.title} | {self.__class__.__name__} | id - {self.id}"
 
     def get_absolute_url(self):
-        return reverse(
-            "forum:question-post-base", kwargs={"pk": self.pk, "slug": self.slug}
-        )
+        return reverse("forum:post-details", kwargs={"pk": self.pk, "slug": self.slug})
 
     @hook(BEFORE_SAVE)
     def before_save(self):

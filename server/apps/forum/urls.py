@@ -18,28 +18,27 @@ from server.apps.forum.views.profile import ProfileView
 from server.apps.users.views.profile_settings import ChangeUserDataView
 
 urlpatterns = [
-    # Forum base block
-    path("", PostListView.as_view(), name="base"),
-    # Question posts block
+    # Posts block
+    path("", PostListView.as_view(), name="post-list"),
     path(
-        "question/<int:pk>/<slug:slug>/",
+        "posts/<int:pk>/<slug:slug>/",
         PostDetailView.as_view(),
-        name="question-post-base",
+        name="post-details",
     ),
     path(
-        "questions/delete/<uuid:uuid>/",
+        "<uuid:uuid>/posts/delete/",
         PostDeleteView.as_view(),
-        name="question-delete",
+        name="post-delete",
     ),
     path(
-        "questions/create/",
+        "posts/create/",
         PostCreateView.as_view(),
-        name="question-create",
+        name="post-create",
     ),
     path(
-        "questions/rate/<uuid:uuid>/",
+        "<uuid:uuid>/posts/rate/",
         HXPostLikesAndDislikesView.as_view(),
-        name="hx-question-rate",
+        name="hx-post-rate",
     ),
     # Question comments block
     path(
@@ -48,22 +47,22 @@ urlpatterns = [
         name="comments-block",
     ),
     path(
-        "comments/create/<uuid:post_uuid>/",
+        "<uuid:post_uuid>/comments/create/",
         CommentCreateView.as_view(),
         name="comment-create",
     ),
     path(
-        "comments/delete/<uuid:uuid>/<uuid:post_uuid>/",
+        "<uuid:uuid>/comments/<uuid:post_uuid>/delete/",
         CommentDeleteView.as_view(),
         name="comment-delete",
     ),
     path(
-        "comments/count/<uuid:post_uuid>/",
+        "<uuid:post_uuid>/comments/count/",
         HXCommentQuantityView.as_view(),
         name="comments-count",
     ),
     path(
-        "comments/rate/<uuid:uuid>/",
+        "<uuid:uuid>/comments/rate/",
         HXCommentLikesAndDislikesView.as_view(),
         name="hx-comment-rate",
     ),

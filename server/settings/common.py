@@ -72,6 +72,7 @@ MIDDLEWARE = [
     "server.common.middlewares.AsyncMiddleware",
     "server.common.middlewares.TokenMiddleware",
     "server.common.middlewares.AccessControl",
+    "server.common.middlewares.HTMXToastMiddleware",
 ]
 
 ROOT_URLCONF = "server.urls.urls"

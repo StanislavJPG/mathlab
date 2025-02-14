@@ -75,21 +75,27 @@ class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
 
     def form_valid(self, form):
         post = form.save()
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponseRedirect(post.get_absolute_url())
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
 
-class PostDeleteView(LoginRequiredMixin, DeleteView):
+class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
     model = Post
     template_name = "base/forum_base.html"
+    form_valid_message = _("Your post has been deleted.")
+    form_invalid_message = _("Error. Please, check your input and try again.")
     slug_url_kwarg = "uuid"
     slug_field = "uuid"
 
     def delete(self, request, *args, **kwargs):
         post = self.get_object()
         post.delete()
-        return HttpResponse()
+
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        response = HttpResponse()
+        trigger_client_event(response, "postDeleted")
+        return response
 
 
 class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):

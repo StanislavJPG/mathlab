@@ -5,7 +5,8 @@
   <div class="container block-body d-flex justify-content-center align-items-center">
     <h1 class="display-4 me-3">{% translate 'Last topics' %}</h1>
     <div class="mt-2">
-      <a type="submit" href="{% if user.is_authenticated %}{% url 'forum:question-create' %}{% else %}{% url 'login_view' %}{% endif %}"
+      <a type="submit"
+         href="{% if user.is_authenticated %}{% url 'forum:post-create' %}{% else %}{% url 'login_view' %}{% endif %}"
          class="btn btn-outline-dark me-2">{% translate 'Ask your question' %}</a>
       <div class="btn-group dropend">
         <div class="dropdown">
@@ -23,24 +24,33 @@
     </div>
   </div>
 
-  <div>
+  <div id="main-posts-block-js">
     <div class="sort-by">
       <a style="margin-bottom: 5px; font-size: 13px;"><span>{% translate 'Sort by' %}:</span></a>
-      <a href="{% url 'forum:base' %}?sort=popular&page={{ page }}"
+      <a href="{% url 'forum:post-list' %}?sort=popular&page={{ page }}"
          class="btn btn-outline-dark a">{% translate 'Most popular' %}</a>
-      <a href="{% url 'forum:base' %}?sort=interest&page={{ page }}"
+      <a href="{% url 'forum:post-list' %}?sort=interest&page={{ page }}"
          class="btn btn-outline-dark a">{% translate 'Most interesting' %}</a>
-      <a href="{% url 'forum:base' %}?sort=newest&page={{ page }}" class="btn btn-outline-dark a">{% translate 'The newest' %}</a>
-      <a href="{% url 'forum:base' %}?sort=last-week&page={{ page }}" class="btn btn-outline-dark a">{% translate 'Previous week' %}</a>
+      <a href="{% url 'forum:post-list' %}?sort=newest&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'The newest' %}</a>
+      <a href="{% url 'forum:post-list' %}?sort=last-week&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'Previous week' %}</a>
     </div>
-    <div class="base-content">
+    <div id="post-list-js"
+         hx-get="{{ request.path }}"
+         hx-select="#post-list-js"
+         hx-target="#post-list-js"
+         hx-swap="outerHTML"
+         hx-trigger="postDeleted from:body"
+         class="base-content"
+    >
       <div style="border-top: 1px solid #858383;"></div>
       {% for post in posts %}
         <div class="text-left">
           <div class="question-{{ post.uuid }}">
             <div style="transform: translateX(70px);">
               <div class="base-title-info">
-                <a href="{% url 'forum:question-post-base' pk=post.pk slug=post.slug %}"
+                <a href="{% url 'forum:post-details' pk=post.pk slug=post.slug %}"
                    class="title">{{ post.title }}</a>
                 <div class="watch">
                   <span class="a-base">{{ post.custom_likes_counter }} {% translate 'Likes' %}</span>
@@ -51,7 +61,7 @@
                 <div class="some">
                   <div class="topics">
                     {% for category in post.categories.all %}
-                      <a href="{% url 'forum:base' %}?sort={{ order_by }}&page={{ page }}&tags={{ category }}"
+                      <a href="{% url 'forum:post-list' %}?sort={{ order_by }}&page={{ page }}&tags={{ category }}"
                          class="a-topic">{{ category.get_name_display }}</a>
                     {% endfor %}
                   </div>
@@ -62,11 +72,11 @@
                     {% if post.user.id == user.id %}
                       <button
                           style="margin-bottom: 10px;"
+                          id="post-delete-js"
                           type="submit"
                           class="btn btn-danger btn-sm"
-                          hx-delete="{% url 'forum:question-delete' post.uuid %}"
-                          hx-target=".question-{{ post.uuid }}"
-                          hx-swap="outerHTML swap:1s"
+                          hx-swap="none"
+                          hx-delete="{% url 'forum:post-delete' post.uuid %}"
                           hx-confirm="Are you sure?"
                       >
                         Видалити пост
@@ -80,14 +90,7 @@
         </div>
         <div style="border-top: 1px solid #858383;"></div>
       {% endfor %}
-      <div style="text-align: center; margin-top: 30px; margin-bottom: -15px;">
-        {% if page > 1 %}
-          <a type="submit" href="{{ url }}{{ page|add:'-1' }}" class="btn btn-dark btn-sm">Назад</a>
-        {% endif %}
-        {% if posts|length >= 10 %}
-          <a type="submit" href="{{ url }}{{ page|add:'1' }}" class="btn btn-dark btn-sm">Далі</a>
-        {% endif %}
-      </div>
     </div>
+    {% include 'common/pagination.html' with htmx_target="#main-posts-block-js" %}
   </div>
 {% endblock body %}

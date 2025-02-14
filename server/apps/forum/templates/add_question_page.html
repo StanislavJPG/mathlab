@@ -1,8 +1,7 @@
 {% extends 'base/forum_base.html' %}
-{% load widget_tweaks %}
+{% load i18n static pagination widget_tweaks %}
 
 {% block head %}
-  {% load i18n static pagination widget_tweaks %}
   <script src="{% static 'error_btn_listener.js' %}"></script>
   <link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
   <title>MathLab | Створити обговорення</title>
@@ -13,7 +12,7 @@
     {% for error in form.errors %}
       {{ error }}
     {% endfor %}
-    <form method="post" action="{% url 'forum:question-create' %}" class="row justify-content-md-center">
+    <form method="post" action="{% url 'forum:post-create' %}" class="row justify-content-md-center">
       {% csrf_token %}
       <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
       <div class="col-md-8">

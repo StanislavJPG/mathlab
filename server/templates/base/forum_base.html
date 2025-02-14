@@ -19,6 +19,7 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@1.74.0/icons-react/dist/index.umd.min.js"></script>
 
+{% include 'partials/toasts.html' %}
 {% include 'partials/forum_navbar.html' %}
 
 {% block head %}
@@ -40,7 +41,7 @@
   }
 </style>
 
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}' hx-boost="true">
+<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body %}
 {% endblock body %}
 
@@ -48,7 +49,7 @@
   <div class="container" style="padding: 25px;">
     <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-4 border-top">
       <p class="col-md-4 mb-0 text-muted">© Made by StanislavJPG</p>
-      <a href="{% url 'forum:base' %}"
+      <a href="{% url 'forum:post-list' %}"
          class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
         <svg width="40" height="32">
           <use xlink:href="#home"></use>
@@ -68,6 +69,7 @@
     </footer>
   </div>
 {% endblock footer %}
+
 </body>
 
 {% block page_css %}
@@ -80,6 +82,8 @@
     $(document).ready(function () {
         $('.selectpicker').selectpicker();
     });
+
 </script>
+<script src="{% static 'toasts.js' %}"></script>
 
 </html>

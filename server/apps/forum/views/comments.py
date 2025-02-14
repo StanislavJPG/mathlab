@@ -1,5 +1,4 @@
 from braces.views import LoginRequiredMixin, FormMessagesMixin
-from django import forms
 from django.http import HttpResponse
 
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
@@ -7,8 +6,18 @@ from django.utils.translation import gettext_lazy as _
 from django_htmx.http import trigger_client_event
 from render_block import render_block_to_string
 
+from server.apps.forum.forms import CommentCreateForm
 from server.apps.forum.models import Comment, Post
 from server.common.http import AuthenticatedHttpRequest
+
+
+__all__ = (
+    "CommentListView",
+    "CommentCreateView",
+    "CommentDeleteView",
+    "HXCommentQuantityView",
+    "HXCommentLikesAndDislikesView",
+)
 
 
 class CommentListView(ListView):
@@ -31,19 +40,6 @@ class CommentListView(ListView):
         context = super().get_context_data(**kwargs)
         context["post"] = Post.objects.get(uuid=self.kwargs["post_uuid"])
         return context
-
-
-class CommentCreateForm(forms.ModelForm):
-    class Meta:
-        model = Comment
-        fields = ("comment",)
-
-    def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user")
-        self.post = kwargs.pop("post")
-        super().__init__(*args, **kwargs)
-        self.instance.user = self.user
-        self.instance.post = self.post
 
 
 class CommentCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):

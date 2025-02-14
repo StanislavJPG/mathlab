@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
 
-from server.apps.forum.models import Post
+from server.apps.forum.models import Post, Comment
 
 
 class PostCreateForm(forms.ModelForm):
@@ -31,3 +31,16 @@ class PostCreateForm(forms.ModelForm):
             lambda obj: obj.get_name_display()
         )
         self.instance.user = self.user
+
+
+class CommentCreateForm(forms.ModelForm):
+    class Meta:
+        model = Comment
+        fields = ("comment",)
+
+    def __init__(self, *args, **kwargs):
+        self.user = kwargs.pop("user")
+        self.post = kwargs.pop("post")
+        super().__init__(*args, **kwargs)
+        self.instance.user = self.user
+        self.instance.post = self.post

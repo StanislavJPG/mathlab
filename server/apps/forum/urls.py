@@ -9,21 +9,21 @@ from server.apps.forum.views.comments import (
 )
 from server.apps.forum.views.posts import (
     PostCreateView,
-    PostView,
+    PostDetailView,
     PostDeleteView,
     HXPostLikesAndDislikesView,
-    ForumBaseListView,
+    PostListView,
 )
 from server.apps.forum.views.profile import ProfileView
 from server.apps.users.views.profile_settings import ChangeUserDataView
 
 urlpatterns = [
     # Forum base block
-    path("", ForumBaseListView.as_view(), name="base"),
+    path("", PostListView.as_view(), name="base"),
     # Question posts block
     path(
         "question/<int:pk>/<slug:slug>/",
-        PostView.as_view(),
+        PostDetailView.as_view(),
         name="question-post-base",
     ),
     path(

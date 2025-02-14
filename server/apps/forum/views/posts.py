@@ -11,7 +11,16 @@ from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
 
 
-class ForumBaseListView(ListView):
+__all__ = (
+    "PostListView",
+    "PostDetailView",
+    "PostCreateView",
+    "PostDeleteView",
+    "HXPostLikesAndDislikesView",
+)
+
+
+class PostListView(ListView):
     paginate_by = 3  # TODO: CHANGE TO 10
     model = Post
     context_object_name = "posts"
@@ -27,7 +36,7 @@ class ForumBaseListView(ListView):
         return context
 
 
-class PostView(DetailView):
+class PostDetailView(DetailView):
     model = Post
     context_object_name = "post"
     template_name = "question_page.html"

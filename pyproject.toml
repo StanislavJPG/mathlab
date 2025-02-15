@@ -81,6 +81,7 @@ django-lifecycle = "^1.2.4"
 uuid = "^1.30"
 python-slugify = {extras = ["unicode"], version = "^8.0.4"}
 django-render-block = "^0.10"
+django-tinymce = "^4.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

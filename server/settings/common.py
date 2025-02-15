@@ -30,18 +30,20 @@ DEFAULT_ADMIN_TOKEN = os.getenv("DEFAULT_ADMIN_TOKEN")
 # Application definition
 
 INSTALLED_APPS = [
-    # libs
-    "drf_yasg",
+    # django's
     "django.contrib.admin",
     "django.contrib.auth",
     "django.contrib.contenttypes",
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+    # installed packages
+    "drf_yasg",
     "rest_framework",
     "rest_framework.authtoken",
     "channels",
     "widget_tweaks",
+    "tinymce",
     # common
     "server.common",
     # apps
@@ -147,15 +149,9 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "static/"
+STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    BASE_DIR / "static/css",
-    BASE_DIR / "static/js",
-    BASE_DIR / "static/img",
-    BASE_DIR / "static/profile_pics",
-]
-
+STATIC_ROOT = BASE_DIR.parent / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
@@ -179,6 +175,24 @@ REST_FRAMEWORK = {
     ],
     "DEFAULT_THROTTLE_RATES": {"anon": "100/hour", "user": "200/hour"},
 }
+
+TINYMCE_DEFAULT_CONFIG = {
+    "theme": "silver",
+    "height": 400,
+    "width": 800,
+    "menubar": False,
+    "setup": """editor => {
+           editor.on('blur', () => editor.save())
+        }""",  # that fixes bug with HTMX + TinyMCE
+    "plugins": "advlist,autolink,lists,link,image,charmap,preview,anchor,"
+    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,"
+    "code,help,wordcount",
+    "toolbar": "undo redo | formatselect | "
+    "bold italic backcolor | alignleft aligncenter "
+    "alignright alignjustify | bullist numlist outdent indent | "
+    "removeformat | help",
+}
+
 
 AUTH_USER_MODEL = "users.CustomUser"
 

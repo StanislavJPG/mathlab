@@ -12,5 +12,4 @@ CSRF_TRUSTED_ORIGINS = [""]
 ALLOWED_HOSTS = [""]
 
 # static
-STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

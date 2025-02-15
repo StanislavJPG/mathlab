@@ -21,7 +21,7 @@ __all__ = (
 
 
 class PostListView(ListView):
-    paginate_by = 3  # TODO: CHANGE TO 10
+    paginate_by = 10
     model = Post
     context_object_name = "posts"
     template_name = "posts_list.html"
@@ -60,7 +60,7 @@ class PostDetailView(DetailView):
 
 class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
     model = Post
-    template_name = "add_question_page.html"
+    template_name = "create_question_page.html"
     form_class = PostCreateForm
     form_valid_message = _("You successfully created a new post.")
     form_invalid_message = _(

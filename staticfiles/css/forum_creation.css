@@ -1,0 +1,27 @@
+.base-content {
+    width: 700px;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 100px;
+    padding: 40px;
+    background-color: ghostwhite;
+    border: solid 1px;
+    border-radius: 10px;
+}
+textarea {
+    width: 620px;
+    height: 400px;
+    resize: none;
+}
+
+.checkboxes {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    padding: 5px;
+}
+
+.form-check {
+    margin-top: 10px;
+    margin-right: 10px;
+}

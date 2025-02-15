@@ -2,7 +2,7 @@
 <html lang="en">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-{% load static pagination urls %}
+{% load static %}
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://unpkg.com/htmx.org@2.0.4" integrity="sha384-HGfztofotfshcF7+8n44JQL2oJmowVChPTg48S+jvZoztPfvwD79OC/LTtG6dMp+" crossorigin="anonymous"></script>
@@ -22,13 +22,18 @@
 {% include 'partials/toasts.html' %}
 {% include 'partials/forum_navbar.html' %}
 
-{% block head %}
-  <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
-  <head>
-    <meta charset="UTF-8">
+<head>
+  <meta charset="UTF-8">
+
+  {% block page_head %}
+    <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
     <title>MathLab | Форум</title>
-  </head>
-{% endblock %}
+  {% endblock page_head %}
+
+</head>
+
+{% block page_css %}
+{% endblock page_css %}
 
 <style>
   .bootstrap-select > .dropdown-toggle {
@@ -37,7 +42,7 @@
   }
   .htmx-swapping {
     opacity: 0;
-    transition: opacity 1s ease-out;
+    transition: opacity 0.5s ease-out;
   }
 </style>
 
@@ -72,9 +77,6 @@
 
 </body>
 
-{% block page_css %}
-{% endblock page_css %}
-
 {% block page_js %}
 {% endblock page_js %}
 
@@ -84,6 +86,5 @@
     });
 
 </script>
-<script src="{% static 'toasts.js' %}"></script>
 
 </html>

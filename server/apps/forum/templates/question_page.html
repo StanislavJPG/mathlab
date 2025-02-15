@@ -1,11 +1,12 @@
 {% extends 'base/forum_base.html' %}
-{% load i18n static pagination urls widget_tweaks %}
+{% load i18n static   widget_tweaks %}
 
-{% block head %}
-  <script src="{% static 'error_btn_listener.js' %}"></script>
+{% block page_head %}
+  <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
   <link type="text/css" href="{% static 'forum_question.css' %}" rel="stylesheet">
   <title>{{ post.categories.first.get_name_display }} - {{ post.title }}</title>
-{% endblock %}
+{% endblock page_head %}
 
 {% block body %}
   <div class="base-content">
@@ -46,29 +47,28 @@
         </div>
       {% endblock post_likes_and_dislikes %}
     </div>
-    <div>
-      <div class="question-content">
-        <p class="text-justify">
-          {{ post.content }}
-        </p>
-        <div class="topics">
-          {% for category in post.categories.all %}
-            <a href="{% url 'forum:post-list' %}?sort=popular&page=1&tags={{ сategory }}"
-               class="a-topic">{{ category.get_name_display }}</a>
-          {% endfor %}
-        </div>
+    <div class="question-content">
+      <p class="text-justify">
+        {{ post.content|safe }}
+      </p>
+      <div class="topics">
+        {% for category in post.categories.all %}
+          <a href="{% url 'forum:post-list' %}?sort=popular&page=1&tags={{ сategory }}"
+             class="a-topic">{{ category.get_name_display }}</a>
+        {% endfor %}
       </div>
     </div>
+
     <div class="comment">
-      <div>
+      <div class="mt-3">
         <div hx-get="{% url 'forum:comments-count' post.uuid %}"
              hx-trigger="commentBlockChanged from:body"
              hx-target="this">
           {% with comment_quantity=post.comments_quantity %}
             {% block comment_quantity %}
-              <h1 class="display-4" style="font-size: 23px; margin-top: 70px; margin-bottom: 10px;">
+              <span class="mt-4">
                   {% translate 'Answers' %}: {{ comment_quantity }}
-              </h1>
+              </span>
             {% endblock %}
           {% endwith %}
         </div>
@@ -76,37 +76,52 @@
           <div class="dropdown" style="margin-top: 5px; margin-bottom: 50px; ">
             <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
                     aria-expanded="false" style="font-size: 10px;">
-              Сортувати за:
+              {% translate 'Sort by' %}:
             </button>
             <ul class="dropdown-menu">
-              <li><a style="font-size: 15px;" class="dropdown-item"
-                     href="{% url 'forum:post-details' post.id post.slug %}?order_by=popular">Популярні</a>
+              <li>
+                <a style="font-size: 15px;"
+                   class="dropdown-item"
+                   href="javascript:(0);"
+                   hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=best"
+                   hx-select="#comment-list-js"
+                   hx-target="#comment-list-js"
+                   hx-trigger="click"
+                >
+                  {% translate 'Best' %}
+                </a>
               </li>
-
-              <li><a style="font-size: 15px;" class="dropdown-item"
-                     href="{% url 'forum:post-details' post.id post.slug %}?order_by=created_at">Найновіші</a>
+              <li>
+                <a style="font-size: 15px;"
+                   class="dropdown-item"
+                   href="javascript:(0);"
+                   hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=newest"
+                   hx-select="#comment-list-js"
+                   hx-target="#comment-list-js"
+                   hx-trigger="click"
+                >
+                  {% translate 'Newest' %}
+                </a>
               </li>
             </ul>
           </div>
         </div>
       </div>
 
-      <div hx-get="{% url 'forum:comments-block' post.uuid %}" hx-target="this" hx-trigger="load">
+      <div hx-get="{% url 'forum:comments-block' post.uuid %}"
+           hx-indicator="#comment-block-wait-spinner"
+           hx-target="this"
+           hx-trigger="load">
 {#        Content will be placed here  #}
+        <div id="comment-block-wait-spinner" class="spinner-grow text-primary mt-2" role="status"></div>
       </div>
 
-      {% if pages > 6 %}
-        {% for page in pages|page_convert:6 %}
-          <a class="btn btn-dark"
-             href="{% url 'forum:post-details' post.id post.slug %}?page={{ page }}"
-             type="submit">{{ page }}</a>
-        {% endfor %}
-      {% endif %}
       <h1 style="font-size: 20px; margin-top: 150px;">Ваша відповідь</h1>
       {% if user.is_authenticated %}
         <div id="comment-block-js" hx-get="{% url 'forum:comment-create' post.uuid %}" hx-target="this"
-             hx-trigger="load, commentBlockChanged from:#comment-block-js">
+             hx-trigger="load delay:0.5s" hx-indicator="#comment-wait-spinner">
         {#            Content will be placed here   #}
+          <div id="comment-wait-spinner" class="spinner-grow text-primary mt-2" role="status"></div>
         <div>
       {% else %}
         <h1 style="font-size: 20px; margin-top: 50px;"><a style="text-decoration: none;" href="{% url 'login_view' %}">Авторизуйтесь</a>,
@@ -118,4 +133,3 @@
   </div>
   </div>
 {% endblock %}
-

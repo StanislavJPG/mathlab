@@ -1,0 +1,108 @@
+.base-content {
+    border-style: solid;
+    border-radius: 10px;
+    border: 1px solid black;
+    width: 700px;
+    margin: auto;
+    margin-top: 60px;
+    margin-bottom: 50px;
+    padding: 40px;
+    background-color: ghostwhite;
+}
+
+.sort-by {
+    width: 500px;
+    padding: 5px;
+    border-radius: 10px;
+    margin: auto;
+    margin-top: 40px;
+    margin-bottom: -55px;
+    transform: translateX(26%);
+}
+
+.question {
+    display: flex;
+    flex-direction: row-reverse;
+    flex-wrap: wrap;
+}
+
+.base-title-info {
+    margin: auto;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+}
+
+.base-title-info-chat {
+    margin: auto;
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    flex-direction: row-reverse;
+    margin-top: 10px;
+    margin-bottom: 10px;
+}
+
+.a-base {
+    margin-top: 3px;
+}
+
+.title {
+    font-size: 16px;
+    text-align: left;
+    transform: translateX(-17%);
+    text-decoration: none;
+    width: 380px;
+    margin-top: 10px;
+    margin-bottom: -5px;
+}
+
+.topics {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    width: 330px;
+    transform: translateX(-30%);
+    flex-wrap: wrap;
+}
+
+.some {
+    text-align: center;
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    justify-content: space-around;
+    align-items: flex-start;
+    margin: auto;
+}
+
+.a-topic {
+    border-style: solid;
+    border-radius: 5px;
+    border: 1px solid black;
+    padding: 3px;
+    margin-bottom: 10px;
+    width: 150px;
+    height: auto;
+    font-size: 13px;
+    text-decoration: none;
+    color: black;
+    background: floralwhite;
+}
+
+.watch {
+    width: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+    align-items: stretch;
+    margin: auto;
+    text-align: left;
+    transform: translateX(25%);
+}
+
+.btn.btn-outline-dark.a {
+    padding: 5px;
+    font-size: 13px;
+}

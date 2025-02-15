@@ -1,6 +1,6 @@
 {% extends 'base/forum_base.html' %}
 
-{% load static pagination urls %}
+{% load static %}
 
 {% block head %}
 <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
@@ -27,7 +27,6 @@
             <div class="question">
                 <div style="transform: translateX(50px);">
                     <div class="base-title-info-chat">
-                        {% load pagination urls %}
                         <a style="text-decoration: none; color: black;"
                            type="button" href="{% url 'ws-chat' receiver=chat.receiver_pk username=chat.chatroom_user2 %}"
                         >Чат між <b>{{ chat.chatroom_user2 }}</b> та <b>{{ chat.chatroom_user1 }}</b></a>

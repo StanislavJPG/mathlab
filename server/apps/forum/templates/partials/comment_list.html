@@ -1,6 +1,9 @@
-{% load i18n static pagination urls widget_tweaks %}
+{% load i18n static   widget_tweaks %}
 
-<div hx-get="{{ request.path }}" hx-trigger="commentBlockChanged from:#comment-block-js">
+<div id="comment-list-js" 
+     hx-get="{{ request.get_full_path }}"
+     hx-trigger="commentBlockChanged from:body delay:0.6s"
+>
   {% for comment in comments %}
     <div class="full-answer-{{ comment.uuid }}">
       <div class="types">
@@ -18,7 +21,7 @@
                     type="submit"
                     hx-delete="{% url 'forum:comment-delete' comment.uuid post.uuid %}"
                     hx-confirm="{% translate 'Are you sure?' %}"
-                    hx-swap="outerHTML swap:1s"
+                    hx-swap="outerHTML swap:0.5s"
                     hx-target=".full-answer-{{ comment.uuid }}"
             >
               Delete comment
@@ -57,4 +60,7 @@
       </div>
     </div>
   {% endfor %}
+  {% if page_obj.paginator.num_pages > 1 %}
+    {% include 'common/pagination.html' with htmx_target="#comment-list-js" %}
+  {% endif %}
 </div>

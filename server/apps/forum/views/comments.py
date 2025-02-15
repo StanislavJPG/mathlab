@@ -21,20 +21,27 @@ __all__ = (
 
 
 class CommentListView(ListView):
-    paginate_by = 10
+    paginate_by = 7
     model = Comment
     context_object_name = "comments"
-    template_name = "partials/comments_block.html"
+    template_name = "partials/comment_list.html"
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
+        order_by = self._get_ordering_from_url()
         return (
             super()
             .get_queryset()
             .filter(post__uuid=self.kwargs["post_uuid"])
             .with_likes_counters()
             .with_have_rates_per_user(self.request.user.id)
+            .order_by(order_by)
         )
+
+    def _get_ordering_from_url(self):
+        order_by = self.request.GET.get("order_by")
+        kwargs = {"best": "-custom_likes_counter", "newest": "-created_at"}
+        return kwargs.get(order_by, "created_at")
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -117,7 +124,7 @@ class HXCommentQuantityView(DetailView):
 
 class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
     model = Comment
-    template_name = "partials/comments_block.html"
+    template_name = "partials/comment_list.html"
     slug_field = "uuid"
     slug_url_kwarg = "uuid"
 

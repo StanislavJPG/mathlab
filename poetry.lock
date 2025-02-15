@@ -1023,6 +1023,21 @@ django = ">=4.2"
 tablib = ["tablib"]
 
 [[package]]
+name = "django-tinymce"
+version = "4.1.0"
+description = "A Django application that contains a widget to render a"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_tinymce-4.1.0-py3-none-any.whl", hash = "sha256:9804836e6d2b08de3b03a27c100f8c2e9633549913eff8b323678a10cd48b94e"},
+    {file = "django_tinymce-4.1.0.tar.gz", hash = "sha256:02e3b70e940fd299f0fbef4315aee5c185664e1eb8cd396b176963954e4357c9"},
+]
+
+[package.dependencies]
+django = ">=3.2"
+
+[[package]]
 name = "django-widget-tweaks"
 version = "1.5.0"
 description = "Tweak the form field rendering in templates, not in python-level form definitions."
@@ -3001,4 +3016,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "ddbc375208f942dfae7d5e23b5b735e1354209f171104900393626adefd58b03"
+content-hash = "428b713449975b6b2de4ea5f9e13dcec03e3d1c9430e198efc6fb97881483dc4"

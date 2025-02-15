@@ -6,6 +6,7 @@ from django.views.generic import RedirectView
 
 urlpatterns = [
     path("admin/", admin.site.urls),
+    path("", include("server.urls.third_party_urls")),
     path(
         "",
         RedirectView.as_view(pattern_name="mathlab:base-math-news"),

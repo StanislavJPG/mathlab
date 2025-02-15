@@ -14,7 +14,7 @@ from server.apps.forum.views.posts import (
     HXPostLikesAndDislikesView,
     PostListView,
 )
-from server.apps.forum.views.profile import ProfileView
+from server.apps.forum.views.profile import ProfileDetailView
 from server.apps.users.views.profile_settings import ChangeUserDataView
 
 urlpatterns = [
@@ -68,10 +68,10 @@ urlpatterns = [
     ),
     # Profile block
     path(
-        "profile/<int:user_id>/<str:username>",
-        ProfileView.as_view(),
-        name="profile",
+        "profile/details/<int:user_id>/<str:username>/",
+        ProfileDetailView.as_view(),
+        name="profile-details",
     ),
     # User data block
-    path("forum/settings/", ChangeUserDataView.as_view(), name="settings"),
+    path("profile/settings/", ChangeUserDataView.as_view(), name="profile-settings"),
 ]

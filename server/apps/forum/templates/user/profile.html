@@ -1,9 +1,9 @@
 {% extends 'base/forum_base.html' %}
+{% load static %}
 
-{% block head %}
-  {% load static %}
-  <title xmlns="http://www.w3.org/1999/html">MathLab | Мій профіль</title>
-{% endblock %}
+{% block page_head %}
+  <title>MathLab | Мій профіль</title>
+{% endblock page_head %}
 
 {% block body %}
   <body>
@@ -91,7 +91,7 @@
           <div class="card mb-4">
             <div class="card-body">
               <p class="mb-4" style="text-align: center;"><b>Останні дії</b></p>
-              {% load pagination urls %}
+              {% load   %}
               <div style="text-align: center;">
                 {% for action in all_actions %}
                   {% if action.comm_id is none %}

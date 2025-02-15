@@ -1,5 +1,5 @@
 {% extends 'base/forum_base.html' %}
-{% load i18n static pagination widget_tweaks %}
+{% load i18n static widget_tweaks %}
 
 {% block page_head %}
   <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
@@ -32,7 +32,6 @@
         <button type="submit" class="btn btn-dark">Створити запитання</button>
       </div>
     </form>
-
   </div>
 {% endblock %}
 

@@ -1,11 +1,12 @@
 {% extends 'base/forum_base.html' %}
 {% load i18n static pagination widget_tweaks %}
 
-{% block head %}
-  <script src="{% static 'error_btn_listener.js' %}"></script>
+{% block page_head %}
+  <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+  <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
   <link type="text/css" href="{% static 'forum_creation.css' %}" rel="stylesheet">
   <title>MathLab | Створити обговорення</title>
-{% endblock %}
+{% endblock page_head %}
 
 {% block body %}
   <div class="container-md border border-dark rounded-4">
@@ -25,7 +26,7 @@
       </div>
       <div class="col-md-8">
         <span>{% translate 'Describe your question' %} *</span>
-        {{ form.content|add_class:"form-control" }}
+        {{ form.content }}
       </div>
       <div class="text-center mt-3 mb-3">
         <button type="submit" class="btn btn-dark">Створити запитання</button>

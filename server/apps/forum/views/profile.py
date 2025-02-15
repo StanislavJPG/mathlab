@@ -1,4 +1,12 @@
-# class ProfileDetailView
+from django.views.generic import DetailView
+
+
+from server.apps.users.models import CustomUser as User
+
+
+class ProfileDetailView(DetailView):
+    model = User
+    template_name = "user/profile.html"
 
 
 # class ProfileView(APIView):

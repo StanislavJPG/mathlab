@@ -54,6 +54,7 @@ INSTALLED_APPS = [
     "server.apps.users.apps.UsersConfig",
     "server.apps.math_news.apps.MathNewsConfig",
     "server.apps.chat.apps.ChatConfig",
+    "server.apps.theorist.apps.TheoristConfig",
 ]
 
 

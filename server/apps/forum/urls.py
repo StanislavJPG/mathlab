@@ -68,7 +68,7 @@ urlpatterns = [
     ),
     # Profile block
     path(
-        "profile/details/<int:user_id>/<str:username>/",
+        "profile/details/<int:pk>/<str:username>/",
         ProfileDetailView.as_view(),
         name="profile-details",
     ),

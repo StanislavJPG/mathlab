@@ -51,10 +51,8 @@
       {% endblock comment_likes_and_dislikes %}
       </div>
       <div style="margin-bottom: 150px;">
-        <div class="question-content">
-          <p style="text-align: justify;">
-            {{ comment.comment }}
-          </p>
+        <div class="question-content text-start">
+          {{ comment.comment|safe }}
         </div>
       </div>
     </div>

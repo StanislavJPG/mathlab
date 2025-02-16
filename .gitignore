@@ -6,3 +6,6 @@ server.py
 .idea/
 **/__pycache__/
 media/
+
+
+staticfiles/

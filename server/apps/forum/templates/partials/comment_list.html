@@ -9,14 +9,14 @@
       <div class="types">
         <span class="span-base"><b>Автор:</b>
             <a style="text-decoration: none;"
-               href=""> {{ comment.user.username }} </a> |
-            <b>{{ comment.user.rank }}</b></span>
+               href=""> {{ comment.theorist.full_name }} </a> |
+            <b>{{ comment.theorist.rank }}</b></span>
         <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
         {% if comment.modified_at is not none %}
           <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>
         {% endif %}
         <div style="margin-left: 15px;">
-          {% if comment.user.id == user.id %}
+          {% if comment.theorist.uuid == request.theorist.uuid %}
             <button class="btn btn-danger btn-sm"
                     type="submit"
                     hx-delete="{% url 'forum:comment-delete' comment.uuid post.uuid %}"

@@ -18,7 +18,7 @@
             <div class="card-body text-center">
               <form method="post" enctype="multipart/form-data">
                 {% csrf_token %}
-                {% if request.user.id == user_content.id %}<label style="cursor: pointer;" for="image">{% endif %}
+                {% if request.theorist.uuid == user_content.id %}<label style="cursor: pointer;" for="image">{% endif %}
                 {% if profile_image %}
                   <img src="{% static profile_image %}" alt="avatar" class="rounded-circle img-fluid"
                        style="width: 150px; height: 150px;">
@@ -27,7 +27,7 @@
                        class="rounded-circle img-fluid" style="width: 150px; height: 150px;">
                 {% endif %}
                 </label>
-                {% if request.user.id == user_content.id %}
+                {% if request.theorist.uuid == user_content.id %}
                   <p>
                     <input type="file" id="image" name="image" style="display: none;">
                     <button class="btn btn-primary" type="submit">Змінити фото</button>

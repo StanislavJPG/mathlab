@@ -2,6 +2,7 @@ from django.http import HttpRequest as HttpRequestBase
 
 from django_htmx.middleware import HtmxDetails
 
+from server.apps.theorist.models import Theorist
 from server.apps.users.models import CustomUser
 
 
@@ -13,3 +14,4 @@ class AuthenticatedHttpRequest(HttpRequestBase):
 
     htmx: HtmxDetails
     user: CustomUser
+    theorist: Theorist

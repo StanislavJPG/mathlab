@@ -67,9 +67,9 @@
                   </div>
                   <div style="transform: translateX(-100px); font-size: 14px;">
                     <span><a style="text-decoration: none; margin-bottom: 15px;"
-                             href="">{{ post.user.username }}
+                             href="">{{ post.theorist.full_name }}
                     </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
-                    {% if post.user.id == user.id %}
+                    {% if post.theorist.uuid == request.theorist.uuid %}
                       <button
                           style="margin-bottom: 10px;"
                           id="post-delete-js"

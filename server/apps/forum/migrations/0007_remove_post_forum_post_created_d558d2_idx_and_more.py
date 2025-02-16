@@ -7,7 +7,7 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("forum", "0006_post_slug_alter_post_content_alter_post_title"),
+        ("forum", "0001_squashed_0006_post_slug_alter_post_content_alter_post_title"),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 

@@ -74,6 +74,7 @@ MIDDLEWARE = [
     "django_htmx.middleware.HtmxMiddleware",
     # custom middlewares
     "server.common.middlewares.HTMXToastMiddleware",
+    "server.common.middlewares.UnifiedRequestMiddleware",
 ]
 
 ROOT_URLCONF = "server.urls.urls"

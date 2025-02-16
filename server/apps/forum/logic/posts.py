@@ -24,7 +24,7 @@ class PostListView(ListView):
     paginate_by = 10
     model = Post
     context_object_name = "posts"
-    template_name = "posts_list.html"
+    template_name = "partials/posts_list.html"
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -48,7 +48,7 @@ class PostDetailView(DetailView):
             .get_queryset()
             .prefetch_related("comments", "categories")
             .with_likes_counters()
-            .with_have_rates_per_user(self.request.user.id)
+            .with_have_rates_per_theorist(self.request.theorist.uuid)
         )
 
     def get_context_data(self, **kwargs):
@@ -70,7 +70,7 @@ class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
     def get_form_kwargs(self):
         self.request: AuthenticatedHttpRequest
         kwargs = super().get_form_kwargs()
-        kwargs["user"] = self.request.user
+        kwargs["theorist"] = self.request.theorist
         return kwargs
 
     def form_valid(self, form):
@@ -110,7 +110,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
             super()
             .get_queryset()
             .with_likes_counters()
-            .with_have_rates_per_user(self.request.user.id)
+            .with_have_rates_per_theorist(self.request.theorist.uuid)
         )
 
     def dispatch(self, request, *args, **kwargs):
@@ -143,17 +143,17 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
         is_like = self.request.GET.get("like") == "true"
 
         if is_like:
-            if likes_manager.filter(id=request.user.id).exists():
-                likes_manager.remove(request.user)
+            if likes_manager.filter(uuid=request.theorist.uuid).exists():
+                likes_manager.remove(request.theorist)
             else:
-                dislikes_manager.remove(request.user)
-                likes_manager.add(request.user)
+                dislikes_manager.remove(request.theorist)
+                likes_manager.add(request.theorist)
         else:
-            if dislikes_manager.filter(id=request.user.id).exists():
-                dislikes_manager.remove(request.user)
+            if dislikes_manager.filter(uuid=request.theorist.uuid).exists():
+                dislikes_manager.remove(request.theorist)
             else:
-                likes_manager.remove(request.user)
-                dislikes_manager.add(request.user)
+                likes_manager.remove(request.theorist)
+                dislikes_manager.add(request.theorist)
 
         response = HttpResponse()
         trigger_client_event(response, "postLikesAndDislikesChanged")

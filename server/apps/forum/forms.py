@@ -22,13 +22,13 @@ class PostCreateForm(forms.ModelForm):
         }
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user")
+        self.theorist = kwargs.pop("theorist")
         super().__init__(*args, **kwargs)
         # prepare 'categories' field
         self.fields["categories"].label_from_instance = (
             lambda obj: obj.get_name_display()
         )
-        self.instance.user = self.user
+        self.instance.theorist = self.theorist
 
 
 class CommentCreateForm(forms.ModelForm):
@@ -38,8 +38,8 @@ class CommentCreateForm(forms.ModelForm):
         widgets = {"comment": TinyMCE(attrs={"cols": 30, "rows": 30})}
 
     def __init__(self, *args, **kwargs):
-        self.user = kwargs.pop("user")
+        self.theorist = kwargs.pop("theorist")
         self.post = kwargs.pop("post")
         super().__init__(*args, **kwargs)
-        self.instance.user = self.user
+        self.instance.theorist = self.theorist
         self.instance.post = self.post

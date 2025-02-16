@@ -4,7 +4,8 @@ from django.db import migrations
 
 
 def gen_uuid(apps, schema_editor):
-    # see: https://docs.djangoproject.com/en/5.0/howto/writing-migrations/#migrations-that-add-unique-fields
+    # to figure out what's going on here check url below:
+    # https://docs.djangoproject.com/en/5.0/howto/writing-migrations/#migrations-that-add-unique-fields
     Comment = apps.get_model("forum", "Comment")
     Post = apps.get_model("forum", "Post")
 

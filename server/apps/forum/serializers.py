@@ -5,11 +5,9 @@ from rest_framework import serializers
 
 from .models import Post
 from .models import Comment
-from server.apps.users.serializers import UserSerializer
 
 
 class CommentSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
     likes_count = serializers.IntegerField(required=False)
     dislikes_count = serializers.IntegerField(required=False)
 
@@ -48,7 +46,6 @@ class CommentSerializer(serializers.ModelSerializer):
 
 
 class PostSerializer(serializers.ModelSerializer):
-    user = UserSerializer(required=False)
     comments_quantity = serializers.IntegerField(required=False)
     likes = serializers.IntegerField(required=False)
     dislikes = serializers.IntegerField(required=False)

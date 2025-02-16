@@ -1,21 +1,21 @@
 from django.urls import path
 
-from server.apps.forum.views.comments import (
+from server.apps.forum.logic.comments import (
     CommentCreateView,
     CommentDeleteView,
     HXCommentQuantityView,
     HXCommentLikesAndDislikesView,
     CommentListView,
 )
-from server.apps.forum.views.posts import (
+from server.apps.forum.logic.posts import (
     PostCreateView,
     PostDetailView,
     PostDeleteView,
     HXPostLikesAndDislikesView,
     PostListView,
 )
-from server.apps.forum.views.profile import ProfileDetailView
-from server.apps.users.views.profile_settings import ChangeUserDataView
+from server.apps.forum.logic.profile import ProfileDetailView
+from server.apps.users.logic.profile_settings import ChangeUserDataView
 
 urlpatterns = [
     # Posts block

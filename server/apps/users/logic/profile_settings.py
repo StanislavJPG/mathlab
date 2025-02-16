@@ -8,21 +8,15 @@ from rest_framework.permissions import (
 from rest_framework.views import APIView
 
 from server.apps.users.models import CustomUser as User
-from server.apps.users.serializers import ProfileSerializer
 
 
 class ChangeUserDataView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        current_user_image_serializer = ProfileSerializer.get_profile_image(
-            user_pk=request.user.id
-        )
-
         return render(
             request,
             "forum/settings_page.html",
-            context={"current_user_image": current_user_image_serializer},
         )
 
     def post(self, request):

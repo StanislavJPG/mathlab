@@ -8,7 +8,6 @@ from server.apps.chat.models import Message
 from server.apps.chat.serializer import MessageSerializer
 from server.apps.forum.utils import PaginationCreator
 from server.common.utils.cache import delete_keys_matching_pattern
-from server.apps.users.serializers import ProfileSerializer
 
 
 class ChatView(APIView):
@@ -31,16 +30,12 @@ class ChatView(APIView):
             msg_serializer = MessageSerializer(messages, many=True)
             serialized_messages = msg_serializer.data
             messages_counter = messages.count()
-            current_user_image_serializer = ProfileSerializer.get_profile_image(
-                user_pk=request.user.id
-            )
 
             cache.set(
                 f"receiver_id.{receiver}: receiver_name.{username}.page.{page}",
                 {
                     "messages": serialized_messages,
                     "message_counter": messages_counter,
-                    "current_user_image": current_user_image_serializer,
                 },
                 120,
             )
@@ -74,10 +69,6 @@ class ChatListView(APIView):
         cached_data = cache.get(f"chat_list.{page}")
 
         if not cached_data:
-            current_user_image_serializer = ProfileSerializer.get_profile_image(
-                user_pk=request.user.id
-            )
-
             latest_messages_subquery = (
                 Message.objects.filter(
                     Q(sender=OuterRef("sender")) & Q(receiver=OuterRef("receiver"))
@@ -133,7 +124,6 @@ class ChatListView(APIView):
             context = {
                 "all_chats": users_chats,
                 "page": int(page) if page else 1,
-                "current_user_image": current_user_image_serializer,
             }
             cache.set(f"chat_list.{page}", context, 60)
         else:

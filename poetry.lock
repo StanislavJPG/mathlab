@@ -201,6 +201,24 @@ files = [
 ]
 
 [[package]]
+name = "boringavatars"
+version = "1.0.3"
+description = "A Python port of the boring-avatars JS library."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "boringavatars-1.0.3-py3-none-any.whl", hash = "sha256:e44b4c7c81280ca68d565101e7fceec15dfe8eb05df0bdaacd983a0ac141b874"},
+    {file = "boringavatars-1.0.3.tar.gz", hash = "sha256:81794c91ba563478ebcef3aae65759ff20524cf00891a3ec9de956b30982f5d2"},
+]
+
+[package.dependencies]
+jinja2 = ">=3.0.0"
+
+[package.extras]
+test = ["black (==23.12.1)", "check-manifest (==0.48)", "pre-commit (==3.5.0)"]
+
+[[package]]
 name = "celery"
 version = "5.4.0"
 description = "Distributed Task Queue."
@@ -852,6 +870,25 @@ django = ">=4.2.9"
 sqlparse = ">=0.2"
 
 [[package]]
+name = "django-dynamic-filenames"
+version = "1.4.0"
+description = "Write advanced filename patterns using the Format String Syntax."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_dynamic_filenames-1.4.0-py3-none-any.whl", hash = "sha256:afbda639b0e54ab3ed7dfed60ed9b388143c07c8cc3b7a33f9904a9696d9de83"},
+    {file = "django_dynamic_filenames-1.4.0.tar.gz", hash = "sha256:8913151c2eb505079dd1dd6891e20150806a3a59fdd71a61436d5af4a0fd7b8c"},
+]
+
+[package.dependencies]
+django = ">=4.2.0"
+
+[package.extras]
+lint = ["bandit (==1.7.7)", "black (==23.12.1)", "flake8 (==7.0.0)", "isort (==5.13.2)", "pydocstyle[toml] (==6.3.0)"]
+test = ["pytest", "pytest-cov", "pytest-django"]
+
+[[package]]
 name = "django-elasticsearch-dsl"
 version = "8.0"
 description = "Wrapper around elasticsearch-dsl-py for django models"
@@ -1088,6 +1125,25 @@ uritemplate = ">=3.0.0"
 [package.extras]
 coreapi = ["coreapi (>=2.3.3)", "coreschema (>=0.0.4)"]
 validation = ["swagger-spec-validator (>=2.1.0)"]
+
+[[package]]
+name = "easy-thumbnails"
+version = "2.10"
+description = "Easy thumbnails for Django"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "easy_thumbnails-2.10-py3-none-any.whl", hash = "sha256:9e446fb9da1ca0cbc99bdd1fe8fdd5c38784323d64393a37e16d13cd736980b2"},
+    {file = "easy_thumbnails-2.10.tar.gz", hash = "sha256:d009462fcd791edf2496e5ed46d044712e1a06b7d4600e4cf2812002e9904ef5"},
+]
+
+[package.dependencies]
+django = ">=4.2"
+pillow = "*"
+
+[package.extras]
+svg = ["reportlab", "svglib"]
 
 [[package]]
 name = "elastic-transport"
@@ -3016,4 +3072,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "428b713449975b6b2de4ea5f9e13dcec03e3d1c9430e198efc6fb97881483dc4"
+content-hash = "b50c043f075c610621b80b9475f40b3922455eb876c99f38f81916c08a433c2b"

@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "channels",
     "widget_tweaks",
     "tinymce",
+    "easy_thumbnails",
     # common
     "server.common",
     # apps

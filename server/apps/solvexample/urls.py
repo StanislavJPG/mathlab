@@ -1,6 +1,6 @@
 from django.urls import path
 
-from server.apps.solvexample.views.solvers import equations, percents, matrix
+from server.apps.solvexample.logic.solvers import equations, percents, matrix
 
 
 urlpatterns = [

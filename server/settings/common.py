@@ -10,11 +10,14 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/5.0/ref/settings/
 """
 
-from datetime import timedelta
+import logging.config
+import sys
 from pathlib import Path
 import os
 
 from dotenv import load_dotenv
+
+from .celery import *  # noqa: F403
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -38,9 +41,6 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     # installed packages
-    "drf_yasg",
-    "rest_framework",
-    "rest_framework.authtoken",
     "channels",
     "widget_tweaks",
     "tinymce",
@@ -73,14 +73,10 @@ MIDDLEWARE = [
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     # custom middlewares
-    "server.common.middlewares.AsyncMiddleware",
-    "server.common.middlewares.TokenMiddleware",
-    "server.common.middlewares.AccessControl",
     "server.common.middlewares.HTMXToastMiddleware",
 ]
 
 ROOT_URLCONF = "server.urls.urls"
-
 
 TEMPLATES = [
     {
@@ -89,6 +85,7 @@ TEMPLATES = [
         "APP_DIRS": True,
         "OPTIONS": {
             "context_processors": [
+                "django.template.context_processors.i18n",
                 "django.template.context_processors.debug",
                 "django.template.context_processors.request",
                 "django.contrib.auth.context_processors.auth",
@@ -142,41 +139,19 @@ AUTH_PASSWORD_VALIDATORS = [
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = "uk"
-
 USE_I18N = True
-
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
 STATIC_URL = "/static/"
-
 STATIC_ROOT = BASE_DIR.parent / "staticfiles"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
-
-REST_FRAMEWORK = {
-    "DEFAULT_RENDERED_CLASSES": [
-        "rest_framework.renderers.JSONRenderer",
-        "rest_framework.renderers.BrowsableAPIRender",
-    ],
-    "DEFAULT_PERMISSION_CLASSES": [
-        "rest_framework.permissions.DjangoModelPermissionsOrAnonReadOnly",
-    ],
-    "DEFAULT_AUTHENTICATION_CLASSES": [
-        "rest_framework.authentication.TokenAuthentication",
-    ],
-    "DEFAULT_THROTTLE_CLASSES": [
-        "rest_framework.throttling.AnonRateThrottle",
-        "rest_framework.throttling.UserRateThrottle",
-    ],
-    "DEFAULT_THROTTLE_RATES": {"anon": "100/hour", "user": "200/hour"},
-}
 
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
@@ -195,7 +170,6 @@ TINYMCE_DEFAULT_CONFIG = {
     "removeformat | help",
 }
 
-
 AUTH_USER_MODEL = "users.CustomUser"
 
 EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
@@ -205,8 +179,6 @@ EMAIL_PORT = 587
 EMAIL_HOST_USER = os.getenv("MAIL_NAME")
 EMAIL_HOST_PASSWORD = os.getenv("MAIL_PASS")
 
-CELERY_BROKER_URL = f"redis://redis:{os.getenv('REDIS_PORT')}"
-CELERY_RESULT_BACKEND = f"redis://redis:{os.getenv('REDIS_PORT')}"
 TIME_ZONE = "Europe/Kiev"
 
 CACHES = {
@@ -219,21 +191,18 @@ CACHES = {
     }
 }
 
-# LOGGING = {
-#     'version': 1,
-#     'disable_existing_loggers': False,
-#     'handlers': {
-#         'console': {
-#             'class': 'logging.StreamHandler',
-#         },
-#     },
-#     'loggers': {
-#         'django.db.backends': {
-#             'handlers': ['console'],
-#             'level': 'DEBUG',
-#         },
-#     },
-# }
+LOGGING = {
+    "version": 1,
+    "disable_existing_loggers": False,
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "stream": sys.stdout,
+        },
+    },
+    "root": {"handlers": ["console"], "level": "INFO"},
+}
+logging.config.dictConfig(LOGGING)
 
 # ELASTICSEARCH_DSL = {
 #     'default': {
@@ -242,18 +211,6 @@ CACHES = {
 #     }
 # }
 
-CELERY_IMPORTS = ["server.apps.math_news.tasks", "server.apps.chat.tasks"]
-
-CELERY_BEAT_SCHEDULE = {
-    "to_find_news": {
-        "task": "server.apps.math_news.tasks.let_find_news",
-        "schedule": timedelta(minutes=1),
-    },
-    "clear_garbage": {
-        "task": "server.apps.chat.tasks.clear_deprecated_messages",
-        "schedule": timedelta(days=7),
-    },
-}
 
 CHANNEL_LAYERS = {
     "default": {

@@ -16,17 +16,17 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     post = models.ForeignKey(
         "forum.Post", related_name="comments", on_delete=models.CASCADE
     )
-    user = models.ForeignKey(
-        "users.CustomUser",
+    theorist = models.ForeignKey(
+        "theorist.Theorist",
         related_name="comments",
         on_delete=models.SET_NULL,
         null=True,
     )
     likes = models.ManyToManyField(
-        "users.CustomUser", through="forum.CommentLike", related_name="comment_likes"
+        "theorist.Theorist", through="forum.CommentLike", related_name="comment_likes"
     )
     dislikes = models.ManyToManyField(
-        "users.CustomUser",
+        "theorist.Theorist",
         through="forum.CommentDislike",
         related_name="comment_dislikes",
     )

@@ -6,10 +6,12 @@ from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin
 
 class PostLike(UUIDModelMixin, LifecycleModel, TimeStampedModelMixin):
     post = models.ForeignKey("forum.Post", on_delete=models.CASCADE)
-    user = models.ForeignKey("users.CustomUser", null=True, on_delete=models.SET_NULL)
+    theorist = models.ForeignKey(
+        "theorist.Theorist", null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
-        unique_together = (("user", "post"),)
+        unique_together = (("theorist", "post"),)
 
     # @hook(AFTER_CREATE)
     # @hook(AFTER_DELETE)
@@ -21,23 +23,29 @@ class PostLike(UUIDModelMixin, LifecycleModel, TimeStampedModelMixin):
 
 class PostDislike(UUIDModelMixin, LifecycleModel, TimeStampedModelMixin):
     post = models.ForeignKey("forum.Post", on_delete=models.CASCADE)
-    user = models.ForeignKey("users.CustomUser", null=True, on_delete=models.SET_NULL)
+    theorist = models.ForeignKey(
+        "theorist.Theorist", null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
-        unique_together = (("user", "post"),)
+        unique_together = (("theorist", "post"),)
 
 
 class CommentLike(UUIDModelMixin, LifecycleModel, TimeStampedModelMixin):
     comment = models.ForeignKey("forum.Comment", on_delete=models.CASCADE)
-    user = models.ForeignKey("users.CustomUser", null=True, on_delete=models.SET_NULL)
+    theorist = models.ForeignKey(
+        "theorist.Theorist", null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
-        unique_together = (("user", "comment"),)
+        unique_together = (("theorist", "comment"),)
 
 
 class CommentDislike(UUIDModelMixin, LifecycleModel, TimeStampedModelMixin):
     comment = models.ForeignKey("forum.Comment", on_delete=models.CASCADE)
-    user = models.ForeignKey("users.CustomUser", null=True, on_delete=models.SET_NULL)
+    theorist = models.ForeignKey(
+        "theorist.Theorist", null=True, on_delete=models.SET_NULL
+    )
 
     class Meta:
-        unique_together = (("user", "comment"),)
+        unique_together = (("theorist", "comment"),)

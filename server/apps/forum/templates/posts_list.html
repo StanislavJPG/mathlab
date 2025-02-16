@@ -67,7 +67,7 @@
                   </div>
                   <div style="transform: translateX(-100px); font-size: 14px;">
                     <span><a style="text-decoration: none; margin-bottom: 15px;"
-                             href="{% url 'forum:profile' user_id=post.user.id username=post.user.username %}">{{ post.user.username }}
+                             href="">{{ post.user.username }}
                     </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
                     {% if post.user.id == user.id %}
                       <button

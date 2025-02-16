@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="{{ LANGUAGE_CODE }}">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% load static %}
@@ -14,22 +14,21 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/js/bootstrap-select.min.js"></script>
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-select/1.14.0-beta2/css/bootstrap-select.min.css">
 
-<link rel="icon" type="image/x-icon" href="{% static 'forum-favicon.png' %}">
 <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@latest/icons-react/dist/index.umd.min.js"></script>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@1.74.0/icons-react/dist/index.umd.min.js"></script>
+
+<link rel="icon" type="image/x-icon" href="{% static 'forum-favicon.png' %}">
 
 {% include 'partials/toasts.html' %}
 {% include 'partials/forum_navbar.html' %}
 
 <head>
   <meta charset="UTF-8">
-
   {% block page_head %}
     <link type="text/css" href="{% static 'forum_base.css' %}" rel="stylesheet">
     <title>MathLab | Форум</title>
   {% endblock page_head %}
-
 </head>
 
 {% block page_css %}

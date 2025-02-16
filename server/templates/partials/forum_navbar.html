@@ -47,9 +47,9 @@
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
           {% if user.is_authenticated %}
             <li><a class="dropdown-item" href="{% url 'forum:post-create' %}">Задати питання...</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:settings' %}">Налаштування</a></li>
+            <li><a class="dropdown-item" href="">Налаштування</a></li>
             <li><a class="dropdown-item"
-                   href="{% url 'forum:profile' user_id=user.id username=user.username %}">Профіль</a></li>
+                   href="">Профіль</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

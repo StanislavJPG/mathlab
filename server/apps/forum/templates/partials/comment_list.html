@@ -9,7 +9,7 @@
       <div class="types">
         <span class="span-base"><b>Автор:</b>
             <a style="text-decoration: none;"
-               href="{% url 'forum:profile' user_id=comment.user.id username=comment.user.username %}"> {{ comment.user.username }} </a> |
+               href=""> {{ comment.user.username }} </a> |
             <b>{{ comment.user.rank }}</b></span>
         <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
         {% if comment.modified_at is not none %}

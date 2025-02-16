@@ -22,6 +22,10 @@ INTERNAL_IPS = [
 
 STATICFILES_DIRS = [BASE_DIR / "static/"]
 
+# Media
+MEDIA_ROOT = os.path.join(BASE_DIR.parent, "media")
+MEDIA_URL = "/media/"
+
 DEBUG_TOOLBAR_CONFIG = {
     "SHOW_TOOLBAR_CALLBACK": lambda request: DEBUG,
 }

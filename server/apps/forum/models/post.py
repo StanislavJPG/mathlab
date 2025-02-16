@@ -13,14 +13,16 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     content = models.TextField(max_length=2000)
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
-    user = models.ForeignKey("users.CustomUser", on_delete=models.SET_NULL, null=True)
+    theorist = models.ForeignKey(
+        "theorist.Theorist", on_delete=models.SET_NULL, null=True
+    )
     categories = models.ManyToManyField("forum.PostCategory", related_name="posts")
 
     likes = models.ManyToManyField(
-        "users.CustomUser", through="forum.PostLike", related_name="post_likes"
+        "theorist.Theorist", through="forum.PostLike", related_name="post_likes"
     )
     dislikes = models.ManyToManyField(
-        "users.CustomUser", through="forum.PostDislike", related_name="post_dislikes"
+        "theorist.Theorist", through="forum.PostDislike", related_name="post_dislikes"
     )
 
     # Denormilized fields

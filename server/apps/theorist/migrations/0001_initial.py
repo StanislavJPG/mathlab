@@ -9,6 +9,16 @@ from django.conf import settings
 from django.db import migrations, models
 
 
+def setup_user(apps, schema_editor):
+    CustomUser = apps.get_model("users", "CustomUser")
+    Theorist = apps.get_model("theorist", "Theorist")
+    obj_to_save = []
+
+    for user in CustomUser.objects.all():
+        obj_to_save.append(Theorist(full_name=user.username, user=user))
+    Theorist.objects.bulk_create(obj_to_save)
+
+
 class Migration(migrations.Migration):
     initial = True
 
@@ -55,7 +65,7 @@ class Migration(migrations.Migration):
                     ),
                 ),
                 ("full_name", models.CharField(max_length=150)),
-                ("city", models.CharField(max_length=100)),
+                ("city", models.CharField(max_length=100, null=True, blank=True)),
                 (
                     "social_media_url",
                     models.URLField(blank=True, max_length=225, null=True),
@@ -97,4 +107,5 @@ class Migration(migrations.Migration):
             },
             bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
         ),
+        migrations.RunPython(setup_user, reverse_code=migrations.RunPython.noop),
     ]

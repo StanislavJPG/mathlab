@@ -99,6 +99,9 @@ TEMPLATES = [
 
 WSGI_APPLICATION = "server.settings.wsgi.application"
 
+FIXTURE_DIRS = [
+    os.path.join(BASE_DIR.parent, "data", "fixtures"),  # Global fixtures directory
+]
 
 # Database
 # https://docs.djangoproject.com/en/5.0/ref/settings/#databases
@@ -142,6 +145,9 @@ AUTH_PASSWORD_VALIDATORS = [
 LANGUAGE_CODE = "uk"
 USE_I18N = True
 USE_TZ = True
+
+
+MEDIA_ROOT = ""
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/

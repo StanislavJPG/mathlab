@@ -31,11 +31,3 @@ class CustomUser(AbstractUser):
     #     else:
     #         self.rank = self.MATH_LORD
     #     self.save()
-
-
-# class ProfileImage(models.Model):
-#     user = models.OneToOneField(CustomUser, on_delete=models.CASCADE)
-#     image = models.ImageField(upload_to="templates/static/profile_pics", blank=True)
-#
-#     def __str__(self):
-#         return f"{self.user}"

@@ -92,7 +92,7 @@ class Migration(migrations.Migration):
                         max_length=100,
                     ),
                 ),
-                ("last_activity", models.DateField(auto_now=True)),
+                ("last_activity", models.DateTimeField(auto_now=True)),
                 (
                     "user",
                     models.OneToOneField(

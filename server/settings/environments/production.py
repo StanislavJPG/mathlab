@@ -13,7 +13,6 @@ ALLOWED_HOSTS = [""]
 
 # TODO: Change by correct urls
 MEDIA_URL = "https://your-cdn.example.com/media/"
-MEDIA_ROOT = "/var/www/example.com/media/"
 
 # static
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

@@ -10,13 +10,13 @@ from rest_framework.views import APIView
 from server.apps.users.models import CustomUser as User
 
 
-class ChangeUserDataView(APIView):
+class TheoristSettingsDetailView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
         return render(
             request,
-            "forum/settings_page.html",
+            "forum/settings.html",
         )
 
     def post(self, request):
@@ -35,7 +35,7 @@ class ChangeUserDataView(APIView):
                 error_msg = {
                     "error_msg": "Користувач з даним нікнеймом вже зареєстрований."
                 }
-                return render(request, "forum/settings_page.html", context=error_msg)
+                return render(request, "forum/settings.html", context=error_msg)
             user.username = new_username
 
         elif new_email and new_email != user.email:
@@ -47,12 +47,12 @@ class ChangeUserDataView(APIView):
                 error_msg = {
                     "error_msg": "Користувач з даною поштою вже зареєстрований."
                 }
-                return render(request, "forum/settings_page.html", context=error_msg)
+                return render(request, "forum/settings.html", context=error_msg)
             user.email = new_email
 
         else:
             error_msg = {"error_msg": "Заповніть поля, які хочете змінити."}
-            return render(request, "forum/settings_page.html", context=error_msg)
+            return render(request, "forum/settings.html", context=error_msg)
 
         user.save()
         return HttpResponseRedirect(reverse("forum-settings"))

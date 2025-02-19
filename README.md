@@ -32,38 +32,15 @@ improve their math skills.
 
 ### Installation
 
-**From GitHub:**
+**Copy project from GitHub:**
 
 ```commandline
-pip install https://github.com/StanislavJPG/mathlab.git
+git clone https://github.com/StanislavJPG/mathlab.git
 ```
 
-**Then install the project dependencies with**
-```commandline
-pip install -r requirements.txt
-```
+# *Project now in development...*
 
-### Usage
-**You can create your own .env file to optimize the project according to your preferences.**
-
-```dotenv
-SECRET_KEY=custom_secret_key
-
-MAIL_NAME=your_mail
-
-MAIL_PASS=your_smtp_app_pass
-
-MYSQL_DB_PASS=your_mysql_pass
-
-ELASTICSEARCH_HOST=elasticsearch_host
-
-ELASTICSEARCH_NAME=elasticsearch_name
-
-ELASTICSEARCH_PASS=elasticsearch_pass
-```
-
-**Now you can run the project using this command**
-
-```commandline
-python manage.py runserver
+**Load data from fixtures**
+```shell
+./manage.py loaddata post_categories   # for load categories data 
 ```

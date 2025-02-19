@@ -7,7 +7,7 @@ from django_lifecycle import (
 )
 
 from server.apps.forum.managers import CommentQuerySet
-from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin
+from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
 class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
@@ -23,12 +23,12 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         null=True,
     )
     likes = models.ManyToManyField(
-        "theorist.Theorist", through="forum.CommentLike", related_name="comment_likes"
+        "theorist.Theorist", through="forum.CommentLike", related_name="liked_comments"
     )
     dislikes = models.ManyToManyField(
         "theorist.Theorist",
         through="forum.CommentDislike",
-        related_name="comment_dislikes",
+        related_name="disliked_comments",
     )
 
     likes_counter = models.PositiveSmallIntegerField(default=0)

@@ -1,9 +1,16 @@
 from django.db import models
+from django.urls import reverse
+
 from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
+
 from slugify import slugify
 
 from server.apps.theorist.choices import TheoristRankChoices
-from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin, AvatarModelMixin
+from server.common.mixins.models import (
+    UUIDModelMixin,
+    TimeStampedModelMixin,
+    AvatarModelMixin,
+)
 
 
 class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarModelMixin):
@@ -15,12 +22,12 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     full_name = models.CharField(max_length=150)
     city = models.CharField(max_length=100, null=True, blank=True)
 
+    full_name_slug = models.SlugField(max_length=255, null=True, blank=True)
+    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE)
+
     # contact info urls
     social_media_url = models.URLField(max_length=225, null=True, blank=True)
     website_url = models.URLField(max_length=225, null=True, blank=True)
-
-    full_name_slug = models.SlugField(max_length=255, null=True, blank=True)
-    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE)
 
     # forum data
     total_posts = models.PositiveSmallIntegerField(default=0)
@@ -32,7 +39,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
         default=PredefinedRankChoices.JUNIOR,
     )
 
-    last_activity = models.DateField(auto_now=True)
+    last_activity = models.DateTimeField(auto_now=True)  # TODO: fix or remove
 
     class Meta:
         verbose_name = "theorist"
@@ -40,6 +47,12 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
 
     def __str__(self):
         return f"{self.full_name} | {self.__class__.__name__} | id - {self.id}"
+
+    def get_absolute_profile_url(self):
+        return reverse(
+            "forum:theorist_profile:base-page",
+            kwargs={"pk": self.pk, "slug": self.full_name_slug},
+        )
 
     def get_absolute_default_avatar_url(self):
         return None  # TODO: Add view with boringavatars URL

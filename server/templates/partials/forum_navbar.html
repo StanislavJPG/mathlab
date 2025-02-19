@@ -21,7 +21,7 @@
         <ul class="nav col-md-4 justify-content-end">
           <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1"
                                   class="nav-link px-2 text-muted">
-            <img width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
+            <img alt="chat" width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
         </ul>
       {% endif %}
 
@@ -46,10 +46,10 @@
         </a>
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
           {% if user.is_authenticated %}
+            <li><a class="dropdown-item"
+                   href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}">Профіль</a></li>
             <li><a class="dropdown-item" href="{% url 'forum:post-create' %}">Задати питання...</a></li>
             <li><a class="dropdown-item" href="">Налаштування</a></li>
-            <li><a class="dropdown-item"
-                   href="">Профіль</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

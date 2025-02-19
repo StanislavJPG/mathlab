@@ -5,7 +5,7 @@ from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
 from slugify import slugify
 
 from server.apps.forum.managers import PostQuerySet
-from server.common.mixins import UUIDModelMixin, TimeStampedModelMixin
+from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
 class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
@@ -14,15 +14,15 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
     theorist = models.ForeignKey(
-        "theorist.Theorist", on_delete=models.SET_NULL, null=True
+        "theorist.Theorist", on_delete=models.SET_NULL, null=True, related_name="posts"
     )
     categories = models.ManyToManyField("forum.PostCategory", related_name="posts")
 
     likes = models.ManyToManyField(
-        "theorist.Theorist", through="forum.PostLike", related_name="post_likes"
+        "theorist.Theorist", through="forum.PostLike", related_name="liked_posts"
     )
     dislikes = models.ManyToManyField(
-        "theorist.Theorist", through="forum.PostDislike", related_name="post_dislikes"
+        "theorist.Theorist", through="forum.PostDislike", related_name="disliked_posts"
     )
 
     # Denormilized fields

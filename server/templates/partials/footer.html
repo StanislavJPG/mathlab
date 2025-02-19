@@ -1,0 +1,24 @@
+{% load static %}
+
+<div class="container">
+  <footer class="d-flex flex-wrap justify-content-between align-items-center py-1 my-4 border-top">
+    <p class="col-md-4 mb-0 text-muted">© Made by StanislavJPG</p>
+    <a href="{% url 'forum:post-list' %}"
+       class="col-md-4 d-flex align-items-center justify-content-center mb-3 mb-md-0 me-md-auto link-dark text-decoration-none">
+      <svg width="40" height="32">
+        <use xlink:href="#home"></use>
+      </svg>
+      <img src="{% static 'img/forum/forum-logo.png' %}" class="d-inline-block align-top" width="110" height="55" alt="">
+    </a>
+
+    <ul class="nav col-md-4 justify-content-end">
+      <li class="nav-item"><a href="https://linkedin.com/in/stanislav-ruban-a77305278" target="_blank"
+                              class="nav-link px-2 text-muted">
+        <img width="34" height="33" src="{% static 'img/base/socials/linkedin.png' %}"></a></li>
+      <li class="nav-item"><a href="https://github.com/StanislavJPG/" target="_blank"
+                              class="nav-link px-2 text-muted">
+        <img width="34" height="33" src="{% static 'img/base/socials/github-mark.png' %}"></a></li>
+    </ul>
+
+  </footer>
+</div>

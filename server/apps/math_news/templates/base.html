@@ -1,0 +1,25 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block body %}
+  <div style="text-align: center;">
+    <h1 class="display-4 index">Останні новини зі світу Математики в Україні</h1>
+    {% for new in all_news %}
+      <div class="input-form">
+        <h1 style="margin-top: 20px; font-size: 20px;" class="display-4">
+          <a style="text-decoration: none;" target="_blank" href="{{ new.new_url }}">{{ new.title }}</a>
+        </h1>
+        <p style="font-size: 14px;">{{ new.additional_info }}</p>
+        <p style="text-align: right; font-size: 14px;">{{ new.posted }}</p>
+      </div>
+    {% endfor %}
+  </div>
+  <div style="text-align: center;">
+    {% if page > 1 %}
+      <a type="button" href="{% url 'mathlab:base-math-news' %}?page={{ page|add:-1 }}" class="btn btn-dark">Назад</a>
+    {% endif %}
+    {% if all_news|length == 10 %}
+      <a type="button" href="{% url 'mathlab:base-math-news' %}?page={{ page|add:1 }}" class="btn btn-dark">Вперед</a>
+    {% endif %}
+  </div>
+{% endblock %}

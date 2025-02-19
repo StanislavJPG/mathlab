@@ -1,5 +1,7 @@
 from django.urls import path
 
-from server.apps.graphbuilder.logic.graphics import index
+from server.apps.graphbuilder.logic.graphics import GraphBuilderTemplateView
 
-urlpatterns = [path("graphbuilder/", index, name="graphbuilder")]
+urlpatterns = [
+    path("graphbuilder/", GraphBuilderTemplateView.as_view(), name="graphbuilder")
+]

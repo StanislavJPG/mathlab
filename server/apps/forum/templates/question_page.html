@@ -4,7 +4,7 @@
 {% block page_head %}
   <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
   <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
-  <link type="text/css" href="{% static 'forum_question.css' %}" rel="stylesheet">
+  <link type="text/css" href="{% static 'css/forum_question.css' %}" rel="stylesheet">
   <title>{{ post.categories.first.get_name_display }} - {{ post.title }}</title>
 {% endblock page_head %}
 

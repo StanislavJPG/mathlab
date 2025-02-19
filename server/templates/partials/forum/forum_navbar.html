@@ -3,7 +3,7 @@
 <header class="p-3 mb-3 border-bottom" style="padding: 0.5rem !important;">
   <div class="container">
     <div class="d-flex flex-wrap align-items-center justify-content-center justify-content-lg-start">
-      <a href="/" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
+      <a href="/server/static" class="d-flex align-items-center mb-2 mb-lg-0 text-dark text-decoration-none">
         <svg class="bi me-2" width="40" height="32" role="img" aria-label="Bootstrap">
           <use xlink:href="#bootstrap"></use>
         </svg>
@@ -21,7 +21,7 @@
         <ul class="nav col-md-4 justify-content-end">
           <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1"
                                   class="nav-link px-2 text-muted">
-            <img alt="chat" width="33" height="34" src="{% static 'chatting.png' %}"></a></li>
+            <img alt="chat" width="33" height="34" src="{% static 'img/forum/chatting.png' %}"></a></li>
         </ul>
       {% endif %}
 

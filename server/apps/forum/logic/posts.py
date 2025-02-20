@@ -28,7 +28,7 @@ class PostListView(ListView):
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
-        return super().get_queryset().with_likes_counters()
+        return super().get_queryset().with_likes_counters().order_by("-created_at")
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)

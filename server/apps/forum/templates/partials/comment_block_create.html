@@ -2,6 +2,7 @@
 {{ form.media }}
 
 <form hx-post="{% url 'forum:comment-create' post.uuid %}"
+      id="comment-block-create"
       hx-swap="none"
       _="on click from #submit-btn toggle @hidden on #comment-wait-spinner until htmx:afterOnLoad"
       hx-on::after-request="this.reset()">
@@ -11,3 +12,11 @@
     {% translate 'Add comment' %}
   </button>
 </form>
+
+<style>
+  @media (min-width: 1200px) {
+    #comment-block-create {
+        width: 800px;
+    }
+}
+</style>

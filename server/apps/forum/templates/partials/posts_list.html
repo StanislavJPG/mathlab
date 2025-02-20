@@ -24,7 +24,12 @@
     </div>
   </div>
 
-  <div id="main-posts-block-js">
+  <div id="main-posts-block-js" 
+         hx-get="{{ request.get_full_path }}"
+         hx-select="#main-posts-block-js"
+         hx-target="#main-posts-block-js"
+         hx-swap="outerHTML"
+         hx-trigger="postDeleted from:body delay:0.6s">
     <div class="sort-by">
       <a style="margin-bottom: 5px; font-size: 13px;"><span>{% translate 'Sort by' %}:</span></a>
       <a href="{% url 'forum:post-list' %}?sort=popular&page={{ page }}"
@@ -36,14 +41,7 @@
       <a href="{% url 'forum:post-list' %}?sort=last-week&page={{ page }}"
          class="btn btn-outline-dark a">{% translate 'Previous week' %}</a>
     </div>
-    <div id="post-list-js"
-         hx-get="{{ request.get_full_path }}"
-         hx-select="#post-list-js"
-         hx-target="#post-list-js"
-         hx-swap="outerHTML"
-         hx-trigger="postDeleted from:body delay:0.6s"
-         class="base-content"
-    >
+    <div class="base-content">
       <div style="border-top: 1px solid #858383;"></div>
       {% for post in posts %}
         <div class="text-left">
@@ -80,7 +78,7 @@
                           hx-delete="{% url 'forum:post-delete' post.uuid %}"
                           hx-confirm="Are you sure?"
                       >
-                        Видалити пост
+                        {% translate 'Delete post' %}
                       </button>
                     {% endif %}
                   </div>

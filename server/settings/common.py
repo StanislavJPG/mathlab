@@ -56,6 +56,8 @@ INSTALLED_APPS = [
     "server.apps.math_news.apps.MathNewsConfig",
     "server.apps.chat.apps.ChatConfig",
     "server.apps.theorist.apps.TheoristConfig",
+    # templatetags
+    "server.common.templatetags.widened_widget_tweaks",
 ]
 
 
@@ -70,6 +72,7 @@ MIDDLEWARE = [
     "django.contrib.messages.middleware.MessageMiddleware",
     "django.middleware.clickjacking.XFrameOptionsMiddleware",
     "django.middleware.security.SecurityMiddleware",
+    "django.middleware.locale.LocaleMiddleware",
     "whitenoise.middleware.WhiteNoiseMiddleware",
     "django_htmx.middleware.HtmxMiddleware",
     # custom middlewares
@@ -102,9 +105,6 @@ WSGI_APPLICATION = "server.settings.wsgi.application"
 FIXTURE_DIRS = [
     os.path.join(BASE_DIR.parent, "data", "fixtures"),  # Global fixtures directory
 ]
-
-# Database
-# https://docs.djangoproject.com/en/5.0/ref/settings/#databases
 
 # RENDER DATABASE
 
@@ -146,6 +146,9 @@ LANGUAGE_CODE = "uk"
 USE_I18N = True
 USE_TZ = True
 
+LOCALE_PATHS = [
+    BASE_DIR.parent / "locale",
+]
 
 MEDIA_ROOT = ""
 
@@ -162,7 +165,6 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 TINYMCE_DEFAULT_CONFIG = {
     "theme": "silver",
     "height": 400,
-    "width": 800,
     "menubar": False,
     "setup": """editor => {
            editor.on('blur', () => editor.save())

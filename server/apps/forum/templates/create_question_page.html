@@ -1,5 +1,5 @@
 {% extends 'base/forum_base.html' %}
-{% load i18n static widget_tweaks %}
+{% load i18n static widget_tweaks widened_widget_tweaks %}
 
 {% block page_head %}
   <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
@@ -9,27 +9,34 @@
 {% endblock page_head %}
 
 {% block body %}
-  <div class="container-md border border-dark rounded-4">
-    {% for error in form.errors %}
-      {{ error }}
-    {% endfor %}
-    <form method="post" action="{% url 'forum:post-create' %}" class="row justify-content-md-center">
+  <div class="container">
+    <form method="post" action="{% url 'forum:post-create' %}" class="row justify-content-center border border-dark rounded-4">
       {% csrf_token %}
       <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
       <div class="col-md-8">
         <span>{% translate 'Question topic' %} *</span>
-        {{ form.title|add_class:"form-control" }}
+        {% render_field form.title|add_bootstrap_validation class="form-control" %}
+        {% for error in form.title.errors %}
+          <div class="text-danger mb-2">
+            <small>{{ error }}</small>
+          </div>
+        {% endfor %}
       </div>
       <div class="col-md-8">
         <span>{% translate 'Question category' %} <small class="text-danger">({% translate 'No more than 4 categories' %}) *</small></span>
-        {{ form.categories|add_class:"form-control selectpicker"|append_attr:"data-style:btn-default"|append_attr:"data-live-search:true"|append_attr:"multiple" }}
+        {% render_field form.categories|add_bootstrap_validation class="selectpicker form-control" data-style="btn-default" data-live-search="true" multiple="" %}
+        {% for error in form.categories.errors %}
+          <div class="text-danger mb-2">
+            <small>{{ error }}</small>
+          </div>
+        {% endfor %}
       </div>
       <div class="col-md-8">
         <span>{% translate 'Describe your question' %} *</span>
         {{ form.content }}
       </div>
       <div class="text-center mt-3 mb-3">
-        <button type="submit" class="btn btn-dark">Створити запитання</button>
+        <button type="submit" class="btn btn-dark">{% translate 'Create question' %}</button>
       </div>
     </form>
   </div>

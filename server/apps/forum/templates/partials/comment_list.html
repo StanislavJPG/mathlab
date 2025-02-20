@@ -7,13 +7,13 @@
   {% for comment in comments %}
     <div class="full-answer-{{ comment.uuid }}">
       <div class="types">
-        <span class="span-base"><b>Автор:</b>
-            <a style="text-decoration: none;"
+        <span class="span-base"><b>{% translate 'Author' %}:</b>
+            <a class="text-decoration-none"
                href=""> {{ comment.theorist.full_name }} </a> |
-            <b>{{ comment.theorist.rank }}</b></span>
-        <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
+            <b>{{ comment.theorist.get_rank_display }}</b></span>
+        <span class="span-base"><b>{% translate 'Created at' %}</b> {{ comment.created_at|timesince }} {% translate 'ago' %}</span>
         {% if comment.modified_at is not none %}
-          <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>
+          <span class="span-base"><b>{% translate 'Modified at' %}</b> {{ comment.modified_at|timesince }} {% translate 'ago' %}</span>
         {% endif %}
         <div style="margin-left: 15px;">
           {% if comment.theorist.uuid == request.theorist.uuid %}
@@ -24,7 +24,7 @@
                     hx-swap="outerHTML swap:0.5s"
                     hx-target=".full-answer-{{ comment.uuid }}"
             >
-              Delete comment
+              {% translate 'Delete comment' %}
             </button>
           {% endif %}
         </div>

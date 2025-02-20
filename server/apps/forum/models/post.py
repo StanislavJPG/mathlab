@@ -1,3 +1,5 @@
+from typing import Final
+
 from django.db import models
 from django.urls import reverse
 from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
@@ -9,6 +11,8 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
 class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    CATEGORIES_LIMIT: Final[int] = 4
+
     title = models.CharField(max_length=85)
     content = models.TextField(max_length=2000)
     slug = models.SlugField(max_length=255, null=True, blank=True)

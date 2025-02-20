@@ -1,0 +1,19 @@
+[
+    {"model": "forum.postcategory", "pk": 1, "fields": {"name": "GF"}},
+    {"model": "forum.postcategory", "pk": 2, "fields": {"name": "MT"}},
+    {"model": "forum.postcategory", "pk": 3, "fields": {"name": "RV"}},
+    {"model": "forum.postcategory", "pk": 4, "fields": {"name": "NR"}},
+    {"model": "forum.postcategory", "pk": 5, "fields": {"name": "SM"}},
+    {"model": "forum.postcategory", "pk": 6, "fields": {"name": "VM"}},
+    {"model": "forum.postcategory", "pk": 7, "fields": {"name": "TY"}},
+    {"model": "forum.postcategory", "pk": 8, "fields": {"name": "KM"}},
+    {"model": "forum.postcategory", "pk": 9, "fields": {"name": "DM"}},
+    {"model": "forum.postcategory", "pk": 10, "fields": {"name": "PM"}},
+    {"model": "forum.postcategory", "pk": 11, "fields": {"name": "VD"}},
+    {"model": "forum.postcategory", "pk": 12, "fields": {"name": "TG"}},
+    {"model": "forum.postcategory", "pk": 13, "fields": {"name": "GM"}},
+    {"model": "forum.postcategory", "pk": 14, "fields": {"name": "YS"}},
+    {"model": "forum.postcategory", "pk": 15, "fields": {"name": "AL"}},
+    {"model": "forum.postcategory", "pk": 16, "fields": {"name": "AG"}},
+    {"model": "forum.postcategory", "pk": 17, "fields": {"name": "IN"}}
+]

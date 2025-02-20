@@ -1,0 +1,97 @@
+{% extends 'base/forum_base.html' %}
+{% load static i18n widget_tweaks %}
+
+{% block body %}
+  <div class="container block-body d-flex justify-content-center align-items-center">
+    <h1 class="display-4 me-3">{% translate 'Last topics' %}</h1>
+    <div class="mt-2">
+      <a type="submit"
+         href="{% if user.is_authenticated %}{% url 'forum:post-create' %}{% else %}{% url 'login_view' %}{% endif %}"
+         class="btn btn-outline-dark me-2">{% translate 'Ask your question' %}</a>
+      <div class="btn-group dropend">
+        <div class="dropdown">
+          <button class="btn btn-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown"
+                  aria-expanded="false">
+            {% translate 'Categories' %}
+          </button>
+          <ul class="dropdown-menu">
+            {% for category in categories %}
+              <li><a class="dropdown-item" href="#">{{ category.get_name_display }}</a></li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="main-posts-block-js">
+    <div class="sort-by">
+      <a style="margin-bottom: 5px; font-size: 13px;"><span>{% translate 'Sort by' %}:</span></a>
+      <a href="{% url 'forum:post-list' %}?sort=popular&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'Most popular' %}</a>
+      <a href="{% url 'forum:post-list' %}?sort=interest&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'Most interesting' %}</a>
+      <a href="{% url 'forum:post-list' %}?sort=newest&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'The newest' %}</a>
+      <a href="{% url 'forum:post-list' %}?sort=last-week&page={{ page }}"
+         class="btn btn-outline-dark a">{% translate 'Previous week' %}</a>
+    </div>
+    <div id="post-list-js"
+         hx-get="{{ request.get_full_path }}"
+         hx-select="#post-list-js"
+         hx-target="#post-list-js"
+         hx-swap="outerHTML"
+         hx-trigger="postDeleted from:body delay:0.6s"
+         class="base-content"
+    >
+      <div style="border-top: 1px solid #858383;"></div>
+      {% for post in posts %}
+        <div class="text-left">
+          <div class="question-{{ post.uuid }}">
+            <div style="transform: translateX(70px);">
+              <div class="base-title-info">
+                <a href="{% url 'forum:post-details' pk=post.pk slug=post.slug %}"
+                   class="title">{{ post.title }}</a>
+                <div class="watch">
+                  <span class="a-base">{{ post.custom_likes_counter }} {% translate 'Likes' %}</span>
+                  <span class="a-base">{{ post.comments_quantity }} {% translate 'Comments' %}</span>
+                </div>
+              </div>
+              <div style="margin-top: 10px;" class="description">
+                <div class="some">
+                  <div class="topics">
+                    {% for category in post.categories.all %}
+                      <a href="{% url 'forum:post-list' %}?sort={{ order_by }}&page={{ page }}&tags={{ category }}"
+                         class="a-topic">{{ category.get_name_display }}</a>
+                    {% endfor %}
+                  </div>
+                  <div style="transform: translateX(-100px); font-size: 14px;">
+                    <span><a style="text-decoration: none; margin-bottom: 15px;"
+                             href="">{{ post.theorist.full_name }}
+                    </a> <time>запитав {{ post.created_at|timesince }} тому</time></span>
+                    {% if post.theorist.uuid == request.theorist.uuid %}
+                      <button
+                          style="margin-bottom: 10px;"
+                          id="post-delete-js"
+                          type="submit"
+                          class="btn btn-danger btn-sm"
+                          hx-swap="innerHTML swap:0.5s"
+                          hx-target=".question-{{ post.uuid }}"
+                          hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                          hx-confirm="Are you sure?"
+                      >
+                        Видалити пост
+                      </button>
+                    {% endif %}
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div style="border-top: 1px solid #858383;"></div>
+      {% endfor %}
+    </div>
+    {% include 'common/pagination.html' with htmx_target="#main-posts-block-js" %}
+  </div>
+{% endblock body %}

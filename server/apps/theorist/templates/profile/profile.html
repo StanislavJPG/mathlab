@@ -1,0 +1,114 @@
+{% extends 'base/forum_base.html' %}
+{% load static i18n %}
+
+{% block page_head %}
+  <title>MathLab | Мій профіль</title>
+{% endblock page_head %}
+
+{% block body %}
+  <body>
+  <div class="block-body">
+    <h1 style="text-align: center;" class="display-5">{% translate 'Profile' %}</h1>
+  </div>
+  <section style="background-color: #eee;">
+    <div class="container py-5">
+      <div style="display: flex; flex-wrap: wrap; flex-direction: column; align-items: center;" class="row">
+        <div class="col-lg-4">
+          <div class="card mb-4">
+            <div class="card-body text-center">
+              <form method="post" enctype="multipart/form-data">
+                {% csrf_token %}
+                {% if request.theorist.uuid == theorist.uuid %}<label class="cursor-pointer" for="image">{% endif %}
+                {#                <img src="">#}
+                {#                {% if profile_image %}#}
+                {#                  <img src="{% static profile_image %}" alt="avatar" class="rounded-circle img-fluid"#}
+                {#                       style="width: 150px; height: 150px;">#}
+                {#                {% else %}#}
+                {#                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"#}
+                {#                       class="rounded-circle img-fluid" style="width: 150px; height: 150px;">#}
+                {#                {% endif %}#}
+                </label>
+                {% if request.theorist.uuid == theorist.uuid %}
+                  <p>
+                    <input type="file" id="image" name="image" class="d-none">
+                    <button class="btn btn-primary" type="submit">Змінити фото</button>
+                  </p>
+                {% endif %}
+              </form>
+              <h5 class="my-3">{{ theorist.full_name }}</h5>
+              <div style="margin-bottom: 1rem !important;">
+                <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
+              </div>
+              {% if request.user.is_authenticated and request.theorist.uuid != theorist.uuid %}
+                <div class="d-flex justify-content-center mb-2">
+                  <a href="" type="button"
+                     data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати
+                    повідомлення</a>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col-lg-8 mt-3">
+          <div class="card mb-4">
+            <ul class="nav nav-pills nav-fill mb-3">
+              <li class="nav-item">
+                <a class="nav-link active"
+                   data-bs-toggle="tab"
+                   data-bs-target="#about-me"
+                   data-toggle="pill"
+                   aria-current="page"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'about-me' %}"
+                   hx-target="#about-me"
+                   hx-trigger="load once, click once"
+                   href="javascript:(0);">
+                  <i class="ti ti-id"></i>
+                  {% translate 'About me' %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link"
+                   data-bs-toggle="tab"
+                   data-toggle="pill"
+                   data-bs-target="#statistics"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'statistics' %}"
+                   hx-target="#statistics"
+                   hx-trigger="click once"
+                   href="javascript:(0);">
+                  <i class="ti ti-chart-arrows-vertical"></i>
+                  {% translate 'Statistics' %}
+                </a>
+              </li>
+              <li class="nav-item">
+                <a class="nav-link"
+                   data-bs-toggle="tab"
+                   data-toggle="pill"
+                   data-bs-target="#contact-info"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'contact-info' %}"
+                   hx-target="#contact-info"
+                   hx-trigger="click once"
+                   href="javascript:(0);">
+                  <i class="ti ti-address-book"></i>
+                  {% translate 'Contact info' %}
+                </a>
+              </li>
+            </ul>
+            <div class="card-body text-center tab-content">
+              <div class="tab-pane fade show active" id="about-me" role="tabpanel" aria-labelledby="pills-about-me-tab"></div>
+              <div class="tab-pane fade" id="statistics" role="tabpanel" aria-labelledby="pills-statics-tab"></div>
+              <div class="tab-pane fade" id="contact-info" role="tabpanel" aria-labelledby="pills-contact-tab"></div>
+            </div>
+
+          </div>
+          <div class="card mb-4"
+               hx-get="{% url 'forum:theorist_profile:hx-theorist-last-activities' theorist.uuid %}"
+               hx-target="this"
+               hx-trigger="load"
+          ></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  </body>
+{% endblock %}
+

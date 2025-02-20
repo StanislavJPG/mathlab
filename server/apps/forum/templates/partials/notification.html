@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="uk">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Template</title>
+    <style>
+        /* Basic styles */
+        body {
+            font-family: Arial, sans-serif;
+            line-height: 1.6;
+            margin: 0;
+            padding: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+        .header {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+            border-radius: 8px 8px 0 0;
+        }
+        .content {
+            margin-top: 20px;
+        }
+        .footer {
+            margin-top: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h2 style="font-size: 25px;">Відповідь на «{{ instance.post.title }}»</h2>
+        </div>
+        <div class="content">
+            <p style="font-size: 24px;">Користувач <strong>{{ instance.theorist.username }}</strong> відповів під вашим запитанням</p>
+            <p style="font-size: 23px;"><b>«{{ instance.post.title }}»</b></p>
+            <p style="font-size: 24px;">Відповідь користувача:</p>
+            <p style="font-size: 23px;">«{{ instance.comment }}»</p>
+        </div>
+        <div class="footer">
+            <p>З повагою,<br>Розробник MathLab</p>
+        </div>
+    </div>
+</body>
+</html>

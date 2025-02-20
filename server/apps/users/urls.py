@@ -1,7 +1,7 @@
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 
-from server.apps.users.views.auths_actions import Login, Logout, Register, ResetPassword
+from server.apps.users.logic.auths_actions import Login, Logout, Register, ResetPassword
 
 urlpatterns = [
     path("login/", Login.as_view(), name="login_view"),
@@ -22,5 +22,4 @@ urlpatterns = [
         ),
         name="password_reset_complete",
     ),
-    path("api/v1/drf-auth/", include("rest_framework.urls")),
 ]

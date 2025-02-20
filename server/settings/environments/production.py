@@ -11,6 +11,10 @@ CSRF_TRUSTED_ORIGINS = [""]
 
 ALLOWED_HOSTS = [""]
 
+# TODO: Change by correct urls
+MEDIA_URL = "https://your-cdn.example.com/media/"
+
+STATIC_ROOT = BASE_DIR.parent / "staticfiles"
+
 # static
-STATIC_ROOT = BASE_DIR / "static/"
 STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"

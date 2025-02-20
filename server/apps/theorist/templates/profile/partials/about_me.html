@@ -1,0 +1,57 @@
+{% load static i18n %}
+
+<div class="row">
+  <div class="col-sm-3">
+    <p class="mb-0">
+      <i class="ti ti-user"></i>
+      <span>{% translate 'Nickname' %}</span>
+    </p>
+  </div>
+  <div class="col-sm-9">
+    <p class="text-muted mb-0">{{ theorist.full_name }}</p>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <p class="mb-0">
+      <i class="ti ti-arrow-badge-down"></i>
+      <span>{% translate 'Rank' %}</span>
+    </p>
+  </div>
+  <div class="col-sm-9">
+    <p class="text-muted mb-0">{{ theorist.get_rank_display }}</p>
+  </div>
+</div>
+{% if theorist.city %}
+  <hr>
+  <div class="row">
+    <div class="col-sm-3">
+      <i class="ti ti-building-skyscraper"></i>
+      <span class="mb-0">{% translate 'City' %}</span>
+    </div>
+    <div class="col-sm-9">
+      <p class="text-muted mb-0">{{ theorist.city }}</p>
+    </div>
+  </div>
+{% endif %}
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <i class="ti ti-calendar-clock"></i>
+    <span class="mb-0">{% translate 'Last activity' %}</span>
+  </div>
+  <div class="col-sm-9">
+    <p class="text-muted mb-0">{{ theorist.last_activity }}</p>
+  </div>
+</div>
+<hr>
+<div class="row">
+  <div class="col-sm-3">
+    <i class="ti ti-calendar-user"></i>
+    <span class="mb-0">{% translate 'Joined date' %}</span>
+  </div>
+  <div class="col-sm-9">
+    <p class="text-muted mb-0">{{ theorist.user.date_joined }}</p>
+  </div>
+</div>

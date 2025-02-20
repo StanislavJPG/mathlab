@@ -1,0 +1,66 @@
+{% load i18n static   widget_tweaks %}
+
+<div id="comment-list-js" 
+     hx-get="{{ request.get_full_path }}"
+     hx-trigger="commentBlockChanged from:body delay:0.6s"
+>
+  {% for comment in comments %}
+    <div class="full-answer-{{ comment.uuid }}">
+      <div class="types">
+        <span class="span-base"><b>Автор:</b>
+            <a style="text-decoration: none;"
+               href=""> {{ comment.theorist.full_name }} </a> |
+            <b>{{ comment.theorist.rank }}</b></span>
+        <span class="span-base"><b>Створено</b> {{ comment.created_at|timesince }} тому</span>
+        {% if comment.modified_at is not none %}
+          <span class="span-base"><b>Модифіковано</b>{{ comment.modified_at|timesince }} тому</span>
+        {% endif %}
+        <div style="margin-left: 15px;">
+          {% if comment.theorist.uuid == request.theorist.uuid %}
+            <button class="btn btn-danger btn-sm"
+                    type="submit"
+                    hx-delete="{% url 'forum:comment-delete' comment.uuid post.uuid %}"
+                    hx-confirm="{% translate 'Are you sure?' %}"
+                    hx-swap="outerHTML swap:0.5s"
+                    hx-target=".full-answer-{{ comment.uuid }}"
+            >
+              Delete comment
+            </button>
+          {% endif %}
+        </div>
+      </div>
+      <div class="d_line"></div>
+      <div class="interact">
+        {% block comment_likes_and_dislikes %}
+          <div hx-get="{% url 'forum:hx-comment-rate' comment.uuid %}"
+               hx-trigger="commentLikesAndDislikesChanged{{ comment.uuid }} from:body"
+               hx-target="this"
+          >
+            <a type="button"
+               class="{% if not comment.is_comment_already_liked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+               hx-swap="none"
+               hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}?like=true">
+              <i style="font-size: 35px" class="ti ti-thumb-up"></i>
+              {{ comment.custom_likes_counter }}
+            </a>
+            <a type="button"
+               class="{% if not comment.is_comment_already_disliked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+               hx-swap="none"
+               hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}">
+              <i style="font-size: 35px" class="ti ti-thumb-down"></i>
+              {{ comment.custom_dislikes_counter }}
+            </a>
+          </div>
+      {% endblock comment_likes_and_dislikes %}
+      </div>
+      <div style="margin-bottom: 150px;">
+        <div class="question-content text-start">
+          {{ comment.comment|safe }}
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  {% if page_obj.paginator.num_pages > 1 %}
+    {% include 'common/pagination.html' with htmx_target="#comment-list-js" %}
+  {% endif %}
+</div>

@@ -14,7 +14,7 @@ class ExplainmeScraper:
 
     async def __get_page_content(self, url) -> BeautifulSoup:
         async with httpx.AsyncClient(headers=self._HEADERS) as client:
-            user_request: str = f"{url}"
+            user_request: str = url
 
             response = await client.get(user_request)
             soup = BeautifulSoup(response.text, "lxml")

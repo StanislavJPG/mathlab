@@ -5,16 +5,9 @@
     width: 700px;
     margin: auto;
     margin-top: 60px;
-    margin-bottom: 100px;
+    margin-bottom: 50px;
     padding: 40px;
     background-color: ghostwhite;
-}
-
-
-.block-body {
-  display: ruby-text;
-  width: 810px;
-  margin: auto;
 }
 
 .sort-by {

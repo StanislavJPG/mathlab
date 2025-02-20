@@ -10,7 +10,7 @@ soft-rebuild:
 	docker-compose build
 
 web:
-	docker compose run --rm web sh
+	docker compose run --rm web bash
 	#chmod +x manage.py
 
 # for translation

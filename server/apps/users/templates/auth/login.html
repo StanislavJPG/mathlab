@@ -2,15 +2,12 @@
 {% block head %}
 {% load static %}
 <title>Вхід до профілю</title>
-<link type="text/css" href="{% static 'login.css' %}" rel="stylesheet">
+<link type="text/css" href="{% static 'css/login.css' %}" rel="stylesheet">
 {% endblock %}
 {% block body %}
-{% endblock %}
-
-{% block content %}
 {% if user.is_authenticated %}
 <div style="margin-top: 250px; text-align: -webkit-center; margin-bottom: 200px;">
-    <h1>Ви вже авторизовані...<img src="{% static 'error.png' %}" style="width: 170px;"></h1>
+    <h1>Ви вже авторизовані...<img src="{% static 'img/base/error.png' %}" style="width: 170px;"></h1>
 </div>
 {% else %}
   <div style="margin-top: 200px; text-align: -webkit-center; margin-bottom: 200px;">

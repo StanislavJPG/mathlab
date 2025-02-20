@@ -15,7 +15,7 @@ class PostCreateForm(forms.ModelForm):
             "categories",
         )
         widgets = {
-            "title": forms.TextInput(  # trans: Тема питання (не більше 85 символів)
+            "title": forms.TextInput(
                 attrs={"placeholder": _("Question topic (maximum 85 characters)")}
             ),
             "content": TinyMCE(attrs={"cols": 30, "rows": 30}),
@@ -29,6 +29,15 @@ class PostCreateForm(forms.ModelForm):
             lambda obj: obj.get_name_display()
         )
         self.instance.theorist = self.theorist
+
+    def clean_categories(self):
+        categories = self.cleaned_data["categories"]
+        if len(categories) > 4:
+            self.add_error(
+                "categories",
+                _("You cannot choose more then %s categories.") % Post.CATEGORIES_LIMIT,
+            )
+        return categories
 
 
 class CommentCreateForm(forms.ModelForm):

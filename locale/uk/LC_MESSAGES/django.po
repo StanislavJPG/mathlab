@@ -1,0 +1,361 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-21 01:04+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=4; plural=(n % 1 == 0 && n % 10 == 1 && n % 100 != "
+"11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
+"100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
+"(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: server/apps/forum/choices.py
+msgid "Graph Functions"
+msgstr "Графіки функцій"
+
+#: server/apps/forum/choices.py
+msgid "Matrices"
+msgstr "Матриці"
+
+#: server/apps/forum/choices.py
+msgid "Equations"
+msgstr "Рівняння"
+
+#: server/apps/forum/choices.py
+msgid "Inequalities"
+msgstr "Нерівності"
+
+#: server/apps/forum/choices.py
+msgid "Systems of Equations"
+msgstr "Системи рівнянь"
+
+#: server/apps/forum/choices.py
+msgid "Higher Mathematics"
+msgstr "Вища математика"
+
+#: server/apps/forum/choices.py
+msgid "Probability Theory"
+msgstr "Теорія ймовірностей"
+
+#: server/apps/forum/choices.py
+msgid "Combinatorics"
+msgstr "Комбінаторика"
+
+#: server/apps/forum/choices.py
+msgid "Discrete Mathematics"
+msgstr "Дискретна математика"
+
+#: server/apps/forum/choices.py
+msgid "Elementary Mathematics"
+msgstr "Елементарна математика"
+
+#: server/apps/forum/choices.py
+msgid "Percentages"
+msgstr "Відсотки"
+
+#: server/apps/forum/choices.py
+msgid "Trigonometry"
+msgstr "Тригонометрія"
+
+#: server/apps/forum/choices.py
+msgid "Geometry"
+msgstr "Геометрія"
+
+#: server/apps/forum/choices.py
+msgid "Probability and Statistics"
+msgstr "Ймовірність та статистика"
+
+#: server/apps/forum/choices.py
+msgid "Algorithms"
+msgstr "Алгоритми"
+
+#: server/apps/forum/choices.py
+msgid "Algebra"
+msgstr "Алгебра"
+
+#: server/apps/forum/choices.py
+msgid "Other"
+msgstr "Інше"
+
+#: server/apps/forum/forms.py
+msgid "Question topic (maximum 85 characters)"
+msgstr "Тема питання (не більше 85 символів)"
+
+#: server/apps/forum/forms.py
+msgid "You cannot choose more then %s categories."
+msgstr "Ви не можете вибрати більше %s категорій."
+
+#: server/apps/forum/logic/comments.py
+msgid "Your comment has been added."
+msgstr "Ваш коментар було додано."
+
+#: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+msgid "Error. Please, check your input and try again."
+msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
+
+#: server/apps/forum/logic/comments.py
+msgid "Your comment has been deleted."
+msgstr "Ваш коментар було видалено."
+
+#: server/apps/forum/logic/posts.py
+msgid "You successfully created a new post."
+msgstr "Ви успішно створили новий пост."
+
+#: server/apps/forum/logic/posts.py
+msgid "Error while creating post. Please check for errors and try again."
+msgstr ""
+"Помилка під час створення поста. Будь ласка, перевірте наявність помилок і "
+"спробуйте ще раз."
+
+#: server/apps/forum/logic/posts.py
+msgid "Your post has been deleted."
+msgstr "Ваш пост було видалено."
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Create your question on forum"
+msgstr "Створіть своє питання на форумі"
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Question topic"
+msgstr "Тема питання"
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Question category"
+msgstr "Категорія питання"
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "No more than 4 categories"
+msgstr "Не більше 4 категорій"
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Describe your question"
+msgstr "Опишіть ваше питання"
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Create question"
+msgstr "Створити запитання"
+
+#: server/apps/forum/templates/partials/comment_block_create.html
+msgid "Add comment"
+msgstr "Додати коментар"
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Author"
+msgstr "Автор"
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Created at"
+msgstr "Створено"
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "ago"
+msgstr "тому"
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Modified at"
+msgstr "Модифіковано о"
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "Are you sure?"
+msgstr "Ви впевнені?"
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "Delete comment"
+msgstr "Видалити коментар"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Last topics"
+msgstr "Останні теми"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Ask your question"
+msgstr "Задайте своє питання"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Categories"
+msgstr "Категорії"
+
+#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Sort by"
+msgstr "Сортувати за"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Most popular"
+msgstr "Найпопулярніші"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Most interesting"
+msgstr "Найцікавіші"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "The newest"
+msgstr "Найновіші"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Previous week"
+msgstr "Попередній тиждень"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Likes"
+msgstr "Лайки"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Comments"
+msgstr "Коментарі"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Delete post"
+msgstr "Видалити пост"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Viewers"
+msgstr "Переглянуто"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Answers"
+msgstr "Відповіді"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Best"
+msgstr "Найкращі"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Newest"
+msgstr "Найновіші"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Your answer"
+msgstr "Ваша відповідь"
+
+#: server/apps/forum/templates/question_page.html
+#, python-format
+msgid ""
+"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
+"none;\" href=\"%(login_view)s\">Authorize</a>, to ask your questions.</h1>"
+msgstr ""
+"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
+"none;\" href=\"%(login_view)s\">Авторизуйтесь</a>, щоб додати власний "
+"коментар.</h1>"
+
+#: server/apps/theorist/choices.py
+msgid "Junior mathematician"
+msgstr "Молодший математик"
+
+#: server/apps/theorist/choices.py
+msgid "Olympic"
+msgstr "Олімпіадник"
+
+#: server/apps/theorist/choices.py
+msgid "Teacher of mathematics"
+msgstr "Учитель математики"
+
+#: server/apps/theorist/choices.py
+msgid "Guru of mathematics"
+msgstr "Гуру математики"
+
+#: server/apps/theorist/choices.py
+msgid "Lord of mathematics"
+msgstr "Володар математики"
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Nickname"
+msgstr "Нікнейм"
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Rank"
+msgstr "Ранг"
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "City"
+msgstr "Місто"
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Last activity"
+msgstr "Остання активність"
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Joined date"
+msgstr "Дата приєднання"
+
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Social media url"
+msgstr "Посилання на соцмережі"
+
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Website URL"
+msgstr "Посилання на сайт"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Last actions"
+msgstr "Останні дії"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Wrote comment"
+msgstr "Написав коментар"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "for the post"
+msgstr "до поста"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Created post"
+msgstr "Створив пост"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Liked a post"
+msgstr "Лайкнув пост"
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Liked a comment in post"
+msgstr "Лайкнув коментар у пості"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Score"
+msgstr "Рейтинг"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Posts quantity"
+msgstr "Кількість постів"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Comments quantity"
+msgstr "Кількість коментарів"
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Profile"
+msgstr "Профіль"
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "About me"
+msgstr "Про мене"
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Statistics"
+msgstr "Статистика"
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Contact info"
+msgstr "Контактна інформація"
+
+#: server/templates/common/pagination.html
+msgid "Previous"
+msgstr "Попередня"
+
+#: server/templates/common/pagination.html
+msgid "Next"
+msgstr "Наступна"

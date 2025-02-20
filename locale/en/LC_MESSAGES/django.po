@@ -1,0 +1,355 @@
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-02-21 01:04+0200\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#: server/apps/forum/choices.py
+msgid "Graph Functions"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Matrices"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Equations"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Inequalities"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Systems of Equations"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Higher Mathematics"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Probability Theory"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Combinatorics"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Discrete Mathematics"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Elementary Mathematics"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Percentages"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Trigonometry"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Geometry"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Probability and Statistics"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Algorithms"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Algebra"
+msgstr ""
+
+#: server/apps/forum/choices.py
+msgid "Other"
+msgstr ""
+
+#: server/apps/forum/forms.py
+msgid "Question topic (maximum 85 characters)"
+msgstr ""
+
+#: server/apps/forum/forms.py
+#, python-format
+msgid "You cannot choose more then %s categories."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py
+msgid "Your comment has been added."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+msgid "Error. Please, check your input and try again."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py
+msgid "Your comment has been deleted."
+msgstr ""
+
+#: server/apps/forum/logic/posts.py
+msgid "You successfully created a new post."
+msgstr ""
+
+#: server/apps/forum/logic/posts.py
+msgid "Error while creating post. Please check for errors and try again."
+msgstr ""
+
+#: server/apps/forum/logic/posts.py
+msgid "Your post has been deleted."
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Create your question on forum"
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Question topic"
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Question category"
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "No more than 4 categories"
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Describe your question"
+msgstr ""
+
+#: server/apps/forum/templates/create_question_page.html
+msgid "Create question"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_block_create.html
+msgid "Add comment"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Author"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Created at"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "ago"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Modified at"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "Are you sure?"
+msgstr ""
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "Delete comment"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Last topics"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Ask your question"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Categories"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Sort by"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Most popular"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Most interesting"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "The newest"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Previous week"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Likes"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Comments"
+msgstr ""
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Delete post"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Viewers"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Answers"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Best"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Newest"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Your answer"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+#, python-format
+msgid ""
+"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
+"none;\" href=\"%(login_view)s\">Authorize</a>, to ask your questions.</h1>"
+msgstr ""
+
+#: server/apps/theorist/choices.py
+msgid "Junior mathematician"
+msgstr ""
+
+#: server/apps/theorist/choices.py
+msgid "Olympic"
+msgstr ""
+
+#: server/apps/theorist/choices.py
+msgid "Teacher of mathematics"
+msgstr ""
+
+#: server/apps/theorist/choices.py
+msgid "Guru of mathematics"
+msgstr ""
+
+#: server/apps/theorist/choices.py
+msgid "Lord of mathematics"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Nickname"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Rank"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "City"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Last activity"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/about_me.html
+msgid "Joined date"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Social media url"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Website URL"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Last actions"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Wrote comment"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "for the post"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Created post"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Liked a post"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/last_activity.html
+msgid "Liked a comment in post"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Score"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Posts quantity"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Comments quantity"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Profile"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "About me"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Statistics"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Contact info"
+msgstr ""
+
+#: server/templates/common/pagination.html
+msgid "Previous"
+msgstr ""
+
+#: server/templates/common/pagination.html
+msgid "Next"
+msgstr ""

@@ -15,13 +15,13 @@
       {{ post.title }}
     </h1>
     <div class="types">
-      <span class="span-base"><b>Автор:</b>
-          <a style="text-decoration: none;"
-             href="">{{ post.theorist.username }}</a> |
-          <b>{{ post.theorist.rank }}</b></span>
-      <span class="span-base"><b>Створено</b> {{ post.created_at|timesince }} тому</span>
-      <span class="span-base"><b>Модифіковано</b> {{ post.modified_at|timesince }} тому</span>
-      <span class="span-base"><b>Переглянуто</b> {{ post.post_views }} разів</span>
+      <span class="span-base"><b>{% translate 'Author' %}:</b>
+          <a class="text-decoration-none"
+             href="">{{ post.theorist.full_name }}</a> |
+          <b>{{ post.theorist.get_rank_display }}</b></span>
+      <span class="span-base"><b>{% translate 'Created at' %}</b> {{ post.created_at|timesince }} тому</span>
+      <span class="span-base"><b>{% translate 'Modified at' %}</b> {{ post.modified_at|timesince }} тому</span>
+      <span class="span-base"><b>{% translate 'Viewers' %}</b> {{ post.post_views }} разів</span>
     </div>
     <div class="d_line"></div>
     <div class="interact">
@@ -116,7 +116,7 @@
         <div id="comment-block-wait-spinner" class="spinner-grow text-primary mt-2" role="status"></div>
       </div>
 
-      <h1 style="font-size: 20px; margin-top: 150px;">Ваша відповідь</h1>
+      <h1 style="font-size: 20px; margin-top: 150px;">{% translate 'Your answer' %}</h1>
       {% if user.is_authenticated %}
         <div id="comment-block-js" hx-get="{% url 'forum:comment-create' post.uuid %}" hx-target="this"
              hx-trigger="load delay:0.5s" hx-indicator="#comment-wait-spinner">
@@ -124,8 +124,11 @@
           <div id="comment-wait-spinner" class="spinner-grow text-primary mt-2" role="status"></div>
         <div>
       {% else %}
-        <h1 style="font-size: 20px; margin-top: 50px;"><a style="text-decoration: none;" href="{% url 'login_view' %}">Авторизуйтесь</a>,
-          щоб залишити відповідь.</h1>
+        {% url 'login_view' as login_view %}
+        {% blocktranslate trimmed %}
+          <h1 style="font-size: 20px; margin-top: 50px;"><a style="text-decoration: none;" href="{{ login_view }}">Authorize</a>,
+            to ask your questions.</h1>
+        {% endblocktranslate %}
       {% endif %}
       </div>
       </div>

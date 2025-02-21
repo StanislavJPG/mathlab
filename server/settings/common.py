@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 import os
 
+from django.urls import reverse_lazy
 from dotenv import load_dotenv
 
 from .celery import *  # noqa: F403
@@ -41,6 +42,10 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # installed packages
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'channels',
     'widget_tweaks',
     'tinymce',
@@ -61,8 +66,6 @@ INSTALLED_APPS = [
 ]
 
 
-SWAGGER_SETTINGS = {'SECURITY_DEFINITIONS': {'Basic': {'type': 'basic'}}}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,6 +76,8 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    # installed packages
+    'allauth.account.middleware.AccountMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     # custom middlewares
@@ -85,7 +90,7 @@ ROOT_URLCONF = 'server.urls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/allauth/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -123,6 +128,8 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
+SITE_ID = 1
+
 AUTH_PASSWORD_VALIDATORS = [
     {
         'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
@@ -138,11 +145,38 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'FETCH_USERINFO': True,
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+    }
+}
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('forum:post-list')
+LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
+LANGUAGES = [
+    ('uk', 'Ukrainian'),
+]
 USE_I18N = True
 USE_TZ = True
 
@@ -177,8 +211,6 @@ TINYMCE_DEFAULT_CONFIG = {
     'alignright alignjustify | bullist numlist outdent indent | '
     'removeformat | help',
 }
-
-AUTH_USER_MODEL = 'users.CustomUser'
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

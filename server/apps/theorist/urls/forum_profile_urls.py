@@ -5,7 +5,6 @@ from server.apps.theorist.logic.profile import (
     HXTheoristDetailsProfileView,
     TheoristLastActivitiesListView,
 )
-from server.apps.users.logic.profile_settings import TheoristSettingsDetailView
 
 app_name = 'theorist_profile'
 
@@ -25,9 +24,9 @@ urlpatterns = [
         TheoristLastActivitiesListView.as_view(),
         name='hx-theorist-last-activities',
     ),
-    path(
-        'settings/<uuid:uuid>/',
-        TheoristSettingsDetailView.as_view(),
-        name='theorist-settings',
-    ),  # TODO: Add possibility to hide last activities for public
+    # path(
+    #     'settings/<uuid:uuid>/',
+    #     TheoristSettingsDetailView.as_view(),
+    #     name='theorist-settings',
+    # ),  # TODO: Add possibility to hide last activities for public
 ]

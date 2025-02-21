@@ -2,8 +2,8 @@ from django.template.defaultfilters import register
 from widget_tweaks.templatetags.widget_tweaks import add_class
 
 
-@register.filter('add_bootstrap_validation')
-def add_bootstrap_validation(field):
+@register.filter('add_bootstrap_validation_classes')
+def add_bootstrap_validation_classes(field):
     if field.form.is_bound:
         if field.errors:
             css_class = 'is-invalid'

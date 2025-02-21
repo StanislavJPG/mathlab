@@ -15,7 +15,7 @@
       <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
       <div class="col-md-8">
         <span>{% translate 'Question topic' %} *</span>
-        {% render_field form.title|add_bootstrap_validation class="form-control" %}
+        {% render_field form.title|add_bootstrap_validation_classes class="form-control" %}
         {% for error in form.title.errors %}
           <div class="text-danger mb-2">
             <small>{{ error }}</small>
@@ -24,7 +24,7 @@
       </div>
       <div class="col-md-8">
         <span>{% translate 'Question category' %} <small class="text-danger">({% translate 'No more than 4 categories' %}) *</small></span>
-        {% render_field form.categories|add_bootstrap_validation class="selectpicker form-control" data-style="btn-default" data-live-search="true" multiple="" %}
+        {% render_field form.categories|add_bootstrap_validation_classes class="selectpicker form-control" data-style="btn-default" data-live-search="true" multiple="" %}
         {% for error in form.categories.errors %}
           <div class="text-danger mb-2">
             <small>{{ error }}</small>

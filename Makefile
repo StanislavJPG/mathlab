@@ -6,7 +6,7 @@ up:
 rebuild:
 	docker-compose build --no-cache
 
-soft-rebuild:
+build:
 	docker-compose build
 
 web:

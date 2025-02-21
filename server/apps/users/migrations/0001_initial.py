@@ -30,9 +30,7 @@ class Migration(migrations.Migration):
                 ('password', models.CharField(max_length=128, verbose_name='password')),
                 (
                     'last_login',
-                    models.DateTimeField(
-                        blank=True, null=True, verbose_name='last login'
-                    ),
+                    models.DateTimeField(blank=True, null=True, verbose_name='last login'),
                 ),
                 (
                     'is_superuser',
@@ -60,9 +58,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     'date_joined',
-                    models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name='date joined'
-                    ),
+                    models.DateTimeField(default=django.utils.timezone.now, verbose_name='date joined'),
                 ),
                 ('username', models.CharField(max_length=150)),
                 (
@@ -136,9 +132,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     'image',
-                    models.ImageField(
-                        blank=True, upload_to='mathlab/templates/static/profile_pics'
-                    ),
+                    models.ImageField(blank=True, upload_to='mathlab/templates/static/profile_pics'),
                 ),
                 (
                     'user',

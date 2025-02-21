@@ -15,9 +15,7 @@ urlpatterns = [
         name='base-redirect',
     ),
     # nested apps urls
-    path(
-        'mathlab/', include('server.urls.mathlab_urls')
-    ),  # this is the main app for math operations
+    path('mathlab/', include('server.urls.mathlab_urls')),  # this is the main app for math operations
     path('forum/', include('server.urls.forum_urls')),  # math forum
     path('', include('server.apps.users.urls')),  # for auth purposes
 ]

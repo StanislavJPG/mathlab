@@ -183,8 +183,6 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
                 dislikes_manager.add(request.theorist)
 
         response = HttpResponse()
-        trigger_client_event(
-            response, f'commentLikesAndDislikesChanged{self.object.uuid}'
-        )
+        trigger_client_event(response, f'commentLikesAndDislikesChanged{self.object.uuid}')
 
         return response

@@ -133,9 +133,7 @@ class Migration(migrations.Migration):
                 ),
                 (
                     'post',
-                    models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to='forum.post'
-                    ),
+                    models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='forum.post'),
                 ),
                 (
                     'user',
@@ -148,21 +146,15 @@ class Migration(migrations.Migration):
         ),
         migrations.AddIndex(
             model_name='post',
-            index=models.Index(
-                fields=['created_at'], name='forum_post_created_d558d2_idx'
-            ),
+            index=models.Index(fields=['created_at'], name='forum_post_created_d558d2_idx'),
         ),
         migrations.AddIndex(
             model_name='post',
-            index=models.Index(
-                fields=['modified_at'], name='forum_post_modifie_02ef33_idx'
-            ),
+            index=models.Index(fields=['modified_at'], name='forum_post_modifie_02ef33_idx'),
         ),
         migrations.AddIndex(
             model_name='post',
-            index=models.Index(
-                fields=['post_views'], name='forum_post_post_vi_6d1b3b_idx'
-            ),
+            index=models.Index(fields=['post_views'], name='forum_post_post_vi_6d1b3b_idx'),
         ),
         migrations.RemoveField(
             model_name='post',

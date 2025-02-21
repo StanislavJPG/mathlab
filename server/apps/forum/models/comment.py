@@ -13,18 +13,14 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     comment = models.TextField('comment', max_length=2000)
 
-    post = models.ForeignKey(
-        'forum.Post', related_name='comments', on_delete=models.CASCADE
-    )
+    post = models.ForeignKey('forum.Post', related_name='comments', on_delete=models.CASCADE)
     theorist = models.ForeignKey(
         'theorist.Theorist',
         related_name='comments',
         on_delete=models.SET_NULL,
         null=True,
     )
-    likes = models.ManyToManyField(
-        'theorist.Theorist', through='forum.CommentLike', related_name='liked_comments'
-    )
+    likes = models.ManyToManyField('theorist.Theorist', through='forum.CommentLike', related_name='liked_comments')
     dislikes = models.ManyToManyField(
         'theorist.Theorist',
         through='forum.CommentDislike',

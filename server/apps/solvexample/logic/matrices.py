@@ -19,9 +19,7 @@ class MatricesTemplateView(TemplateView):
             for single_matrix in [matrix_a, matrix_b]:
                 matrices.append(list(eval(single_matrix.replace('\n', ''))))
 
-            solved_example = MathOperations(
-                example=matrices, operation_type=operator
-            ).solve_matrix()
+            solved_example = MathOperations(example=matrices, operation_type=operator).solve_matrix()
             # expression pattern [x, y]
             pattern = r'\[([^\[\]]+),\s*([^\[\]]+)\]'
 

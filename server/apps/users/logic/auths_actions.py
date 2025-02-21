@@ -34,14 +34,10 @@ class Register(APIView):
             return render(
                 request,
                 'auth/registration.html',
-                context={
-                    'error_msg': 'Користувач з цією поштою або нікнеймом вже зареєстрований.'
-                },
+                context={'error_msg': 'Користувач з цією поштою або нікнеймом вже зареєстрований.'},
             )
 
-        created_user = User.objects.create_user(
-            username=username, email=email, password=password
-        )
+        created_user = User.objects.create_user(username=username, email=email, password=password)
         Token.objects.create(user=created_user)
 
         auth_creds = authenticate(request, email=email, password=password)

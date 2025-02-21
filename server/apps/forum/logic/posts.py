@@ -63,9 +63,7 @@ class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
     template_name = 'create_question_page.html'
     form_class = PostCreateForm
     form_valid_message = _('You successfully created a new post.')
-    form_invalid_message = _(
-        'Error while creating post. Please check for errors and try again.'
-    )
+    form_invalid_message = _('Error while creating post. Please check for errors and try again.')
 
     def get_form_kwargs(self):
         self.request: AuthenticatedHttpRequest
@@ -106,12 +104,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
-        return (
-            super()
-            .get_queryset()
-            .with_likes_counters()
-            .with_have_rates_per_theorist(self.request.theorist.uuid)
-        )
+        return super().get_queryset().with_likes_counters().with_have_rates_per_theorist(self.request.theorist.uuid)
 
     def dispatch(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest

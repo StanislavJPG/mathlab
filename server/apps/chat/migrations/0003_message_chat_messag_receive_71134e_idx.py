@@ -11,8 +11,6 @@ class Migration(migrations.Migration):
     operations = [
         migrations.AddIndex(
             model_name='message',
-            index=models.Index(
-                fields=['receiver', 'sender'], name='chat_messag_receive_71134e_idx'
-            ),
+            index=models.Index(fields=['receiver', 'sender'], name='chat_messag_receive_71134e_idx'),
         ),
     ]

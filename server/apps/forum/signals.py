@@ -13,18 +13,14 @@ from server.apps.forum.models import Comment
 @shared_task
 def send_notification(comment_id):
     comment = Comment.objects.select_related('post', 'user').get(pk=comment_id)
-    html_content = render_to_string(
-        'forum/notification.html', context={'instance': comment}
-    )
+    html_content = render_to_string('forum/notification.html', context={'instance': comment})
     text_content = strip_tags(html_content)
 
     msg = EmailMultiAlternatives(
         subject=f'[MathLab] Відповідь на Ваше запитання «{comment.post.title}» від {comment.user.username}!',
         body=text_content,
         from_email=os.getenv('MAIL_NAME'),
-        to=(
-            comment.post.user.email,
-        ),  # change to user's email like instance.post.user.email
+        to=(comment.post.user.email,),  # change to user's email like instance.post.user.email
     )
     msg.attach_alternative(html_content, 'text/html')
     msg.send(fail_silently=False)

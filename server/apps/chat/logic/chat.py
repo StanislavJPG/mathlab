@@ -15,9 +15,7 @@ class ChatView(APIView):
 
     def get(self, request, receiver: int, username: str):
         page = request.GET.get('page')
-        cached_data = cache.get(
-            f'receiver_id.{receiver}: receiver_name.{username}.page.{page}'
-        )
+        cached_data = cache.get(f'receiver_id.{receiver}: receiver_name.{username}.page.{page}')
         pagination = PaginationCreator(page, limit=8)
         offset = pagination.get_offset
 
@@ -82,9 +80,7 @@ class ChatListView(APIView):
             )
 
             users_chats = (
-                Message.objects.filter(
-                    Q(sender=request.user.id) | Q(receiver=request.user.id)
-                )
+                Message.objects.filter(Q(sender=request.user.id) | Q(receiver=request.user.id))
                 .annotate(
                     chatroom_user1=Case(
                         When(
@@ -103,13 +99,9 @@ class ChatListView(APIView):
                         output_field=CharField(),
                     ),
                     latest_message=Subquery(latest_messages_subquery.values('message')),
-                    sent_at_last_message=Subquery(
-                        latest_messages_subquery.values('sent_at')
-                    ),
+                    sent_at_last_message=Subquery(latest_messages_subquery.values('sent_at')),
                     receiver_pk=Subquery(latest_messages_subquery.values('receiver')),
-                    sender_username=Subquery(
-                        latest_messages_subquery.values('sender_username')
-                    ),
+                    sender_username=Subquery(latest_messages_subquery.values('sender_username')),
                 )
                 .values(
                     'receiver_pk',

@@ -18,9 +18,7 @@ class NewsView(APIView):
             pagination = PaginationCreator(page, limit=10)
             offset = pagination.get_offset
 
-            all_news = MathNews.objects.all().order_by('-published_at')[
-                offset : offset + 10
-            ]
+            all_news = MathNews.objects.all().order_by('-published_at')[offset : offset + 10]
             news_serializer = NewsSerializer(all_news, many=True)
             context = {'all_news': news_serializer.data, 'page': page}
             cache.set(f'news.page={page}', context, 60 * 6)

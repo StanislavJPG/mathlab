@@ -37,9 +37,7 @@ class AvatarModelMixin(models.Model):
     AVATAR_DEFAULT_SQUARE: Final[bool] = False
 
     # custom avatar that was set by user
-    custom_avatar = models.ImageField(
-        max_length=600, upload_to=upload_to_pattern_avatar, blank=True, null=True
-    )
+    custom_avatar = models.ImageField(max_length=600, upload_to=upload_to_pattern_avatar, blank=True, null=True)
 
     class Meta:
         abstract = True
@@ -69,8 +67,7 @@ class AvatarModelMixin(models.Model):
             avatar_url = thumbnail.url
         else:
             avatar_url = (
-                self.get_absolute_default_avatar_url()
-                + f'?size={size[0]}&square={"true" if square else "false"}'
+                self.get_absolute_default_avatar_url() + f'?size={size[0]}&square={"true" if square else "false"}'
             )
 
         return (

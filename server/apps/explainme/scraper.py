@@ -28,9 +28,7 @@ class ExplainmeScraper:
             f'https://www.google.com/search?q=site:uk.wikipedia.org математика {self.request}'
         )
         search_results = wiki_url.find_all('div', class_='yuRUbf', limit=1)
-        url = [
-            result.find('a', jsname='UWckNb').get('href') for result in search_results
-        ][0]
+        url = [result.find('a', jsname='UWckNb').get('href') for result in search_results][0]
 
         # now let's get explanation directly from wiki page
         wiki_page_content = await self.__get_page_content(url)

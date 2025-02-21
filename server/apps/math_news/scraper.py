@@ -13,9 +13,7 @@ class MathNewsSearcher:
         return self
 
     def __next__(self) -> dict:
-        url = URL('https://www.google.com/search').with_query(
-            q='математика+україна', tbm='nws', start=0
-        )
+        url = URL('https://www.google.com/search').with_query(q='математика+україна', tbm='nws', start=0)
         news_titles = self.__get_page_content(str(url))
         search_results = news_titles.find_all('div', class_='SoaBEf', limit=1)
 

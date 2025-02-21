@@ -57,9 +57,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='postcategory',
             name='created_at',
-            field=models.DateTimeField(
-                default=django.utils.timezone.now, editable=False
-            ),
+            field=models.DateTimeField(default=django.utils.timezone.now, editable=False),
         ),
         migrations.AddField(
             model_name='postcategory',
@@ -69,23 +67,17 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='comment',
             name='created_at',
-            field=models.DateTimeField(
-                default=django.utils.timezone.now, editable=False
-            ),
+            field=models.DateTimeField(default=django.utils.timezone.now, editable=False),
         ),
         migrations.AlterField(
             model_name='comment',
             name='dislikes',
-            field=models.ManyToManyField(
-                related_name='disliked_comments', to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name='disliked_comments', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='comment',
             name='likes',
-            field=models.ManyToManyField(
-                related_name='liked_comments', to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name='liked_comments', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='comment',
@@ -95,9 +87,7 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='created_at',
-            field=models.DateTimeField(
-                default=django.utils.timezone.now, editable=False
-            ),
+            field=models.DateTimeField(default=django.utils.timezone.now, editable=False),
         ),
         migrations.AlterField(
             model_name='post',

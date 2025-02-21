@@ -18,9 +18,7 @@ class Chat(AsyncWebsocketConsumer):
     async def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         # check here
-        message = (
-            text_data_json['message'] if len(text_data_json['message']) <= 50 else None
-        )
+        message = text_data_json['message'] if len(text_data_json['message']) <= 50 else None
         sender_id = text_data_json['sender_id']
         receiver_id = text_data_json['receiver_id']
         data = {'message': message}
@@ -28,9 +26,7 @@ class Chat(AsyncWebsocketConsumer):
         cached_data = cache.get(f'sender_id.{sender_id}: receiver_id.{receiver_id}')
         if not cached_data:
             cached_sender, cached_receiver = None, None
-            async for user in CustomUser.objects.filter(
-                Q(id=sender_id) | Q(id=receiver_id)
-            ):
+            async for user in CustomUser.objects.filter(Q(id=sender_id) | Q(id=receiver_id)):
                 if user.id == sender_id:
                     cached_sender = user
                 else:
@@ -42,9 +38,7 @@ class Chat(AsyncWebsocketConsumer):
                 60 * 10,
             )
 
-            await Message.objects.acreate(
-                sender=cached_sender, receiver=cached_receiver, message=message
-            )
+            await Message.objects.acreate(sender=cached_sender, receiver=cached_receiver, message=message)
 
             data['sender'], data['receiver'] = (
                 cached_sender.username,

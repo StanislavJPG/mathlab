@@ -30,16 +30,12 @@ class Migration(migrations.Migration):
         migrations.AlterField(
             model_name='post',
             name='dislikes',
-            field=models.ManyToManyField(
-                related_name='disliked_posts', to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name='disliked_posts', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='post',
             name='likes',
-            field=models.ManyToManyField(
-                related_name='liked_posts', to=settings.AUTH_USER_MODEL
-            ),
+            field=models.ManyToManyField(related_name='liked_posts', to=settings.AUTH_USER_MODEL),
         ),
         migrations.AlterField(
             model_name='post',

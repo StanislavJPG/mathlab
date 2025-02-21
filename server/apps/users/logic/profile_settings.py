@@ -22,31 +22,17 @@ class TheoristSettingsDetailView(APIView):
     def post(self, request):
         new_username = request.POST.get('username')
         new_email = request.POST.get('email')
-        user = User.objects.get(
-            username=request.user.username, email=request.user.email
-        )
+        user = User.objects.get(username=request.user.username, email=request.user.email)
 
         if new_username and new_username != user.username:
-            if (
-                User.objects.filter(username=new_username)
-                .exclude(email=user.email)
-                .exists()
-            ):
-                error_msg = {
-                    'error_msg': 'Користувач з даним нікнеймом вже зареєстрований.'
-                }
+            if User.objects.filter(username=new_username).exclude(email=user.email).exists():
+                error_msg = {'error_msg': 'Користувач з даним нікнеймом вже зареєстрований.'}
                 return render(request, 'forum/settings.html', context=error_msg)
             user.username = new_username
 
         elif new_email and new_email != user.email:
-            if (
-                User.objects.filter(email=new_email)
-                .exclude(username=user.username)
-                .exists()
-            ):
-                error_msg = {
-                    'error_msg': 'Користувач з даною поштою вже зареєстрований.'
-                }
+            if User.objects.filter(email=new_email).exclude(username=user.username).exists():
+                error_msg = {'error_msg': 'Користувач з даною поштою вже зареєстрований.'}
                 return render(request, 'forum/settings.html', context=error_msg)
             user.email = new_email
 

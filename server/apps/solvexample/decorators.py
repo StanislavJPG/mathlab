@@ -17,18 +17,12 @@ class ToUserFriendlyAppearance:
                 # if quantity of unknown args greater than 1
                 # (in system multiples args can not be repeated)
                 if len(self.to_find) > 1:
-                    return [
-                        {'key': 1, 'result': (to_find[kw], vw)}
-                        for kw, vw in enumerate(func(self))
-                    ]
+                    return [{'key': 1, 'result': (to_find[kw], vw)} for kw, vw in enumerate(func(self))]
 
                 # otherwise it's adding to the argument it's index
                 # example: x1, x2
                 # where 1 and 2 is kw + 1
-                return [
-                    {'key': kw + 1, 'result': (to_find[0], vw)}
-                    for kw, vw in enumerate(func(self))
-                ]
+                return [{'key': kw + 1, 'result': (to_find[0], vw)} for kw, vw in enumerate(func(self))]
 
             except TypeError:
                 return func(self)

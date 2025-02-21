@@ -42,9 +42,7 @@ class MathOperations:
             symbols_to_find = self.to_find.split(',')
             solved_equation: list = []
             for single_symbol in symbols_to_find:
-                solving = reduce_inequalities(
-                    eval(self.example), symbols(single_symbol)
-                )
+                solving = reduce_inequalities(eval(self.example), symbols(single_symbol))
                 solved_equation.append(solving)
             return solved_equation
 
@@ -54,10 +52,7 @@ class MathOperations:
 
         elif self.operation_type == 'Первісна':
             expr = eval(self.example)
-            solved_equation: list = [
-                str(simplify(integrate(expr, eval(self.to_find), conds='none')))
-                + ' + C'
-            ]
+            solved_equation: list = [str(simplify(integrate(expr, eval(self.to_find), conds='none'))) + ' + C']
 
         else:
             to_find = self.to_find
@@ -88,9 +83,7 @@ class MathOperations:
             # replace % with '' if user wrote number like so
             self.example[1] = self.example[1].replace('%', '')
             if self.operation_type == 'від числа x':
-                return (float(self.to_find) * float(self.example[1])) / float(
-                    self.example[0]
-                )
+                return (float(self.to_find) * float(self.example[1])) / float(self.example[0])
 
             # otherwise it calculates number from percent
             return (float(self.example[0]) / 100) * float(self.example[1])

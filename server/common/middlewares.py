@@ -9,10 +9,7 @@ from server.apps.theorist.models import Theorist
 
 class HTMXToastMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
-        messages = [
-            {'message': message.message, 'tags': message.tags}
-            for message in get_messages(request)
-        ]
+        messages = [{'message': message.message, 'tags': message.tags} for message in get_messages(request)]
 
         if messages:
             existing_trigger = response.headers.get('HX-Trigger', '{}')

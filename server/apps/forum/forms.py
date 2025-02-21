@@ -15,9 +15,7 @@ class PostCreateForm(forms.ModelForm):
             'categories',
         )
         widgets = {
-            'title': forms.TextInput(
-                attrs={'placeholder': _('Question topic (maximum 85 characters)')}
-            ),
+            'title': forms.TextInput(attrs={'placeholder': _('Question topic (maximum 85 characters)')}),
             'content': TinyMCE(attrs={'cols': 30, 'rows': 30}),
         }
 
@@ -25,9 +23,7 @@ class PostCreateForm(forms.ModelForm):
         self.theorist = kwargs.pop('theorist')
         super().__init__(*args, **kwargs)
         # prepare 'categories' field
-        self.fields['categories'].label_from_instance = (
-            lambda obj: obj.get_name_display()
-        )
+        self.fields['categories'].label_from_instance = lambda obj: obj.get_name_display()
         self.instance.theorist = self.theorist
 
     def clean_categories(self):

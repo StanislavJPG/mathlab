@@ -116,8 +116,8 @@
         <div id="comment-block-wait-spinner" class="spinner-grow text-primary mt-2" role="status"></div>
       </div>
 
-      <h1 style="font-size: 20px; margin-top: 150px;">{% translate 'Your answer' %}</h1>
       {% if user.is_authenticated %}
+        <h1 style="font-size: 20px; margin-top: 150px;">{% translate 'Your answer' %}</h1>
         <div id="comment-block-js" hx-get="{% url 'forum:comment-create' post.uuid %}" hx-target="this"
              hx-trigger="load delay:0.5s" hx-indicator="#comment-wait-spinner">
         {#            Content will be placed here   #}

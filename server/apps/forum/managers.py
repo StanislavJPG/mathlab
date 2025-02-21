@@ -9,15 +9,21 @@ class CommentQuerySet(models.QuerySet):
             custom_dislikes_counter=Count('dislikes', distinct=True),
         )
 
-    def with_have_rates_per_theorist(self, theorist_uuid):
-        return self.annotate(
-            is_comment_already_liked=Exists(
-                self.model.likes.through.objects.filter(comment__uuid=OuterRef('uuid'), theorist__uuid=theorist_uuid)
-            ),
-            is_comment_already_disliked=Exists(
-                self.model.dislikes.through.objects.filter(comment__uuid=OuterRef('uuid'), theorist__uuid=theorist_uuid)
-            ),
-        )
+    def with_have_rates_per_theorist(self, theorist):
+        if theorist:
+            return self.annotate(
+                is_comment_already_liked=Exists(
+                    self.model.likes.through.objects.filter(
+                        comment__uuid=OuterRef('uuid'), theorist__uuid=theorist.uuid
+                    )
+                ),
+                is_comment_already_disliked=Exists(
+                    self.model.dislikes.through.objects.filter(
+                        comment__uuid=OuterRef('uuid'), theorist__uuid=theorist.uuid
+                    )
+                ),
+            )
+        return self
 
 
 class PostQuerySet(models.QuerySet):
@@ -27,12 +33,16 @@ class PostQuerySet(models.QuerySet):
             custom_dislikes_counter=Count('dislikes', distinct=True),
         )
 
-    def with_have_rates_per_theorist(self, theorist_uuid):
-        return self.annotate(
-            is_already_liked=Exists(
-                self.model.likes.through.objects.filter(post__uuid=OuterRef('uuid'), theorist__uuid=theorist_uuid)
-            ),
-            is_already_disliked=Exists(
-                self.model.dislikes.through.objects.filter(post__uuid=OuterRef('uuid'), theorist__uuid=theorist_uuid)
-            ),
-        )
+    def with_have_rates_per_theorist(self, theorist):
+        if theorist:
+            return self.annotate(
+                is_already_liked=Exists(
+                    self.model.likes.through.objects.filter(post__uuid=OuterRef('uuid'), theorist__uuid=theorist.uuid)
+                ),
+                is_already_disliked=Exists(
+                    self.model.dislikes.through.objects.filter(
+                        post__uuid=OuterRef('uuid'), theorist__uuid=theorist.uuid
+                    )
+                ),
+            )
+        return self

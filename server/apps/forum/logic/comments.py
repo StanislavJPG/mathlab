@@ -34,7 +34,7 @@ class CommentListView(ListView):
             .get_queryset()
             .filter(post__uuid=self.kwargs['post_uuid'])
             .with_likes_counters()
-            .with_have_rates_per_theorist(self.request.theorist.uuid)
+            .with_have_rates_per_theorist(self.request.theorist)
             .order_by(order_by)
         )
 
@@ -135,7 +135,7 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
             .get_queryset()
             .prefetch_related('likes', 'dislikes')
             .with_likes_counters()
-            .with_have_rates_per_theorist(self.request.theorist.uuid)
+            .with_have_rates_per_theorist(self.request.theorist)
         )
 
     def dispatch(self, request, *args, **kwargs):

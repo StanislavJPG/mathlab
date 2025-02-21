@@ -48,7 +48,7 @@ class PostDetailView(DetailView):
             .get_queryset()
             .prefetch_related('comments', 'categories')
             .with_likes_counters()
-            .with_have_rates_per_theorist(self.request.theorist.uuid)
+            .with_have_rates_per_theorist(self.request.theorist)
         )
 
     def get_context_data(self, **kwargs):
@@ -104,7 +104,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
-        return super().get_queryset().with_likes_counters().with_have_rates_per_theorist(self.request.theorist.uuid)
+        return super().get_queryset().with_likes_counters().with_have_rates_per_theorist(self.request.theorist)
 
     def dispatch(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest

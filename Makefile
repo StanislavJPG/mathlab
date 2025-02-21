@@ -4,7 +4,7 @@ up:
 	docker-compose up
 
 rebuild:
-	docker-compose build --no-cache
+	docker-compose up --build
 
 build:
 	docker-compose build

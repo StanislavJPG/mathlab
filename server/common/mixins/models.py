@@ -28,7 +28,7 @@ class UUIDModelMixin(models.Model):
 
 
 upload_to_pattern_avatar = FilePattern(
-    filename_pattern="{app_label:.25}/{instance.full_name_slug}/avatars/{uuid:s}{ext}"
+    filename_pattern='{app_label:.25}/{instance.full_name_slug}/avatars/{uuid:s}{ext}'
 )
 
 
@@ -47,7 +47,7 @@ class AvatarModelMixin(models.Model):
     def get_absolute_default_avatar_url(self):
         """Returns default avatar's URL by unique identifier"""
         raise NotImplementedError(
-            f"You need to specify a get_absolute_default_avatar_url method in your {self.__class__.__name__} model"
+            f'You need to specify a get_absolute_default_avatar_url method in your {self.__class__.__name__} model'
         )
 
     def html_tag_avatar(self, size: tuple[int, int] = None, square: bool = None) -> str:
@@ -62,15 +62,15 @@ class AvatarModelMixin(models.Model):
             thumbnailer = get_thumbnailer(self.custom_avatar)
             thumbnail = thumbnailer.get_thumbnail(
                 {
-                    "size": BORINGAVATARS_DEFAULT_SIZE_QUALITY,
-                    "crop": BORINGAVATARS_DEFAULT_CROP,
+                    'size': BORINGAVATARS_DEFAULT_SIZE_QUALITY,
+                    'crop': BORINGAVATARS_DEFAULT_CROP,
                 }
             )
             avatar_url = thumbnail.url
         else:
             avatar_url = (
                 self.get_absolute_default_avatar_url()
-                + f"?size={size[0]}&square={'true' if square else 'false'}"
+                + f'?size={size[0]}&square={"true" if square else "false"}'
             )
 
         return (
@@ -80,4 +80,4 @@ class AvatarModelMixin(models.Model):
 
     def drop_avatar_to_default(self):
         self.custom_avatar = None
-        self.save(update_fields=["custom_avatar"])
+        self.save(update_fields=['custom_avatar'])

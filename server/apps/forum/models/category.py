@@ -13,7 +13,7 @@ class PostCategory(TimeStampedModelMixin):
     name = models.CharField(max_length=100, choices=CATEGORY_CHOICES)
 
     def __str__(self):
-        return f"{self.name} | {self.__class__.__name__} | id - {self.id}"
+        return f'{self.name} | {self.__class__.__name__} | id - {self.id}'
 
     @classmethod
     def create_data(cls):

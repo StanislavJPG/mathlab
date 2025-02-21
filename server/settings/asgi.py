@@ -13,8 +13,8 @@ from django.core.asgi import get_asgi_application
 
 
 os.environ.setdefault(
-    "DJANGO_SETTINGS_MODULE",
-    os.getenv("DJANGO_SETTINGS_MODULE", "server.settings.environments.development"),
+    'DJANGO_SETTINGS_MODULE',
+    os.getenv('DJANGO_SETTINGS_MODULE', 'server.settings.environments.development'),
 )
 
 application = get_asgi_application()

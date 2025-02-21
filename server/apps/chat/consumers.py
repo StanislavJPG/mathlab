@@ -19,13 +19,13 @@ class Chat(AsyncWebsocketConsumer):
         text_data_json = json.loads(text_data)
         # check here
         message = (
-            text_data_json["message"] if len(text_data_json["message"]) <= 50 else None
+            text_data_json['message'] if len(text_data_json['message']) <= 50 else None
         )
-        sender_id = text_data_json["sender_id"]
-        receiver_id = text_data_json["receiver_id"]
-        data = {"message": message}
+        sender_id = text_data_json['sender_id']
+        receiver_id = text_data_json['receiver_id']
+        data = {'message': message}
 
-        cached_data = cache.get(f"sender_id.{sender_id}: receiver_id.{receiver_id}")
+        cached_data = cache.get(f'sender_id.{sender_id}: receiver_id.{receiver_id}')
         if not cached_data:
             cached_sender, cached_receiver = None, None
             async for user in CustomUser.objects.filter(
@@ -37,8 +37,8 @@ class Chat(AsyncWebsocketConsumer):
                     cached_receiver = user
 
             cache.set(
-                f"sender_id.{sender_id}: receiver_id.{receiver_id}",
-                {"sender": cached_sender, "receiver": cached_receiver},
+                f'sender_id.{sender_id}: receiver_id.{receiver_id}',
+                {'sender': cached_sender, 'receiver': cached_receiver},
                 60 * 10,
             )
 
@@ -46,18 +46,18 @@ class Chat(AsyncWebsocketConsumer):
                 sender=cached_sender, receiver=cached_receiver, message=message
             )
 
-            data["sender"], data["receiver"] = (
+            data['sender'], data['receiver'] = (
                 cached_sender.username,
                 cached_receiver.username,
             )
         else:
-            cached_sender = cached_data["sender"].username
-            cached_receiver = cached_data["receiver"].username
+            cached_sender = cached_data['sender'].username
+            cached_receiver = cached_data['receiver'].username
             await Message.objects.acreate(
-                sender=cached_data["sender"],
-                receiver=cached_data["receiver"],
+                sender=cached_data['sender'],
+                receiver=cached_data['receiver'],
                 message=message,
             )
-            data["sender"], data["receiver"] = (cached_sender, cached_receiver)
+            data['sender'], data['receiver'] = (cached_sender, cached_receiver)
 
         await self.send(text_data=json.dumps(data))

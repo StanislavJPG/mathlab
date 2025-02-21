@@ -5,24 +5,24 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("users", "0001_initial"),
+        ('users', '0001_initial'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="customuser",
-            name="rank",
+            model_name='customuser',
+            name='rank',
             field=models.CharField(
                 choices=[
-                    ("JR", "Учень математики"),
-                    ("OP", "Олімпіадник"),
-                    ("TC", "Вчитель математики"),
-                    ("GR", "Гуру математики"),
-                    ("LD", "Володар математики"),
+                    ('JR', 'Учень математики'),
+                    ('OP', 'Олімпіадник'),
+                    ('TC', 'Вчитель математики'),
+                    ('GR', 'Гуру математики'),
+                    ('LD', 'Володар математики'),
                 ],
-                default="JR",
+                default='JR',
                 max_length=2,
-                verbose_name="rank",
+                verbose_name='rank',
             ),
         ),
     ]

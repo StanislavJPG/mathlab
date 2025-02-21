@@ -5,14 +5,14 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("chat", "0002_initial"),
+        ('chat', '0002_initial'),
     ]
 
     operations = [
         migrations.AddIndex(
-            model_name="message",
+            model_name='message',
             index=models.Index(
-                fields=["receiver", "sender"], name="chat_messag_receive_71134e_idx"
+                fields=['receiver', 'sender'], name='chat_messag_receive_71134e_idx'
             ),
         ),
     ]

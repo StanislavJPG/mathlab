@@ -6,36 +6,36 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("forum", "0010_auto_20250212_2349"),
+        ('forum', '0010_auto_20250212_2349'),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="comment",
+            name='comment',
             options={
-                "get_latest_by": "created_at",
-                "ordering": ("created_at",),
-                "verbose_name": "comment",
-                "verbose_name_plural": "comments",
+                'get_latest_by': 'created_at',
+                'ordering': ('created_at',),
+                'verbose_name': 'comment',
+                'verbose_name_plural': 'comments',
             },
         ),
         migrations.AlterModelOptions(
-            name="post",
+            name='post',
             options={
-                "get_latest_by": "created_at",
-                "ordering": ("created_at",),
-                "verbose_name": "post",
-                "verbose_name_plural": "posts",
+                'get_latest_by': 'created_at',
+                'ordering': ('created_at',),
+                'verbose_name': 'post',
+                'verbose_name_plural': 'posts',
             },
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="uuid",
+            model_name='comment',
+            name='uuid',
             field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="uuid",
+            model_name='post',
+            name='uuid',
             field=models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
         ),
     ]

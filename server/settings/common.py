@@ -27,95 +27,95 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 load_dotenv()
-DEFAULT_ADMIN_TOKEN = os.getenv("DEFAULT_ADMIN_TOKEN")
+DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 
 
 # Application definition
 
 INSTALLED_APPS = [
     # django's
-    "django.contrib.admin",
-    "django.contrib.auth",
-    "django.contrib.contenttypes",
-    "django.contrib.sessions",
-    "django.contrib.messages",
-    "django.contrib.staticfiles",
+    'django.contrib.admin',
+    'django.contrib.auth',
+    'django.contrib.contenttypes',
+    'django.contrib.sessions',
+    'django.contrib.messages',
+    'django.contrib.staticfiles',
     # installed packages
-    "channels",
-    "widget_tweaks",
-    "tinymce",
-    "easy_thumbnails",
+    'channels',
+    'widget_tweaks',
+    'tinymce',
+    'easy_thumbnails',
     # common
-    "server.common",
+    'server.common',
     # apps
-    "server.apps.explainme.apps.ExplainmeConfig",
-    "server.apps.solvexample.apps.SolvexampleConfig",
-    "server.apps.graphbuilder.apps.GraphbuilderConfig",
-    "server.apps.forum.apps.ForumConfig",
-    "server.apps.users.apps.UsersConfig",
-    "server.apps.math_news.apps.MathNewsConfig",
-    "server.apps.chat.apps.ChatConfig",
-    "server.apps.theorist.apps.TheoristConfig",
+    'server.apps.explainme.apps.ExplainmeConfig',
+    'server.apps.solvexample.apps.SolvexampleConfig',
+    'server.apps.graphbuilder.apps.GraphbuilderConfig',
+    'server.apps.forum.apps.ForumConfig',
+    'server.apps.users.apps.UsersConfig',
+    'server.apps.math_news.apps.MathNewsConfig',
+    'server.apps.chat.apps.ChatConfig',
+    'server.apps.theorist.apps.TheoristConfig',
     # templatetags
-    "server.common.templatetags.widened_widget_tweaks",
+    'server.common.templatetags.widened_widget_tweaks',
 ]
 
 
-SWAGGER_SETTINGS = {"SECURITY_DEFINITIONS": {"Basic": {"type": "basic"}}}
+SWAGGER_SETTINGS = {'SECURITY_DEFINITIONS': {'Basic': {'type': 'basic'}}}
 
 MIDDLEWARE = [
-    "django.middleware.security.SecurityMiddleware",
-    "django.contrib.sessions.middleware.SessionMiddleware",
-    "django.middleware.common.CommonMiddleware",
-    "django.middleware.csrf.CsrfViewMiddleware",
-    "django.contrib.auth.middleware.AuthenticationMiddleware",
-    "django.contrib.messages.middleware.MessageMiddleware",
-    "django.middleware.clickjacking.XFrameOptionsMiddleware",
-    "django.middleware.security.SecurityMiddleware",
-    "django.middleware.locale.LocaleMiddleware",
-    "whitenoise.middleware.WhiteNoiseMiddleware",
-    "django_htmx.middleware.HtmxMiddleware",
+    'django.middleware.security.SecurityMiddleware',
+    'django.contrib.sessions.middleware.SessionMiddleware',
+    'django.middleware.common.CommonMiddleware',
+    'django.middleware.csrf.CsrfViewMiddleware',
+    'django.contrib.auth.middleware.AuthenticationMiddleware',
+    'django.contrib.messages.middleware.MessageMiddleware',
+    'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    'django.middleware.security.SecurityMiddleware',
+    'django.middleware.locale.LocaleMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'django_htmx.middleware.HtmxMiddleware',
     # custom middlewares
-    "server.common.middlewares.HTMXToastMiddleware",
-    "server.common.middlewares.UnifiedRequestMiddleware",
+    'server.common.middlewares.HTMXToastMiddleware',
+    'server.common.middlewares.UnifiedRequestMiddleware',
 ]
 
-ROOT_URLCONF = "server.urls.urls"
+ROOT_URLCONF = 'server.urls.urls'
 
 TEMPLATES = [
     {
-        "BACKEND": "django.template.backends.django.DjangoTemplates",
-        "DIRS": [BASE_DIR / "templates"],
-        "APP_DIRS": True,
-        "OPTIONS": {
-            "context_processors": [
-                "django.template.context_processors.i18n",
-                "django.template.context_processors.debug",
-                "django.template.context_processors.request",
-                "django.contrib.auth.context_processors.auth",
-                "django.contrib.messages.context_processors.messages",
+        'BACKEND': 'django.template.backends.django.DjangoTemplates',
+        'DIRS': [BASE_DIR / 'templates'],
+        'APP_DIRS': True,
+        'OPTIONS': {
+            'context_processors': [
+                'django.template.context_processors.i18n',
+                'django.template.context_processors.debug',
+                'django.template.context_processors.request',
+                'django.contrib.auth.context_processors.auth',
+                'django.contrib.messages.context_processors.messages',
             ]
         },
     },
 ]
 
 
-WSGI_APPLICATION = "server.settings.wsgi.application"
+WSGI_APPLICATION = 'server.settings.wsgi.application'
 
 FIXTURE_DIRS = [
-    os.path.join(BASE_DIR.parent, "data", "fixtures"),  # Global fixtures directory
+    os.path.join(BASE_DIR.parent, 'data', 'fixtures'),  # Global fixtures directory
 ]
 
 # RENDER DATABASE
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": os.getenv("DB_NAME"),
-        "USER": os.getenv("DB_USER"),
-        "PASSWORD": os.getenv("DB_PASS"),
-        "HOST": os.getenv("DB_HOST"),
-        "PORT": os.getenv("DB_PORT"),
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASS'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
     }
 }
 
@@ -125,16 +125,16 @@ DATABASES = {
 
 AUTH_PASSWORD_VALIDATORS = [
     {
-        "NAME": "django.contrib.auth.password_validation.UserAttributeSimilarityValidator",
+        'NAME': 'django.contrib.auth.password_validation.UserAttributeSimilarityValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.MinimumLengthValidator",
+        'NAME': 'django.contrib.auth.password_validation.MinimumLengthValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.CommonPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.CommonPasswordValidator',
     },
     {
-        "NAME": "django.contrib.auth.password_validation.NumericPasswordValidator",
+        'NAME': 'django.contrib.auth.password_validation.NumericPasswordValidator',
     },
 ]
 
@@ -142,73 +142,73 @@ AUTH_PASSWORD_VALIDATORS = [
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
-LANGUAGE_CODE = "uk"
+LANGUAGE_CODE = 'uk'
 USE_I18N = True
 USE_TZ = True
 
 LOCALE_PATHS = [
-    BASE_DIR.parent / "locale",
+    BASE_DIR.parent / 'locale',
 ]
 
-MEDIA_ROOT = ""
+MEDIA_ROOT = ''
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/5.0/howto/static-files/
 
-STATIC_URL = "/static/"
+STATIC_URL = '/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.0/ref/settings/#default-auto-field
 
-DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
+DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TINYMCE_DEFAULT_CONFIG = {
-    "theme": "silver",
-    "height": 400,
-    "menubar": False,
-    "setup": """editor => {
+    'theme': 'silver',
+    'height': 400,
+    'menubar': False,
+    'setup': """editor => {
            editor.on('blur', () => editor.save())
         }""",  # that fixes bug with HTMX + TinyMCE
-    "plugins": "advlist,autolink,lists,link,image,charmap,preview,anchor,"
-    "searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,"
-    "code,help,wordcount",
-    "toolbar": "undo redo | formatselect | "
-    "bold italic backcolor | alignleft aligncenter "
-    "alignright alignjustify | bullist numlist outdent indent | "
-    "removeformat | help",
+    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+    'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,'
+    'code,help,wordcount',
+    'toolbar': 'undo redo | formatselect | '
+    'bold italic backcolor | alignleft aligncenter '
+    'alignright alignjustify | bullist numlist outdent indent | '
+    'removeformat | help',
 }
 
-AUTH_USER_MODEL = "users.CustomUser"
+AUTH_USER_MODEL = 'users.CustomUser'
 
-EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
-EMAIL_HOST = "smtp.gmail.com"
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_USE_TLS = True
 EMAIL_PORT = 587
-EMAIL_HOST_USER = os.getenv("MAIL_NAME")
-EMAIL_HOST_PASSWORD = os.getenv("MAIL_PASS")
+EMAIL_HOST_USER = os.getenv('MAIL_NAME')
+EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASS')
 
-TIME_ZONE = "Europe/Kiev"
+TIME_ZONE = 'Europe/Kiev'
 
 CACHES = {
-    "default": {
-        "BACKEND": "django_redis.cache.RedisCache",
-        "LOCATION": f"redis://redis:{os.getenv('REDIS_PORT')}",
-        "OPTIONS": {
-            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': f'redis://redis:{os.getenv("REDIS_PORT")}',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
     }
 }
 
 LOGGING = {
-    "version": 1,
-    "disable_existing_loggers": False,
-    "handlers": {
-        "console": {
-            "class": "logging.StreamHandler",
-            "stream": sys.stdout,
+    'version': 1,
+    'disable_existing_loggers': False,
+    'handlers': {
+        'console': {
+            'class': 'logging.StreamHandler',
+            'stream': sys.stdout,
         },
     },
-    "root": {"handlers": ["console"], "level": "INFO"},
+    'root': {'handlers': ['console'], 'level': 'INFO'},
 }
 logging.config.dictConfig(LOGGING)
 
@@ -221,12 +221,12 @@ logging.config.dictConfig(LOGGING)
 
 
 CHANNEL_LAYERS = {
-    "default": {
-        "BACKEND": "channels_redis.core.RedisChannelLayer",
-        "CONFIG": {
-            "hosts": [("redis", os.getenv("REDIS_PORT"))],
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            'hosts': [('redis', os.getenv('REDIS_PORT'))],
         },
     },
 }
 
-ASGI_APPLICATION = "server.apps.chat.routing.application"
+ASGI_APPLICATION = 'server.apps.chat.routing.application'

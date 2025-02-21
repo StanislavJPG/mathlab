@@ -14,9 +14,9 @@ class ChatView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request, receiver: int, username: str):
-        page = request.GET.get("page")
+        page = request.GET.get('page')
         cached_data = cache.get(
-            f"receiver_id.{receiver}: receiver_name.{username}.page.{page}"
+            f'receiver_id.{receiver}: receiver_name.{username}.page.{page}'
         )
         pagination = PaginationCreator(page, limit=8)
         offset = pagination.get_offset
@@ -25,36 +25,36 @@ class ChatView(APIView):
             messages = Message.objects.filter(
                 sender__in=[request.user.id, receiver],
                 receiver__in=[request.user.id, receiver],
-            ).order_by("-sent_at")[offset : offset + 8]
+            ).order_by('-sent_at')[offset : offset + 8]
 
             msg_serializer = MessageSerializer(messages, many=True)
             serialized_messages = msg_serializer.data
             messages_counter = messages.count()
 
             cache.set(
-                f"receiver_id.{receiver}: receiver_name.{username}.page.{page}",
+                f'receiver_id.{receiver}: receiver_name.{username}.page.{page}',
                 {
-                    "messages": serialized_messages,
-                    "message_counter": messages_counter,
+                    'messages': serialized_messages,
+                    'message_counter': messages_counter,
                 },
                 120,
             )
         else:
-            serialized_messages = cached_data["messages"]
-            messages_counter = cached_data["message_counter"]
-            current_user_image_serializer = cached_data["current_user_image"]
-            delete_keys_matching_pattern("receiver_id.*")
+            serialized_messages = cached_data['messages']
+            messages_counter = cached_data['message_counter']
+            current_user_image_serializer = cached_data['current_user_image']
+            delete_keys_matching_pattern('receiver_id.*')
 
         return render(
             request,
-            "chat.html",
+            'chat.html',
             context={
-                "receiver": receiver,
-                "username": username,
-                "messages": serialized_messages,
-                "page": pagination.get_page,
-                "message_counter": messages_counter,
-                "current_user_image": current_user_image_serializer,
+                'receiver': receiver,
+                'username': username,
+                'messages': serialized_messages,
+                'page': pagination.get_page,
+                'message_counter': messages_counter,
+                'current_user_image': current_user_image_serializer,
             },
         )
 
@@ -63,22 +63,22 @@ class ChatListView(APIView):
     permission_classes = [IsAuthenticated]
 
     def get(self, request):
-        page = request.GET.get("page")
+        page = request.GET.get('page')
         pagination = PaginationCreator(page, limit=10)
         offset = pagination.get_offset
-        cached_data = cache.get(f"chat_list.{page}")
+        cached_data = cache.get(f'chat_list.{page}')
 
         if not cached_data:
             latest_messages_subquery = (
                 Message.objects.filter(
-                    Q(sender=OuterRef("sender")) & Q(receiver=OuterRef("receiver"))
-                    | Q(sender=OuterRef("receiver")) & Q(receiver=OuterRef("sender"))
+                    Q(sender=OuterRef('sender')) & Q(receiver=OuterRef('receiver'))
+                    | Q(sender=OuterRef('receiver')) & Q(receiver=OuterRef('sender'))
                 )
                 .annotate(
-                    sender_username=F("sender__username"),
+                    sender_username=F('sender__username'),
                 )
-                .order_by("-sent_at")
-                .values("message", "sent_at", "receiver", "sender_username")[:1]
+                .order_by('-sent_at')
+                .values('message', 'sent_at', 'receiver', 'sender_username')[:1]
             )
 
             users_chats = (
@@ -88,45 +88,45 @@ class ChatListView(APIView):
                 .annotate(
                     chatroom_user1=Case(
                         When(
-                            sender__username__lt=F("receiver__username"),
-                            then=F("sender__username"),
+                            sender__username__lt=F('receiver__username'),
+                            then=F('sender__username'),
                         ),
-                        default=F("receiver__username"),
+                        default=F('receiver__username'),
                         output_field=CharField(),
                     ),
                     chatroom_user2=Case(
                         When(
-                            sender__username__lt=F("receiver__username"),
-                            then=F("receiver__username"),
+                            sender__username__lt=F('receiver__username'),
+                            then=F('receiver__username'),
                         ),
-                        default=F("sender__username"),
+                        default=F('sender__username'),
                         output_field=CharField(),
                     ),
-                    latest_message=Subquery(latest_messages_subquery.values("message")),
+                    latest_message=Subquery(latest_messages_subquery.values('message')),
                     sent_at_last_message=Subquery(
-                        latest_messages_subquery.values("sent_at")
+                        latest_messages_subquery.values('sent_at')
                     ),
-                    receiver_pk=Subquery(latest_messages_subquery.values("receiver")),
+                    receiver_pk=Subquery(latest_messages_subquery.values('receiver')),
                     sender_username=Subquery(
-                        latest_messages_subquery.values("sender_username")
+                        latest_messages_subquery.values('sender_username')
                     ),
                 )
                 .values(
-                    "receiver_pk",
-                    "sent_at_last_message",
-                    "sender_username",
-                    "latest_message",
-                    "chatroom_user1",
-                    "chatroom_user2",
+                    'receiver_pk',
+                    'sent_at_last_message',
+                    'sender_username',
+                    'latest_message',
+                    'chatroom_user1',
+                    'chatroom_user2',
                 )
                 .distinct()[offset : offset + 10]
             )
             context = {
-                "all_chats": users_chats,
-                "page": int(page) if page else 1,
+                'all_chats': users_chats,
+                'page': int(page) if page else 1,
             }
-            cache.set(f"chat_list.{page}", context, 60)
+            cache.set(f'chat_list.{page}', context, 60)
         else:
             context = cached_data
 
-        return render(request, "chat_list.html", context=context)
+        return render(request, 'chat_list.html', context=context)

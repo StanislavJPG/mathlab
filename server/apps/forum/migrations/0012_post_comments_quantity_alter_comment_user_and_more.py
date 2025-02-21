@@ -7,43 +7,43 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("forum", "0011_alter_comment_options_alter_post_options_and_more"),
+        ('forum', '0011_alter_comment_options_alter_post_options_and_more'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="post",
-            name="comments_quantity",
+            model_name='post',
+            name='comments_quantity',
             field=models.PositiveSmallIntegerField(default=0),
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="user",
+            model_name='comment',
+            name='user',
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,
-                related_name="comments",
+                related_name='comments',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="dislikes",
+            model_name='post',
+            name='dislikes',
             field=models.ManyToManyField(
-                related_name="disliked_posts", to=settings.AUTH_USER_MODEL
+                related_name='disliked_posts', to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="likes",
+            model_name='post',
+            name='likes',
             field=models.ManyToManyField(
-                related_name="liked_posts", to=settings.AUTH_USER_MODEL
+                related_name='liked_posts', to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="user",
+            model_name='post',
+            name='user',
             field=models.ForeignKey(
                 null=True,
                 on_delete=django.db.models.deletion.SET_NULL,

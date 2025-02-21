@@ -5,12 +5,12 @@ Copyright (c) 2019 - present AppSeed.us
 
 import os
 
-bind = os.getenv("GUNICORN_BIND_HOST")
+bind = os.getenv('GUNICORN_BIND_HOST')
 workers = 1
 # workers = (
 #     multiprocessing.cpu_count() * 2 + 1
 # )  # Gunicorn docs suggest this formula as the default number of workers.
-accesslog = "-"
-loglevel = "info"
+accesslog = '-'
+loglevel = 'info'
 capture_output = True
 enable_stdio_inheritance = True

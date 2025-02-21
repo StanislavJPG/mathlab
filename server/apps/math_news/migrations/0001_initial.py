@@ -11,27 +11,27 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="MathNews",
+            name='MathNews',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("title", models.CharField(max_length=255, unique=True)),
-                ("new_url", models.CharField(max_length=255, unique=True)),
-                ("additional_info", models.CharField(max_length=255, null=True)),
-                ("posted", models.CharField(max_length=100)),
-                ("published_at", models.DateField(default=django.utils.timezone.now)),
+                ('title', models.CharField(max_length=255, unique=True)),
+                ('new_url', models.CharField(max_length=255, unique=True)),
+                ('additional_info', models.CharField(max_length=255, null=True)),
+                ('posted', models.CharField(max_length=100)),
+                ('published_at', models.DateField(default=django.utils.timezone.now)),
             ],
             options={
-                "verbose_name_plural": "news",
-                "ordering": ("title",),
-                "get_latest_by": "published_at",
+                'verbose_name_plural': 'news',
+                'ordering': ('title',),
+                'get_latest_by': 'published_at',
             },
         ),
     ]

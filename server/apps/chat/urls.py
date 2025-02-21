@@ -4,9 +4,9 @@ from server.apps.chat.logic.chat import ChatView, ChatListView
 
 urlpatterns = [
     path(
-        "chat/communication/<int:receiver>/<str:username>",
+        'chat/communication/<int:receiver>/<str:username>',
         ChatView.as_view(),
-        name="ws-chat",
+        name='ws-chat',
     ),
-    path("chat/list/", ChatListView.as_view(), name="chat-list"),
+    path('chat/list/', ChatListView.as_view(), name='chat-list'),
 ]

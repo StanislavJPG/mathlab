@@ -5,15 +5,15 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("users", "0002_alter_customuser_rank"),
+        ('users', '0002_alter_customuser_rank'),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name="profileimage",
-            name="image",
+            model_name='profileimage',
+            name='image',
             field=models.ImageField(
-                blank=True, upload_to="templates/static/profile_pics"
+                blank=True, upload_to='templates/static/profile_pics'
             ),
         ),
     ]

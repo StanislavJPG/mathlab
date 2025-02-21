@@ -7,101 +7,101 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("forum", "0001_squashed_0006_post_slug_alter_post_content_alter_post_title"),
+        ('forum', '0001_squashed_0006_post_slug_alter_post_content_alter_post_title'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.RemoveIndex(
-            model_name="post",
-            name="forum_post_created_d558d2_idx",
+            model_name='post',
+            name='forum_post_created_d558d2_idx',
         ),
         migrations.RemoveIndex(
-            model_name="post",
-            name="forum_post_modifie_02ef33_idx",
+            model_name='post',
+            name='forum_post_modifie_02ef33_idx',
         ),
         migrations.RemoveIndex(
-            model_name="post",
-            name="forum_post_post_vi_6d1b3b_idx",
+            model_name='post',
+            name='forum_post_post_vi_6d1b3b_idx',
         ),
         migrations.RenameField(
-            model_name="post",
-            old_name="post_dislikes",
-            new_name="dislikes",
+            model_name='post',
+            old_name='post_dislikes',
+            new_name='dislikes',
         ),
         migrations.RenameField(
-            model_name="post",
-            old_name="post_likes",
-            new_name="likes",
+            model_name='post',
+            old_name='post_likes',
+            new_name='likes',
         ),
         migrations.AddField(
-            model_name="comment",
-            name="dislikes_counter",
+            model_name='comment',
+            name='dislikes_counter',
             field=models.PositiveSmallIntegerField(default=0),
         ),
         migrations.AddField(
-            model_name="comment",
-            name="likes_counter",
+            model_name='comment',
+            name='likes_counter',
             field=models.PositiveSmallIntegerField(default=0),
         ),
         migrations.AddField(
-            model_name="post",
-            name="dislikes_counter",
+            model_name='post',
+            name='dislikes_counter',
             field=models.PositiveSmallIntegerField(default=0),
         ),
         migrations.AddField(
-            model_name="post",
-            name="likes_counter",
+            model_name='post',
+            name='likes_counter',
             field=models.PositiveSmallIntegerField(default=0),
         ),
         migrations.AddField(
-            model_name="postcategory",
-            name="created_at",
+            model_name='postcategory',
+            name='created_at',
             field=models.DateTimeField(
                 default=django.utils.timezone.now, editable=False
             ),
         ),
         migrations.AddField(
-            model_name="postcategory",
-            name="modified_at",
+            model_name='postcategory',
+            name='modified_at',
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="created_at",
+            model_name='comment',
+            name='created_at',
             field=models.DateTimeField(
                 default=django.utils.timezone.now, editable=False
             ),
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="dislikes",
+            model_name='comment',
+            name='dislikes',
             field=models.ManyToManyField(
-                related_name="disliked_comments", to=settings.AUTH_USER_MODEL
+                related_name='disliked_comments', to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="likes",
+            model_name='comment',
+            name='likes',
             field=models.ManyToManyField(
-                related_name="liked_comments", to=settings.AUTH_USER_MODEL
+                related_name='liked_comments', to=settings.AUTH_USER_MODEL
             ),
         ),
         migrations.AlterField(
-            model_name="comment",
-            name="modified_at",
+            model_name='comment',
+            name='modified_at',
             field=models.DateTimeField(default=django.utils.timezone.now),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="created_at",
+            model_name='post',
+            name='created_at',
             field=models.DateTimeField(
                 default=django.utils.timezone.now, editable=False
             ),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="post_views",
+            model_name='post',
+            name='post_views',
             field=models.PositiveSmallIntegerField(blank=True, default=0, null=True),
         ),
     ]

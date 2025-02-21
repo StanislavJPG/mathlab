@@ -7,27 +7,27 @@ from server.apps.theorist.logic.profile import (
 )
 from server.apps.users.logic.profile_settings import TheoristSettingsDetailView
 
-app_name = "theorist_profile"
+app_name = 'theorist_profile'
 
 urlpatterns = [
     path(
-        "<int:pk>/<slug:full_name_slug>/",
+        '<int:pk>/<slug:full_name_slug>/',
         TheoristProfileDetailView.as_view(),
-        name="base-page",
+        name='base-page',
     ),
     path(
-        "<int:pk>/<slug:full_name_slug>/<str:section>/",
+        '<int:pk>/<slug:full_name_slug>/<str:section>/',
         HXTheoristDetailsProfileView.as_view(),
-        name="hx-theorist-details",
+        name='hx-theorist-details',
     ),
     path(
-        "<uuid:uuid>/last-activities/",
+        '<uuid:uuid>/last-activities/',
         TheoristLastActivitiesListView.as_view(),
-        name="hx-theorist-last-activities",
+        name='hx-theorist-last-activities',
     ),
     path(
-        "settings/<uuid:uuid>/",
+        'settings/<uuid:uuid>/',
         TheoristSettingsDetailView.as_view(),
-        name="theorist-settings",
+        name='theorist-settings',
     ),  # TODO: Add possibility to hide last activities for public
 ]

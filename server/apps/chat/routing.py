@@ -7,10 +7,10 @@ from server.apps.chat.consumers import Chat
 
 application = ProtocolTypeRouter(
     {
-        "http": get_asgi_application(),
-        "websocket": URLRouter(
+        'http': get_asgi_application(),
+        'websocket': URLRouter(
             [
-                path("ws/chat/", Chat.as_asgi()),
+                path('ws/chat/', Chat.as_asgi()),
             ]
         ),
     }

@@ -8,12 +8,12 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     replaces = [
-        ("forum", "0001_initial"),
-        ("forum", "0002_initial"),
-        ("forum", "0003_remove_post_categories_delete_category_and_more"),
-        ("forum", "0004_alter_post_categories"),
-        ("forum", "0005_postcategory_remove_post_categories_post_categories"),
-        ("forum", "0006_post_slug_alter_post_content_alter_post_title"),
+        ('forum', '0001_initial'),
+        ('forum', '0002_initial'),
+        ('forum', '0003_remove_post_categories_delete_category_and_more'),
+        ('forum', '0004_alter_post_categories'),
+        ('forum', '0005_postcategory_remove_post_categories_post_categories'),
+        ('forum', '0006_post_slug_alter_post_content_alter_post_title'),
     ]
 
     initial = True
@@ -24,69 +24,69 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Category",
+            name='Category',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "category_name",
-                    models.CharField(max_length=100, verbose_name="category_name"),
+                    'category_name',
+                    models.CharField(max_length=100, verbose_name='category_name'),
                 ),
             ],
         ),
         migrations.CreateModel(
-            name="Post",
+            name='Post',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("title", models.CharField(max_length=85, verbose_name="title")),
-                ("content", models.TextField(max_length=2000, verbose_name="content")),
-                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
+                ('title', models.CharField(max_length=85, verbose_name='title')),
+                ('content', models.TextField(max_length=2000, verbose_name='content')),
+                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
-                ("post_views", models.IntegerField(blank=True, default=0, null=True)),
+                ('post_views', models.IntegerField(blank=True, default=0, null=True)),
                 (
-                    "categories",
+                    'categories',
                     models.ManyToManyField(
                         db_index=True,
-                        related_name="post_categories",
-                        to="forum.category",
+                        related_name='post_categories',
+                        to='forum.category',
                     ),
                 ),
                 (
-                    "post_dislikes",
+                    'post_dislikes',
                     models.ManyToManyField(
                         db_index=True,
-                        related_name="disliked_posts",
+                        related_name='disliked_posts',
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
-                    "post_likes",
+                    'post_likes',
                     models.ManyToManyField(
                         db_index=True,
-                        related_name="liked_posts",
+                        related_name='liked_posts',
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
@@ -94,51 +94,51 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "post",
-                "verbose_name_plural": "posts",
-                "ordering": ("title",),
-                "get_latest_by": "created_at",
+                'verbose_name': 'post',
+                'verbose_name_plural': 'posts',
+                'ordering': ('title',),
+                'get_latest_by': 'created_at',
             },
         ),
         migrations.CreateModel(
-            name="Comment",
+            name='Comment',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("comment", models.TextField(max_length=2000, verbose_name="comment")),
-                ("created_at", models.DateTimeField(default=django.utils.timezone.now)),
-                ("modified_at", models.DateTimeField(default=None, null=True)),
+                ('comment', models.TextField(max_length=2000, verbose_name='comment')),
+                ('created_at', models.DateTimeField(default=django.utils.timezone.now)),
+                ('modified_at', models.DateTimeField(default=None, null=True)),
                 (
-                    "dislikes",
+                    'dislikes',
                     models.ManyToManyField(
                         default=0,
-                        related_name="disliked_comments",
+                        related_name='disliked_comments',
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
-                    "likes",
+                    'likes',
                     models.ManyToManyField(
                         default=0,
-                        related_name="liked_comments",
+                        related_name='liked_comments',
                         to=settings.AUTH_USER_MODEL,
                     ),
                 ),
                 (
-                    "post",
+                    'post',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.post"
+                        on_delete=django.db.models.deletion.CASCADE, to='forum.post'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
@@ -147,63 +147,63 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddIndex(
-            model_name="post",
+            model_name='post',
             index=models.Index(
-                fields=["created_at"], name="forum_post_created_d558d2_idx"
+                fields=['created_at'], name='forum_post_created_d558d2_idx'
             ),
         ),
         migrations.AddIndex(
-            model_name="post",
+            model_name='post',
             index=models.Index(
-                fields=["modified_at"], name="forum_post_modifie_02ef33_idx"
+                fields=['modified_at'], name='forum_post_modifie_02ef33_idx'
             ),
         ),
         migrations.AddIndex(
-            model_name="post",
+            model_name='post',
             index=models.Index(
-                fields=["post_views"], name="forum_post_post_vi_6d1b3b_idx"
+                fields=['post_views'], name='forum_post_post_vi_6d1b3b_idx'
             ),
         ),
         migrations.RemoveField(
-            model_name="post",
-            name="categories",
+            model_name='post',
+            name='categories',
         ),
         migrations.DeleteModel(
-            name="Category",
+            name='Category',
         ),
         migrations.CreateModel(
-            name="PostCategory",
+            name='PostCategory',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "name",
+                    'name',
                     models.CharField(
                         choices=[
-                            ("GF", "Graph Functions"),
-                            ("MT", "Matrices"),
-                            ("RV", "Equations"),
-                            ("NR", "Inequalities"),
-                            ("SM", "Systems of Equations"),
-                            ("VM", "Higher Mathematics"),
-                            ("TY", "Probability Theory"),
-                            ("KM", "Combinatorics"),
-                            ("DM", "Discrete Mathematics"),
-                            ("PM", "Elementary Mathematics"),
-                            ("VD", "Percentages"),
-                            ("TG", "Trigonometry"),
-                            ("GM", "Geometry"),
-                            ("YS", "Probability and Statistics"),
-                            ("AL", "Algorithms"),
-                            ("AG", "Algebra"),
-                            ("IN", "Other"),
+                            ('GF', 'Graph Functions'),
+                            ('MT', 'Matrices'),
+                            ('RV', 'Equations'),
+                            ('NR', 'Inequalities'),
+                            ('SM', 'Systems of Equations'),
+                            ('VM', 'Higher Mathematics'),
+                            ('TY', 'Probability Theory'),
+                            ('KM', 'Combinatorics'),
+                            ('DM', 'Discrete Mathematics'),
+                            ('PM', 'Elementary Mathematics'),
+                            ('VD', 'Percentages'),
+                            ('TG', 'Trigonometry'),
+                            ('GM', 'Geometry'),
+                            ('YS', 'Probability and Statistics'),
+                            ('AL', 'Algorithms'),
+                            ('AG', 'Algebra'),
+                            ('IN', 'Other'),
                         ],
                         max_length=100,
                     ),
@@ -211,23 +211,23 @@ class Migration(migrations.Migration):
             ],
         ),
         migrations.AddField(
-            model_name="post",
-            name="categories",
-            field=models.ManyToManyField(related_name="posts", to="forum.postcategory"),
+            model_name='post',
+            name='categories',
+            field=models.ManyToManyField(related_name='posts', to='forum.postcategory'),
         ),
         migrations.AddField(
-            model_name="post",
-            name="slug",
+            model_name='post',
+            name='slug',
             field=models.SlugField(blank=True, max_length=255, null=True),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="content",
+            model_name='post',
+            name='content',
             field=models.TextField(max_length=2000),
         ),
         migrations.AlterField(
-            model_name="post",
-            name="title",
+            model_name='post',
+            name='title',
             field=models.CharField(max_length=85),
         ),
     ]

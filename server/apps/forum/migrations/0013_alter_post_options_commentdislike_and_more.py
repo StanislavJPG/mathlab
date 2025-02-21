@@ -9,54 +9,54 @@ from django.db import migrations, models
 
 class Migration(migrations.Migration):
     dependencies = [
-        ("forum", "0012_post_comments_quantity_alter_comment_user_and_more"),
+        ('forum', '0012_post_comments_quantity_alter_comment_user_and_more'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AlterModelOptions(
-            name="post",
+            name='post',
             options={
-                "get_latest_by": "created_at",
-                "ordering": ("-created_at",),
-                "verbose_name": "post",
-                "verbose_name_plural": "posts",
+                'get_latest_by': 'created_at',
+                'ordering': ('-created_at',),
+                'verbose_name': 'post',
+                'verbose_name_plural': 'posts',
             },
         ),
         migrations.CreateModel(
-            name="CommentDislike",
+            name='CommentDislike',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "created_at",
+                    'created_at',
                     models.DateTimeField(
                         default=django.utils.timezone.now, editable=False
                     ),
                 ),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 (
-                    "uuid",
+                    'uuid',
                     models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
                 ),
                 (
-                    "comment",
+                    'comment',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.comment"
+                        on_delete=django.db.models.deletion.CASCADE, to='forum.comment'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
@@ -65,43 +65,43 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {("user", "comment")},
+                'unique_together': {('user', 'comment')},
             },
         ),
         migrations.CreateModel(
-            name="CommentLike",
+            name='CommentLike',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "created_at",
+                    'created_at',
                     models.DateTimeField(
                         default=django.utils.timezone.now, editable=False
                     ),
                 ),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 (
-                    "uuid",
+                    'uuid',
                     models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
                 ),
                 (
-                    "comment",
+                    'comment',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.comment"
+                        on_delete=django.db.models.deletion.CASCADE, to='forum.comment'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
@@ -110,43 +110,43 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {("user", "comment")},
+                'unique_together': {('user', 'comment')},
             },
         ),
         migrations.CreateModel(
-            name="PostDislike",
+            name='PostDislike',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "created_at",
+                    'created_at',
                     models.DateTimeField(
                         default=django.utils.timezone.now, editable=False
                     ),
                 ),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 (
-                    "uuid",
+                    'uuid',
                     models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
                 ),
                 (
-                    "post",
+                    'post',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.post"
+                        on_delete=django.db.models.deletion.CASCADE, to='forum.post'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
@@ -155,43 +155,43 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {("user", "post")},
+                'unique_together': {('user', 'post')},
             },
         ),
         migrations.CreateModel(
-            name="PostLike",
+            name='PostLike',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "created_at",
+                    'created_at',
                     models.DateTimeField(
                         default=django.utils.timezone.now, editable=False
                     ),
                 ),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 (
-                    "uuid",
+                    'uuid',
                     models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
                 ),
                 (
-                    "post",
+                    'post',
                     models.ForeignKey(
-                        on_delete=django.db.models.deletion.CASCADE, to="forum.post"
+                        on_delete=django.db.models.deletion.CASCADE, to='forum.post'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.ForeignKey(
                         null=True,
                         on_delete=django.db.models.deletion.SET_NULL,
@@ -200,58 +200,58 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "unique_together": {("user", "post")},
+                'unique_together': {('user', 'post')},
             },
         ),
         migrations.RemoveField(
-            model_name="comment",
-            name="likes",
+            model_name='comment',
+            name='likes',
         ),
         migrations.AddField(
-            model_name="comment",
-            name="likes",
+            model_name='comment',
+            name='likes',
             field=models.ManyToManyField(
-                related_name="comment_likes",
-                through="forum.CommentLike",
+                related_name='comment_likes',
+                through='forum.CommentLike',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.RemoveField(
-            model_name="comment",
-            name="dislikes",
+            model_name='comment',
+            name='dislikes',
         ),
         migrations.AddField(
-            model_name="comment",
-            name="dislikes",
+            model_name='comment',
+            name='dislikes',
             field=models.ManyToManyField(
-                related_name="comment_dislikes",
-                through="forum.CommentDislike",
+                related_name='comment_dislikes',
+                through='forum.CommentDislike',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.RemoveField(
-            model_name="post",
-            name="likes",
+            model_name='post',
+            name='likes',
         ),
         migrations.AddField(
-            model_name="post",
-            name="likes",
+            model_name='post',
+            name='likes',
             field=models.ManyToManyField(
-                related_name="post_likes",
-                through="forum.PostLike",
+                related_name='post_likes',
+                through='forum.PostLike',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.RemoveField(
-            model_name="post",
-            name="dislikes",
+            model_name='post',
+            name='dislikes',
         ),
         migrations.AddField(
-            model_name="post",
-            name="dislikes",
+            model_name='post',
+            name='dislikes',
             field=models.ManyToManyField(
-                related_name="post_dislikes",
-                through="forum.PostDislike",
+                related_name='post_dislikes',
+                through='forum.PostDislike',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),

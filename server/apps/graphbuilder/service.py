@@ -12,4 +12,4 @@ def my_func(x: ndarray, function: str) -> ndarray:
     try:
         return eval(function)
     except NameError:
-        raise Exception("Invalid syntax.")
+        raise Exception('Invalid syntax.')

@@ -6,18 +6,18 @@ class CustomUser(AbstractUser):
     first_name = None
     last_name = None
     username = models.CharField(max_length=150, unique=False)
-    email = models.EmailField("email address", blank=True, unique=True)
+    email = models.EmailField('email address', blank=True, unique=True)
 
-    EMAIL_FIELD = "email"
-    USERNAME_FIELD = "email"
-    REQUIRED_FIELDS = ["username"]
+    EMAIL_FIELD = 'email'
+    USERNAME_FIELD = 'email'
+    REQUIRED_FIELDS = ['username']
 
     class Meta:
-        verbose_name = "user"
-        verbose_name_plural = "users"
+        verbose_name = 'user'
+        verbose_name_plural = 'users'
 
     def __str__(self):
-        return f"{self.username}"
+        return f'{self.username}'
 
     # def update_rank(self):
     #     if self.score < 50:

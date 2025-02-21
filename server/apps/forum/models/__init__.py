@@ -4,11 +4,11 @@ from .post import Post
 from .like import PostLike, CommentLike, CommentDislike, PostDislike
 
 __all__ = (
-    "PostCategory",
-    "Comment",
-    "Post",
-    "CommentLike",
-    "PostLike",
-    "CommentDislike",
-    "PostDislike",
+    'PostCategory',
+    'Comment',
+    'Post',
+    'CommentLike',
+    'PostLike',
+    'CommentDislike',
+    'PostDislike',
 )

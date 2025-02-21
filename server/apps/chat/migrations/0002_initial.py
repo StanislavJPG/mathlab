@@ -9,26 +9,26 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("chat", "0001_initial"),
+        ('chat', '0001_initial'),
         migrations.swappable_dependency(settings.AUTH_USER_MODEL),
     ]
 
     operations = [
         migrations.AddField(
-            model_name="message",
-            name="receiver",
+            model_name='message',
+            name='receiver',
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="received_message",
+                related_name='received_message',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),
         migrations.AddField(
-            model_name="message",
-            name="sender",
+            model_name='message',
+            name='sender',
             field=models.ForeignKey(
                 on_delete=django.db.models.deletion.CASCADE,
-                related_name="sent_message",
+                related_name='sent_message',
                 to=settings.AUTH_USER_MODEL,
             ),
         ),

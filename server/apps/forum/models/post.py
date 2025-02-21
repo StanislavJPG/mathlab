@@ -18,15 +18,15 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
     theorist = models.ForeignKey(
-        "theorist.Theorist", on_delete=models.SET_NULL, null=True, related_name="posts"
+        'theorist.Theorist', on_delete=models.SET_NULL, null=True, related_name='posts'
     )
-    categories = models.ManyToManyField("forum.PostCategory", related_name="posts")
+    categories = models.ManyToManyField('forum.PostCategory', related_name='posts')
 
     likes = models.ManyToManyField(
-        "theorist.Theorist", through="forum.PostLike", related_name="liked_posts"
+        'theorist.Theorist', through='forum.PostLike', related_name='liked_posts'
     )
     dislikes = models.ManyToManyField(
-        "theorist.Theorist", through="forum.PostDislike", related_name="disliked_posts"
+        'theorist.Theorist', through='forum.PostDislike', related_name='disliked_posts'
     )
 
     # Denormilized fields
@@ -39,16 +39,16 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     objects = PostQuerySet.as_manager()
 
     class Meta:
-        ordering = ("-created_at",)
-        verbose_name = "post"
-        verbose_name_plural = "posts"
-        get_latest_by = "created_at"
+        ordering = ('-created_at',)
+        verbose_name = 'post'
+        verbose_name_plural = 'posts'
+        get_latest_by = 'created_at'
 
     def __str__(self):
-        return f"{self.title} | {self.__class__.__name__} | id - {self.id}"
+        return f'{self.title} | {self.__class__.__name__} | id - {self.id}'
 
     def get_absolute_url(self):
-        return reverse("forum:post-details", kwargs={"pk": self.pk, "slug": self.slug})
+        return reverse('forum:post-details', kwargs={'pk': self.pk, 'slug': self.slug})
 
     @hook(BEFORE_SAVE)
     def before_save(self):

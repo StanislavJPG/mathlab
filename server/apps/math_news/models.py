@@ -10,9 +10,9 @@ class MathNews(models.Model):
     published_at = models.DateField(default=timezone.now)
 
     class Meta:
-        ordering = ("title",)
-        verbose_name_plural = "news"
-        get_latest_by = "published_at"
+        ordering = ('title',)
+        verbose_name_plural = 'news'
+        get_latest_by = 'published_at'
 
     def __str__(self):
-        return f"{self.title}"
+        return f'{self.title}'

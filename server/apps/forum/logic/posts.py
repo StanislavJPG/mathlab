@@ -12,41 +12,41 @@ from server.common.http import AuthenticatedHttpRequest
 
 
 __all__ = (
-    "PostListView",
-    "PostDetailView",
-    "PostCreateView",
-    "PostDeleteView",
-    "HXPostLikesAndDislikesView",
+    'PostListView',
+    'PostDetailView',
+    'PostCreateView',
+    'PostDeleteView',
+    'HXPostLikesAndDislikesView',
 )
 
 
 class PostListView(ListView):
     paginate_by = 10
     model = Post
-    context_object_name = "posts"
-    template_name = "partials/posts_list.html"
+    context_object_name = 'posts'
+    template_name = 'partials/posts_list.html'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
-        return super().get_queryset().with_likes_counters().order_by("-created_at")
+        return super().get_queryset().with_likes_counters().order_by('-created_at')
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context["categories"] = PostCategory.objects.all()
+        context['categories'] = PostCategory.objects.all()
         return context
 
 
 class PostDetailView(DetailView):
     model = Post
-    context_object_name = "post"
-    template_name = "question_page.html"
+    context_object_name = 'post'
+    template_name = 'question_page.html'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return (
             super()
             .get_queryset()
-            .prefetch_related("comments", "categories")
+            .prefetch_related('comments', 'categories')
             .with_likes_counters()
             .with_have_rates_per_theorist(self.request.theorist.uuid)
         )
@@ -54,23 +54,23 @@ class PostDetailView(DetailView):
     def get_context_data(self, **kwargs):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
-        context["post"] = self.object
+        context['post'] = self.object
         return context
 
 
 class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
     model = Post
-    template_name = "create_question_page.html"
+    template_name = 'create_question_page.html'
     form_class = PostCreateForm
-    form_valid_message = _("You successfully created a new post.")
+    form_valid_message = _('You successfully created a new post.')
     form_invalid_message = _(
-        "Error while creating post. Please check for errors and try again."
+        'Error while creating post. Please check for errors and try again.'
     )
 
     def get_form_kwargs(self):
         self.request: AuthenticatedHttpRequest
         kwargs = super().get_form_kwargs()
-        kwargs["theorist"] = self.request.theorist
+        kwargs['theorist'] = self.request.theorist
         return kwargs
 
     def form_valid(self, form):
@@ -82,11 +82,11 @@ class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
 
 class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
     model = Post
-    template_name = "base/forum_base.html"
-    form_valid_message = _("Your post has been deleted.")
-    form_invalid_message = _("Error. Please, check your input and try again.")
-    slug_url_kwarg = "uuid"
-    slug_field = "uuid"
+    template_name = 'base/forum_base.html'
+    form_valid_message = _('Your post has been deleted.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
 
     def delete(self, request, *args, **kwargs):
         post = self.get_object()
@@ -94,15 +94,15 @@ class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
 
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponse()
-        trigger_client_event(response, "postDeleted")
+        trigger_client_event(response, 'postDeleted')
         return response
 
 
 class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
     model = Post
-    template_name = "question_page.html"
-    slug_field = "uuid"
-    slug_url_kwarg = "uuid"
+    template_name = 'question_page.html'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -123,11 +123,11 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
         self.request: AuthenticatedHttpRequest
         self.object = self.get_object()
 
-        context = {"post": self.object}
+        context = {'post': self.object}
 
         rendered_block = render_block_to_string(
             self.template_name,
-            "post_likes_and_dislikes",
+            'post_likes_and_dislikes',
             context=context,
             request=self.request,
         )
@@ -140,7 +140,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
         likes_manager = self.object.likes
         dislikes_manager = self.object.dislikes
 
-        is_like = self.request.GET.get("like") == "true"
+        is_like = self.request.GET.get('like') == 'true'
 
         if is_like:
             if likes_manager.filter(uuid=request.theorist.uuid).exists():
@@ -156,6 +156,6 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
                 dislikes_manager.add(request.theorist)
 
         response = HttpResponse()
-        trigger_client_event(response, "postLikesAndDislikesChanged")
+        trigger_client_event(response, 'postLikesAndDislikesChanged')
 
         return response

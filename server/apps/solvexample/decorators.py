@@ -11,14 +11,14 @@ class ToUserFriendlyAppearance:
     def equations(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrap(self: MathOperations) -> list | dict:
-            to_find = self.to_find.split(",")
+            to_find = self.to_find.split(',')
             try:
                 # index of arguments will be always 1
                 # if quantity of unknown args greater than 1
                 # (in system multiples args can not be repeated)
                 if len(self.to_find) > 1:
                     return [
-                        {"key": 1, "result": (to_find[kw], vw)}
+                        {'key': 1, 'result': (to_find[kw], vw)}
                         for kw, vw in enumerate(func(self))
                     ]
 
@@ -26,7 +26,7 @@ class ToUserFriendlyAppearance:
                 # example: x1, x2
                 # where 1 and 2 is kw + 1
                 return [
-                    {"key": kw + 1, "result": (to_find[0], vw)}
+                    {'key': kw + 1, 'result': (to_find[0], vw)}
                     for kw, vw in enumerate(func(self))
                 ]
 
@@ -47,8 +47,8 @@ class ToUserFriendlyAppearance:
     def percents(func: Callable) -> Callable:
         @functools.wraps(func)
         def wrap(self: MathOperations) -> str:
-            if self.operation_type == "від числа x":
-                return str(round(func(self), 3)) + "%"
+            if self.operation_type == 'від числа x':
+                return str(round(func(self), 3)) + '%'
             return func(self)
 
         return wrap

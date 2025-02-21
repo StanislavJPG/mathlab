@@ -9,12 +9,12 @@ from server.apps.users.models import CustomUser
 class MessageSerializer(serializers.ModelSerializer):
     class Meta:
         model = Message
-        fields = "__all__"
+        fields = '__all__'
 
     def to_representation(self, instance):
         representation = super().to_representation(instance)
-        representation["sender"]: str = CustomUser.objects.get(
-            id=representation["sender"]
+        representation['sender']: str = CustomUser.objects.get(
+            id=representation['sender']
         ).username
-        representation["sent_at"] = datetime.fromisoformat(representation["sent_at"])
+        representation['sent_at'] = datetime.fromisoformat(representation['sent_at'])
         return representation

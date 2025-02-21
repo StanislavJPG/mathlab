@@ -10,8 +10,8 @@ from django.db import migrations, models
 
 
 def setup_user(apps, schema_editor):
-    CustomUser = apps.get_model("users", "CustomUser")
-    Theorist = apps.get_model("theorist", "Theorist")
+    CustomUser = apps.get_model('users', 'CustomUser')
+    Theorist = apps.get_model('theorist', 'Theorist')
     obj_to_save = []
 
     for user in CustomUser.objects.all():
@@ -28,73 +28,73 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Theorist",
+            name='Theorist',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "created_at",
+                    'created_at',
                     models.DateTimeField(
                         default=django.utils.timezone.now, editable=False
                     ),
                 ),
                 (
-                    "modified_at",
+                    'modified_at',
                     models.DateTimeField(default=django.utils.timezone.now),
                 ),
                 (
-                    "uuid",
+                    'uuid',
                     models.UUIDField(default=uuid.uuid4, editable=False, unique=True),
                 ),
                 (
-                    "custom_avatar",
+                    'custom_avatar',
                     models.ImageField(
                         blank=True,
                         max_length=600,
                         null=True,
                         upload_to=dynamic_filenames.FilePattern(
-                            filename_pattern="{app_label:.25}/{instance.full_name_slug}/avatars/{uuid:s}{ext}"
+                            filename_pattern='{app_label:.25}/{instance.full_name_slug}/avatars/{uuid:s}{ext}'
                         ),
                     ),
                 ),
-                ("full_name", models.CharField(max_length=150)),
-                ("city", models.CharField(max_length=100, null=True, blank=True)),
+                ('full_name', models.CharField(max_length=150)),
+                ('city', models.CharField(max_length=100, null=True, blank=True)),
                 (
-                    "social_media_url",
+                    'social_media_url',
                     models.URLField(blank=True, max_length=225, null=True),
                 ),
-                ("website_url", models.URLField(blank=True, max_length=225, null=True)),
+                ('website_url', models.URLField(blank=True, max_length=225, null=True)),
                 (
-                    "full_name_slug",
+                    'full_name_slug',
                     models.SlugField(blank=True, max_length=255, null=True),
                 ),
-                ("total_posts", models.PositiveSmallIntegerField(default=0)),
-                ("total_comments", models.PositiveIntegerField(default=0)),
-                ("score", models.SmallIntegerField(default=0)),
+                ('total_posts', models.PositiveSmallIntegerField(default=0)),
+                ('total_comments', models.PositiveIntegerField(default=0)),
+                ('score', models.SmallIntegerField(default=0)),
                 (
-                    "rank",
+                    'rank',
                     models.CharField(
                         choices=[
-                            ("junior", "Junior mathematician"),
-                            ("olympic", "Olympic"),
-                            ("teacher", "Teacher of mathematics"),
-                            ("guru", "Guru of mathematics"),
-                            ("math_lord", "Lord of mathematics"),
+                            ('junior', 'Junior mathematician'),
+                            ('olympic', 'Olympic'),
+                            ('teacher', 'Teacher of mathematics'),
+                            ('guru', 'Guru of mathematics'),
+                            ('math_lord', 'Lord of mathematics'),
                         ],
-                        default="junior",
+                        default='junior',
                         max_length=100,
                     ),
                 ),
-                ("last_activity", models.DateTimeField(auto_now=True)),
+                ('last_activity', models.DateTimeField(auto_now=True)),
                 (
-                    "user",
+                    'user',
                     models.OneToOneField(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,
@@ -102,8 +102,8 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                "verbose_name": "theorist",
-                "verbose_name_plural": "theorists",
+                'verbose_name': 'theorist',
+                'verbose_name_plural': 'theorists',
             },
             bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
         ),

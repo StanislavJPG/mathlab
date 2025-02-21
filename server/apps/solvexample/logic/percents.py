@@ -4,14 +4,14 @@ from server.apps.solvexample.service import MathOperations
 
 
 class PercentsTemplateView(TemplateView):
-    template_name = "partials/percents.html"
+    template_name = 'partials/percents.html'
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        example = self.request.GET.get("example")
-        number = self.request.GET.get("num")
-        percent = self.request.GET.get("percent")
-        operation_type: str = self.request.GET.get("type")
+        example = self.request.GET.get('example')
+        number = self.request.GET.get('num')
+        percent = self.request.GET.get('percent')
+        operation_type: str = self.request.GET.get('type')
 
         if operation_type:
             solved_example = MathOperations(
@@ -22,11 +22,11 @@ class PercentsTemplateView(TemplateView):
 
             context.update(
                 {
-                    "example": example,
-                    "number": number,
-                    "percent": percent,
-                    "solved_example": solved_example,
-                    "operation_type": operation_type,
+                    'example': example,
+                    'number': number,
+                    'percent': percent,
+                    'solved_example': solved_example,
+                    'operation_type': operation_type,
                 }
             )
         return context

@@ -10,19 +10,19 @@ class Migration(migrations.Migration):
 
     operations = [
         migrations.CreateModel(
-            name="Message",
+            name='Message',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("message", models.TextField(max_length=500)),
-                ("sent_at", models.DateTimeField(auto_now_add=True)),
+                ('message', models.TextField(max_length=500)),
+                ('sent_at', models.DateTimeField(auto_now_add=True)),
             ],
         ),
     ]

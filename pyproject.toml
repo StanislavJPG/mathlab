@@ -85,6 +85,7 @@ django-tinymce = "^4.1.0"
 django-dynamic-filenames = "^1.4.0"
 easy-thumbnails = "^2.10"
 boringavatars = "^1.0.3"
+ruff = "^0.9.7"
 
 
 [tool.poetry.group.dev.dependencies]
@@ -95,5 +96,5 @@ django-extensions = "^3.2.3"
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"
 
-[tool.ruff.lint.flake8-quotes]
-inline-quotes = "single"
+[tool.ruff.format]
+quote-style = "single"

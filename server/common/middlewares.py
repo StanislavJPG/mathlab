@@ -10,24 +10,24 @@ from server.apps.theorist.models import Theorist
 class HTMXToastMiddleware(MiddlewareMixin):
     def process_response(self, request, response):
         messages = [
-            {"message": message.message, "tags": message.tags}
+            {'message': message.message, 'tags': message.tags}
             for message in get_messages(request)
         ]
 
         if messages:
-            existing_trigger = response.headers.get("HX-Trigger", "{}")
+            existing_trigger = response.headers.get('HX-Trigger', '{}')
             existing_data = json.loads(existing_trigger)
 
-            existing_data.setdefault("messages", []).extend(messages)
+            existing_data.setdefault('messages', []).extend(messages)
 
-            response.headers["HX-Trigger"] = json.dumps(existing_data)
+            response.headers['HX-Trigger'] = json.dumps(existing_data)
 
         return response
 
 
 class UnifiedRequestMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        if not hasattr("request", "theorist"):
+        if not hasattr('request', 'theorist'):
             request.theorist = SimpleLazyObject(lambda: self.get_theorist(request))
 
     def get_theorist(self, request):

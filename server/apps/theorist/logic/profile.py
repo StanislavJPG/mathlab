@@ -10,33 +10,33 @@ from server.common.http import AuthenticatedHttpRequest
 
 
 __all__ = (
-    "TheoristProfileDetailView",
-    "HXTheoristDetailsProfileView",
-    "TheoristLastActivitiesListView",
+    'TheoristProfileDetailView',
+    'HXTheoristDetailsProfileView',
+    'TheoristLastActivitiesListView',
 )
 
 
 class TheoristProfileDetailView(DetailView):
     model = Theorist
-    template_name = "profile/profile.html"
-    context_object_name = "theorist"
+    template_name = 'profile/profile.html'
+    context_object_name = 'theorist'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return (
-            super().get_queryset().filter(full_name_slug=self.kwargs["full_name_slug"])
+            super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
         )
 
     def dispatch(self, request, *args, **kwargs):
-        theorist = get_object_or_404(Theorist, pk=self.kwargs["pk"])
+        theorist = get_object_or_404(Theorist, pk=self.kwargs['pk'])
         valid_full_name_slug = theorist.full_name_slug
-        if valid_full_name_slug != self.kwargs["full_name_slug"]:
+        if valid_full_name_slug != self.kwargs['full_name_slug']:
             return redirect(
                 reverse(
-                    "forum:theorist_profile:base-page",
+                    'forum:theorist_profile:base-page',
                     kwargs={
-                        "pk": self.kwargs["pk"],
-                        "full_name_slug": valid_full_name_slug,
+                        'pk': self.kwargs['pk'],
+                        'full_name_slug': valid_full_name_slug,
                     },
                 )
             )
@@ -45,55 +45,55 @@ class TheoristProfileDetailView(DetailView):
 
 class HXTheoristDetailsProfileView(DetailView):
     model = Theorist
-    context_object_name = "theorist"
+    context_object_name = 'theorist'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return (
-            super().get_queryset().filter(full_name_slug=self.kwargs["full_name_slug"])
+            super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
         )
 
     def get_template_names(self):
-        section = self.kwargs.get("section")
-        if section == "about-me":
-            return "profile/partials/about_me.html"
-        elif section == "statistics":
-            return "profile/partials/statistics.html"
-        elif section == "contact-info":
-            return "profile/partials/contact_info.html"
+        section = self.kwargs.get('section')
+        if section == 'about-me':
+            return 'profile/partials/about_me.html'
+        elif section == 'statistics':
+            return 'profile/partials/statistics.html'
+        elif section == 'contact-info':
+            return 'profile/partials/contact_info.html'
 
 
 class TheoristLastActivitiesListView(ListView):
     model = Theorist
-    template_name = "profile/partials/last_activity.html"
+    template_name = 'profile/partials/last_activity.html'
     paginate_by = 5
     limit = 15  # custom attr to limit resulting activities
-    context_object_name = "activities_list"
-    slug_field = "uuid"
-    slug_url_kwarg = "uuid"
+    context_object_name = 'activities_list'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
 
     def get_queryset(self):
         qs = (
             super()
             .get_queryset()
-            .filter(uuid=self.kwargs["uuid"])
+            .filter(uuid=self.kwargs['uuid'])
             .prefetch_related(
-                "comments", "posts", "comment_likes_relations", "post_likes_relations"
+                'comments', 'posts', 'comment_likes_relations', 'post_likes_relations'
             )
         )
         obj = qs.get()
 
         posts = obj.posts.all().annotate(
-            model_name=Value("post", output_field=CharField())
+            model_name=Value('post', output_field=CharField())
         )
         post_likes = obj.post_likes_relations.all().annotate(
-            model_name=Value("post_like", output_field=CharField())
+            model_name=Value('post_like', output_field=CharField())
         )
         comments = obj.comments.all().annotate(
-            model_name=Value("comment", output_field=CharField())
+            model_name=Value('comment', output_field=CharField())
         )
         comment_likes = obj.comment_likes_relations.all().annotate(
-            model_name=Value("comment_like", output_field=CharField())
+            model_name=Value('comment_like', output_field=CharField())
         )
 
         combined_qs = chain(posts, post_likes, comments, comment_likes)
@@ -105,5 +105,5 @@ class TheoristLastActivitiesListView(ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(object_list=object_list, **kwargs)
-        context["theorist"] = Theorist.objects.get(uuid=self.kwargs["uuid"])
+        context['theorist'] = Theorist.objects.get(uuid=self.kwargs['uuid'])
         return context

@@ -17,7 +17,7 @@ class ToUserFriendlyInterface:
             full_explanation = await func(self)
             pattern = r'href\s*=\s*["\'][^"\']*["\']'
             __cleaned_full_explanation = re.sub(
-                pattern, "", str(full_explanation[0])[1:-1]
+                pattern, '', str(full_explanation[0])[1:-1]
             )
             return __cleaned_full_explanation
 

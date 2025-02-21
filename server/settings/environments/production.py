@@ -5,16 +5,16 @@ import os
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = False
 
-SECRET_KEY = os.getenv("SECRET_KEY")
+SECRET_KEY = os.getenv('SECRET_KEY')
 
-CSRF_TRUSTED_ORIGINS = [""]
+CSRF_TRUSTED_ORIGINS = ['']
 
-ALLOWED_HOSTS = [""]
+ALLOWED_HOSTS = ['']
 
 # TODO: Change by correct urls
-MEDIA_URL = "https://your-cdn.example.com/media/"
+MEDIA_URL = 'https://your-cdn.example.com/media/'
 
-STATIC_ROOT = BASE_DIR.parent / "staticfiles"
+STATIC_ROOT = BASE_DIR.parent / 'staticfiles'
 
 # static
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'

@@ -23,7 +23,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     city = models.CharField(max_length=100, null=True, blank=True)
 
     full_name_slug = models.SlugField(max_length=255, null=True, blank=True)
-    user = models.OneToOneField("users.CustomUser", on_delete=models.CASCADE)
+    user = models.OneToOneField('users.CustomUser', on_delete=models.CASCADE)
 
     # contact info urls
     social_media_url = models.URLField(max_length=225, null=True, blank=True)
@@ -42,16 +42,16 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     last_activity = models.DateTimeField(auto_now=True)  # TODO: fix or remove
 
     class Meta:
-        verbose_name = "theorist"
-        verbose_name_plural = "theorists"
+        verbose_name = 'theorist'
+        verbose_name_plural = 'theorists'
 
     def __str__(self):
-        return f"{self.full_name} | {self.__class__.__name__} | id - {self.id}"
+        return f'{self.full_name} | {self.__class__.__name__} | id - {self.id}'
 
     def get_absolute_profile_url(self):
         return reverse(
-            "forum:theorist_profile:base-page",
-            kwargs={"pk": self.pk, "slug": self.full_name_slug},
+            'forum:theorist_profile:base-page',
+            kwargs={'pk': self.pk, 'slug': self.full_name_slug},
         )
 
     def get_absolute_default_avatar_url(self):

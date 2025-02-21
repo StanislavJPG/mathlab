@@ -11,137 +11,137 @@ class Migration(migrations.Migration):
     initial = True
 
     dependencies = [
-        ("auth", "0012_alter_user_first_name_max_length"),
+        ('auth', '0012_alter_user_first_name_max_length'),
     ]
 
     operations = [
         migrations.CreateModel(
-            name="CustomUser",
+            name='CustomUser',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
-                ("password", models.CharField(max_length=128, verbose_name="password")),
+                ('password', models.CharField(max_length=128, verbose_name='password')),
                 (
-                    "last_login",
+                    'last_login',
                     models.DateTimeField(
-                        blank=True, null=True, verbose_name="last login"
+                        blank=True, null=True, verbose_name='last login'
                     ),
                 ),
                 (
-                    "is_superuser",
+                    'is_superuser',
                     models.BooleanField(
                         default=False,
-                        help_text="Designates that this user has all permissions without explicitly assigning them.",
-                        verbose_name="superuser status",
+                        help_text='Designates that this user has all permissions without explicitly assigning them.',
+                        verbose_name='superuser status',
                     ),
                 ),
                 (
-                    "is_staff",
+                    'is_staff',
                     models.BooleanField(
                         default=False,
-                        help_text="Designates whether the user can log into this admin site.",
-                        verbose_name="staff status",
+                        help_text='Designates whether the user can log into this admin site.',
+                        verbose_name='staff status',
                     ),
                 ),
                 (
-                    "is_active",
+                    'is_active',
                     models.BooleanField(
                         default=True,
-                        help_text="Designates whether this user should be treated as active. Unselect this instead of deleting accounts.",
-                        verbose_name="active",
+                        help_text='Designates whether this user should be treated as active. Unselect this instead of deleting accounts.',
+                        verbose_name='active',
                     ),
                 ),
                 (
-                    "date_joined",
+                    'date_joined',
                     models.DateTimeField(
-                        default=django.utils.timezone.now, verbose_name="date joined"
+                        default=django.utils.timezone.now, verbose_name='date joined'
                     ),
                 ),
-                ("username", models.CharField(max_length=150)),
+                ('username', models.CharField(max_length=150)),
                 (
-                    "email",
+                    'email',
                     models.EmailField(
                         blank=True,
                         max_length=254,
                         unique=True,
-                        verbose_name="email address",
+                        verbose_name='email address',
                     ),
                 ),
-                ("score", models.IntegerField(default=0, verbose_name="score")),
+                ('score', models.IntegerField(default=0, verbose_name='score')),
                 (
-                    "rank",
+                    'rank',
                     models.CharField(
                         choices=[
-                            ("1", "Учень математики"),
-                            ("2", "Олімпіадник"),
-                            ("3", "Вчитель математики"),
-                            ("4", "Гуру математики"),
-                            ("5", "Володар математики"),
+                            ('1', 'Учень математики'),
+                            ('2', 'Олімпіадник'),
+                            ('3', 'Вчитель математики'),
+                            ('4', 'Гуру математики'),
+                            ('5', 'Володар математики'),
                         ],
-                        default="1",
+                        default='1',
                         max_length=1,
-                        verbose_name="rank",
+                        verbose_name='rank',
                     ),
                 ),
                 (
-                    "groups",
+                    'groups',
                     models.ManyToManyField(
                         blank=True,
-                        help_text="The groups this user belongs to. A user will get all permissions granted to each of their groups.",
-                        related_name="user_set",
-                        related_query_name="user",
-                        to="auth.group",
-                        verbose_name="groups",
+                        help_text='The groups this user belongs to. A user will get all permissions granted to each of their groups.',
+                        related_name='user_set',
+                        related_query_name='user',
+                        to='auth.group',
+                        verbose_name='groups',
                     ),
                 ),
                 (
-                    "user_permissions",
+                    'user_permissions',
                     models.ManyToManyField(
                         blank=True,
-                        help_text="Specific permissions for this user.",
-                        related_name="user_set",
-                        related_query_name="user",
-                        to="auth.permission",
-                        verbose_name="user permissions",
+                        help_text='Specific permissions for this user.',
+                        related_name='user_set',
+                        related_query_name='user',
+                        to='auth.permission',
+                        verbose_name='user permissions',
                     ),
                 ),
             ],
             options={
-                "verbose_name": "user",
-                "verbose_name_plural": "users",
-                "ordering": ("username",),
+                'verbose_name': 'user',
+                'verbose_name_plural': 'users',
+                'ordering': ('username',),
             },
             managers=[
-                ("objects", django.contrib.auth.models.UserManager()),
+                ('objects', django.contrib.auth.models.UserManager()),
             ],
         ),
         migrations.CreateModel(
-            name="ProfileImage",
+            name='ProfileImage',
             fields=[
                 (
-                    "id",
+                    'id',
                     models.BigAutoField(
                         auto_created=True,
                         primary_key=True,
                         serialize=False,
-                        verbose_name="ID",
+                        verbose_name='ID',
                     ),
                 ),
                 (
-                    "image",
+                    'image',
                     models.ImageField(
-                        blank=True, upload_to="mathlab/templates/static/profile_pics"
+                        blank=True, upload_to='mathlab/templates/static/profile_pics'
                     ),
                 ),
                 (
-                    "user",
+                    'user',
                     models.OneToOneField(
                         on_delete=django.db.models.deletion.CASCADE,
                         to=settings.AUTH_USER_MODEL,

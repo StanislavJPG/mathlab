@@ -12,10 +12,10 @@ def let_find_news():
     try:
         for title in titles:
             MathNews.objects.create(
-                title=title["title"],
-                new_url=title["new_url"],
-                posted=title["posted"],
-                additional_info=title["add_info"],
+                title=title['title'],
+                new_url=title['new_url'],
+                posted=title['posted'],
+                additional_info=title['add_info'],
             )
         return status.HTTP_201_CREATED
     except IntegrityError:

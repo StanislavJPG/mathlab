@@ -24,6 +24,12 @@
 {% include 'partials/toasts.html' %}
 {% include 'partials/forum/forum_navbar.html' %}
 
+{% block extended_css %}
+{% endblock extended_css %}
+
+{% block page_css %}
+{% endblock page_css %}
+
 <head>
   <meta charset="UTF-8">
   {% block page_head %}
@@ -31,9 +37,6 @@
     <title>MathLab | Форум</title>
   {% endblock page_head %}
 </head>
-
-{% block page_css %}
-{% endblock page_css %}
 
 <link type="text/css" href="{% static 'css/common/default_grid.css' %}" rel="stylesheet">
 
@@ -47,6 +50,9 @@
 
 {% block page_js %}
 {% endblock page_js %}
+
+{% block extended_js %}
+{% endblock extended_js %}
 
 <script>
     $(document).ready(function () {

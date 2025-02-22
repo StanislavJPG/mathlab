@@ -24,9 +24,6 @@ from .celery import *  # noqa: F403
 BASE_DIR = Path(__file__).resolve().parent.parent
 
 
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
-
 load_dotenv()
 DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 
@@ -124,11 +121,8 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
-
-SITE_ID = 1
 
 AUTH_PASSWORD_VALIDATORS = [
     {
@@ -154,7 +148,11 @@ AUTHENTICATION_BACKENDS = [
 
 SOCIALACCOUNT_PROVIDERS = {
     'google': {
-        'FETCH_USERINFO': True,
+        'APP': {
+            'client_id': os.getenv('GOOGLE_AUTH_WEB_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_AUTH_WEB_CLIENT_SECRET'),
+            'key': '',
+        },
         'SCOPE': [
             'profile',
             'email',
@@ -162,19 +160,26 @@ SOCIALACCOUNT_PROVIDERS = {
         'AUTH_PARAMS': {
             'access_type': 'offline',
         },
+        'OAUTH_PKCE_ENABLED': True,
     }
 }
+
+SOCIALACCOUNT_AUTO_SIGNUP = False
+SOCIALACCOUNT_FORMS = {'signup': 'users.forms.CustomSignupForm'}
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('forum:post-list')
 LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
 
+SITE_ID = 1
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
 LANGUAGES = [
+    ('en', 'English'),
     ('uk', 'Ukrainian'),
 ]
 USE_I18N = True

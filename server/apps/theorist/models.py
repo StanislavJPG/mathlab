@@ -51,7 +51,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     def get_absolute_profile_url(self):
         return reverse(
             'forum:theorist_profile:base-page',
-            kwargs={'pk': self.pk, 'slug': self.full_name_slug},
+            kwargs={'pk': self.pk, 'full_name_slug': self.full_name_slug},
         )
 
     def get_absolute_default_avatar_url(self):

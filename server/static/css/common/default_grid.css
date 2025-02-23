@@ -18,10 +18,6 @@ body > .container {
 }
 
 @media (max-width: 980px) {
-    body > .container {
-        padding-top: 0;
-    }
-
     .navbar-fixed-top {
         margin-bottom: 0;
     }

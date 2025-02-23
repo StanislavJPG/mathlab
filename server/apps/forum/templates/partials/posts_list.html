@@ -6,7 +6,7 @@
     <h1 class="display-4 me-3">{% translate 'Last topics' %}</h1>
     <div class="mt-2">
       <a type="submit"
-         href="{% if user.is_authenticated %}{% url 'forum:post-create' %}{% else %}{% url 'login_view' %}{% endif %}"
+         href="{% if user.is_authenticated %}{% url 'forum:post-create' %}{% else %}{% url 'users:base-auth' %}?signup=true{% endif %}"
          class="btn btn-outline-dark me-2">{% translate 'Ask your question' %}</a>
       <div class="btn-group dropend">
         <div class="dropdown">

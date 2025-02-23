@@ -10,7 +10,7 @@ build:
 	docker-compose build
 
 web:
-	docker compose run --rm web bash
+	docker-compose run --rm web bash
 
 # for translation
 makemessages:

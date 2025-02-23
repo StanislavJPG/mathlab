@@ -42,6 +42,8 @@
 
 <body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body %}
+  {% block additional %}
+  {% endblock additional %}
 {% endblock body %}
 
 {% include 'partials/footer.html' %}

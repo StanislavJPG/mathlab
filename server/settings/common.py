@@ -164,8 +164,12 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
+# ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'email'}
+
 SOCIALACCOUNT_AUTO_SIGNUP = False
-SOCIALACCOUNT_FORMS = {'signup': 'users.forms.CustomSignupForm'}
+# SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 

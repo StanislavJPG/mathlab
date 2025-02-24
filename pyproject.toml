@@ -86,6 +86,7 @@ django-dynamic-filenames = "^1.4.0"
 easy-thumbnails = "^2.10"
 boringavatars = "^1.0.3"
 ruff = "^0.9.7"
+django-countries = {extras = ["pyuca"], version = "^7.6.1"}
 
 
 [tool.poetry.group.dev.dependencies]

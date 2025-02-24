@@ -19,6 +19,9 @@
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
 <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@1.74.0/icons-react/dist/index.umd.min.js"></script>
 
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+
 <link rel="icon" type="image/x-icon" href="{% static 'img/forum/forum-favicon.png' %}">
 
 {% include 'partials/toasts.html' %}
@@ -55,6 +58,8 @@
 
 {% block extended_js %}
 {% endblock extended_js %}
+
+<script src="{% static 'js/htmx_sweetalert.js' %}"></script>
 
 <script>
     $(document).ready(function () {

@@ -16,6 +16,8 @@ from pathlib import Path
 import os
 
 from django.urls import reverse_lazy
+from django.contrib.messages import constants as messages
+
 from dotenv import load_dotenv
 
 from .celery import *  # noqa: F403
@@ -47,6 +49,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'tinymce',
     'easy_thumbnails',
+    'django_countries',
     # common
     'server.common',
     # apps
@@ -80,6 +83,7 @@ MIDDLEWARE = [
     # custom middlewares
     'server.common.middlewares.HTMXToastMiddleware',
     'server.common.middlewares.UnifiedRequestMiddleware',
+    'server.common.middlewares.OnboardingMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls.urls'
@@ -164,17 +168,26 @@ SOCIALACCOUNT_PROVIDERS = {
     }
 }
 
-# ACCOUNT_ADAPTER = 'users.adapters.AccountAdapter'
+ACCOUNT_ADAPTER = 'server.apps.users.adapters.AccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_METHODS = {'email'}
+# ACCOUNT_FORMS = {
+#     'signup': 'server.apps.users.forms.UserLoginForm',
+# }
+# SOCIALACCOUNT_FORMS = {
+#     'signup': 'server.apps.users.forms.UserLoginForm',
+# }
 
-SOCIALACCOUNT_AUTO_SIGNUP = False
-# SOCIALACCOUNT_ADAPTER = 'users.adapters.SocialAccountAdapter'
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: CHANGE
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'
 
 AUTH_USER_MODEL = 'users.CustomUser'
 
-ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('forum:post-list')
+ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
 LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:post-list')
 
 SITE_ID = 1
 
@@ -220,6 +233,8 @@ TINYMCE_DEFAULT_CONFIG = {
     'alignright alignjustify | bullist numlist outdent indent | '
     'removeformat | help',
 }
+
+MESSAGE_TAGS = {messages.ERROR: 'danger', messages.SUCCESS: 'success'}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

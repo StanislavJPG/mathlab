@@ -2,6 +2,8 @@ from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
 
+from server.apps.theorist.models import Theorist
+
 
 class CustomUser(AbstractUser):
     first_name = None
@@ -14,6 +16,10 @@ class CustomUser(AbstractUser):
 
     def __str__(self):
         return f'{self.email} | {self.__class__.__name__} | id - {self.id}'
+
+    def create_initial_theorist(self):
+        if not hasattr(self, 'theorist'):
+            return Theorist.objects.create(full_name=self.username, user=self)
 
     # def update_rank(self):
     #     if self.score < 50:

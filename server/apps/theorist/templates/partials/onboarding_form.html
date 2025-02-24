@@ -1,0 +1,97 @@
+{% load widened_widget_tweaks widget_tweaks %}
+{% load static i18n allauth account socialaccount %}
+
+<style>
+    .btn {
+        box-shadow: none !important;
+    }
+
+    .bootstrap-select > .dropdown-toggle {
+        border: 1px solid !important;
+        border-radius: 0.25rem !important;
+        border-color: rgb(79, 79, 79);
+    }
+
+    .form-outline .default {
+        padding-left: unset !important;
+        padding-right: unset !important;
+    }
+</style>
+
+<div class="position-relative mb-5" style="width: 100%">
+  <div class="progress" style="height: 1px">
+    <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0"
+      aria-valuemax="100"></div>
+  </div>
+  <button type="button"
+    class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-secondary rounded-pill"
+    style="width: 3rem; height: 3rem">
+    1
+  </button>
+  <button type="button"
+    class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary rounded-pill"
+    style="width: 3rem; height: 3rem">
+    2
+  </button>
+</div>
+
+<h2 class="fw-bold mb-5"><i class="ti ti-home-question"></i> {% translate 'Your profile data' %}</h2>
+<form hx-post="{% url 'theorist_onboarding:hx-onboard-view' request.theorist.uuid %}" class="needs-validation">
+
+  <div class="form-outline mb-4">
+    {% render_field form.country|add_bootstrap_validation_classes class="selectpicker form-control default" data-style="btn-default" data-live-search="true" %}
+    {% render_field_errors form.country class_="text-start text-danger mb-2" %}
+  </div>
+
+  <div data-mdb-input-init class="form-outline mb-4">
+    {% render_field form.social_media_url|add_bootstrap_validation_classes class="form-control" %}
+    {% render_field_errors form.social_media_url class_="invalid-feedback" %}
+  </div>
+
+  <div data-mdb-input-init class="form-outline mb-4">
+    {% render_field form.website_url|add_bootstrap_validation_classes class="form-control" %}
+    {% render_field_errors form.website_url class_="invalid-feedback" %}
+  </div>
+
+  <!-- Checkbox -->
+  <div class="form-check d-flex justify-content-center mb-4">
+    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked/>
+    <label class="form-check-label" for="form2Example33">
+      Subscribe to our newsletter
+    </label>
+  </div>
+
+  <!-- Submit button -->
+  <button type="submit" class="btn btn-primary btn-block mb-4">
+    {% translate 'Finish registration' %}
+  </button>
+
+</form>
+
+<!-- Font Awesome -->
+<link
+    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    rel="stylesheet"
+/>
+<!-- Google Fonts -->
+<link
+    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+    rel="stylesheet"
+/>
+<!-- MDB -->
+<link
+    href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/css/mdb.min.css"
+    rel="stylesheet"
+/>
+<!-- MDB -->
+<script
+    type="text/javascript"
+    src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/js/mdb.umd.min.js"
+></script>
+
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+
+</script>

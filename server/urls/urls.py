@@ -18,6 +18,7 @@ urlpatterns = [
     # nested apps urls
     path('mathlab/', include('server.urls.mathlab_urls')),  # this is the main app for math operations
     path('forum/', include('server.urls.forum_urls')),  # math forum
+    path('theorist/onboarding/', include('server.apps.theorist.urls.onboarding_urls')),  # theorist onboarding urls
     path('', include('server.apps.users.urls')),  # for auth purposes
 ]
 

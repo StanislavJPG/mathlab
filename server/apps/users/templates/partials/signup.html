@@ -44,13 +44,15 @@
     {% render_field form.password2|add_bootstrap_validation_classes class="form-control" %}
   </div>
 
-  <ul class="alert alert-danger">
-    {% for field in form %}
-      {% for error in field.errors %}
-        <li>{{ error|escape }}</li>
+  {% if form.errors %}
+    <ul class="alert alert-danger">
+      {% for field in form %}
+        {% for error in field.errors %}
+          <li>{{ error|escape }}</li>
+        {% endfor %}
       {% endfor %}
-    {% endfor %}
-  </ul>
+    </ul>
+  {% endif %}
 
   <button type="submit" class="btn btn-primary btn-block mb-3">
     {% translate 'Sign in' %}

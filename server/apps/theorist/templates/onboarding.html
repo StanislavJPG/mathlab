@@ -1,0 +1,29 @@
+{% extends 'base/forum_base.html' %}
+{% load widened_widget_tweaks widget_tweaks %}
+{% load static i18n allauth account socialaccount %}
+
+
+{% block body %}
+  <!-- Section: Design Block -->
+  <section class="text-center">
+    <!-- Background image -->
+    <div class="p-5 bg-image" style="
+        background-image: url('https://mdbootstrap.com/img/new/textures/full/171.jpg');
+        height: 300px;
+        "></div>
+    <!-- Background image -->
+
+    <div class="card mx-4 mx-md-5 shadow-5-strong bg-body-tertiary" style="
+        margin-top: -100px;
+        backdrop-filter: blur(30px);
+        ">
+      <div class="card-body py-5 px-md-5">
+
+        <div class="row d-flex justify-content-center">
+          <div class="col-lg-8" hx-get="{% url 'theorist_onboarding:hx-onboard-view' request.theorist.uuid %}" hx-trigger="load" hx-target="this"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+  <!-- Section: Design Block -->
+{% endblock body %}

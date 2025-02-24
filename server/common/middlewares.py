@@ -1,6 +1,8 @@
 import json
 
 from django.contrib.messages import get_messages
+from django.shortcuts import redirect
+from django.urls import reverse
 from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 
@@ -31,3 +33,16 @@ class UnifiedRequestMiddleware(MiddlewareMixin):
         if request.user.is_authenticated:
             return Theorist.objects.filter(user=request.user).first()
         return None
+
+
+class OnboardingMiddleware(MiddlewareMixin):
+    """Theorist will always be redirected to the onboarding page if he is not onboarded yet."""
+
+    def process_request(self, request):
+        if (
+            request.user.is_authenticated
+            and not request.user.is_superuser
+            and not request.theorist.is_onboarded
+            and 'onboarding' not in request.path
+        ):
+            return redirect(reverse('theorist_onboarding:base-page'))

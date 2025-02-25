@@ -1,5 +1,8 @@
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+from django_countries.fields import CountryField
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
 
@@ -20,7 +23,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
 
     # personal info
     full_name = models.CharField(max_length=150)
-    city = models.CharField(max_length=100, null=True, blank=True)
+    country = CountryField(blank_label=_('Country'), null=True)
 
     full_name_slug = models.SlugField(max_length=255, null=True, blank=True)
     user = models.OneToOneField('users.CustomUser', on_delete=models.CASCADE)
@@ -39,6 +42,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
         default=PredefinedRankChoices.JUNIOR,
     )
 
+    is_onboarded = models.BooleanField(default=False)
+    onboarding_date = models.DateTimeField(null=True)
+
     last_activity = models.DateTimeField(auto_now=True)  # TODO: fix or remove
 
     class Meta:
@@ -51,13 +57,18 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     def get_absolute_profile_url(self):
         return reverse(
             'forum:theorist_profile:base-page',
-            kwargs={'pk': self.pk, 'slug': self.full_name_slug},
+            kwargs={'pk': self.pk, 'full_name_slug': self.full_name_slug},
         )
 
-    def get_absolute_default_avatar_url(self):
+    def get_default_avatar_url(self):
         return None  # TODO: Add view with boringavatars URL
 
     @hook(BEFORE_SAVE)
     def before_save(self):
         slug = slugify(self.full_name)
         self.full_name_slug = slug
+
+    def apply_default_onboarding_data(self):
+        # use .save() outside explicitly
+        self.is_onboarded = True
+        self.onboarding_date = timezone.now()

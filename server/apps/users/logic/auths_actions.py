@@ -1,111 +1,58 @@
-from django.contrib.auth import authenticate, login, logout
-from django.contrib.auth.views import PasswordResetView
-from django.contrib.messages.views import SuccessMessageMixin
-from django.core.cache import cache
-from django.http import HttpResponseRedirect
-from django.shortcuts import render
-from django.urls import reverse_lazy, reverse
+from django.urls import reverse
+from django.views.generic import TemplateView
+from django.utils.translation import gettext_lazy as _
 
-from rest_framework.authtoken.models import Token
-from rest_framework.permissions import (
-    IsAuthenticated,
-    AllowAny,
-)
-from rest_framework.views import APIView
+from allauth.account.views import LoginView, SignupView, LogoutView, PasswordResetView
 
-from server.apps.users.models import CustomUser as User
+from braces.views import FormMessagesMixin
+
+from django_htmx.http import HttpResponseClientRedirect
 
 
-class Register(APIView):
-    permission_classes = [AllowAny]
-
-    def get(self, request):
-        return render(request, 'auth/registration.html')
-
-    def post(self, request):
-        email = request.POST.get('email')
-        username = request.POST.get('username')
-        password = request.POST.get('password')
-
-        user_by_email = User.objects.filter(email=email).first()
-        user_by_name = User.objects.filter(username=username).first()
-
-        if user_by_email or user_by_name:
-            return render(
-                request,
-                'auth/registration.html',
-                context={'error_msg': 'Користувач з цією поштою або нікнеймом вже зареєстрований.'},
-            )
-
-        created_user = User.objects.create_user(username=username, email=email, password=password)
-        Token.objects.create(user=created_user)
-
-        auth_creds = authenticate(request, email=email, password=password)
-        login(request, auth_creds)
-
-        return HttpResponseRedirect(reverse('base-redirect'))
+class CustomBaseAuthenticationView(TemplateView):
+    template_name = 'base_auth_site.html'
 
 
-class Login(APIView):
-    permission_classes = [AllowAny]
+class CustomLoginView(FormMessagesMixin, LoginView):
+    template_name = 'partials/login.html'
+    form_valid_message = _('You have logged in successfully.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
 
-    def get(self, request):
-        return render(request, 'auth/login.html')
-
-    def post(self, request):
-        email = request.POST.get('email')
-        password = request.POST.get('password')
-        user = User.objects.filter(email=email).first()
-
-        if not user:
-            return render(
-                request,
-                'auth/login.html',
-                context={'error_msg': 'Цього користувача не існує.'},
-            )
-
-        if not user.check_password(password):
-            return render(
-                request,
-                'auth/login.html',
-                context={'error_msg': 'Перевірте правильність введеного паролю.'},
-            )
-
-        auth_creds = authenticate(request, email=email, password=password)
-        login(request, auth_creds)
-        cache.clear()
-
-        return HttpResponseRedirect(reverse('base-redirect'))
+    def form_valid(self, form):
+        super().form_valid(form)
+        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        return response
 
 
-class Logout(APIView):
-    permission_classes = [IsAuthenticated]
+class CustomSignUpView(FormMessagesMixin, SignupView):
+    template_name = 'partials/signup.html'
+    form_valid_message = _('You have registered successfully.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
 
-    def get(self, request):
-        # image_serializer = ProfileSerializer.get_profile_image(user_pk=request.user.id)
-
-        return render(
-            request,
-            'auth/logout.html',
-        )
-
-    def post(self, request):
-        logout(request)
-        cache.clear()
-
-        return HttpResponseRedirect(reverse('base-redirect'))
+    def form_valid(self, form):
+        super().form_valid(form)
+        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        return response
 
 
-class ResetPassword(SuccessMessageMixin, PasswordResetView):
-    template_name = 'auth/password_reset.html'
-    email_template_name = 'auth/password_reset_email.html'
+class CustomLogoutUpView(FormMessagesMixin, LogoutView):
+    form_valid_message = _('You are successfully logout.')
+    form_invalid_message = _('Error. Please, check for errors existing and try again.')
 
-    success_message = (
-        'Ми відправили вам інструкції щодо налаштування вашого пароля,'
-        'якщо обліковий запис існує з введеною вами електронною адресою.'
-        'Ви повинні отримати їх незабаром.'
-        'Якщо ви не отримаєте електронного листа, будь ласка, переконайтеся,'
-        'що ви ввели адресу, з якою зареєстровані, або ж перевірте папку Спам.'
-    )
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        return HttpResponseClientRedirect(reverse('forum:post-list'))  # for HTMX purposes
 
-    success_url = reverse_lazy('base-redirect')
+
+class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):
+    template_name = 'partials/password_reset.html'
+    form_valid_message = _('You have registered successfully.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        response = HttpResponseClientRedirect(reverse('users:login'))
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        return response

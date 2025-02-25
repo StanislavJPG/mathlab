@@ -1,4 +1,4 @@
-{% load static %}
+{% load static i18n %}
 
 <header class="p-3 mb-3 border-bottom" style="padding: 0.5rem !important;">
   <div class="container">
@@ -14,7 +14,7 @@
         {% if user.is_authenticated %}
           <li><a href="{% url 'forum:post-create' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
         {% else %}
-          <li><a href="{% url 'login_view' %}" class="nav-link px-2 link-dark">Нове обговорення</a></li>
+          <li><a href="{% url 'users:base-auth' %}?signup=true" class="nav-link px-2 link-dark">Нове обговорення</a></li>
         {% endif %}
       </ul>
       {% if user.is_authenticated %}
@@ -53,13 +53,18 @@
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{% url 'logout_view' %}">Вийти з профілю</a></li>
+            <li><a class="dropdown-item" href="javascript:(0);" 
+                   hx-post="{% url 'users:logout-view' %}"
+                   hx-confirm="{% translate 'Are you sure?' %}">
+              Вийти з профілю
+            </a>
+            </li>
           {% else %}
-            <li><a class="dropdown-item" href="{% url 'login_view' %}">Задати питання...</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}?signup=true">Задати питання...</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{% url 'login_view' %}">Увійти</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}">Увійти</a></li>
           {% endif %}
         </ul>
       </div>

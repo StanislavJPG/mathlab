@@ -1,0 +1,88 @@
+{% extends 'base/forum_base.html' %}
+{% load static i18n %}
+
+{% block extended_css %}
+  <style>
+      section {
+          background-image: url("{% static 'img/accounts/auth/auth-background.png' %}");
+          background-size: cover;
+      }
+  </style>
+{% endblock extended_css %}
+
+{% block extended_js %}
+  <!-- Font Awesome -->
+  <link
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+      rel="stylesheet"
+  />
+  <!-- Google Fonts -->
+  <link
+      href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
+      rel="stylesheet"
+  />
+  <!-- MDB -->
+  <link
+      href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/css/mdb.min.css"
+      rel="stylesheet"
+  />
+  <!-- MDB -->
+  <script
+      type="text/javascript"
+      src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/js/mdb.umd.min.js"
+  ></script>
+{% endblock extended_js %}
+
+
+{% block body %}
+<section class="vh-100">
+  <div class="container py-5 h-100">
+    <div class="row d-flex align-items-center justify-content-center h-100">
+      <div class="card bg-light border border-dark p-5 col-md-7 col-lg-5 col-xl-5 offset-xl-1 mx-auto">
+        {% block additional %}
+        <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+          <li class="nav-item" role="presentation">
+            <a class="nav-link {% if not request.GET.signup %}active{% endif %}" id="tab-login"
+               data-mdb-pill-init
+               href="#pills-login"
+               hx-get="{% url 'users:login-view' %}"
+               hx-target="#pills-login"
+               hx-trigger="{% if not request.GET.signup %}load once, {% endif %}click once"
+               role="tab"
+              aria-controls="pills-login" aria-selected="{% if not request.GET.signup %}true{% else %}false{% endif %}">Login</a>
+          </li>
+          <li class="nav-item" role="presentation">
+            <a class="nav-link {% if request.GET.signup %}active{% endif %}" id="tab-register"
+               data-mdb-pill-init
+               href="#pills-register"
+               hx-get="{% url 'users:register-view' %}"
+               hx-target="#pills-register"
+               hx-trigger="{% if request.GET.signup %}load once, {% endif %}click once"
+               role="tab"
+              aria-controls="pills-register" aria-selected="{% if request.GET.signup %}true{% else %}false{% endif %}">Register</a>
+          </li>
+        </ul>
+        <!-- Pills navs -->
+
+        <!-- Pills content -->
+        <div class="tab-content">
+          <div class="tab-pane fade {% if not request.GET.login %}show active{% endif %}" 
+               id="pills-login" 
+               role="tabpanel" 
+               hx-target="this" 
+               aria-labelledby="tab-login">
+          </div>
+
+          <div class="tab-pane fade {% if request.GET.signup %}show active{% endif %}" 
+               id="pills-register" 
+               role="tabpanel"
+               hx-target="this"
+               aria-labelledby="tab-register">
+          </div>
+        </div>
+        {% endblock additional %}
+      </div>
+    </div>
+  </div>
+</section>
+{% endblock body %}

@@ -1,31 +1,31 @@
 {% load static i18n %}
 
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-5">
     <i class="ti ti-scoreboard"></i>
     <span class="mb-0">{% translate 'Score' %}</span>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-7">
     <p class="text-muted mb-0">{{ theorist.score }}</p>
   </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-5">
     <i class="ti ti-inbox"></i>
     <span class="mb-0">{% translate 'Posts quantity' %}</span>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-7">
     <p class="text-muted mb-0">{{ theorist.total_posts }}</p>
   </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-3">
+  <div class="col-sm-5">
     <i class="ti ti-message"></i>
     <span class="mb-0">{% translate 'Comments quantity' %}</span>
   </div>
-  <div class="col-sm-9">
+  <div class="col-sm-7">
     <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
   </div>
 </div>

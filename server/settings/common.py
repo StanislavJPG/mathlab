@@ -15,6 +15,9 @@ import sys
 from pathlib import Path
 import os
 
+from django.urls import reverse_lazy
+from django.contrib.messages import constants as messages
+
 from dotenv import load_dotenv
 
 from .celery import *  # noqa: F403
@@ -22,9 +25,6 @@ from .celery import *  # noqa: F403
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-
-# Quick-start development settings - unsuitable for production
-# See https://docs.djangoproject.com/en/5.0/howto/deployment/checklist/
 
 load_dotenv()
 DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
@@ -41,10 +41,15 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     # installed packages
+    'allauth',
+    'allauth.account',
+    'allauth.socialaccount',
+    'allauth.socialaccount.providers.google',
     'channels',
     'widget_tweaks',
     'tinymce',
     'easy_thumbnails',
+    'django_countries',
     # common
     'server.common',
     # apps
@@ -61,8 +66,6 @@ INSTALLED_APPS = [
 ]
 
 
-SWAGGER_SETTINGS = {'SECURITY_DEFINITIONS': {'Basic': {'type': 'basic'}}}
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -73,11 +76,14 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.middleware.locale.LocaleMiddleware',
+    # installed packages
+    'allauth.account.middleware.AccountMiddleware',
     'whitenoise.middleware.WhiteNoiseMiddleware',
     'django_htmx.middleware.HtmxMiddleware',
     # custom middlewares
     'server.common.middlewares.HTMXToastMiddleware',
     'server.common.middlewares.UnifiedRequestMiddleware',
+    'server.common.middlewares.OnboardingMiddleware',
 ]
 
 ROOT_URLCONF = 'server.urls.urls'
@@ -85,7 +91,7 @@ ROOT_URLCONF = 'server.urls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/allauth/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -119,7 +125,6 @@ DATABASES = {
     }
 }
 
-
 # Password validation
 # https://docs.djangoproject.com/en/5.0/ref/settings/#auth-password-validators
 
@@ -138,11 +143,62 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+AUTHENTICATION_BACKENDS = [
+    # Needed to login by username in Django admin, regardless of `allauth`
+    'django.contrib.auth.backends.ModelBackend',
+    # `allauth` specific authentication methods, such as login by email
+    'allauth.account.auth_backends.AuthenticationBackend',
+]
+
+SOCIALACCOUNT_PROVIDERS = {
+    'google': {
+        'APP': {
+            'client_id': os.getenv('GOOGLE_AUTH_WEB_CLIENT_ID'),
+            'secret': os.getenv('GOOGLE_AUTH_WEB_CLIENT_SECRET'),
+            'key': '',
+        },
+        'SCOPE': [
+            'profile',
+            'email',
+        ],
+        'AUTH_PARAMS': {
+            'access_type': 'offline',
+        },
+        'OAUTH_PKCE_ENABLED': True,
+    }
+}
+
+ACCOUNT_ADAPTER = 'server.apps.users.adapters.AccountAdapter'
+ACCOUNT_EMAIL_REQUIRED = True
+ACCOUNT_LOGIN_METHODS = {'email'}
+# ACCOUNT_FORMS = {
+#     'signup': 'server.apps.users.forms.UserLoginForm',
+# }
+# SOCIALACCOUNT_FORMS = {
+#     'signup': 'server.apps.users.forms.UserLoginForm',
+# }
+
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: CHANGE
+
+SOCIALACCOUNT_AUTO_SIGNUP = True
+SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'
+
+AUTH_USER_MODEL = 'users.CustomUser'
+
+ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
+LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:post-list')
+
+SITE_ID = 1
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 
 LANGUAGE_CODE = 'uk'
+LANGUAGES = [
+    ('en', 'English'),
+    ('uk', 'Ukrainian'),
+]
 USE_I18N = True
 USE_TZ = True
 
@@ -178,7 +234,7 @@ TINYMCE_DEFAULT_CONFIG = {
     'removeformat | help',
 }
 
-AUTH_USER_MODEL = 'users.CustomUser'
+MESSAGE_TAGS = {messages.ERROR: 'danger', messages.SUCCESS: 'success'}
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

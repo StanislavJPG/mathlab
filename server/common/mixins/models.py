@@ -42,10 +42,10 @@ class AvatarModelMixin(models.Model):
     class Meta:
         abstract = True
 
-    def get_absolute_default_avatar_url(self):
+    def get_default_avatar_url(self):
         """Returns default avatar's URL by unique identifier"""
         raise NotImplementedError(
-            f'You need to specify a get_absolute_default_avatar_url method in your {self.__class__.__name__} model'
+            f'You need to specify a get_default_avatar_url method in your {self.__class__.__name__} model'
         )
 
     def html_tag_avatar(self, size: tuple[int, int] = None, square: bool = None) -> str:
@@ -66,9 +66,7 @@ class AvatarModelMixin(models.Model):
             )
             avatar_url = thumbnail.url
         else:
-            avatar_url = (
-                self.get_absolute_default_avatar_url() + f'?size={size[0]}&square={"true" if square else "false"}'
-            )
+            avatar_url = self.get_default_avatar_url() + f'?size={size[0]}&square={"true" if square else "false"}'
 
         return (
             f'<img src="{avatar_url}" width="{size[0]}" height="{size[1]}" '

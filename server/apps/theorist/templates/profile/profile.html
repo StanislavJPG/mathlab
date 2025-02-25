@@ -35,7 +35,10 @@
                   </p>
                 {% endif %}
               </form>
-              <h5 class="my-3">{{ theorist.full_name }}</h5>
+              <h5 class="my-3">
+                <img alt="country_flag" src="{{ theorist.country.flag }}"> 
+                {{ theorist.full_name }}
+              </h5>
               <div style="margin-bottom: 1rem !important;">
                 <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
               </div>

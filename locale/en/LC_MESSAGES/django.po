@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 01:04+0200\n"
+"POT-Creation-Date: 2025-02-25 11:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -100,6 +100,8 @@ msgid "Your comment has been added."
 msgstr ""
 
 #: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+#: server/apps/theorist/logic/onboarding.py
+#: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check your input and try again."
 msgstr ""
 
@@ -167,6 +169,7 @@ msgid "Modified at"
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/templates/partials/forum/forum_navbar.html
 msgid "Are you sure?"
 msgstr ""
 
@@ -266,16 +269,36 @@ msgstr ""
 msgid "Lord of mathematics"
 msgstr ""
 
+#: server/apps/theorist/forms.py
+msgid "Social media url (optional)"
+msgstr ""
+
+#: server/apps/theorist/forms.py
+msgid "Website url (optional)"
+msgstr ""
+
+#: server/apps/theorist/logic/onboarding.py
+msgid "You successfully registered!"
+msgstr ""
+
+#: server/apps/theorist/models.py
+msgid "Country"
+msgstr ""
+
+#: server/apps/theorist/templates/partials/onboarding_form.html
+msgid "Your profile data"
+msgstr ""
+
+#: server/apps/theorist/templates/partials/onboarding_form.html
+msgid "Finish registration"
+msgstr ""
+
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Nickname"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Rank"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/about_me.html
-msgid "City"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
@@ -344,6 +367,68 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Contact info"
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have logged in successfully."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have registered successfully."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You are successfully logout."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "Error. Please, check for errors existing and try again."
+msgstr ""
+
+#: server/apps/users/models.py
+msgid "user"
+msgstr ""
+
+#: server/apps/users/models.py
+msgid "users"
+msgstr ""
+
+#: server/apps/users/templates/base_auth_site.html
+msgid "Login"
+msgstr ""
+
+#: server/apps/users/templates/base_auth_site.html
+msgid "Register"
+msgstr ""
+
+#: server/apps/users/templates/partials/login.html
+msgid "Remember me?"
+msgstr ""
+
+#: server/apps/users/templates/partials/login.html
+msgid "Forgot password?"
+msgstr ""
+
+#: server/apps/users/templates/partials/login.html
+msgid "Log in"
+msgstr ""
+
+#: server/apps/users/templates/partials/login.html
+#: server/apps/users/templates/partials/signup.html
+msgid "Or"
+msgstr ""
+
+#: server/apps/users/templates/partials/login.html
+#: server/apps/users/templates/partials/signup.html
+msgid "Continue with Google"
+msgstr ""
+
+#: server/apps/users/templates/partials/password_reset.html
+msgid "Reset password"
+msgstr ""
+
+#: server/apps/users/templates/partials/signup.html
+msgid "Sign in"
 msgstr ""
 
 #: server/templates/common/pagination.html

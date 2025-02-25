@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-21 01:04+0200\n"
+"POT-Creation-Date: 2025-02-25 11:34+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,6 +93,7 @@ msgid "Question topic (maximum 85 characters)"
 msgstr "Тема питання (не більше 85 символів)"
 
 #: server/apps/forum/forms.py
+#, python-format
 msgid "You cannot choose more then %s categories."
 msgstr "Ви не можете вибрати більше %s категорій."
 
@@ -101,6 +102,8 @@ msgid "Your comment has been added."
 msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+#: server/apps/theorist/logic/onboarding.py
+#: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check your input and try again."
 msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
 
@@ -170,6 +173,7 @@ msgid "Modified at"
 msgstr "Модифіковано о"
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/templates/partials/forum/forum_navbar.html
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
 
@@ -272,6 +276,30 @@ msgstr "Гуру математики"
 msgid "Lord of mathematics"
 msgstr "Володар математики"
 
+#: server/apps/theorist/forms.py
+msgid "Social media url (optional)"
+msgstr "Посилання на соц.мережі (опціонально)"
+
+#: server/apps/theorist/forms.py
+msgid "Website url (optional)"
+msgstr "Посилання на веб-сайт (опціонально)"
+
+#: server/apps/theorist/logic/onboarding.py
+msgid "You successfully registered!"
+msgstr "Ви успішно зареєструвались!"
+
+#: server/apps/theorist/models.py
+msgid "Country"
+msgstr "Країна"
+
+#: server/apps/theorist/templates/partials/onboarding_form.html
+msgid "Your profile data"
+msgstr "Дані вашого профілю"
+
+#: server/apps/theorist/templates/partials/onboarding_form.html
+msgid "Finish registration"
+msgstr "Завершити реєстрацію"
+
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Nickname"
 msgstr "Нікнейм"
@@ -279,10 +307,6 @@ msgstr "Нікнейм"
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Rank"
 msgstr "Ранг"
-
-#: server/apps/theorist/templates/profile/partials/about_me.html
-msgid "City"
-msgstr "Місто"
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Last activity"
@@ -351,6 +375,68 @@ msgstr "Статистика"
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Contact info"
 msgstr "Контактна інформація"
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have logged in successfully."
+msgstr "Ви успішно авторизувались."
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have registered successfully."
+msgstr "Ви успішно зареєструвались."
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You are successfully logout."
+msgstr "Ви успішно вийшли з акаунту."
+
+#: server/apps/users/logic/auths_actions.py
+msgid "Error. Please, check for errors existing and try again."
+msgstr "Помилка. Будь ласка, перевірте наявність помилок та спробуйте ще раз."
+
+#: server/apps/users/models.py
+msgid "user"
+msgstr "користувач"
+
+#: server/apps/users/models.py
+msgid "users"
+msgstr "користувачі"
+
+#: server/apps/users/templates/base_auth_site.html
+msgid "Login"
+msgstr "Увійти"
+
+#: server/apps/users/templates/base_auth_site.html
+msgid "Register"
+msgstr "Зареєструватись"
+
+#: server/apps/users/templates/partials/login.html
+msgid "Remember me?"
+msgstr "Запам'ятати мене?"
+
+#: server/apps/users/templates/partials/login.html
+msgid "Forgot password?"
+msgstr "Забули пароль?"
+
+#: server/apps/users/templates/partials/login.html
+msgid "Log in"
+msgstr "Увійти"
+
+#: server/apps/users/templates/partials/login.html
+#: server/apps/users/templates/partials/signup.html
+msgid "Or"
+msgstr "Або"
+
+#: server/apps/users/templates/partials/login.html
+#: server/apps/users/templates/partials/signup.html
+msgid "Continue with Google"
+msgstr "Продовжити з Google"
+
+#: server/apps/users/templates/partials/password_reset.html
+msgid "Reset password"
+msgstr "Скинути пароль"
+
+#: server/apps/users/templates/partials/signup.html
+msgid "Sign in"
+msgstr "Зареєструватись"
 
 #: server/templates/common/pagination.html
 msgid "Previous"

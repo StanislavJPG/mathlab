@@ -1,9 +1,12 @@
 from itertools import chain
 
-from django.db.models import Value, CharField
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.db.models import Value, CharField, Q
+from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
+from django_htmx.http import trigger_client_event
 
 from server.apps.theorist.models import Theorist
 from server.common.http import AuthenticatedHttpRequest
@@ -14,6 +17,8 @@ __all__ = (
     'HXTheoristDetailsProfileView',
     'TheoristLastActivitiesListView',
 )
+
+from server.common.mixins.views import RaiseScoreMixin
 
 
 class TheoristProfileDetailView(DetailView):
@@ -57,6 +62,25 @@ class HXTheoristDetailsProfileView(DetailView):
             return 'profile/partials/statistics.html'
         elif section == 'contact-info':
             return 'profile/partials/contact_info.html'
+
+
+class HXTheoristRaiseScoreUpdateView(LoginRequiredMixin, RaiseScoreMixin, DetailView):
+    model = Theorist
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        # logically, theorist cannot say thanks to himself for score raising
+        return super().get_queryset().filter(~Q(uuid=self.request.theorist.uuid))
+
+    def post(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        self.object = self.get_object()
+        self._relation_by_request_param()
+        response = HttpResponse()
+        trigger_client_event(response, 'commentBlockChanged')
+        return response
 
 
 class TheoristLastActivitiesListView(ListView):

@@ -1,3 +1,4 @@
+from allauth.account.models import EmailAddress
 from django.db import models
 from django.contrib.auth.models import AbstractUser
 from django.utils.translation import gettext_lazy as _
@@ -21,15 +22,6 @@ class CustomUser(AbstractUser):
         if not hasattr(self, 'theorist'):
             return Theorist.objects.create(full_name=self.username, user=self)
 
-    # def update_rank(self):
-    #     if self.score < 50:
-    #         self.rank = self.JUNIOR
-    #     elif 50 <= self.score < 100:
-    #         self.rank = self.OLYMPIC
-    #     elif 100 <= self.score < 200:
-    #         self.rank = self.TEACHER
-    #     elif 200 <= self.score < 600:
-    #         self.rank = self.GURU
-    #     else:
-    #         self.rank = self.MATH_LORD
-    #     self.save()
+    @property
+    def is_email_verified(self) -> bool:
+        return EmailAddress.objects.get(email=self.email).verified

@@ -45,6 +45,11 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         raise NotImplementedError  # TODO: change
 
     @hook(AFTER_CREATE)
+    def comments_count_hook(self):
+        self.theorist.total_comments = Comment.objects.filter(theorist=self.theorist).count()
+        self.theorist.save(update_fields=['total_comments'])
+
+    @hook(AFTER_CREATE)
     @hook(AFTER_DELETE)
     def after_comments_created_or_deleted(self):
         self.post.comments_quantity = self.post.comments.count()

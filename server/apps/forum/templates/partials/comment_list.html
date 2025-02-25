@@ -5,7 +5,7 @@
      hx-trigger="commentBlockChanged from:body delay:0.6s"
 >
   {% for comment in comments %}
-    <div class="full-answer-{{ comment.uuid }}">
+    <div style="margin-bottom: 150px;" class="full-answer-{{ comment.uuid }}">
       <div class="types">
         <span class="span-base"><b>{% translate 'Author' %}:</b>
             <a class="text-decoration-none"
@@ -52,11 +52,22 @@
             </a>
           </div>
       {% endblock comment_likes_and_dislikes %}
+      <button
+          class="btn btn-sm btn-primary text-nowrap"
+          {% if request.user.is_verified_email %}
+            hx-get="{% url 'forum:theorist_profile:email-verification-redirect' comment.theorist.pk comment.theorist.full_name_slug %}"
+            hx-confirm="{% translate 'Sorry! You have to verify your email to interact.' %}"
+          {% else %}
+            hx-post="{% url 'forum:theorist_profile:hx-theorist-raise-score' comment.theorist.uuid comment.uuid 'comment' %}"
+            hx-swap="none"
+            hx-confirm="{% translate 'Support this answer? You will raise this users score by doing that.' %}"
+          {% endif %}
+      >
+        {% translate 'Thank you!' %}
+      </button>
       </div>
-      <div style="margin-bottom: 150px;">
-        <div class="question-content text-start">
-          {{ comment.comment|safe }}
-        </div>
+      <div class="question-content text-start">
+        {{ comment.comment|safe }}
       </div>
     </div>
   {% endfor %}

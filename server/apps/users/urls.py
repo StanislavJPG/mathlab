@@ -5,6 +5,7 @@ from server.apps.users.logic.auths_actions import (
     CustomSignUpView,
     CustomBaseAuthenticationView,
     CustomLogoutUpView,
+    CustomPasswordResetView,
 )
 
 app_name = 'users'
@@ -14,5 +15,6 @@ urlpatterns = [
     path('login/', CustomLoginView.as_view(), name='login-view'),
     path('register/', CustomSignUpView.as_view(), name='register-view'),
     path('logout/', CustomLogoutUpView.as_view(), name='logout-view'),
+    path('password/reset/', CustomPasswordResetView.as_view(), name='reset-password-view'),
     # socialaccount
 ]

@@ -23,6 +23,8 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     likes = models.ManyToManyField('theorist.Theorist', through='forum.PostLike', related_name='liked_posts')
     dislikes = models.ManyToManyField('theorist.Theorist', through='forum.PostDislike', related_name='disliked_posts')
 
+    supports = models.ManyToManyField('theorist.Theorist', through='forum.PostSupport', related_name='supported_posts')
+
     # Denormilized fields
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)

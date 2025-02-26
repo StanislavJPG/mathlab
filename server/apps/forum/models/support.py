@@ -10,7 +10,7 @@ __all__ = (
 
 
 class PostSupport(TimeStampedModelMixin):
-    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='post_supports_relation')
+    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE)
     post = models.ForeignKey('forum.Post', on_delete=models.CASCADE)
 
     class Meta:
@@ -18,9 +18,7 @@ class PostSupport(TimeStampedModelMixin):
 
 
 class CommentSupport(TimeStampedModelMixin):
-    theorist = models.ForeignKey(
-        'theorist.Theorist', on_delete=models.CASCADE, related_name='comment_supports_relation'
-    )
+    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE)
     comment = models.ForeignKey('forum.Comment', on_delete=models.CASCADE)
 
     class Meta:

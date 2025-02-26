@@ -7,6 +7,7 @@ from django_lifecycle import hook, AFTER_SAVE
 from dynamic_filenames import FilePattern
 from easy_thumbnails.files import get_thumbnailer
 
+from server.apps.forum.constants import MIN_SCORE, MAX_SCORE
 from server.apps.theorist.choices import TheoristRankChoices
 from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_SIZE_QUALITY,
@@ -31,8 +32,8 @@ class UUIDModelMixin(models.Model):
 
 class RankSystemModelMixin(models.Model):
     PredefinedRankChoices = TheoristRankChoices
-    MIN_SCORE: Final[int] = 10
-    MAX_SCORE: Final[int] = 25
+    PREDEFINED_MIN_SCORE = MIN_SCORE
+    PREDEFINED_MAX_SCORE = MAX_SCORE
 
     rank = models.CharField(
         max_length=100,
@@ -40,12 +41,6 @@ class RankSystemModelMixin(models.Model):
         default=PredefinedRankChoices.JUNIOR,
     )
     score = models.SmallIntegerField(default=0)
-    post_supports = models.ManyToManyField(
-        'theorist.Theorist', through='forum.PostSupport', related_name='supported_posts'
-    )
-    comment_supports = models.ManyToManyField(
-        'theorist.Theorist', through='forum.CommentSupport', related_name='supported_comments'
-    )
 
     @hook(AFTER_SAVE, when='score', has_changed=True)
     def score_hook(self):
@@ -64,12 +59,12 @@ class RankSystemModelMixin(models.Model):
 
     def add_min_score(self):
         # add minimum possible score
-        self.score += self.MIN_SCORE
+        self.score += self.PREDEFINED_MIN_SCORE
         self.save(update_fields=['score'])
 
     def add_max_score(self):
         # add maximum possible score
-        self.score += self.MAX_SCORE
+        self.score += self.PREDEFINED_MAX_SCORE
         self.save(update_fields=['score'])
 
     class Meta:

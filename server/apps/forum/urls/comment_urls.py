@@ -6,6 +6,7 @@ from server.apps.forum.logic.comments import (
     HXCommentQuantityView,
     HXCommentLikesAndDislikesView,
     CommentListView,
+    CommentSupportUpdateView,
 )
 
 urlpatterns = [
@@ -33,5 +34,10 @@ urlpatterns = [
         '<uuid:uuid>/comments/rate/',
         HXCommentLikesAndDislikesView.as_view(),
         name='hx-comment-rate',
+    ),
+    path(
+        '<uuid:uuid>/comments/support/',
+        CommentSupportUpdateView.as_view(),
+        name='comments-support-update',
     ),
 ]

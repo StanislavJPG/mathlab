@@ -1,4 +1,5 @@
 from braces.views import LoginRequiredMixin, FormMessagesMixin
+from django.db.models import Q
 from django.http import HttpResponse
 
 from django.views.generic import CreateView, DeleteView, DetailView, ListView
@@ -17,6 +18,7 @@ __all__ = (
     'CommentDeleteView',
     'HXCommentQuantityView',
     'HXCommentLikesAndDislikesView',
+    'CommentSupportUpdateView',
 )
 
 
@@ -185,4 +187,27 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
         response = HttpResponse()
         trigger_client_event(response, f'commentLikesAndDislikesChanged{self.object.uuid}')
 
+        return response
+
+
+class CommentSupportUpdateView(LoginRequiredMixin, DetailView):
+    model = Comment
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        # logically, theorist cannot say thanks to himself for score raising
+        return super().get_queryset().filter(~Q(theorist=self.request.theorist))
+
+    def post(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        self.object = self.get_object()
+
+        if not self.object.supports.exists():
+            self.object.supports.add(self.request.theorist)
+            self.object.theorist.add_max_score()
+
+        response = HttpResponse()
+        trigger_client_event(response, 'commentBlockChanged')
         return response

@@ -26,6 +26,9 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         through='forum.CommentDislike',
         related_name='disliked_comments',
     )
+    supports = models.ManyToManyField(
+        'theorist.Theorist', through='forum.CommentSupport', related_name='supported_comments'
+    )
 
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)

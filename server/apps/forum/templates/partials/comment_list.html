@@ -9,7 +9,8 @@
       <div class="types">
         <span class="span-base"><b>{% translate 'Author' %}:</b>
             <a class="text-decoration-none"
-               href=""> {{ comment.theorist.full_name }} </a> |
+               target="_blank"
+               href="{{ comment.theorist.get_absolute_profile_url }}"> {{ comment.theorist.full_name }} </a> |
             <b>{{ comment.theorist.get_rank_display }}</b></span>
         <span class="span-base"><b>{% translate 'Created at' %}</b> {{ comment.created_at|timesince }} {% translate 'ago' %}</span>
         {% if comment.modified_at is not none %}
@@ -58,7 +59,7 @@
             hx-get="{% url 'forum:theorist_profile:email-verification-redirect' comment.theorist.pk comment.theorist.full_name_slug %}"
             hx-confirm="{% translate 'Sorry! You have to verify your email to interact.' %}"
           {% else %}
-            hx-post="{% url 'forum:theorist_profile:hx-theorist-raise-score' comment.theorist.uuid comment.uuid 'comment' %}"
+            hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
             hx-swap="none"
             hx-confirm="{% translate 'Support this answer? You will raise this users score by doing that.' %}"
           {% endif %}

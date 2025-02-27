@@ -43,6 +43,6 @@ class OnboardingMiddleware(MiddlewareMixin):
             request.user.is_authenticated
             and not request.user.is_superuser
             and not request.theorist.is_onboarded
-            and 'onboarding' not in request.path
+            and not request.path.startswith('/theorist/onboarding')
         ):
             return redirect(reverse('theorist_onboarding:base-page'))

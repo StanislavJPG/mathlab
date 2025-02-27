@@ -55,7 +55,7 @@
             </a>
           </div>
         {% endblock comment_likes_and_dislikes %}
-        {% if request.user.is_email_verified %}
+        {% if not request.user.is_email_verified %}
           <a class="btn btn-sm btn-secondary text-nowrap" disabled
              data-bs-toggle="tooltip" data-bs-placement="top"
              title="{% translate 'Sorry! You have to verify your email to interact.' %}"

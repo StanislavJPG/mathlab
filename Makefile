@@ -16,6 +16,9 @@ web:
 makemessages:
 	python manage.py makemessages -l en -l uk --ignore=media/* --ignore=static/* --ignore=docs --add-location=file --no-obsolete
 
+js-makemessages:
+	python manage.py makemessages -l en -l uk -d djangojs
+
 compilemessages:
 	python manage.py compilemessages
 

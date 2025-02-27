@@ -70,6 +70,9 @@
 {% block page_js %}
 {% endblock page_js %}
 
+<script src="{% url 'javascript-catalog' %}"></script>
+<script src="{% static 'js/htmx_sweetalert.js' %}"></script>
+
 <script>
     $(document).ready(function () {
         $('.selectpicker').selectpicker();

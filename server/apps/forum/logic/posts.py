@@ -1,4 +1,5 @@
 from braces.views import FormMessagesMixin, LoginRequiredMixin
+from django.db.models import Q
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
@@ -151,4 +152,27 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
         response = HttpResponse()
         trigger_client_event(response, 'postLikesAndDislikesChanged')
 
+        return response
+
+
+class PostSupportUpdateView(LoginRequiredMixin, DetailView):
+    model = Post
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        # logically, theorist cannot say thanks to himself for score raising
+        return super().get_queryset().filter(~Q(theorist=self.request.theorist))
+
+    def post(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        self.object = self.get_object()
+
+        if not self.object.supports.exists():
+            self.object.supports.add(self.request.theorist)
+            self.object.theorist.add_min_score()
+
+        response = HttpResponse()
+        trigger_client_event(response, 'postBlockChanged')
         return response

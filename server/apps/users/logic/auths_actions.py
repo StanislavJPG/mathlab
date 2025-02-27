@@ -2,7 +2,7 @@ from django.urls import reverse
 from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.views import LoginView, SignupView, LogoutView, PasswordResetView
+from allauth.account.views import LoginView, SignupView, LogoutView, PasswordResetView, ConfirmEmailView, EmailView
 
 from braces.views import FormMessagesMixin
 
@@ -56,3 +56,9 @@ class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):
         response = HttpResponseClientRedirect(reverse('users:login'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
+
+
+class CustomEmailView(EmailView): ...
+
+
+class CustomConfirmEmailView(ConfirmEmailView): ...

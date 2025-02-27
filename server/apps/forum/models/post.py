@@ -2,7 +2,7 @@ from typing import Final
 
 from django.db import models
 from django.urls import reverse
-from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
+from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE, AFTER_CREATE
 
 from slugify import slugify
 
@@ -22,6 +22,8 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     likes = models.ManyToManyField('theorist.Theorist', through='forum.PostLike', related_name='liked_posts')
     dislikes = models.ManyToManyField('theorist.Theorist', through='forum.PostDislike', related_name='disliked_posts')
+
+    supports = models.ManyToManyField('theorist.Theorist', through='forum.PostSupport', related_name='supported_posts')
 
     # Denormilized fields
     likes_counter = models.PositiveSmallIntegerField(default=0)
@@ -48,6 +50,11 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def before_save(self):
         text = slugify(self.title)
         self.slug = text
+
+    @hook(AFTER_CREATE)
+    def posts_count_hook(self):
+        self.theorist.total_posts = Post.objects.filter(theorist=self.theorist).count()
+        self.theorist.save(update_fields=['total_posts'])
 
     # @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
     # def after_update_likes_and_dislikes(self):

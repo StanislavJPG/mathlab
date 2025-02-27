@@ -6,6 +6,7 @@ from server.apps.forum.logic.posts import (
     PostDeleteView,
     HXPostLikesAndDislikesView,
     PostListView,
+    PostSupportUpdateView,
 )
 
 urlpatterns = [
@@ -29,5 +30,10 @@ urlpatterns = [
         '<uuid:uuid>/posts/rate/',
         HXPostLikesAndDislikesView.as_view(),
         name='hx-post-rate',
+    ),
+    path(
+        '<uuid:uuid>/posts/support/',
+        PostSupportUpdateView.as_view(),
+        name='posts-support-update',
     ),
 ]

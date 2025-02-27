@@ -171,14 +171,7 @@ SOCIALACCOUNT_PROVIDERS = {
 ACCOUNT_ADAPTER = 'server.apps.users.adapters.AccountAdapter'
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_METHODS = {'email'}
-# ACCOUNT_FORMS = {
-#     'signup': 'server.apps.users.forms.UserLoginForm',
-# }
-# SOCIALACCOUNT_FORMS = {
-#     'signup': 'server.apps.users.forms.UserLoginForm',
-# }
-
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: CHANGE
+ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: remove this var if not debug
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'

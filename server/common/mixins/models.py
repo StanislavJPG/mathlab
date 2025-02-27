@@ -3,9 +3,12 @@ from typing import Final
 
 from django.db import models
 from django.utils import timezone
+from django_lifecycle import hook, AFTER_SAVE
 from dynamic_filenames import FilePattern
 from easy_thumbnails.files import get_thumbnailer
 
+from server.apps.forum.constants import MIN_SCORE, MAX_SCORE
+from server.apps.theorist.choices import TheoristRankChoices
 from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_SIZE_QUALITY,
     BORINGAVATARS_DEFAULT_CROP,
@@ -22,6 +25,47 @@ class TimeStampedModelMixin(models.Model):
 
 class UUIDModelMixin(models.Model):
     uuid = models.UUIDField(default=uuid.uuid4, unique=True, editable=False)
+
+    class Meta:
+        abstract = True
+
+
+class RankSystemModelMixin(models.Model):
+    PredefinedRankChoices = TheoristRankChoices
+    PREDEFINED_MIN_SCORE = MIN_SCORE
+    PREDEFINED_MAX_SCORE = MAX_SCORE
+
+    rank = models.CharField(
+        max_length=100,
+        choices=PredefinedRankChoices,
+        default=PredefinedRankChoices.JUNIOR,
+    )
+    score = models.SmallIntegerField(default=0)
+
+    @hook(AFTER_SAVE, when='score', has_changed=True)
+    def score_hook(self):
+        if 100 <= self.score < 200:
+            self.rank = self.PredefinedRankChoices.OLYMPIC
+        elif 200 <= self.score < 300:
+            self.rank = self.PredefinedRankChoices.TEACHER
+        elif 300 <= self.score < 600:
+            self.rank = self.PredefinedRankChoices.GURU
+        elif self.score > 600:
+            self.rank = self.PredefinedRankChoices.MATH_LORD
+        else:
+            return
+
+        self.save(update_fields=['rank'])
+
+    def add_min_score(self):
+        # add minimum possible score
+        self.score += self.PREDEFINED_MIN_SCORE
+        self.save(update_fields=['score'])
+
+    def add_max_score(self):
+        # add maximum possible score
+        self.score += self.PREDEFINED_MAX_SCORE
+        self.save(update_fields=['score'])
 
     class Meta:
         abstract = True

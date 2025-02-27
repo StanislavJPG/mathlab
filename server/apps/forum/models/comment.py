@@ -26,6 +26,9 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         through='forum.CommentDislike',
         related_name='disliked_comments',
     )
+    supports = models.ManyToManyField(
+        'theorist.Theorist', through='forum.CommentSupport', related_name='supported_comments'
+    )
 
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)
@@ -43,6 +46,11 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def get_absolute_url(self):
         raise NotImplementedError  # TODO: change
+
+    @hook(AFTER_CREATE)
+    def comments_count_hook(self):
+        self.theorist.total_comments = Comment.objects.filter(theorist=self.theorist).count()
+        self.theorist.save(update_fields=['total_comments'])
 
     @hook(AFTER_CREATE)
     @hook(AFTER_DELETE)

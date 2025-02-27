@@ -70,9 +70,18 @@
 {% block page_js %}
 {% endblock page_js %}
 
+<script src="{% url 'javascript-catalog' %}"></script>
+<script src="{% static 'js/htmx_sweetalert.js' %}"></script>
+
 <script>
     $(document).ready(function () {
         $('.selectpicker').selectpicker();
+    });
+    document.addEventListener("htmx:afterSettle", function () {
+      var tooltipTriggerList = [].slice.call(document.querySelectorAll('[data-bs-toggle="tooltip"]'));
+      tooltipTriggerList.map(function (tooltipTriggerEl) {
+        return new bootstrap.Tooltip(tooltipTriggerEl);
+      });
     });
 </script>
 

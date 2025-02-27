@@ -8,18 +8,16 @@ from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
 
 from slugify import slugify
 
-from server.apps.theorist.choices import TheoristRankChoices
 from server.common.mixins.models import (
     UUIDModelMixin,
     TimeStampedModelMixin,
     AvatarModelMixin,
+    RankSystemModelMixin,
 )
 
 
-class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarModelMixin):
+class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystemModelMixin, AvatarModelMixin):
     """Model for business logic of web-site user. User model uses only for auth purposes."""
-
-    PredefinedRankChoices = TheoristRankChoices
 
     # personal info
     full_name = models.CharField(max_length=150)
@@ -32,15 +30,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, AvatarMode
     social_media_url = models.URLField(max_length=225, null=True, blank=True)
     website_url = models.URLField(max_length=225, null=True, blank=True)
 
-    # forum data
+    # forum statistics data
     total_posts = models.PositiveSmallIntegerField(default=0)
     total_comments = models.PositiveIntegerField(default=0)
-    score = models.SmallIntegerField(default=0)
-    rank = models.CharField(
-        max_length=100,
-        choices=PredefinedRankChoices,
-        default=PredefinedRankChoices.JUNIOR,
-    )
 
     is_onboarded = models.BooleanField(default=False)
     onboarding_date = models.DateTimeField(null=True)

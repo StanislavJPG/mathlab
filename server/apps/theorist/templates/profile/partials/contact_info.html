@@ -6,7 +6,11 @@
     <span class="mb-0">{% translate 'Social media url' %}</span>
   </div>
   <div class="col-sm-7">
-    <a href="{{ theorist.social_media_url }}" target="_blank" class="mb-0">{{ theorist.social_media_url|default:'─' }}</a>
+    {% if theorist.social_media_url %}
+      <a href="{{ theorist.social_media_url }}" target="_blank" class="mb-0">{{ theorist.social_media_url }}</a>
+    {% else %}
+      <span class="mb-0">─</span>
+    {% endif %}
   </div>
 </div>
 <hr>
@@ -16,6 +20,10 @@
     <span class="mb-0">{% translate 'Website URL' %}</span>
   </div>
   <div class="col-sm-7">
-    <a href="{{ theorist.website_url }}" target="_blank" class="mb-0">{{ theorist.website_url|default:'─' }}</a>
+    {% if theorist.website_url %}
+      <a href="{{ theorist.website_url }}" target="_blank" class="mb-0">{{ theorist.website_url }}</a>
+    {% else %}
+      <span class="mb-0">─</span>
+    {% endif %}
   </div>
 </div>

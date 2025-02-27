@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-25 11:34+0200\n"
+"POT-Creation-Date: 2025-02-28 00:22+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -181,6 +181,28 @@ msgstr "Ви впевнені?"
 msgid "Delete comment"
 msgstr "Видалити коментар"
 
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Sorry! You have to verify your email to interact."
+msgstr "Вибачте! Ви маєте підтвердити електронну пошту, щоб взаємодіяти."
+
+#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
+msgid "Thank you!"
+msgstr "Дякую!"
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid "You have already supported this comment."
+msgstr "Ви вже підтримували цей коментар."
+
+#: server/apps/forum/templates/partials/comment_list.html
+msgid ""
+"Do you want to support this answer? You will raise score for this user by "
+"doing that."
+msgstr ""
+"Хочете підтримати цей коментар? Цим самим Ви підвищите рейтинг цього "
+"користувача."
+
 #: server/apps/forum/templates/partials/posts_list.html
 msgid "Last topics"
 msgstr "Останні теми"
@@ -229,6 +251,17 @@ msgstr "Видалити пост"
 #: server/apps/forum/templates/question_page.html
 msgid "Viewers"
 msgstr "Переглянуто"
+
+#: server/apps/forum/templates/question_page.html
+msgid "You have already supported this post."
+msgstr "Ви вже підтримували цей пост."
+
+#: server/apps/forum/templates/question_page.html
+msgid ""
+"Do you want to support this post? You will raise score for this user by "
+"doing that."
+msgstr ""
+"Хочете підтримати цей пост? Цим самим Ви підвищите рейтинг цього користувача."
 
 #: server/apps/forum/templates/question_page.html
 msgid "Answers"

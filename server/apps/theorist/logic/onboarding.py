@@ -1,5 +1,6 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -28,6 +29,11 @@ class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, UpdateVie
     form_valid_message = _('You successfully registered!')
     form_invalid_message = _('Error. Please, check your input and try again.')
     success_url = reverse_lazy('forum:post-list')
+
+    def get(self, request, *args, **kwargs):
+        if not request.htmx:
+            return HttpResponseNotFound()
+        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         super().form_valid(form)

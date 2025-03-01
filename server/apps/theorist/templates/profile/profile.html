@@ -1,5 +1,5 @@
 {% extends 'base/forum_base.html' %}
-{% load static i18n %}
+{% load static i18n avatars %}
 
 {% block page_head %}
   <title>MathLab | Мій профіль</title>
@@ -12,50 +12,14 @@
   </div>
   <section style="background-color: #eee;">
     <div class="container py-5">
-      <div style="display: flex; flex-wrap: wrap; flex-direction: column; align-items: center;" class="row">
-        <div class="col-lg-4">
-          <div class="card mb-4">
-            <div class="card-body text-center">
-              <form method="post" enctype="multipart/form-data">
-                {% csrf_token %}
-                {% if request.theorist.uuid == theorist.uuid %}<label class="cursor-pointer" for="image">{% endif %}
-                {#                <img src="">#}
-                {#                {% if profile_image %}#}
-                {#                  <img src="{% static profile_image %}" alt="avatar" class="rounded-circle img-fluid"#}
-                {#                       style="width: 150px; height: 150px;">#}
-                {#                {% else %}#}
-                {#                  <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar"#}
-                {#                       class="rounded-circle img-fluid" style="width: 150px; height: 150px;">#}
-                {#                {% endif %}#}
-                </label>
-                {% if request.theorist.uuid == theorist.uuid %}
-                  <p>
-                    <input type="file" id="image" name="image" class="d-none">
-                    <button class="btn btn-primary" type="submit">Змінити фото</button>
-                  </p>
-                {% endif %}
-              </form>
-              <h5 class="my-3">
-                <img alt="country_flag" src="{{ theorist.country.flag }}"> 
-                {{ theorist.full_name }}
-              </h5>
-              <div style="margin-bottom: 1rem !important;">
-                <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
-              </div>
-              {% if request.user.is_authenticated and request.theorist.uuid != theorist.uuid %}
-                <div class="d-flex justify-content-center mb-2">
-                  <a href="" type="button"
-                     data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати
-                    повідомлення</a>
-                </div>
-              {% endif %}
-            </div>
-          </div>
+      <div class="row d-dlex flex-wrap flex-column align-items-center">
+        <div class="col-lg-4" hx-get="{% url 'forum:theorist_profile:theorist-avatar-upload' theorist.uuid %}" hx-target="this" hx-trigger="load">
+{#          Content#}
         </div>
         <div class="col-lg-8 mt-3">
           <div class="card mb-4">
-            <ul class="nav nav-pills nav-fill mb-3">
-              <li class="nav-item">
+            <ul class="nav nav-pills nav-fill mb-3" role="tablist">
+              <li class="nav-item flex-grow-1">
                 <a class="nav-link active"
                    data-bs-toggle="tab"
                    data-bs-target="#about-me"
@@ -69,7 +33,7 @@
                   {% translate 'About me' %}
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item flex-grow-1">
                 <a class="nav-link"
                    data-bs-toggle="tab"
                    data-toggle="pill"
@@ -82,7 +46,7 @@
                   {% translate 'Statistics' %}
                 </a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item flex-grow-1">
                 <a class="nav-link"
                    data-bs-toggle="tab"
                    data-toggle="pill"
@@ -114,4 +78,3 @@
   </section>
   </body>
 {% endblock %}
-

@@ -87,6 +87,7 @@ easy-thumbnails = "^2.10"
 boringavatars = "^1.0.3"
 ruff = "^0.9.7"
 django-countries = {extras = ["pyuca"], version = "^7.6.1"}
+django-cleanup = "^9.0.0"
 
 
 [tool.poetry.group.dev.dependencies]

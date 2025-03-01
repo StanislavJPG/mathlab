@@ -10,7 +10,7 @@ from easy_thumbnails.files import get_thumbnailer
 from server.apps.forum.constants import MIN_SCORE, MAX_SCORE
 from server.apps.theorist.choices import TheoristRankChoices
 from server.common.third_party_apps.boringavatar import (
-    BORINGAVATARS_DEFAULT_SIZE_QUALITY,
+    BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
     BORINGAVATARS_DEFAULT_CROP,
 )
 
@@ -86,15 +86,15 @@ class AvatarModelMixin(models.Model):
     class Meta:
         abstract = True
 
-    def get_default_avatar_url(self):
+    def get_boringavatars_url(self):
         """Returns default avatar's URL by unique identifier"""
         raise NotImplementedError(
-            f'You need to specify a get_default_avatar_url method in your {self.__class__.__name__} model'
+            f'You need to specify a `get_boringavatars_url` method in your {self.__class__.__name__} model'
         )
 
     def html_tag_avatar(self, size: tuple[int, int] = None, square: bool = None) -> str:
         """
-        Generate an HTML <img> tag for the avatar.
+        Generate HTML <img> tag for the avatar.
         """
         size = size or self.AVATAR_DEFAULT_SIZE
         square = square or self.AVATAR_DEFAULT_SQUARE
@@ -102,19 +102,19 @@ class AvatarModelMixin(models.Model):
         if self.custom_avatar:
             # https://easy-thumbnails.readthedocs.io/en/latest/usage/?highlight=thumbnailer%20get_thumbnail#get-thumbnailer
             thumbnailer = get_thumbnailer(self.custom_avatar)
-            thumbnail = thumbnailer.get_thumbnail(
+            thumb = thumbnailer.get_thumbnail(
                 {
-                    'size': BORINGAVATARS_DEFAULT_SIZE_QUALITY,
+                    'size': BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
                     'crop': BORINGAVATARS_DEFAULT_CROP,
                 }
             )
-            avatar_url = thumbnail.url
+            avatar_url = thumb.url
         else:
-            avatar_url = self.get_default_avatar_url() + f'?size={size[0]}&square={"true" if square else "false"}'
+            avatar_url = self.get_boringavatars_url() + f'?size={size[0]}&square={"true" if square else "false"}'
 
         return (
             f'<img src="{avatar_url}" width="{size[0]}" height="{size[1]}" '
-            f'alt="avatar" class="{"rounded-circle" if square else "squared"}">'
+            f'alt="avatar" class="{"rounded-circle" if not square else "squared"}">'
         )
 
     def drop_avatar_to_default(self):

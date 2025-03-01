@@ -50,6 +50,7 @@ INSTALLED_APPS = [
     'tinymce',
     'easy_thumbnails',
     'django_countries',
+    'django_cleanup.apps.CleanupConfig',
     # common
     'server.common',
     # apps
@@ -63,6 +64,7 @@ INSTALLED_APPS = [
     'server.apps.theorist.apps.TheoristConfig',
     # templatetags
     'server.common.templatetags.widened_widget_tweaks',
+    'server.common.templatetags.avatars',
 ]
 
 

@@ -11,6 +11,7 @@ from server.apps.forum.constants import MIN_SCORE, MAX_SCORE
 from server.apps.theorist.choices import TheoristRankChoices
 from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
+    BORINGAVATARS_DEFAULT_CROP,
 )
 
 
@@ -104,7 +105,7 @@ class AvatarModelMixin(models.Model):
             thumb = thumbnailer.get_thumbnail(
                 {
                     'size': BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
-                    'crop': 'smart',
+                    'crop': BORINGAVATARS_DEFAULT_CROP,
                 }
             )
             avatar_url = thumb.url

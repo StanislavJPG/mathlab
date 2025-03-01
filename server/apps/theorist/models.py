@@ -46,14 +46,17 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def __str__(self):
         return f'{self.full_name} | {self.__class__.__name__} | id - {self.id}'
 
-    def get_absolute_profile_url(self):
+    def get_absolute_url(self):
         return reverse(
             'forum:theorist_profile:base-page',
             kwargs={'pk': self.pk, 'full_name_slug': self.full_name_slug},
         )
 
-    def get_default_avatar_url(self):
-        return None  # TODO: Add view with boringavatars URL
+    def get_boringavatars_url(self):
+        return reverse(
+            'forum:theorist_profile:theorist-avatar',
+            kwargs={'uuid': self.uuid},
+        )
 
     @hook(BEFORE_SAVE)
     def before_save(self):

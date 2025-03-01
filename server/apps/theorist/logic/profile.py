@@ -8,7 +8,6 @@ from django.views.generic import DetailView, ListView
 from server.apps.theorist.models import Theorist
 from server.common.http import AuthenticatedHttpRequest
 
-
 __all__ = (
     'TheoristProfileDetailView',
     'HXTheoristDetailsProfileView',

@@ -1,0 +1,47 @@
+{% load static i18n avatars %}
+
+<style>
+    input[type="file"] {
+        display: none;
+    }
+</style>
+
+<div class="card mb-4">
+  <div class="card-body text-center"
+       hx-get="{{ request.path }}"
+       hx-trigger="imageChanged from:body"
+  >
+    {% get_instance_avatar theorist %}
+    {% if request.theorist.uuid == theorist.uuid %}
+      <form hx-post="{{ request.path }}" class="mt-2" enctype="multipart/form-data" hx-trigger="change">
+        <label for="id_custom_avatar" class="btn btn-primary btn-sm custom-file-upload">
+          <i class="ti ti-upload"></i> {% translate 'Update avatar' %}
+        </label>
+        <input type="file" name="custom_avatar" accept="image/*" id="id_custom_avatar">
+      </form>
+      {% if theorist.custom_avatar %}
+        <button type="button"
+                class="btn btn-danger btn-sm mt-2"
+                hx-confirm="{% translate 'Are you sure?' %}"
+                hx-post="{% url 'forum:theorist_profile:theorist-avatar-delete' theorist.uuid %}"
+        >
+          <i class="ti ti-trash"></i> {% translate 'Delete avatar' %}
+        </button>
+      {% endif %}
+    {% endif %}
+    <h5 class="my-3">
+      <img alt="country_flag" src="{{ theorist.country.flag }}">
+      {{ theorist.full_name }}
+    </h5>
+    <div style="margin-bottom: 1rem !important;">
+      <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
+    </div>
+    {% if request.user.is_authenticated and request.theorist.uuid != theorist.uuid %}
+      <div class="d-flex justify-content-center mb-2">
+        <a href="" type="button"
+           data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-primary ms-1">Написати
+          повідомлення</a>
+      </div>
+    {% endif %}
+  </div>
+</div>

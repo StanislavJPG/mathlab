@@ -1,4 +1,4 @@
-{% load static i18n %}
+{% load static i18n avatars %}
 
 <header class="p-3 mb-3 border-bottom" style="padding: 0.5rem !important;">
   <div class="container">
@@ -34,15 +34,16 @@
       </form>
 
       <div class="dropdown_user text-end">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" id="dropdownUser1"
-           data-bs-toggle="dropdown" aria-expanded="false">
-          {% if not current_user_image %}
-            <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="mdo"
-                 width="32" height="32" class="rounded-circle">
-          {% else %}
-            <img src="{% static current_user_image %}" alt="mdo" width="32" height="32"
-                 class="rounded-circle">
-          {% endif %}
+        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle" 
+           id="dropdownUser1"
+           hx-get="{{ request.path }}"
+           hx-select="#dropdownUser1"
+           hx-target="#dropdownUser1"
+           hx-swap="outerHTML"
+           hx-trigger="imageChanged from:body"
+           data-bs-toggle="dropdown" aria-expanded="false"
+        >
+          {% get_instance_avatar request.theorist size=40 %}
         </a>
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
           {% if user.is_authenticated %}

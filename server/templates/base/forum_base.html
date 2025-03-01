@@ -36,14 +36,14 @@
 <head>
   <meta charset="UTF-8">
   {% block page_head %}
-    <link type="text/css" href="{% static 'css/forum_base.css' %}" rel="stylesheet">
+{#    <link type="text/css" href="{% static 'css/forum_base.css' %}" rel="stylesheet">#}
     <title>MathLab | Форум</title>
   {% endblock page_head %}
 </head>
 
 <link type="text/css" href="{% static 'css/common/default_grid.css' %}" rel="stylesheet">
 
-<body hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
+  <body class="bg-light" hx-headers='{"X-CSRFToken": "{{ csrf_token }}"}'>
 {% block body %}
   {% block additional %}
   {% endblock additional %}

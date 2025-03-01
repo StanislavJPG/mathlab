@@ -6,8 +6,7 @@ from django_htmx.http import trigger_client_event
 
 from server.apps.theorist.models import Theorist
 from server.common.mixins.accesses import OnlyOwnerChangesMixin
-from server.common.mixins.views import AvatarDetailViewMixin
-
+from server.common.mixins.views import AvatarDetailViewMixin, CacheMixin
 
 __all__ = (
     'TheoristDefaultProfileImageView',
@@ -16,11 +15,12 @@ __all__ = (
 )
 
 
-class TheoristDefaultProfileImageView(AvatarDetailViewMixin):
+class TheoristDefaultProfileImageView(CacheMixin, AvatarDetailViewMixin):
     model = Theorist
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
     unique_avatar_field = 'user__email'
+    cache_timeout = 120
 
 
 class TheoristAvatarUploadView(OnlyOwnerChangesMixin, FormMessagesMixin, UpdateView):

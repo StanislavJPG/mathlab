@@ -46,6 +46,9 @@ class AvatarDetailViewMixin(DetailView):
         return getattr(self.object, self.unique_avatar_field)
 
     def get(self, request, *args, **kwargs):
+        """
+        See: https://github.com/riquedev/django-initials-avatar/blob/2d297bd449b8d02785b6b079a968e9a7cf044784/django_initials_avatar/views.py#L59
+        """
         name = self.get_unique_avatar_field()
         return HttpResponse(
             avatar(

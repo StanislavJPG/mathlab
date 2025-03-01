@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 00:22+0200\n"
+"POT-Creation-Date: 2025-03-01 19:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -317,6 +317,18 @@ msgstr "Посилання на соц.мережі (опціонально)"
 msgid "Website url (optional)"
 msgstr "Посилання на веб-сайт (опціонально)"
 
+#: server/apps/theorist/logic/avatars.py
+msgid "You successfully uploaded your avatar."
+msgstr "Ви успішно завантажили аватар."
+
+#: server/apps/theorist/logic/avatars.py
+msgid "Error. Please check for errors and try again."
+msgstr "Помилка. Будь ласка, перевірте наявність помилок та спробуйте ще раз."
+
+#: server/apps/theorist/logic/avatars.py
+msgid "You successfully deleted your avatar."
+msgstr "Ви успішно видалили аватар."
+
 #: server/apps/theorist/logic/onboarding.py
 msgid "You successfully registered!"
 msgstr "Ви успішно зареєструвались!"
@@ -380,6 +392,22 @@ msgstr "Лайкнув пост"
 #: server/apps/theorist/templates/profile/partials/last_activity.html
 msgid "Liked a comment in post"
 msgstr "Лайкнув коментар у пості"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Update avatar"
+msgstr "Оновити аватар"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Delete this image?"
+msgstr "Видалити цей аватар?"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Delete avatar"
+msgstr "Видалити аватар"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Send message"
+msgstr "Відправили повідомлення"
 
 #: server/apps/theorist/templates/profile/partials/statistics.html
 msgid "Score"

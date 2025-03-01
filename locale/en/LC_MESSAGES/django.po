@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 00:22+0200\n"
+"POT-Creation-Date: 2025-03-01 19:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,6 +307,18 @@ msgstr ""
 msgid "Website url (optional)"
 msgstr ""
 
+#: server/apps/theorist/logic/avatars.py
+msgid "You successfully uploaded your avatar."
+msgstr ""
+
+#: server/apps/theorist/logic/avatars.py
+msgid "Error. Please check for errors and try again."
+msgstr ""
+
+#: server/apps/theorist/logic/avatars.py
+msgid "You successfully deleted your avatar."
+msgstr ""
+
 #: server/apps/theorist/logic/onboarding.py
 msgid "You successfully registered!"
 msgstr ""
@@ -369,6 +381,22 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
 msgid "Liked a comment in post"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Update avatar"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Delete this image?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Delete avatar"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Send message"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/statistics.html

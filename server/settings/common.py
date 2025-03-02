@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'tinymce',
     'easy_thumbnails',
+    'hitcount',
     'django_countries',
     'django_cleanup.apps.CleanupConfig',
     # common

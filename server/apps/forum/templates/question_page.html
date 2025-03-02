@@ -27,7 +27,7 @@
           <b>{{ post.theorist.get_rank_display }}</b></span>
           <span class="span-base"><b>{% translate 'Created at' %}</b> {{ post.created_at|timesince }} тому</span>
           <span class="span-base"><b>{% translate 'Modified at' %}</b> {{ post.modified_at|timesince }} тому</span>
-          <span class="span-base"><b>{% translate 'Viewers' %}</b> {{ post.post_views }} разів</span>
+          <span class="span-base"><b>{% translate 'Viewers' %}</b> {{ post.hit_count.hits }} разів</span>
         </div>
         <div class="d_line"></div>
         <div class="interact">

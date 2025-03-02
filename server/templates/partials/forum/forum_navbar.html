@@ -15,34 +15,26 @@
           </a>
         </li>
         <li>
-          <a href="{% url 'forum:base-forum-page' %}" class="nav-link px-2 link-dark">
+          <a href="{% url 'forum:base-forum-page' %}" class="nav-link px-2 link-secondary">
             <i class="ti ti-users"></i>{% translate 'Forum' %}
           </a>
         </li>
         {% if user.is_authenticated %}
           <li>
-            <a href="{% url 'forum:post-create' %}" class="nav-link px-2 link-dark">
+            <a href="{% url 'forum:post-create' %}" class="nav-link px-2 link-secondary">
               <i class="ti ti-help-hexagon"></i>{% translate 'New discussion' %}
             </a>
           </li>
         {% else %}
           <li>
-            <a href="{% url 'users:base-auth' %}?signup=true" class="nav-link px-2 link-dark">
+            <a href="{% url 'users:base-auth' %}?signup=true" class="nav-link px-2 link-secondary">
               <i class="ti ti-help-hexagon"></i>{% translate 'New discussion' %}
             </a>
           </li>
         {% endif %}
       </ul>
-{#      {% if user.is_authenticated %}#}
-{#        <ul class="nav col-md-4 justify-content-end">#}
-{#          <li class="nav-item"><a href="{% url 'mathlab:chat-list' %}?page=1"#}
-{#                                  class="nav-link px-2 text-muted">#}
-{#            <img alt="chat" width="33" height="34" src="{% static 'img/forum/chatting.png' %}"></a></li>#}
-{#        </ul>#}
-{#      {% endif %}#}
-
       <div class="dropdown_user text-end">
-        <a href="#" class="d-block link-dark text-decoration-none dropdown-toggle"
+        <a href="#" class="d-block link-secondary text-decoration-none dropdown-toggle"
            id="dropdownUser1"
            hx-get="{{ request.path }}"
            hx-select="#dropdownUser1"

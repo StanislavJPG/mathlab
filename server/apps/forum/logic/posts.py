@@ -6,6 +6,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import DeleteView, CreateView, DetailView, TemplateView
 from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
+from hitcount.views import HitCountDetailView
 from render_block import render_block_to_string
 
 from server.apps.forum.filters import PostListFilter
@@ -28,7 +29,7 @@ __all__ = (
 
 
 class BasePostTemplateView(TemplateView):
-    template_name = 'base_forum.html'
+    template_name = 'base_articles.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -41,17 +42,18 @@ class PostListView(FilterView):
     model = Post
     filterset_class = PostListFilter
     context_object_name = 'posts'
-    template_name = 'partials/posts.html'
+    template_name = 'partials/posts_list.html'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return super().get_queryset().with_likes_counters().order_by('-created_at')
 
 
-class PostDetailView(DetailView):
+class PostDetailView(HitCountDetailView):
     model = Post
     context_object_name = 'post'
     template_name = 'question_page.html'
+    count_hit = True
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest

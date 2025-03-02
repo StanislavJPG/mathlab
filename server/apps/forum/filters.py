@@ -16,6 +16,13 @@ class PostListFilter(filters.FilterSet):
         to_field_name='id',
         queryset=PostCategory.objects.all(),
     )
+    sort_by = filters.OrderingFilter(
+        choices=(
+            ('-likes_counter', _('Likes quantity')),
+            ('-comments_quantity', _('Comments quantity')),
+            ('-hit_count_generic__hits', _('Posts views')),
+        ),
+    )
 
     class Meta:
         model = Post

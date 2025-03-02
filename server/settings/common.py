@@ -181,8 +181,8 @@ SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
-LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
-ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:post-list')
+LOGIN_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 
 SITE_ID = 1
 

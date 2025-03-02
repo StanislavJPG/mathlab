@@ -20,7 +20,7 @@ class CustomLoginView(FormMessagesMixin, LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
@@ -32,7 +32,7 @@ class CustomSignUpView(FormMessagesMixin, SignupView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
@@ -43,7 +43,7 @@ class CustomLogoutUpView(FormMessagesMixin, LogoutView):
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
-        return HttpResponseClientRedirect(reverse('forum:post-list'))  # for HTMX purposes
+        return HttpResponseClientRedirect(reverse('forum:base-forum-page'))  # for HTMX purposes
 
 
 class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):

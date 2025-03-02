@@ -1,56 +1,58 @@
 {% load i18n %}
 
-<nav>
-  <ul class="pagination justify-content-center">
-    {% if page_obj.has_previous %}
-      <li class="page-item">
-        <a class="page-link"
-           href="javascript:(0);"
-           hx-get="{{ request.path }}?page={{ page_obj.previous_page_number }}"
-           hx-target="{{ htmx_target }}"
-           hx-select="{{ htmx_target }}"
-           hx-swap="outerHTML">
-          {% translate 'Previous' %}
-        </a>
-      </li>
-    {% else %}
-      <li class="page-item">
-        <a class="page-link disabled">
-          {% translate 'Previous' %}
-        </a>
-      </li>
-    {% endif %}
+{% if page_obj.paginator.num_pages > 1 %}
+  <nav>
+    <ul class="pagination justify-content-center">
+      {% if page_obj.has_previous %}
+        <li class="page-item">
+          <a class="page-link"
+             href="javascript:(0);"
+             hx-get="{{ request.get_full_path }}{% if request.GET %}&{% else %}?{% endif %}page={{ page_obj.previous_page_number }}"
+             hx-target="{{ htmx_target }}"
+             hx-select="{{ htmx_target }}"
+             hx-swap="outerHTML">
+            {% translate 'Previous' %}
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link disabled">
+            {% translate 'Previous' %}
+          </a>
+        </li>
+      {% endif %}
 
-    {% for page in page_obj.paginator.page_range %}
-      <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-        <a href="javascript:void(0);"
-           class="page-link"
-           hx-get="{{ request.path }}?page={{ page }}"
-           hx-target="{{ htmx_target }}"
-           hx-select="{{ htmx_target }}"
-           hx-swap="outerHTML">
-          {{ page }}
-        </a>
-      </li>
-    {% endfor %}
+      {% for page in page_obj.paginator.page_range %}
+        <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+          <a href="javascript:void(0);"
+             class="page-link"
+             hx-get="{{ request.get_full_path }}{% if request.GET %}&{% else %}?{% endif %}page={{ page }}"
+             hx-target="{{ htmx_target }}"
+             hx-select="{{ htmx_target }}"
+             hx-swap="outerHTML">
+            {{ page }}
+          </a>
+        </li>
+      {% endfor %}
 
-    {% if page_obj.has_next %}
-      <li class="page-item">
-        <a class="page-link"
-           href="javascript:(0);"
-           hx-get="{{ request.path }}?page={{ page_obj.next_page_number }}"
-           hx-target="{{ htmx_target }}"
-           hx-select="{{ htmx_target }}"
-           hx-swap="outerHTML">
-          {% translate 'Next' %}
-        </a>
-      </li>
-    {% else %}
-      <li class="page-item">
-        <a class="page-link disabled">
-          {% translate 'Next' %}
-        </a>
-      </li>
-    {% endif %}
-  </ul>
-</nav>
+      {% if page_obj.has_next %}
+        <li class="page-item">
+          <a class="page-link"
+             href="javascript:(0);"
+             hx-get="{{ request.get_full_path }}{% if request.GET %}&{% else %}?{% endif %}page={{ page_obj.next_page_number }}"
+             hx-target="{{ htmx_target }}"
+             hx-select="{{ htmx_target }}"
+             hx-swap="outerHTML">
+            {% translate 'Next' %}
+          </a>
+        </li>
+      {% else %}
+        <li class="page-item">
+          <a class="page-link disabled">
+            {% translate 'Next' %}
+          </a>
+        </li>
+      {% endif %}
+    </ul>
+  </nav>
+{% endif %}

@@ -1,13 +1,13 @@
-{% load i18n static   widget_tweaks %}
+{% load i18n static widget_tweaks %}
 {{ form.media }}
 
 <form hx-post="{% url 'forum:comment-create' post.uuid %}"
       id="comment-block-create"
       hx-swap="none"
-      _="on click from #submit-btn toggle @hidden on #comment-wait-spinner until htmx:afterOnLoad"
+      _="on submit toggle @hidden on #comment-wait-spinner until htmx:afterOnLoad"
       hx-on::after-request="this.reset()">
   {{ form.comment }}
-  <button type="submit" id="submit-btn" class="btn btn-dark mt-3">
+  <button type="submit" class="btn btn-dark mt-3">
     <span id="comment-wait-spinner" class="spinner-grow spinner-grow-sm text-primary mt-2" role="status" hidden></span>
     {% translate 'Add comment' %}
   </button>

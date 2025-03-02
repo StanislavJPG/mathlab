@@ -3,38 +3,49 @@ from django.db.models import Q
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, CreateView, DetailView, ListView
+from django.views.generic import DeleteView, CreateView, DetailView, TemplateView
+from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
 from render_block import render_block_to_string
 
+from server.apps.forum.filters import PostListFilter
 from server.apps.forum.forms import PostCreateForm
 from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
+from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin
 
 
 __all__ = (
+    'BasePostTemplateView',
+    'PostSupportUpdateView',
     'PostListView',
     'PostDetailView',
     'PostCreateView',
     'PostDeleteView',
     'HXPostLikesAndDislikesView',
+    'PostDefaultImageView',
 )
 
 
-class PostListView(ListView):
-    paginate_by = 10
-    model = Post
-    context_object_name = 'posts'
-    template_name = 'partials/posts_list.html'
-
-    def get_queryset(self):
-        self.request: AuthenticatedHttpRequest
-        return super().get_queryset().with_likes_counters().order_by('-created_at')
+class BasePostTemplateView(TemplateView):
+    template_name = 'base_forum.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['categories'] = PostCategory.objects.all()
         return context
+
+
+class PostListView(FilterView):
+    paginate_by = 10
+    model = Post
+    filterset_class = PostListFilter
+    context_object_name = 'posts'
+    template_name = 'partials/posts.html'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return super().get_queryset().with_likes_counters().order_by('-created_at')
 
 
 class PostDetailView(DetailView):
@@ -176,3 +187,13 @@ class PostSupportUpdateView(LoginRequiredMixin, DetailView):
         response = HttpResponse()
         trigger_client_event(response, 'postBlockChanged')
         return response
+
+
+class PostDefaultImageView(CacheMixin, AvatarDetailViewMixin):
+    model = Post
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+    avatar_unique_field = 'slug'
+    avatar_variant = 'marble'
+    avatar_square = True
+    cache_timeout = 120

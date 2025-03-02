@@ -85,7 +85,7 @@
           </p>
           <div class="topics">
             {% for category in post.categories.all %}
-              <a href="{% url 'forum:post-list' %}?sort=popular&page=1&tags={{ сategory }}"
+              <a href="{% url 'forum:base-forum-page' %}"
                  class="a-topic">{{ category.get_name_display }}</a>
             {% endfor %}
           </div>

@@ -46,6 +46,12 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def get_absolute_url(self):
         return reverse('forum:post-details', kwargs={'pk': self.pk, 'slug': self.slug})
 
+    def get_boringavatars_url(self):
+        return reverse(
+            'forum:post-avatar',
+            kwargs={'uuid': self.uuid},
+        )
+
     @hook(BEFORE_SAVE)
     def before_save(self):
         text = slugify(self.title)

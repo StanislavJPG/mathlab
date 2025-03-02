@@ -16,7 +16,7 @@ class TheoristOnboardingTemplateView(LoginRequiredMixin, TemplateView):
 
     def dispatch(self, request, *args, **kwargs):
         if request.theorist.is_onboarded:
-            return redirect(reverse('forum:post-list'))
+            return redirect(reverse('forum:base-forum-page'))
         return super().dispatch(request, *args, **kwargs)
 
 
@@ -28,7 +28,7 @@ class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, UpdateVie
     template_name = 'partials/onboarding_form.html'
     form_valid_message = _('You successfully registered!')
     form_invalid_message = _('Error. Please, check your input and try again.')
-    success_url = reverse_lazy('forum:post-list')
+    success_url = reverse_lazy('forum:base-forum-page')
 
     def get(self, request, *args, **kwargs):
         if not request.htmx:
@@ -37,6 +37,6 @@ class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, UpdateVie
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response

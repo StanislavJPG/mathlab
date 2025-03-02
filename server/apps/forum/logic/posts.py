@@ -58,6 +58,7 @@ class PostDetailView(DetailView):
         return (
             super()
             .get_queryset()
+            .filter(slug=self.kwargs['slug'])
             .prefetch_related('comments', 'categories')
             .with_likes_counters()
             .with_have_rates_per_theorist(self.request.theorist)

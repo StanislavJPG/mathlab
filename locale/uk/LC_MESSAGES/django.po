@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-01 19:35+0200\n"
+"POT-Creation-Date: 2025-03-03 00:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,6 +88,27 @@ msgstr "Алгебра"
 msgid "Other"
 msgstr "Інше"
 
+#: server/apps/forum/filters.py
+msgid "Title"
+msgstr "Назва"
+
+#: server/apps/forum/filters.py
+msgid "Categories"
+msgstr "Категорії"
+
+#: server/apps/forum/filters.py
+msgid "Likes quantity"
+msgstr "Кількість лайків"
+
+#: server/apps/forum/filters.py
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Comments quantity"
+msgstr "Кількість коментарів"
+
+#: server/apps/forum/filters.py
+msgid "Posts views"
+msgstr "Перегляди посту"
+
 #: server/apps/forum/forms.py
 msgid "Question topic (maximum 85 characters)"
 msgstr "Тема питання (не більше 85 символів)"
@@ -124,6 +145,10 @@ msgstr ""
 #: server/apps/forum/logic/posts.py
 msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
+
+#: server/apps/forum/templates/base_articles.html
+msgid "Loading..."
+msgstr "Завантаження..."
 
 #: server/apps/forum/templates/create_question_page.html
 msgid "Create your question on forum"
@@ -164,6 +189,7 @@ msgid "Created at"
 msgstr "Створено"
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/partials/posts_list.html
 msgid "ago"
 msgstr "тому"
 
@@ -204,49 +230,44 @@ msgstr ""
 "користувача."
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Last topics"
-msgstr "Останні теми"
+msgid "Filter"
+msgstr "Фільтр"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Ask your question"
-msgstr "Задайте своє питання"
+msgid "Advanced filter"
+msgstr "Розширений фільтр"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Categories"
-msgstr "Категорії"
+msgid "Apply"
+msgstr "Застосувати"
 
 #: server/apps/forum/templates/partials/posts_list.html
-#: server/apps/forum/templates/question_page.html
-msgid "Sort by"
-msgstr "Сортувати за"
+msgid "Clear"
+msgstr "Очистити"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Most popular"
-msgstr "Найпопулярніші"
+msgid "Recent questions"
+msgstr "Нещодавні запитання"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Most interesting"
-msgstr "Найцікавіші"
+msgid "asked"
+msgstr "спитав"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "The newest"
-msgstr "Найновіші"
+msgid "Post likes quantity"
+msgstr "Кількість лайків поста"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Previous week"
-msgstr "Попередній тиждень"
+msgid "Post comments quantity"
+msgstr "Кількість коментарів поста"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Likes"
-msgstr "Лайки"
+msgid "Post views quantity"
+msgstr "Кількість переглядів поста"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Comments"
-msgstr "Коментарі"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Delete post"
-msgstr "Видалити пост"
+msgid "Post deletion"
+msgstr "Видалення поста"
 
 #: server/apps/forum/templates/question_page.html
 msgid "Viewers"
@@ -266,6 +287,10 @@ msgstr ""
 #: server/apps/forum/templates/question_page.html
 msgid "Answers"
 msgstr "Відповіді"
+
+#: server/apps/forum/templates/question_page.html
+msgid "Sort by"
+msgstr "Сортувати за"
 
 #: server/apps/forum/templates/question_page.html
 msgid "Best"
@@ -417,10 +442,6 @@ msgstr "Рейтинг"
 msgid "Posts quantity"
 msgstr "Кількість постів"
 
-#: server/apps/theorist/templates/profile/partials/statistics.html
-msgid "Comments quantity"
-msgstr "Кількість коментарів"
-
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Profile"
 msgstr "Профіль"
@@ -506,3 +527,23 @@ msgstr "Попередня"
 #: server/templates/common/pagination.html
 msgid "Next"
 msgstr "Наступна"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Forum"
+msgstr "Форум"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "New discussion"
+msgstr "Нове питання"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Light"
+msgstr "Світлий"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Dark"
+msgstr "Темний"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Auto"
+msgstr "Авто"

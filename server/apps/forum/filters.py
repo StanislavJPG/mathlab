@@ -17,6 +17,7 @@ class PostListFilter(filters.FilterSet):
         queryset=PostCategory.objects.all(),
     )
     sort_by = filters.OrderingFilter(
+        label=_('Sort by'),
         choices=(
             ('-likes_counter', _('Likes quantity')),
             ('-comments_quantity', _('Comments quantity')),

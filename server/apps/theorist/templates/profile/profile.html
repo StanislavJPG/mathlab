@@ -10,7 +10,7 @@
   <div class="block-body">
     <h1 style="text-align: center;" class="display-5">{% translate 'Profile' %}</h1>
   </div>
-  <section style="background-color: #eee;">
+  <section>
     <div class="container py-5">
       <div class="row d-dlex flex-wrap flex-column align-items-center">
         <div class="col-lg-4" hx-get="{% url 'forum:theorist_profile:theorist-avatar-upload' theorist.uuid %}" hx-target="this" hx-trigger="load">

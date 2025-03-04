@@ -41,14 +41,6 @@
                       <label class="form-label" for="{{ filter.form.sort_by.id_for_label }}">{{ filter.form.sort_by.label }}</label>
                       {% render_field filter.form.sort_by class="form-control" %}
                     </div>
-                    <div class="col-12 col-md-12">
-                      <label class="form-label" for="{{ filter.form.title.id_for_label }}">{{ filter.form.title.label }}</label>
-                      {% render_field filter.form.title class="form-control" %}
-                    </div>
-                    <div class="col-12 col-md-12">
-                      <label class="form-label" for="{{ filter.form.title.id_for_label }}">{{ filter.form.title.label }}</label>
-                      {% render_field filter.form.title class="form-control" %}
-                    </div>
                   </div>
                 </div>
               </div>
@@ -94,7 +86,7 @@
             {{ category.get_name_display }}
           </a>
         {% endfor %}
-        <div class="mt-1 d-flex justify-content-between align-items-center">
+        <div class="mt-1 d-flex justify-content-between align-items-center flex-column flex-sm-row">
           <small>
             - <a class="text-decoration-none"
                  href="{{ post.theorist.get_absolute_url }}">

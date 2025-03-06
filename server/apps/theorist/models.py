@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
-from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE
+from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE, AFTER_CREATE
 
 from slugify import slugify
 
@@ -58,6 +58,10 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
             kwargs={'uuid': self.uuid},
         )
 
+    @hook(AFTER_CREATE)
+    def create_initial_data(self):
+        TheoristProfileSettings.objects.create(theorist=self)
+
     @hook(BEFORE_SAVE)
     def before_save(self):
         slug = slugify(self.full_name)
@@ -67,3 +71,22 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
         # use .save() outside explicitly
         self.is_onboarded = True
         self.onboarding_date = timezone.now()
+
+
+class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    theorist = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='settings')
+
+    is_show_last_activities = models.BooleanField(default=True)
+    is_able_to_get_messages = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = 'theorist profile setting'
+        verbose_name_plural = 'theorist profile settings'
+
+    def __str__(self):
+        return f'{self.theorist.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    def get_absolute_url(self):
+        return reverse(
+            'forum:theorist_profile:theorist-profile-settings',
+        )

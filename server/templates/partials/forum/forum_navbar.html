@@ -50,7 +50,7 @@
             <li><a class="dropdown-item"
                    href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}">Профіль</a></li>
             <li><a class="dropdown-item" href="{% url 'forum:post-create' %}">Задати питання...</a></li>
-            <li><a class="dropdown-item" href="">Налаштування</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:theorist-profile-settings' %}">{% translate 'Settings' %}</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>

@@ -1,0 +1,71 @@
+{% load i18n static widened_widget_tweaks widget_tweaks %}
+
+<form hx-post="{{ request.path }}" hx-swap="outerHTML" class="card-body">
+  <div class="row gutters mb-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <h6 class="mb-3 text-primary">Personal Details</h6>
+    </div>
+    <div class="col-12">
+      <div class="form-group">
+        <label for="{{ form.username.id_for_label }}">{% translate 'Username' %}</label>
+        {% render_field form.username class="form-control" %}
+        {% render_field_errors form.username small=True %}
+      </div>
+    </div>
+  </div>
+  <hr/>
+  <div class="row gutters mb-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <h6 class="mb-3 text-primary">Address</h6>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+        <label for="Street">Street</label>
+        <input type="name" class="form-control" id="Street" placeholder="Enter Street">
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+        <label for="ciTy">City</label>
+        <input type="name" class="form-control" id="ciTy" placeholder="Enter City">
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+        <label for="sTate">State</label>
+        <input type="text" class="form-control" id="sTate" placeholder="Enter State">
+      </div>
+    </div>
+    <div class="col-xl-6 col-lg-6 col-md-6 col-sm-6 col-12">
+      <div class="form-group">
+        <label for="zIp">Zip Code</label>
+        <input type="text" class="form-control" id="zIp" placeholder="Zip Code">
+      </div>
+    </div>
+  </div>
+
+  <hr/>
+  <div class="row d-flex justify-content-center border border-danger rounded p-4 mt-4">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <h6 class="mb-3 text-danger">{% translate 'Danger zone' %}</h6>
+    </div>
+    <div class="col-md-3 col-6">
+      <button type="button"
+              class="btn btn-danger"
+              hx-confirm="{% translate 'Are you sure that you want to deactivate your account? Your account will not be available anymore.' %}"
+              hx-post=""
+      >
+        <i class="ti ti-user-minus"></i> {% translate 'Deactivate account' %}
+      </button>
+    </div>
+  </div>
+
+  <div class="row gutters">
+    <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+      <div class="d-flex justify-content-center justify-content-sm-end mt-3">
+        <button type="reset" class="btn btn-secondary me-2">{% translate 'Cancel' %}</button>
+        <button type="submit" class="btn btn-primary">{% translate 'Update' %}</button>
+      </div>
+    </div>
+  </div>
+</form>

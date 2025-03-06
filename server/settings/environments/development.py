@@ -5,7 +5,7 @@ DEBUG = True
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.110']
 
-CSRF_TRUSTED_ORIGINS = ['127.0.0.1', 'localhost', '192.168.0.110']
+# CSRF_TRUSTED_ORIGINS = []
 
 SECRET_KEY = 'ASOJFAOSJ-0J1-0U-0js0adja0sj0-21juu0--109U2U0@((@(@'
 

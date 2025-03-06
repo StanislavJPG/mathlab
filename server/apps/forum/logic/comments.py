@@ -21,6 +21,8 @@ __all__ = (
     'CommentSupportUpdateView',
 )
 
+from server.common.mixins.views import HXViewMixin
+
 
 class CommentListView(ListView):
     paginate_by = 7
@@ -124,7 +126,7 @@ class HXCommentQuantityView(DetailView):
         return response
 
 
-class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
+class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Comment
     template_name = 'partials/comment_list.html'
     slug_field = 'uuid'
@@ -139,12 +141,6 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, DetailView):
             .with_likes_counters()
             .with_have_rates_per_theorist(self.request.theorist)
         )
-
-    def dispatch(self, request, *args, **kwargs):
-        self.request: AuthenticatedHttpRequest
-        if not self.request.htmx:
-            return HttpResponse(status=405)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest

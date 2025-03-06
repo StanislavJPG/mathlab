@@ -1,0 +1,17 @@
+{% extends 'base/forum_base.html' %}
+{% load i18n static widened_widget_tweaks widget_tweaks %}
+
+{% block page_head %}
+<title>MathLab | Налаштування профілю</title>
+{% endblock page_head %}
+
+{% block body %}
+<div class="container">
+<div class="row justify-content-center gutters">
+  <h1 class="display-5 mb-5 text-center">Налаштування профілю</h1>
+	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">
+		<div hx-get="{% url 'forum:theorist_profile:hx-profile-settings-form' theorist.uuid %}" hx-targert="this" hx-trigger="load" class="card h-100 p-5"></div>
+	</div>
+</div>
+</div>
+{% endblock body %}

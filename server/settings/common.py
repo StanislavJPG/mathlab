@@ -185,6 +185,8 @@ ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
 LOGIN_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 
+LOGIN_URL = reverse_lazy('users:base-auth')
+
 SITE_ID = 1
 
 # Internationalization

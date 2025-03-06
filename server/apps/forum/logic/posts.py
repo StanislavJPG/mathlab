@@ -13,8 +13,7 @@ from server.apps.forum.filters import PostListFilter
 from server.apps.forum.forms import PostCreateForm
 from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin
-
+from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin
 
 __all__ = (
     'BasePostTemplateView',
@@ -111,7 +110,7 @@ class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
         return response
 
 
-class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
+class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Post
     template_name = 'question_page.html'
     slug_field = 'uuid'
@@ -120,12 +119,6 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return super().get_queryset().with_likes_counters().with_have_rates_per_theorist(self.request.theorist)
-
-    def dispatch(self, request, *args, **kwargs):
-        self.request: AuthenticatedHttpRequest
-        if not self.request.htmx:
-            return HttpResponse(status=405)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest

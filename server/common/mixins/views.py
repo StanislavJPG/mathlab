@@ -3,6 +3,7 @@ from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView
 
+from server.common.http import AuthenticatedHttpRequest
 from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_COLORS,
     BORINGAVATARS_DEFAULT_VARIANT,
@@ -65,3 +66,13 @@ class AvatarDetailViewMixin(DetailView):
             ),
             content_type='image/svg+xml',
         )
+
+
+class HXViewMixin:
+    pass_only_htmx_request = True  # pass request only if it's triggered by htmx
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        if self.pass_only_htmx_request and not self.request.htmx:
+            return HttpResponse(status=405)
+        return super().dispatch(request, *args, **kwargs)

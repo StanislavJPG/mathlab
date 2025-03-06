@@ -10,6 +10,10 @@ from server.apps.theorist.logic.avatars import (
     TheoristAvatarUploadView,
     TheoristAvatarDeleteView,
 )
+from server.apps.theorist.logic.profile_settings import (
+    TheoristProfileSettingsGeneralView,
+    TheoristProfileSettingsFormView,
+)
 
 app_name = 'theorist_profile'
 
@@ -45,9 +49,14 @@ urlpatterns = [
         TheoristAvatarDeleteView.as_view(),
         name='theorist-avatar-delete',
     ),
-    # path(
-    #     'settings/<uuid:uuid>/',
-    #     TheoristSettingsDetailView.as_view(),
-    #     name='theorist-settings',
-    # ),  # TODO: Add possibility to hide last activities for public
+    path(
+        'settings/',
+        TheoristProfileSettingsGeneralView.as_view(),
+        name='theorist-profile-settings',
+    ),
+    path(
+        'settings/<uuid:uuid>/',
+        TheoristProfileSettingsFormView.as_view(),
+        name='hx-profile-settings-form',
+    ),
 ]

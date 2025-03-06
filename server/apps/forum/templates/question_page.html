@@ -87,13 +87,17 @@
         </div>
 
         <div class="mt-5 p-3 text-center">
-          <h6>{% translate 'Answers' %}:
-            <span hx-get="{% url 'forum:comments-count' post.uuid %}"
-                  hx-trigger="commentBlockChanged from:body"
-                  hx-target="this">
-              {{ post.comments_quantity }}
-            </span>
-          </h6>
+          <div hx-get="{% url 'forum:comments-count' post.uuid %}"
+               hx-trigger="commentBlockChanged from:body"
+               hx-target="this">
+            {% with comment_quantity=post.comments_quantity %}
+              {% block comment_quantity %}
+                <span class="mt-4">
+                  {% translate 'Answers' %}: {{ comment_quantity }}
+              </span>
+              {% endblock %}
+            {% endwith %}
+          </div>
           <div class="dropdown mb-3">
             <button class="btn btn-secondary btn-sm dropdown-toggle" type="button" data-bs-toggle="dropdown">
               {% translate 'Sort by' %}

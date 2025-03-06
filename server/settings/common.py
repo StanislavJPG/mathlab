@@ -218,9 +218,13 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme': 'silver',
     'height': 400,
     'menubar': False,
-    'setup': """editor => {
-           editor.on('blur', () => editor.save())
-        }""",  # that fixes bug with HTMX + TinyMCE
+    'setup': """
+    function(editor) {
+        editor.on('blur', function() { editor.save(); });
+        editor.on('focusout', function() { editor.save(); });
+        editor.on('touchend', function() { editor.save(); });
+    }
+    """,  # that fixes bug with HTMX + TinyMCE
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',

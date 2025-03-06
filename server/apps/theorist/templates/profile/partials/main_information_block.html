@@ -11,7 +11,7 @@
     {% if request.theorist.uuid == theorist.uuid %}
       <div class="d-flex justify-content-end">
         <div class="btn-group">
-          <button type="button" class="btn btn-light dropdown-toggle"
+          <button type="button" class="btn btn-primary dropdown-toggle"
                   data-bs-toggle="dropdown"
                   aria-expanded="false"
           >
@@ -19,7 +19,7 @@
           </button>
           <ul class="dropdown-menu">
             <li>
-              <form hx-post="{{ request.path }}" class="mt-2" enctype="multipart/form-data" hx-trigger="change">
+              <form hx-post="{{ request.path }}" enctype="multipart/form-data" hx-trigger="change">
                 <label for="id_custom_avatar" style="cursor: pointer" class="dropdown-item custom-file-upload">
                   <i class="ti ti-upload"></i> {% translate 'Update avatar' %}
                 </label>

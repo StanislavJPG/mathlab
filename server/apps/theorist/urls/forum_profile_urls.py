@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from server.apps.theorist.logic.profile import (
     TheoristProfileDetailView,
@@ -9,10 +9,6 @@ from server.apps.theorist.logic.avatars import (
     TheoristDefaultProfileImageView,
     TheoristAvatarUploadView,
     TheoristAvatarDeleteView,
-)
-from server.apps.theorist.logic.profile_settings import (
-    TheoristProfileSettingsGeneralView,
-    TheoristProfileSettingsFormView,
 )
 
 app_name = 'theorist_profile'
@@ -49,14 +45,6 @@ urlpatterns = [
         TheoristAvatarDeleteView.as_view(),
         name='theorist-avatar-delete',
     ),
-    path(
-        'settings/',
-        TheoristProfileSettingsGeneralView.as_view(),
-        name='theorist-profile-settings',
-    ),
-    path(
-        'settings/<uuid:uuid>/',
-        TheoristProfileSettingsFormView.as_view(),
-        name='hx-profile-settings-form',
-    ),
+    # settings
+    path('settings/', include('server.apps.theorist.urls.settings_urls')),
 ]

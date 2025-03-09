@@ -1,66 +1,22 @@
 {% load static i18n avatars %}
 
-<style>
-    input[type="file"] {
-        display: none;
-    }
-</style>
-
 <div class="card mb-4">
   <div class="card-body text-center">
-    {% if request.theorist.uuid == theorist.uuid %}
-      <div class="d-flex justify-content-end">
-        <div class="btn-group">
-          <button type="button" class="btn btn-primary dropdown-toggle"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-          >
-            <i class="ti ti-menu-2"></i>
-          </button>
-          <ul class="dropdown-menu">
-            <li>
-              <form hx-post="{{ request.path }}" enctype="multipart/form-data" hx-trigger="change">
-                <label for="id_custom_avatar" style="cursor: pointer" class="dropdown-item custom-file-upload">
-                  <i class="ti ti-upload"></i> {% translate 'Update avatar' %}
-                </label>
-                <input type="file" name="custom_avatar" accept="image/*" id="id_custom_avatar">
-              </form>
-            </li>
-            <li>
-              {% if theorist.custom_avatar %}
-                <button type="button"
-                        class="dropdown-item"
-                        hx-confirm="{% translate 'Delete this image?' %}"
-                        hx-post="{% url 'forum:theorist_profile:theorist-avatar-delete' theorist.uuid %}"
-                >
-                  <i class="ti ti-trash"></i> {% translate 'Delete avatar' %}
-                </button>
-              {% endif %}
-            </li>
-          </ul>
-        </div>
-      </div>
-    {% endif %}
-    <div class="mb-3 mt-1"
-         hx-get="{{ request.path }}"
-         hx-trigger="imageChanged from:body"
-    >
+    <div class="mb-3 mt-1">
       {% get_instance_avatar theorist %}
     </div>
-    <div>
-      <h5>
-        <img alt="country_flag" src="{{ theorist.country.flag }}">
-        {{ theorist.full_name }}
-      </h5>
-      <div style="margin-bottom: 1rem !important;">
-        <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
-      </div>
-      <div class="d-flex justify-content-center mb-2">
-        <a href="" type="button"
-           data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm ms-1">
-          <i class="ti ti-message"></i> {% translate 'Send message' %}
-        </a>
-      </div>
+    <h5>
+      <img alt="country_flag" src="{{ theorist.country.flag }}">
+      {{ theorist.full_name }}
+    </h5>
+    <div style="margin-bottom: 1rem !important;">
+      <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
+    </div>
+    <div class="d-flex justify-content-center mb-2">
+      <a href="" type="button"
+         data-mdb-button-init data-mdb-ripple-init class="btn btn-primary btn-sm ms-1">
+        <i class="ti ti-message"></i> {% translate 'Send message' %}
+      </a>
     </div>
   </div>
 </div>

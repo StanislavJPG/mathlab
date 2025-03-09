@@ -4,7 +4,7 @@ from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
-from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE, AFTER_CREATE
+from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 
 from slugify import slugify
 
@@ -22,6 +22,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     # personal info
     full_name = models.CharField(max_length=150)
     country = CountryField(blank_label=_('Country'), null=True)
+    about_me = models.TextField(_('About me'), blank=True)
 
     full_name_slug = models.SlugField(max_length=255, null=True, blank=True)
     user = models.OneToOneField('users.CustomUser', on_delete=models.CASCADE)
@@ -62,15 +63,20 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def create_initial_data(self):
         TheoristProfileSettings.objects.create(theorist=self)
 
-    @hook(BEFORE_SAVE)
-    def before_save(self):
+    @hook(AFTER_SAVE, when='full_name', has_changed=True)
+    def after_save(self):
         slug = slugify(self.full_name)
         self.full_name_slug = slug
+        self.save(update_fields=['full_name_slug'])
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly
         self.is_onboarded = True
         self.onboarding_date = timezone.now()
+
+    def deactivate(self):
+        self.user.is_active = False
+        self.user.save(update_fields=['is_active'])
 
 
 class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
@@ -88,5 +94,5 @@ class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleMo
 
     def get_absolute_url(self):
         return reverse(
-            'forum:theorist_profile:theorist-profile-settings',
+            'forum:theorist_profile:settings:theorist-profile-settings',
         )

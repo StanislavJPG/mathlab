@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 23:25+0200\n"
+"POT-Creation-Date: 2025-03-10 23:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -506,8 +506,7 @@ msgstr "Ви успішно авторизувались."
 #: server/apps/users/logic/auths_actions.py
 msgid ""
 "You have created your account successfully. Now finish the registration."
-msgstr ""
-"Ви успішно створили акаунт. Тепер завершіть реєстрацію."
+msgstr "Ви успішно створили акаунт. Тепер завершіть реєстрацію."
 
 #: server/apps/users/logic/auths_actions.py
 msgid "You are successfully logged out."
@@ -567,6 +566,13 @@ msgstr "Продовжити з Google"
 #: server/apps/users/templates/partials/password_reset_key.html
 msgid "Reset password"
 msgstr "Скинути пароль"
+
+#: server/apps/users/templates/partials/password_reset_key.html
+#, python-format
+msgid ""
+"Hi, %(full_name)s 👋. You can reset your password by filling the form below."
+msgstr ""
+"Привіт, %(full_name)s 👋. Ви можете відновити Ваш пароль, заповнивши форму нижче."
 
 #: server/apps/users/templates/partials/signup.html
 msgid "Sign in"

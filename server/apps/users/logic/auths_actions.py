@@ -1,5 +1,6 @@
 from django.http import HttpResponseRedirect
 from django.urls import reverse
+from django.utils.http import base36_to_int
 from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
 
@@ -14,6 +15,8 @@ from allauth.account.views import (
 from braces.views import FormMessagesMixin
 
 from django_htmx.http import HttpResponseClientRedirect
+
+from server.apps.users.models import CustomUser
 
 
 class CustomBaseAuthenticationView(TemplateView):
@@ -76,3 +79,9 @@ class CustomPasswordResetFromKeyView(FormMessagesMixin, PasswordResetFromKeyView
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('users:base-auth'))
         return response
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        uid = base36_to_int(self.kwargs['uidb36'])
+        context['user_to_reset'] = CustomUser.objects.filter(pk=uid).first()
+        return context

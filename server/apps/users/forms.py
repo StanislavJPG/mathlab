@@ -8,6 +8,7 @@ from allauth.account.forms import (
     default_token_generator,
 )
 from allauth.account.utils import user_username, user_pk_to_url_str
+from django.conf import settings
 from django.urls import reverse
 from allauth.account.app_settings import LoginMethod
 from allauth.account.internal import flows
@@ -40,6 +41,9 @@ class CustomResetPasswordForm(ResetPasswordForm):
                 'uid': uid,
                 'key': temp_key,
                 'request': request,
+                'operating_system': request.headers.get('Sec-Ch-Ua-Platform'),
+                'browser_name': request.headers.get('User-Agent'),
+                'default_site_url': build_absolute_uri(request, settings.SITE_DEFAULT_URL),
             }
             if LoginMethod.USERNAME in app_settings.LOGIN_METHODS:
                 context['username'] = user_username(user)

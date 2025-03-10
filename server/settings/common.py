@@ -94,7 +94,7 @@ ROOT_URLCONF = 'server.urls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'apps'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -192,6 +192,7 @@ ACCOUNT_FORMS = {
 LOGIN_URL = reverse_lazy('users:base-auth')
 
 SITE_ID = 1
+SITE_DEFAULT_URL = reverse_lazy('forum:base-forum-page')
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

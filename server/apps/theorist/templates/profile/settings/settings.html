@@ -2,7 +2,7 @@
 {% load i18n static widened_widget_tweaks widget_tweaks %}
 
 {% block page_head %}
-  <title>MathLab | Налаштування профілю</title>
+  <title>MathLab | {% translate 'Profile settings' %}</title>
 {% endblock page_head %}
 
 {% block page_css %}
@@ -23,28 +23,21 @@
              data-bs-toggle="tab"
              href="#account"
              role="tab">
-            Account
+            {% translate 'Account' %}
           </a>
           <a class="list-group-item list-group-item-action"
              id="password-btn"
              data-bs-toggle="tab"
              href="#password"
              role="tab">
-            Password
+            {% translate 'Password' %}
           </a>
           <a class="list-group-item list-group-item-action"
              id="your-data-btn"
              data-bs-toggle="tab"
              href="#your-data"
              role="tab">
-            Your data
-          </a>
-          <a class="list-group-item list-group-item-action"
-             id="deactivate-profile-btn"
-             data-bs-toggle="tab"
-             href="#deactivate-profile"
-             role="tab">
-            Delete account
+            {% translate 'Your data' %}
           </a>
         </div>
       </div>

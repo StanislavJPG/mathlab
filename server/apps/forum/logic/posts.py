@@ -3,33 +3,32 @@ from django.db.models import Q
 
 from django.http import HttpResponseRedirect, HttpResponse
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, CreateView, DetailView, ListView
+from django.views.generic import DeleteView, CreateView, DetailView, TemplateView
+from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
+from hitcount.views import HitCountDetailView
 from render_block import render_block_to_string
 
+from server.apps.forum.filters import PostListFilter
 from server.apps.forum.forms import PostCreateForm
 from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
-
+from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin
 
 __all__ = (
+    'BasePostTemplateView',
+    'PostSupportUpdateView',
     'PostListView',
     'PostDetailView',
     'PostCreateView',
     'PostDeleteView',
     'HXPostLikesAndDislikesView',
+    'PostDefaultImageView',
 )
 
 
-class PostListView(ListView):
-    paginate_by = 10
-    model = Post
-    context_object_name = 'posts'
-    template_name = 'partials/posts_list.html'
-
-    def get_queryset(self):
-        self.request: AuthenticatedHttpRequest
-        return super().get_queryset().with_likes_counters().order_by('-created_at')
+class BasePostTemplateView(TemplateView):
+    template_name = 'base_articles.html'
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -37,16 +36,30 @@ class PostListView(ListView):
         return context
 
 
-class PostDetailView(DetailView):
+class PostListView(FilterView):
+    paginate_by = 10
+    model = Post
+    filterset_class = PostListFilter
+    context_object_name = 'posts'
+    template_name = 'partials/posts_list.html'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return super().get_queryset().with_likes_counters().order_by('-created_at')
+
+
+class PostDetailView(HitCountDetailView):
     model = Post
     context_object_name = 'post'
     template_name = 'question_page.html'
+    count_hit = True
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return (
             super()
             .get_queryset()
+            .filter(slug=self.kwargs['slug'])
             .prefetch_related('comments', 'categories')
             .with_likes_counters()
             .with_have_rates_per_theorist(self.request.theorist)
@@ -97,7 +110,7 @@ class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
         return response
 
 
-class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
+class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Post
     template_name = 'question_page.html'
     slug_field = 'uuid'
@@ -106,12 +119,6 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, DetailView):
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return super().get_queryset().with_likes_counters().with_have_rates_per_theorist(self.request.theorist)
-
-    def dispatch(self, request, *args, **kwargs):
-        self.request: AuthenticatedHttpRequest
-        if not self.request.htmx:
-            return HttpResponse(status=405)
-        return super().dispatch(request, *args, **kwargs)
 
     def get(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest
@@ -176,3 +183,13 @@ class PostSupportUpdateView(LoginRequiredMixin, DetailView):
         response = HttpResponse()
         trigger_client_event(response, 'postBlockChanged')
         return response
+
+
+class PostDefaultImageView(CacheMixin, AvatarDetailViewMixin):
+    model = Post
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+    avatar_unique_field = 'slug'
+    avatar_variant = 'marble'
+    avatar_square = True
+    cache_timeout = 120

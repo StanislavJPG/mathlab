@@ -19,7 +19,7 @@ class TheoristDefaultProfileImageView(CacheMixin, AvatarDetailViewMixin):
     model = Theorist
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
-    unique_avatar_field = 'user__email'
+    avatar_unique_field = 'user__email'
     cache_timeout = 120
 
 

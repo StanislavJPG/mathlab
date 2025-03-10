@@ -7,10 +7,13 @@ from server.apps.forum.logic.posts import (
     HXPostLikesAndDislikesView,
     PostListView,
     PostSupportUpdateView,
+    PostDefaultImageView,
+    BasePostTemplateView,
 )
 
 urlpatterns = [
-    path('', PostListView.as_view(), name='post-list'),
+    path('', BasePostTemplateView.as_view(), name='base-forum-page'),
+    path('posts/list/', PostListView.as_view(), name='post-list'),
     path(
         'posts/<int:pk>/<slug:slug>/',
         PostDetailView.as_view(),
@@ -35,5 +38,11 @@ urlpatterns = [
         '<uuid:uuid>/posts/support/',
         PostSupportUpdateView.as_view(),
         name='posts-support-update',
+    ),
+    # avatars
+    path(
+        '<uuid:uuid>/posts/avatar/',
+        PostDefaultImageView.as_view(),
+        name='post-avatar',
     ),
 ]

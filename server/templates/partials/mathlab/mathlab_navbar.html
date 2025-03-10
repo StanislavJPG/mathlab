@@ -1,6 +1,6 @@
 
 <header class="navbar navbar-fixed-top d-flex justify-content-center py-3">
-  <ul class="nav nav-pills">
+  <ul class="nav nav-pills d-flex justify-content-center">
       <li class="nav-item">
         <a href="{% url 'mathlab:base-math-news' %}"
            class="nav-link {% if 'news' in request.path %}active{% endif %}"
@@ -19,7 +19,7 @@
            class="nav-link {% if 'graphbuilder' in request.path %}active{% endif %}">Побудуй графік</a>
       </li>
       <li class="nav-item">
-        <a href="{% url 'forum:post-list' %}?sort=popular&page=1"
+        <a href="{% url 'forum:base-forum-page' %}"
            class="nav-link">Форум</a>
       </li>
   </ul>

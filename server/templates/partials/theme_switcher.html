@@ -1,0 +1,64 @@
+{% load i18n %}
+
+<div class="dropdown position-fixed bottom-0 end-0 mb-3 me-3 bd-mode-toggle">
+  <button class="btn btn-primary py-2 dropdown-toggle d-flex align-items-center" id="bd-theme" type="button"
+          aria-expanded="false" data-bs-toggle="dropdown" aria-label="Toggle theme (light)">
+    <span class="visually-hidden" id="bd-theme-text">Toggle theme</span>
+  </button>
+  <ul class="dropdown-menu dropdown-menu-end shadow" aria-labelledby="bd-theme-text">
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center active"
+              data-bs-theme-value="light" aria-pressed="true">
+        <i class="ti ti-sun-filled me-1"></i> {% translate 'Light' %}
+      </button>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center"
+              data-bs-theme-value="dark" aria-pressed="false">
+        <i class="ti ti-moon-filled me-1"></i> {% translate 'Dark' %}
+      </button>
+    </li>
+    <li>
+      <button type="button" class="dropdown-item d-flex align-items-center"
+              data-bs-theme-value="auto" aria-pressed="false">
+        <i class="ti ti-circle-half-2 me-1"></i>{% translate 'Auto' %}
+      </button>
+    </li>
+  </ul>
+</div>
+
+<script>
+    document.addEventListener("DOMContentLoaded", () => {
+        const themeButton = document.getElementById("bd-theme");
+        const themeButtons = document.querySelectorAll("[data-bs-theme-value]");
+        const themes = {light: "ti ti-sun-filled", dark: "ti ti-moon-filled", auto: "ti ti-circle-half-2"};
+
+        let currentTheme = localStorage.getItem("theme") || "light";
+        setTheme(currentTheme);
+
+        themeButtons.forEach(button => {
+            button.addEventListener("click", () => setTheme(button.getAttribute("data-bs-theme-value")));
+        });
+
+        function setTheme(theme) {
+            document.documentElement.setAttribute("data-bs-theme", theme);
+            localStorage.setItem("theme", theme);
+            updateThemeIcon(theme);
+            updateActiveTheme(theme);
+        }
+
+        function updateThemeIcon(theme) {
+            themeButton.innerHTML = `<i class="${themes[theme]}"></i>`;
+            localStorage.setItem("themeIconClass", themes[theme]);
+        }
+
+        function updateActiveTheme(theme) {
+            themeButtons.forEach(button => {
+                button.classList.toggle("active", button.getAttribute("data-bs-theme-value") === theme);
+                button.setAttribute("aria-pressed", button.classList.contains("active"));
+            });
+        }
+    });
+</script>
+
+

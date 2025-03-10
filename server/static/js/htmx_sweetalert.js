@@ -5,10 +5,12 @@ document.addEventListener("htmx:confirm", function (e) {
         e.detail.issueRequest(true);
         return;
     }
+    const theme = localStorage.getItem("theme");
     Swal.fire({
         title: gettext("Proceed?"),
         text: `${e.detail.question}`,
         icon: "warning",
+        theme: (theme === "auto") ? "light" : theme,
         showCancelButton: true,
         confirmButtonText: gettext("Yes"),
         cancelButtonText: gettext("No"),

@@ -5,85 +5,101 @@
      hx-trigger="commentBlockChanged from:body delay:0.6s"
 >
   {% for comment in comments %}
-    <div style="margin-bottom: 150px;" class="full-answer-{{ comment.uuid }}">
-      <div class="types">
-        <span class="span-base"><b>{% translate 'Author' %}:</b>
-            <a class="text-decoration-none"
-               target="_blank"
-               href="{{ comment.theorist.get_absolute_profile_url }}"> {{ comment.theorist.full_name }} </a> |
-            <b>{{ comment.theorist.get_rank_display }}</b></span>
-        <span
-            class="span-base"><b>{% translate 'Created at' %}</b> {{ comment.created_at|timesince }} {% translate 'ago' %}</span>
-        {% if comment.modified_at is not none %}
-          <span
-              class="span-base"><b>{% translate 'Modified at' %}</b> {{ comment.modified_at|timesince }} {% translate 'ago' %}</span>
-        {% endif %}
-        <div style="margin-left: 15px;">
-          {% if comment.theorist.uuid == request.theorist.uuid %}
-            <button class="btn btn-danger btn-sm"
-                    type="submit"
-                    hx-delete="{% url 'forum:comment-delete' comment.uuid post.uuid %}"
-                    hx-confirm="{% translate 'Are you sure?' %}"
-                    hx-swap="outerHTML swap:0.5s"
-                    hx-target=".full-answer-{{ comment.uuid }}"
-            >
-              {% translate 'Delete comment' %}
-            </button>
-          {% endif %}
-        </div>
-      </div>
-      <div class="d_line"></div>
-      <div class="interact">
-        {% block comment_likes_and_dislikes %}
-          <div hx-get="{% url 'forum:hx-comment-rate' comment.uuid %}"
-               hx-trigger="commentLikesAndDislikesChanged{{ comment.uuid }} from:body"
-               hx-target="this"
-          >
-            <a type="button"
-               class="{% if not comment.is_comment_already_liked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
-               hx-swap="none"
-               hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}?like=true">
-              <i style="font-size: 35px" class="ti ti-thumb-up"></i>
-              {{ comment.custom_likes_counter }}
-            </a>
-            <a type="button"
-               class="{% if not comment.is_comment_already_disliked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
-               hx-swap="none"
-               hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}">
-              <i style="font-size: 35px" class="ti ti-thumb-down"></i>
-              {{ comment.custom_dislikes_counter }}
-            </a>
+    <hr/>
+    <div class="container full-answer-{{ comment.uuid }} mb-5">
+      <div class="row">
+        <div class="d-flex flex-column flex-md-row list-inline text-muted small text-start justify-content-between">
+          <div>
+            <div class="list-inline-item small"><b>{% translate 'Author' %}:</b>
+              <a class="text-decoration-none"
+                 target="_blank"
+                 href="{{ comment.theorist.get_absolute_url }}"> {{ comment.theorist.full_name }} </a> |
+              <b>{{ comment.theorist.get_rank_display }}</b></div>
+            <div class="list-inline-item small"
+                class="span-base">
+              <b>{% translate 'Created at' %}</b> {{ comment.created_at|timesince }} {% translate 'ago' %}</div>
+            {% if comment.modified_at is not none %}
+              <div class="list-inline-item small"
+                  class="span-base">
+                <b>{% translate 'Modified at' %}</b> {{ comment.modified_at|timesince }} {% translate 'ago' %}</div>
+            {% endif %}
           </div>
-        {% endblock comment_likes_and_dislikes %}
-        {% if not request.user.is_email_verified %}
-          <a class="btn btn-sm btn-secondary text-nowrap" disabled
-             data-bs-toggle="tooltip" data-bs-placement="top"
-             title="{% translate 'Sorry! You have to verify your email to interact.' %}"
-             href="{% url 'forum:theorist_profile:base-page' comment.theorist.pk comment.theorist.full_name_slug %}"
-          >
-            {% translate 'Thank you!' %}
-          </a>
-        {% elif request.theorist.uuid == comment.theorist.uuid %}
-        {% elif comment in request.theorist.supported_comments.all %}
-          <a class="btn btn-sm btn-outline-primary text-nowrap" disabled
-             data-bs-toggle="tooltip" data-bs-placement="top"
-             title="{% translate 'You have already supported this comment.' %}"
-          >
-            {% translate 'Thank you!' %}
-          </a>
-        {% else %}
-          <button
-              class="btn btn-sm btn-primary text-nowrap"
-              hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
-              hx-swap="none"
-              hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}"
-          >
-            {% translate 'Thank you!' %}
-          </button>
-        {% endif %}
-      </div>
-      <div class="question-content text-start">
-        {{ comment.comment|safe }}
+          <div class="list-inline-item small">
+            {% if comment.theorist.uuid == request.theorist.uuid %}
+              <button class="btn btn-warning btn-sm me-1"
+                      type="submit"
+              >
+                <i class="ti ti-edit"></i>
+              </button>
+              <button class="btn btn-danger btn-sm"
+                      type="submit"
+                      hx-delete="{% url 'forum:comment-delete' comment.uuid post.uuid %}"
+                      hx-confirm="{% translate 'Are you sure?' %}"
+                      hx-swap="outerHTML swap:0.5s"
+                      hx-target=".full-answer-{{ comment.uuid }}"
+              >
+                <i class="ti ti-trash"></i>
+              </button>
+            {% else %}
+              {% if request.user.is_authenticated %}
+                {% if not request.user.is_email_verified %}
+                  <a class="btn btn-sm btn-secondary text-nowrap" disabled
+                     data-bs-toggle="tooltip" data-bs-placement="top"
+                     title="{% translate 'Sorry! You have to verify your email to interact.' %}"
+                     href="{% url 'forum:theorist_profile:base-page' comment.theorist.pk comment.theorist.full_name_slug %}"
+                  >
+                    {% translate 'Thank you!' %}
+                  </a>
+                {% elif request.theorist.uuid == comment.theorist.uuid %}
+                {% elif comment in request.theorist.supported_comments.all %}
+                  <a class="btn btn-sm btn-outline-primary text-nowrap" disabled
+                     data-bs-toggle="tooltip" data-bs-placement="top"
+                     title="{% translate 'You have already supported this comment.' %}"
+                  >
+                    {% translate 'Thank you!' %}
+                  </a>
+                {% else %}
+                  <button
+                      class="btn btn-sm btn-primary text-nowrap"
+                      hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
+                      hx-swap="none"
+                      hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}"
+                  >
+                    {% translate 'Thank you!' %}
+                  </button>
+                {% endif %}
+              {% endif %}
+            {% endif %}
+          </div>
+        </div>
+        <div class="d-flex flex-row-reverse justify-content-end">
+          <div class="d-flex flex-column">
+            <div class="text-break p-1 mt-1">{{ comment.comment|safe }}</div>
+          </div>
+          <div class="flex-column me-4 mt-2">
+            {% block comment_likes_and_dislikes %}
+              <div hx-get="{% url 'forum:hx-comment-rate' comment.uuid %}"
+                   hx-trigger="commentLikesAndDislikesChanged{{ comment.uuid }} from:body"
+                   hx-target="this"
+              >
+                <a type="button"
+                   class="{% if not comment.is_comment_already_liked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                   hx-swap="none"
+                   hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}?like=true">
+                  <i style="font-size: 35px" class="ti ti-thumb-up"></i>
+                  {{ comment.custom_likes_counter }}
+                </a>
+                <a type="button"
+                   class="{% if not comment.is_comment_already_disliked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                   hx-swap="none"
+                   hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}">
+                  <i style="font-size: 35px" class="ti ti-thumb-down"></i>
+                  {{ comment.custom_dislikes_counter }}
+                </a>
+              </div>
+            {% endblock comment_likes_and_dislikes %}
+          </div>
+        </div>
       </div>
     </div>
   {% endfor %}

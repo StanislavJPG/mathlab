@@ -1,8 +1,15 @@
+from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import TemplateView
 from django.utils.translation import gettext_lazy as _
 
-from allauth.account.views import LoginView, SignupView, LogoutView, PasswordResetView, ConfirmEmailView, EmailView
+from allauth.account.views import (
+    LoginView,
+    SignupView,
+    LogoutView,
+    PasswordResetView,
+    PasswordResetFromKeyView,
+)
 
 from braces.views import FormMessagesMixin
 
@@ -12,6 +19,11 @@ from django_htmx.http import HttpResponseClientRedirect
 class CustomBaseAuthenticationView(TemplateView):
     template_name = 'base_auth_site.html'
 
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated:
+            return HttpResponseRedirect(reverse('forum:base-forum-page'))
+        return super().dispatch(request, *args, **kwargs)
+
 
 class CustomLoginView(FormMessagesMixin, LoginView):
     template_name = 'partials/login.html'
@@ -20,7 +32,7 @@ class CustomLoginView(FormMessagesMixin, LoginView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
@@ -32,7 +44,7 @@ class CustomSignUpView(FormMessagesMixin, SignupView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('forum:post-list'))
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
@@ -43,7 +55,7 @@ class CustomLogoutUpView(FormMessagesMixin, LogoutView):
 
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
-        return HttpResponseClientRedirect(reverse('forum:post-list'))  # for HTMX purposes
+        return HttpResponseClientRedirect(reverse('forum:base-forum-page'))  # for HTMX purposes
 
 
 class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):
@@ -53,12 +65,18 @@ class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):
 
     def form_valid(self, form):
         super().form_valid(form)
-        response = HttpResponseClientRedirect(reverse('users:login'))
+        response = HttpResponseClientRedirect(reverse('users:base-auth'))
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
 
-class CustomEmailView(EmailView): ...
+class CustomPasswordResetFromKeyView(FormMessagesMixin, PasswordResetFromKeyView):
+    template_name = 'partials/password_reset_key.html'
+    form_valid_message = _('You have registered successfully.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
 
-
-class CustomConfirmEmailView(ConfirmEmailView): ...
+    def form_valid(self, form):
+        super().form_valid(form)
+        response = HttpResponseClientRedirect(reverse('users:base-auth'))
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        return response

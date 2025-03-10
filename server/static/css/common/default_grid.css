@@ -13,8 +13,7 @@
 }
 
 body > .container {
-    padding-top: 60px;
-    background-color: white;
+    padding-top: 50px;
 }
 
 @media (max-width: 980px) {

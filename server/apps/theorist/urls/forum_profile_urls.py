@@ -1,4 +1,4 @@
-from django.urls import path
+from django.urls import path, include
 
 from server.apps.theorist.logic.profile import (
     TheoristProfileDetailView,
@@ -45,9 +45,6 @@ urlpatterns = [
         TheoristAvatarDeleteView.as_view(),
         name='theorist-avatar-delete',
     ),
-    # path(
-    #     'settings/<uuid:uuid>/',
-    #     TheoristSettingsDetailView.as_view(),
-    #     name='theorist-settings',
-    # ),  # TODO: Add possibility to hide last activities for public
+    # settings
+    path('settings/', include('server.apps.theorist.urls.settings_urls')),
 ]

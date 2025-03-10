@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-01 19:35+0200\n"
+"POT-Creation-Date: 2025-03-03 00:35+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -86,6 +86,27 @@ msgstr ""
 msgid "Other"
 msgstr ""
 
+#: server/apps/forum/filters.py
+msgid "Title"
+msgstr ""
+
+#: server/apps/forum/filters.py
+msgid "Categories"
+msgstr ""
+
+#: server/apps/forum/filters.py
+msgid "Likes quantity"
+msgstr ""
+
+#: server/apps/forum/filters.py
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Comments quantity"
+msgstr ""
+
+#: server/apps/forum/filters.py
+msgid "Posts views"
+msgstr ""
+
 #: server/apps/forum/forms.py
 msgid "Question topic (maximum 85 characters)"
 msgstr ""
@@ -119,6 +140,10 @@ msgstr ""
 
 #: server/apps/forum/logic/posts.py
 msgid "Your post has been deleted."
+msgstr ""
+
+#: server/apps/forum/templates/base_articles.html
+msgid "Loading..."
 msgstr ""
 
 #: server/apps/forum/templates/create_question_page.html
@@ -160,6 +185,7 @@ msgid "Created at"
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/partials/posts_list.html
 msgid "ago"
 msgstr ""
 
@@ -198,48 +224,43 @@ msgid ""
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Last topics"
+msgid "Filter"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Ask your question"
+msgid "Advanced filter"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Categories"
+msgid "Apply"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-#: server/apps/forum/templates/question_page.html
-msgid "Sort by"
+msgid "Clear"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Most popular"
+msgid "Recent questions"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Most interesting"
+msgid "asked"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "The newest"
+msgid "Post likes quantity"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Previous week"
+msgid "Post comments quantity"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Likes"
+msgid "Post views quantity"
 msgstr ""
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Comments"
-msgstr ""
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Delete post"
+msgid "Post deletion"
 msgstr ""
 
 #: server/apps/forum/templates/question_page.html
@@ -258,6 +279,10 @@ msgstr ""
 
 #: server/apps/forum/templates/question_page.html
 msgid "Answers"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
+msgid "Sort by"
 msgstr ""
 
 #: server/apps/forum/templates/question_page.html
@@ -407,10 +432,6 @@ msgstr ""
 msgid "Posts quantity"
 msgstr ""
 
-#: server/apps/theorist/templates/profile/partials/statistics.html
-msgid "Comments quantity"
-msgstr ""
-
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Profile"
 msgstr ""
@@ -495,4 +516,24 @@ msgstr ""
 
 #: server/templates/common/pagination.html
 msgid "Next"
+msgstr ""
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Forum"
+msgstr ""
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "New discussion"
+msgstr ""
+
+#: server/templates/partials/theme_switcher.html
+msgid "Light"
+msgstr ""
+
+#: server/templates/partials/theme_switcher.html
+msgid "Dark"
+msgstr ""
+
+#: server/templates/partials/theme_switcher.html
+msgid "Auto"
 msgstr ""

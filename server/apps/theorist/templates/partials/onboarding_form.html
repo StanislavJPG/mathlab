@@ -25,6 +25,11 @@
     {% render_field form.country|add_bootstrap_validation_classes class="selectpicker form-control" data-style="btn-default" data-live-search="true" %}
     {% render_field_errors form.country small=True %}
   </div>
+  
+  <div class="form-outline mb-4">
+    {% render_field form.about_me|add_bootstrap_validation_classes class="form-control" %}
+    {% render_field_errors form.about_me small=True %}
+  </div>
 
   <div class="form-outline mb-4">
     {% render_field form.social_media_url|add_bootstrap_validation_classes class="form-control" %}

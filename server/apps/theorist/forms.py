@@ -6,12 +6,15 @@ from server.apps.theorist.models import Theorist, TheoristProfileSettings
 
 
 class TheoristOnboardForm(forms.ModelForm):
+    about_me = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), max_length=150, required=False)
+
     class Meta:
         model = Theorist
-        fields = ('country', 'social_media_url', 'website_url')
+        fields = ('country', 'about_me', 'social_media_url', 'website_url')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
+        self.fields['about_me'].widget.attrs['placeholder'] = _('Tell something about yourself... (optional)')
         self.fields['social_media_url'].widget.attrs['placeholder'] = _('Social media url (optional)')
         self.fields['website_url'].widget.attrs['placeholder'] = _('Website url (optional)')
 

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-03 00:35+0200\n"
+"POT-Creation-Date: 2025-03-10 17:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,6 +94,10 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
+#: server/apps/forum/filters.py server/apps/forum/templates/question_page.html
+msgid "Sort by"
+msgstr ""
+
 #: server/apps/forum/filters.py
 msgid "Likes quantity"
 msgstr ""
@@ -122,6 +126,7 @@ msgstr ""
 
 #: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
 #: server/apps/theorist/logic/onboarding.py
+#: server/apps/theorist/logic/profile_settings.py
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check your input and try again."
 msgstr ""
@@ -190,26 +195,20 @@ msgid "ago"
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Modified at"
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
 #: server/templates/partials/forum/forum_navbar.html
 msgid "Are you sure?"
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
-msgid "Delete comment"
-msgstr ""
-
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Sorry! You have to verify your email to interact."
 msgstr ""
 
 #: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Thank you!"
 msgstr ""
 
@@ -264,25 +263,15 @@ msgid "Post deletion"
 msgstr ""
 
 #: server/apps/forum/templates/question_page.html
+msgid "Modified"
+msgstr ""
+
+#: server/apps/forum/templates/question_page.html
 msgid "Viewers"
 msgstr ""
 
 #: server/apps/forum/templates/question_page.html
-msgid "You have already supported this post."
-msgstr ""
-
-#: server/apps/forum/templates/question_page.html
-msgid ""
-"Do you want to support this post? You will raise score for this user by "
-"doing that."
-msgstr ""
-
-#: server/apps/forum/templates/question_page.html
 msgid "Answers"
-msgstr ""
-
-#: server/apps/forum/templates/question_page.html
-msgid "Sort by"
 msgstr ""
 
 #: server/apps/forum/templates/question_page.html
@@ -295,13 +284,6 @@ msgstr ""
 
 #: server/apps/forum/templates/question_page.html
 msgid "Your answer"
-msgstr ""
-
-#: server/apps/forum/templates/question_page.html
-#, python-format
-msgid ""
-"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
-"none;\" href=\"%(login_view)s\">Authorize</a>, to ask your questions.</h1>"
 msgstr ""
 
 #: server/apps/theorist/choices.py
@@ -332,6 +314,10 @@ msgstr ""
 msgid "Website url (optional)"
 msgstr ""
 
+#: server/apps/theorist/forms.py
+msgid "Username"
+msgstr ""
+
 #: server/apps/theorist/logic/avatars.py
 msgid "You successfully uploaded your avatar."
 msgstr ""
@@ -348,8 +334,18 @@ msgstr ""
 msgid "You successfully registered!"
 msgstr ""
 
+#: server/apps/theorist/logic/profile_settings.py
+msgid "You successfully changed your profile data!"
+msgstr ""
+
 #: server/apps/theorist/models.py
 msgid "Country"
+msgstr ""
+
+#: server/apps/theorist/models.py
+#: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist/templates/profile/profile.html
+msgid "About me"
 msgstr ""
 
 #: server/apps/theorist/templates/partials/onboarding_form.html
@@ -409,18 +405,6 @@ msgid "Liked a comment in post"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Update avatar"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Delete this image?"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Delete avatar"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
 msgstr ""
 
@@ -437,15 +421,70 @@ msgid "Profile"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/profile.html
-msgid "About me"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/profile.html
 msgid "Statistics"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Contact info"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Personal info"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Save changes"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Update avatar"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Delete this image?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Delete avatar"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Danger zone"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid ""
+"Are you sure that you want to deactivate your account? Your account will not "
+"be available anymore."
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Deactivate account"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Profile settings"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Settings"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Account"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Password"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Your data"
+msgstr ""
+
+#: server/apps/users/adapters.py
+msgid "Password reset"
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
@@ -503,6 +542,7 @@ msgid "Continue with Google"
 msgstr ""
 
 #: server/apps/users/templates/partials/password_reset.html
+#: server/apps/users/templates/partials/password_reset_key.html
 msgid "Reset password"
 msgstr ""
 

@@ -33,24 +33,22 @@ class CustomLoginView(FormMessagesMixin, LoginView):
     def form_valid(self, form):
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
 
 class CustomSignUpView(FormMessagesMixin, SignupView):
     template_name = 'partials/signup.html'
-    form_valid_message = _('You have registered successfully.')
+    form_valid_message = _('You have created your account successfully. Now finish the registration.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def form_valid(self, form):
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
 
 class CustomLogoutUpView(FormMessagesMixin, LogoutView):
-    form_valid_message = _('You are successfully logout.')
+    form_valid_message = _('You are successfully logged out.')
     form_invalid_message = _('Error. Please, check for errors existing and try again.')
 
     def post(self, request, *args, **kwargs):
@@ -60,23 +58,21 @@ class CustomLogoutUpView(FormMessagesMixin, LogoutView):
 
 class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):
     template_name = 'partials/password_reset.html'
-    form_valid_message = _('You have registered successfully.')
+    form_valid_message = _('Password reset instruction has sent to your email address.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def form_valid(self, form):
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('users:base-auth'))
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response
 
 
 class CustomPasswordResetFromKeyView(FormMessagesMixin, PasswordResetFromKeyView):
     template_name = 'partials/password_reset_key.html'
-    form_valid_message = _('You have registered successfully.')
+    form_valid_message = _('You have changed your password successfully. Now your can log in.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def form_valid(self, form):
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('users:base-auth'))
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 17:10+0200\n"
+"POT-Creation-Date: 2025-03-10 23:25+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -307,6 +307,10 @@ msgid "Lord of mathematics"
 msgstr ""
 
 #: server/apps/theorist/forms.py
+msgid "Tell something about yourself... (optional)"
+msgstr ""
+
+#: server/apps/theorist/forms.py
 msgid "Social media url (optional)"
 msgstr ""
 
@@ -484,7 +488,7 @@ msgid "Your data"
 msgstr ""
 
 #: server/apps/users/adapters.py
-msgid "Password reset"
+msgid "Mathlab | Password reset"
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
@@ -492,15 +496,24 @@ msgid "You have logged in successfully."
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
-msgid "You have registered successfully."
+msgid ""
+"You have created your account successfully. Now finish the registration."
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
-msgid "You are successfully logout."
+msgid "You are successfully logged out."
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check for errors existing and try again."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "Password reset instruction has sent to your email address."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have changed your password successfully. Now your can log in."
 msgstr ""
 
 #: server/apps/users/models.py

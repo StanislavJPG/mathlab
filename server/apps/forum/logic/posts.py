@@ -1,16 +1,14 @@
-from braces.views import FormMessagesMixin, LoginRequiredMixin
+from braces.views import LoginRequiredMixin
 from django.db.models import Q
 
-from django.http import HttpResponseRedirect, HttpResponse
-from django.utils.translation import gettext_lazy as _
-from django.views.generic import DeleteView, CreateView, DetailView, TemplateView
+from django.http import HttpResponse
+from django.views.generic import DetailView, TemplateView
 from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
 from hitcount.views import HitCountDetailView
 from render_block import render_block_to_string
 
 from server.apps.forum.filters import PostListFilter
-from server.apps.forum.forms import PostCreateForm
 from server.apps.forum.models import Post, PostCategory
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin
@@ -20,8 +18,6 @@ __all__ = (
     'PostSupportUpdateView',
     'PostListView',
     'PostDetailView',
-    'PostCreateView',
-    'PostDeleteView',
     'HXPostLikesAndDislikesView',
     'PostDefaultImageView',
 )
@@ -41,7 +37,7 @@ class PostListView(FilterView):
     model = Post
     filterset_class = PostListFilter
     context_object_name = 'posts'
-    template_name = 'partials/posts_list.html'
+    template_name = 'posts/partials/posts_list.html'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -51,7 +47,7 @@ class PostListView(FilterView):
 class PostDetailView(HitCountDetailView):
     model = Post
     context_object_name = 'post'
-    template_name = 'question_page.html'
+    template_name = 'posts/question_page.html'
     count_hit = True
 
     def get_queryset(self):
@@ -72,47 +68,9 @@ class PostDetailView(HitCountDetailView):
         return context
 
 
-class PostCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
-    model = Post
-    template_name = 'create_question_page.html'
-    form_class = PostCreateForm
-    form_valid_message = _('You successfully created a new post.')
-    form_invalid_message = _('Error while creating post. Please check for errors and try again.')
-
-    def get_form_kwargs(self):
-        self.request: AuthenticatedHttpRequest
-        kwargs = super().get_form_kwargs()
-        kwargs['theorist'] = self.request.theorist
-        return kwargs
-
-    def form_valid(self, form):
-        post = form.save()
-        response = HttpResponseRedirect(post.get_absolute_url())
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        return response
-
-
-class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
-    model = Post
-    template_name = 'base/forum_base.html'
-    form_valid_message = _('Your post has been deleted.')
-    form_invalid_message = _('Error. Please, check your input and try again.')
-    slug_url_kwarg = 'uuid'
-    slug_field = 'uuid'
-
-    def delete(self, request, *args, **kwargs):
-        post = self.get_object()
-        post.delete()
-
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        response = HttpResponse()
-        trigger_client_event(response, 'postDeleted')
-        return response
-
-
 class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Post
-    template_name = 'question_page.html'
+    template_name = 'posts/question_page.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
 

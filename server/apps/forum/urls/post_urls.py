@@ -1,15 +1,14 @@
 from django.urls import path
 
 from server.apps.forum.logic.posts import (
-    PostCreateView,
     PostDetailView,
-    PostDeleteView,
     HXPostLikesAndDislikesView,
     PostListView,
     PostSupportUpdateView,
     PostDefaultImageView,
     BasePostTemplateView,
 )
+from server.apps.forum.logic.post_management import PostCreateBaseView, PostCreateView, PostDeleteView
 
 urlpatterns = [
     path('', BasePostTemplateView.as_view(), name='base-forum-page'),
@@ -20,14 +19,19 @@ urlpatterns = [
         name='post-details',
     ),
     path(
-        '<uuid:uuid>/posts/delete/',
+        '<uuid:uuid>/posts/<str:location>/delete/',
         PostDeleteView.as_view(),
         name='post-delete',
     ),
     path(
         'posts/create/',
-        PostCreateView.as_view(),
+        PostCreateBaseView.as_view(),
         name='post-create',
+    ),
+    path(
+        'hx/posts/create/',
+        PostCreateView.as_view(),
+        name='hx-post-create',
     ),
     path(
         '<uuid:uuid>/posts/rate/',

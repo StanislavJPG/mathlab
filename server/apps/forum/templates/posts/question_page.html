@@ -38,11 +38,9 @@
                     <i class="ti ti-edit"></i>
                   </button>
                   <button class="btn btn-danger btn-sm mb-1"
-                          type="submit"
-                          hx-delete=""
+                          type="button"
+                          hx-delete="{% url 'forum:post-delete' post.uuid 'detail' %}"
                           hx-confirm="{% translate 'Are you sure?' %}"
-                          hx-swap="outerHTML swap:0.5s"
-                          hx-target=".full-answer-{{ comment.uuid }}"
                   >
                     <i class="ti ti-trash"></i>
                   </button>

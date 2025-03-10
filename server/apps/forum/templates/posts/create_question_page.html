@@ -1,0 +1,10 @@
+{% extends 'base/forum_base.html' %}
+
+{% block page_head %}
+  <title>MathLab | Створити обговорення</title>
+{% endblock page_head %}
+
+{% block body %}
+  <div class="container card" hx-get="{% url 'forum:hx-post-create' %}" hx-trigger="load" hx-target="this"></div>
+{% endblock %}
+

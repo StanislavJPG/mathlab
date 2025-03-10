@@ -28,7 +28,7 @@ class CommentListView(ListView):
     paginate_by = 7
     model = Comment
     context_object_name = 'comments'
-    template_name = 'partials/comment_list.html'
+    template_name = 'comments/partials/comment_list.html'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -54,9 +54,8 @@ class CommentListView(ListView):
 
 
 class CommentCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
-    # TODO: check LoginRequiredMixin from braces or not
     model = Comment
-    template_name = 'partials/comment_block_create.html'
+    template_name = 'comments/partials/comment_block_create.html'
     form_valid_message = _('Your comment has been added.')
     form_invalid_message = _('Error. Please, check your input and try again.')
     form_class = CommentCreateForm
@@ -87,7 +86,7 @@ class CommentCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
 
 class CommentDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
     model = Comment
-    template_name = 'question_page.html'
+    template_name = 'posts/question_page.html'
     form_valid_message = _('Your comment has been deleted.')
     form_invalid_message = _('Error. Please, check your input and try again.')
     slug_field = 'uuid'
@@ -104,7 +103,7 @@ class CommentDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
 
 class HXCommentQuantityView(DetailView):
     model = Post
-    template_name = 'question_page.html'
+    template_name = 'posts/question_page.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'post_uuid'
 
@@ -128,7 +127,7 @@ class HXCommentQuantityView(DetailView):
 
 class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Comment
-    template_name = 'partials/comment_list.html'
+    template_name = 'comments/partials/comment_list.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
 

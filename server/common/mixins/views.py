@@ -23,8 +23,8 @@ class CacheMixin:
 
 class AvatarDetailViewMixin(DetailView):
     avatar_unique_field = None  # this is unique identifier of instance to render avatar
-    avatar_variant = None  # choices: {beam, marble, pixel, sunset, bauhaus, ring}
-    avatar_square = False
+    avatar_variant = BORINGAVATARS_DEFAULT_VARIANT  # choices: {beam, marble, pixel, sunset, bauhaus, ring}
+    avatar_square = BORINGAVATARS_DEFAULT_SQUARE
 
     def _get_nested_attr(self, obj, attr, default=None):
         for part in attr.split('__'):
@@ -60,9 +60,9 @@ class AvatarDetailViewMixin(DetailView):
         return HttpResponse(
             avatar(
                 name=name,
-                variant=self.avatar_variant if self.avatar_variant else BORINGAVATARS_DEFAULT_VARIANT,
+                variant=self.avatar_variant,
                 colors=BORINGAVATARS_DEFAULT_COLORS,
-                square=self.avatar_square if self.avatar_square else BORINGAVATARS_DEFAULT_SQUARE,
+                square=self.avatar_square,
             ),
             content_type='image/svg+xml',
         )

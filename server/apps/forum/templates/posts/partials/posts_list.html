@@ -112,11 +112,10 @@
               <a id="post-delete-js"
                  href="javascript:(0);"
                  class="text-decoration-none"
-                 data-bs-toggle="tooltip" data-toggle="tooltip" data-bs-placement="top"
                  title="{% translate 'Post deletion' %}"
                  hx-swap="innerHTML swap:0.5s"
                  hx-target=".question-{{ post.uuid }}"
-                 hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                 hx-delete="{% url 'forum:post-delete' post.uuid 'base' %}"
                  hx-confirm="Are you sure?"
               >
                 <i class="text-danger ti ti-trash"></i>
@@ -133,9 +132,6 @@
 </div>
 
 <script>
-    $(function () {
-        $('[data-toggle="tooltip"]').tooltip();
-    });
     $(document).ready(function () {
         $('.selectpicker').selectpicker();
     });

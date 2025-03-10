@@ -1,35 +1,15 @@
 {% load widened_widget_tweaks widget_tweaks %}
 {% load static i18n allauth account socialaccount %}
 
-<style>
-    .divider:after,
-    .divider:before {
-        content: "";
-        flex: 1;
-        height: 1px;
-        background: #eee;
-    }
-
-    .h-custom {
-        height: calc(100% - 73px);
-    }
-
-    @media (max-width: 450px) {
-        .h-custom {
-            height: 100%;
-        }
-    }
-</style>
-
-<form hx-post="{{ request.path }}" class="needs-validation">
-  <div data-mdb-input-init class="form-outline mb-4">
+<form hx-post="{{ request.path }}">
+  <div class="form-group mb-2">
     {% render_field form.login|add_bootstrap_validation_classes class="form-control" %}
-    {% render_field_errors form.login class_="invalid-feedback" %}
+    {% render_field_errors form.login small=True %}
   </div>
 
-  <div data-mdb-input-init class="form-outline mb-4">
+  <div class="form-group mb-2">
     {% render_field form.password|add_bootstrap_validation_classes class="form-control" %}
-    {% render_field_errors form.password class_="invalid-feedback" %}
+    {% render_field_errors form.password small=True %}
   </div>
 
   {% for error in form.non_field_errors %}
@@ -51,42 +31,22 @@
     </div>
   </div>
 
-  <button type="submit" class="btn btn-primary btn-block mb-4">{% translate 'Log in' %}</button>
+  <div class="text-center">
+    <button type="submit" class="btn btn-primary btn-block mb-4">{% translate 'Log in' %}</button>
+  </div>
 </form>
 
-<div class="divider d-flex align-items-center my-4">
-  <p class="text-center mx-3 mb-0">{% translate 'Or' %}</p>
+<div class="divider d-flex align-items-center my-2">
+  <p class="text-center mx-2 mb-0">{% translate 'Or' %}</p>
 </div>
 
-<div class="text-center mb-3">
+<div class="text-center mb-1 mt-3">
   <form method="post" action="{% provider_login_url 'google' %}">
     {% csrf_token %}
-    <button data-mdb-ripple-init class="btn btn-primary btn-lg btn-block"
+    <button class="btn btn-danger btn-block"
             style="background-color: #DB4437"
             type="submit">
       <i class="fab fa-google me-2"></i>{% translate 'Continue with Google' %}
     </button>
   </form>
 </div>
-
-
-<!-- Font Awesome -->
-<link
-    href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
-    rel="stylesheet"
-/>
-<!-- Google Fonts -->
-<link
-    href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
-    rel="stylesheet"
-/>
-<!-- MDB -->
-<link
-    href="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/css/mdb.min.css"
-    rel="stylesheet"
-/>
-<!-- MDB -->
-<script
-    type="text/javascript"
-    src="https://cdn.jsdelivr.net/npm/mdb-ui-kit@8.2.0/js/mdb.umd.min.js"
-></script>

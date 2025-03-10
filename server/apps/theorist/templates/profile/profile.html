@@ -13,8 +13,8 @@
   <section>
     <div class="container py-5">
       <div class="row d-dlex flex-wrap flex-column align-items-center">
-        <div class="col-lg-4" hx-get="{% url 'forum:theorist_profile:theorist-avatar-upload' theorist.uuid %}" hx-target="this" hx-trigger="load">
-{#          Content#}
+        <div class="col-lg-4">
+          {% include 'profile/partials/main_information_block.html' %}
         </div>
         <div class="col-lg-8 mt-3">
           <div class="card mb-4">

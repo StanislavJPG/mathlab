@@ -432,7 +432,7 @@ msgstr "Видалити аватар"
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
-msgstr "Відправили повідомлення"
+msgstr "Відправити повідомлення"
 
 #: server/apps/theorist/templates/profile/partials/statistics.html
 msgid "Score"

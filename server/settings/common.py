@@ -94,7 +94,7 @@ ROOT_URLCONF = 'server.urls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/allauth/'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -184,6 +184,10 @@ AUTH_USER_MODEL = 'users.CustomUser'
 ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
 LOGIN_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
+
+ACCOUNT_FORMS = {
+    'reset_password': 'server.apps.users.forms.CustomResetPasswordForm',
+}
 
 LOGIN_URL = reverse_lazy('users:base-auth')
 

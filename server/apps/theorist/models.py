@@ -63,11 +63,10 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def create_initial_data(self):
         TheoristProfileSettings.objects.create(theorist=self)
 
-    @hook(AFTER_SAVE, when='full_name', has_changed=True)
+    @hook(AFTER_SAVE)
     def after_save(self):
-        slug = slugify(self.full_name)
-        self.full_name_slug = slug
-        self.save(update_fields=['full_name_slug'])
+        self.full_name_slug = slugify(self.full_name)
+        self.save(update_fields=['full_name_slug'], skip_hooks=True)
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly

@@ -4,13 +4,12 @@
 {% block page_head %}
   <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
   <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
-  <link type="text/css" href="{% static 'css/forum_creation.css' %}" rel="stylesheet">
   <title>MathLab | Створити обговорення</title>
 {% endblock page_head %}
 
 {% block body %}
-  <div class="container">
-    <form method="post" action="{% url 'forum:post-create' %}" class="row justify-content-center border border-dark rounded-4">
+  <div class="container card">
+    <form method="post" action="{% url 'forum:post-create' %}" class="row justify-content-center">
       {% csrf_token %}
       <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
       <div class="col-md-8">
@@ -28,7 +27,7 @@
         {{ form.content }}
       </div>
       <div class="text-center mt-3 mb-3">
-        <button type="submit" class="btn btn-dark">{% translate 'Create question' %}</button>
+        <button type="submit" class="btn btn-primary">{% translate 'Create question' %}</button>
       </div>
     </form>
   </div>

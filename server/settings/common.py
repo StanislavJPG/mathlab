@@ -49,6 +49,7 @@ INSTALLED_APPS = [
     'widget_tweaks',
     'tinymce',
     'easy_thumbnails',
+    'hitcount',
     'django_countries',
     'django_cleanup.apps.CleanupConfig',
     # common
@@ -93,7 +94,7 @@ ROOT_URLCONF = 'server.urls.urls'
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
-        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'templates/allauth/'],
+        'DIRS': [BASE_DIR / 'templates', BASE_DIR / 'apps'],
         'APP_DIRS': True,
         'OPTIONS': {
             'context_processors': [
@@ -181,10 +182,17 @@ SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'
 AUTH_USER_MODEL = 'users.CustomUser'
 
 ACCOUNT_SIGNUP_REDIRECT_URL = reverse_lazy('theorist_onboarding:base-page')
-LOGIN_REDIRECT_URL = reverse_lazy('forum:post-list')
-ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:post-list')
+LOGIN_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
+ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
+
+ACCOUNT_FORMS = {
+    'reset_password': 'server.apps.users.forms.CustomResetPasswordForm',
+}
+
+LOGIN_URL = reverse_lazy('users:base-auth')
 
 SITE_ID = 1
+SITE_DEFAULT_URL = reverse_lazy('forum:base-forum-page')
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
@@ -217,9 +225,13 @@ TINYMCE_DEFAULT_CONFIG = {
     'theme': 'silver',
     'height': 400,
     'menubar': False,
-    'setup': """editor => {
-           editor.on('blur', () => editor.save())
-        }""",  # that fixes bug with HTMX + TinyMCE
+    'setup': """
+    function(editor) {
+        editor.on('blur', function() { editor.save(); });
+        editor.on('focusout', function() { editor.save(); });
+        editor.on('touchend', function() { editor.save(); });
+    }
+    """,  # that fixes bug with HTMX + TinyMCE
     'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',

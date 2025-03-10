@@ -1,0 +1,33 @@
+{% extends 'base/forum_base.html' %}
+{% load static i18n widget_tweaks avatars %}
+
+{% block page_css %}
+  <link href="{% static 'css/common/offcanvas.css' %}" rel="stylesheet">
+{% endblock page_css %}
+
+{% block body %}
+  <main role="main" class="container">
+    <div class="my-3 p-3 rounded box-shadow"
+         hx-get="{% url 'forum:post-list' %}"
+         hx-indicator="#post-list-block-wait-spinner"
+         hx-trigger="load"
+         hx-target="this"
+    >
+      {#        Content will be placed here  #}
+      <div class="text-center d-flex align-items-center flex-column">
+        <div id="post-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+        <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+      </div>
+    </div>
+  </main>
+{% endblock body %}
+
+{% block page_js %}
+  <script>
+      $(function () {
+          $('[data-toggle="tooltip"]').tooltip();
+      });
+  </script>
+  <script src="{% static 'js/offcanvas.js' %}"></script>
+{% endblock page_js %}
+

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-01 19:35+0200\n"
+"POT-Creation-Date: 2025-03-10 17:10+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -88,6 +88,31 @@ msgstr "Алгебра"
 msgid "Other"
 msgstr "Інше"
 
+#: server/apps/forum/filters.py
+msgid "Title"
+msgstr "Назва"
+
+#: server/apps/forum/filters.py
+msgid "Categories"
+msgstr "Категорії"
+
+#: server/apps/forum/filters.py server/apps/forum/templates/question_page.html
+msgid "Sort by"
+msgstr "Сортувати за"
+
+#: server/apps/forum/filters.py
+msgid "Likes quantity"
+msgstr "Кількість лайків"
+
+#: server/apps/forum/filters.py
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Comments quantity"
+msgstr "Кількість коментарів"
+
+#: server/apps/forum/filters.py
+msgid "Posts views"
+msgstr "Перегляди посту"
+
 #: server/apps/forum/forms.py
 msgid "Question topic (maximum 85 characters)"
 msgstr "Тема питання (не більше 85 символів)"
@@ -103,6 +128,7 @@ msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
 #: server/apps/theorist/logic/onboarding.py
+#: server/apps/theorist/logic/profile_settings.py
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check your input and try again."
 msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
@@ -124,6 +150,10 @@ msgstr ""
 #: server/apps/forum/logic/posts.py
 msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
+
+#: server/apps/forum/templates/base_articles.html
+msgid "Loading..."
+msgstr "Завантаження..."
 
 #: server/apps/forum/templates/create_question_page.html
 msgid "Create your question on forum"
@@ -164,30 +194,25 @@ msgid "Created at"
 msgstr "Створено"
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/partials/posts_list.html
 msgid "ago"
 msgstr "тому"
 
 #: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Modified at"
 msgstr "Модифіковано о"
 
 #: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/question_page.html
 #: server/templates/partials/forum/forum_navbar.html
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
 
 #: server/apps/forum/templates/partials/comment_list.html
-msgid "Delete comment"
-msgstr "Видалити коментар"
-
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Sorry! You have to verify your email to interact."
 msgstr "Вибачте! Ви маєте підтвердити електронну пошту, щоб взаємодіяти."
 
 #: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
 msgid "Thank you!"
 msgstr "Дякую!"
 
@@ -204,64 +229,52 @@ msgstr ""
 "користувача."
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Last topics"
-msgstr "Останні теми"
+msgid "Filter"
+msgstr "Фільтр"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Ask your question"
-msgstr "Задайте своє питання"
+msgid "Advanced filter"
+msgstr "Розширений фільтр"
 
 #: server/apps/forum/templates/partials/posts_list.html
-msgid "Categories"
-msgstr "Категорії"
+msgid "Apply"
+msgstr "Застосувати"
 
 #: server/apps/forum/templates/partials/posts_list.html
+msgid "Clear"
+msgstr "Очистити"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Recent questions"
+msgstr "Нещодавні запитання"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "asked"
+msgstr "спитав"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Post likes quantity"
+msgstr "Кількість лайків поста"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Post comments quantity"
+msgstr "Кількість коментарів поста"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Post views quantity"
+msgstr "Кількість переглядів поста"
+
+#: server/apps/forum/templates/partials/posts_list.html
+msgid "Post deletion"
+msgstr "Видалення поста"
+
 #: server/apps/forum/templates/question_page.html
-msgid "Sort by"
-msgstr "Сортувати за"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Most popular"
-msgstr "Найпопулярніші"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Most interesting"
-msgstr "Найцікавіші"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "The newest"
-msgstr "Найновіші"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Previous week"
-msgstr "Попередній тиждень"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Likes"
-msgstr "Лайки"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Comments"
-msgstr "Коментарі"
-
-#: server/apps/forum/templates/partials/posts_list.html
-msgid "Delete post"
-msgstr "Видалити пост"
+msgid "Modified"
+msgstr "Модифіковано"
 
 #: server/apps/forum/templates/question_page.html
 msgid "Viewers"
 msgstr "Переглянуто"
-
-#: server/apps/forum/templates/question_page.html
-msgid "You have already supported this post."
-msgstr "Ви вже підтримували цей пост."
-
-#: server/apps/forum/templates/question_page.html
-msgid ""
-"Do you want to support this post? You will raise score for this user by "
-"doing that."
-msgstr ""
-"Хочете підтримати цей пост? Цим самим Ви підвищите рейтинг цього користувача."
 
 #: server/apps/forum/templates/question_page.html
 msgid "Answers"
@@ -278,16 +291,6 @@ msgstr "Найновіші"
 #: server/apps/forum/templates/question_page.html
 msgid "Your answer"
 msgstr "Ваша відповідь"
-
-#: server/apps/forum/templates/question_page.html
-#, python-format
-msgid ""
-"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
-"none;\" href=\"%(login_view)s\">Authorize</a>, to ask your questions.</h1>"
-msgstr ""
-"<h1 style=\"font-size: 20px; margin-top: 50px;\"><a style=\"text-decoration: "
-"none;\" href=\"%(login_view)s\">Авторизуйтесь</a>, щоб додати власний "
-"коментар.</h1>"
 
 #: server/apps/theorist/choices.py
 msgid "Junior mathematician"
@@ -317,6 +320,10 @@ msgstr "Посилання на соц.мережі (опціонально)"
 msgid "Website url (optional)"
 msgstr "Посилання на веб-сайт (опціонально)"
 
+#: server/apps/theorist/forms.py
+msgid "Username"
+msgstr "Нікнейм"
+
 #: server/apps/theorist/logic/avatars.py
 msgid "You successfully uploaded your avatar."
 msgstr "Ви успішно завантажили аватар."
@@ -333,9 +340,19 @@ msgstr "Ви успішно видалили аватар."
 msgid "You successfully registered!"
 msgstr "Ви успішно зареєструвались!"
 
+#: server/apps/theorist/logic/profile_settings.py
+msgid "You successfully changed your profile data!"
+msgstr "Ви успішно змінили дані профілю."
+
 #: server/apps/theorist/models.py
 msgid "Country"
 msgstr "Країна"
+
+#: server/apps/theorist/models.py
+#: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist/templates/profile/profile.html
+msgid "About me"
+msgstr "Про мене"
 
 #: server/apps/theorist/templates/partials/onboarding_form.html
 msgid "Your profile data"
@@ -394,20 +411,8 @@ msgid "Liked a comment in post"
 msgstr "Лайкнув коментар у пості"
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Update avatar"
-msgstr "Оновити аватар"
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Delete this image?"
-msgstr "Видалити цей аватар?"
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "Delete avatar"
-msgstr "Видалити аватар"
-
-#: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
-msgstr "Відправили повідомлення"
+msgstr "Відправити повідомлення"
 
 #: server/apps/theorist/templates/profile/partials/statistics.html
 msgid "Score"
@@ -417,17 +422,9 @@ msgstr "Рейтинг"
 msgid "Posts quantity"
 msgstr "Кількість постів"
 
-#: server/apps/theorist/templates/profile/partials/statistics.html
-msgid "Comments quantity"
-msgstr "Кількість коментарів"
-
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Profile"
 msgstr "Профіль"
-
-#: server/apps/theorist/templates/profile/profile.html
-msgid "About me"
-msgstr "Про мене"
 
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Statistics"
@@ -436,6 +433,66 @@ msgstr "Статистика"
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Contact info"
 msgstr "Контактна інформація"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Personal info"
+msgstr "Персональна інформація"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Save changes"
+msgstr "Зберегти зміни"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Update avatar"
+msgstr "Оновити аватар"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Delete this image?"
+msgstr "Видалити цей аватар?"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Delete avatar"
+msgstr "Видалити аватар"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Danger zone"
+msgstr "Небезпечна зона"
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid ""
+"Are you sure that you want to deactivate your account? Your account will not "
+"be available anymore."
+msgstr ""
+"Ви впевнені, що хочете деактивувати Ваш акаунт? Після цього Ваш акаунт не буде більше доступним."
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Deactivate account"
+msgstr "Деактивувати акаунт"
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Profile settings"
+msgstr "Налаштування профілю"
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Settings"
+msgstr "Налаштування"
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Account"
+msgstr "Акаунт"
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Password"
+msgstr "Пароль"
+
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Your data"
+msgstr "Ваші дані"
+
+#: server/apps/users/adapters.py
+msgid "Password reset"
+msgstr "Скинути пароль"
 
 #: server/apps/users/logic/auths_actions.py
 msgid "You have logged in successfully."
@@ -492,6 +549,7 @@ msgid "Continue with Google"
 msgstr "Продовжити з Google"
 
 #: server/apps/users/templates/partials/password_reset.html
+#: server/apps/users/templates/partials/password_reset_key.html
 msgid "Reset password"
 msgstr "Скинути пароль"
 
@@ -506,3 +564,23 @@ msgstr "Попередня"
 #: server/templates/common/pagination.html
 msgid "Next"
 msgstr "Наступна"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Forum"
+msgstr "Форум"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "New discussion"
+msgstr "Нове питання"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Light"
+msgstr "Світлий"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Dark"
+msgstr "Темний"
+
+#: server/templates/partials/theme_switcher.html
+msgid "Auto"
+msgstr "Авто"

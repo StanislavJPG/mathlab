@@ -1,8 +1,10 @@
 from typing import Final
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE, AFTER_CREATE
+from hitcount.models import HitCountMixin
 
 from slugify import slugify
 
@@ -10,7 +12,7 @@ from server.apps.forum.managers import PostQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
-class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin):
     CATEGORIES_LIMIT: Final[int] = 4
 
     title = models.CharField(max_length=85)
@@ -29,7 +31,9 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     likes_counter = models.PositiveSmallIntegerField(default=0)
     dislikes_counter = models.PositiveSmallIntegerField(default=0)
 
-    post_views = models.PositiveSmallIntegerField(default=0, null=True, blank=True)
+    hit_count_generic = GenericRelation(
+        'hitcount.HitCount', object_id_field='object_pk', related_query_name='hit_count_generic_relation'
+    )
     comments_quantity = models.PositiveSmallIntegerField(default=0)
 
     objects = PostQuerySet.as_manager()
@@ -45,6 +49,12 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def get_absolute_url(self):
         return reverse('forum:post-details', kwargs={'pk': self.pk, 'slug': self.slug})
+
+    def get_boringavatars_url(self):
+        return reverse(
+            'forum:post-avatar',
+            kwargs={'uuid': self.uuid},
+        )
 
     @hook(BEFORE_SAVE)
     def before_save(self):

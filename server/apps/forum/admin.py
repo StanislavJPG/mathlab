@@ -12,7 +12,7 @@ class CommentAdmin(admin.ModelAdmin):
 
 @admin.register(Post)
 class PostAdmin(admin.ModelAdmin):
-    list_display = ('id', 'title', 'post_views', 'comments_quantity')
+    list_display = ('id', 'title', 'comments_quantity')
     list_filter = ('theorist', 'title')
 
 

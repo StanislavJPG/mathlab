@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ LANGUAGE_CODE }}">
+<html data-bs-theme="light" lang="{{ LANGUAGE_CODE }}">
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 {% load static %}
@@ -36,7 +36,6 @@
 <head>
   <meta charset="UTF-8">
   {% block page_head %}
-    <link type="text/css" href="{% static 'css/forum_base.css' %}" rel="stylesheet">
     <title>MathLab | Форум</title>
   {% endblock page_head %}
 </head>
@@ -49,6 +48,7 @@
   {% endblock additional %}
 {% endblock body %}
 
+{% include 'partials/theme_switcher.html' %}
 {% include 'partials/footer.html' %}
 
 </body>

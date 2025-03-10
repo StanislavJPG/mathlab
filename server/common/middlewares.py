@@ -7,6 +7,7 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 
 from server.apps.theorist.models import Theorist
+from server.common.utils.urls import is_excluded_path
 
 
 class HTMXToastMiddleware(MiddlewareMixin):
@@ -43,6 +44,6 @@ class OnboardingMiddleware(MiddlewareMixin):
             request.user.is_authenticated
             and not request.user.is_superuser
             and not request.theorist.is_onboarded
-            and not request.path.startswith('/theorist/onboarding')
+            and not is_excluded_path(request)
         ):
             return redirect(reverse('theorist_onboarding:base-page'))

@@ -11,6 +11,20 @@
     <p class="text-muted mb-0">{{ theorist.full_name }}</p>
   </div>
 </div>
+{% if theorist.about_me %}
+  <hr>
+  <div class="row">
+    <div class="col-sm-5">
+      <p class="mb-0">
+        <i class="ti ti-user"></i>
+        <span>{% translate 'About me' %}</span>
+      </p>
+    </div>
+    <div class="col-sm-7">
+      <p class="text-muted mb-0">{{ theorist.about_me }}</p>
+    </div>
+  </div>
+{% endif %}
 <hr>
 <div class="row">
   <div class="col-sm-5">

@@ -1,7 +1,7 @@
 {% load widened_widget_tweaks widget_tweaks %}
 {% load static i18n allauth account socialaccount %}
 
-<form hx-post="{% url 'users:register-view' %}" class="needs-validation">
+<form hx-post="{% url 'users:register-view' %}">
   <div class="form-group mb-2">
     {% render_field form.email|add_bootstrap_validation_classes class="form-control" %}
     {% render_field_errors form.email class_="invalid-feedback" small=True %}

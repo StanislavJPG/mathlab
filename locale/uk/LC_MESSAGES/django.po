@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 17:10+0200\n"
+"POT-Creation-Date: 2025-03-10 23:42+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -313,6 +313,10 @@ msgid "Lord of mathematics"
 msgstr "Володар математики"
 
 #: server/apps/theorist/forms.py
+msgid "Tell something about yourself... (optional)"
+msgstr "Розкажіть щось про себе... (опціонально)"
+
+#: server/apps/theorist/forms.py
 msgid "Social media url (optional)"
 msgstr "Посилання на соц.мережі (опціонально)"
 
@@ -463,7 +467,8 @@ msgid ""
 "Are you sure that you want to deactivate your account? Your account will not "
 "be available anymore."
 msgstr ""
-"Ви впевнені, що хочете деактивувати Ваш акаунт? Після цього Ваш акаунт не буде більше доступним."
+"Ви впевнені, що хочете деактивувати Ваш акаунт? Після цього Ваш акаунт не "
+"буде більше доступним."
 
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
 msgid "Deactivate account"
@@ -491,24 +496,33 @@ msgid "Your data"
 msgstr "Ваші дані"
 
 #: server/apps/users/adapters.py
-msgid "Password reset"
-msgstr "Скинути пароль"
+msgid "Mathlab | Password reset"
+msgstr "Mathlab | Відновити пароль"
 
 #: server/apps/users/logic/auths_actions.py
 msgid "You have logged in successfully."
 msgstr "Ви успішно авторизувались."
 
 #: server/apps/users/logic/auths_actions.py
-msgid "You have registered successfully."
-msgstr "Ви успішно зареєструвались."
+msgid ""
+"You have created your account successfully. Now finish the registration."
+msgstr "Ви успішно створили акаунт. Тепер завершіть реєстрацію."
 
 #: server/apps/users/logic/auths_actions.py
-msgid "You are successfully logout."
+msgid "You are successfully logged out."
 msgstr "Ви успішно вийшли з акаунту."
 
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check for errors existing and try again."
 msgstr "Помилка. Будь ласка, перевірте наявність помилок та спробуйте ще раз."
+
+#: server/apps/users/logic/auths_actions.py
+msgid "Password reset instruction has sent to your email address."
+msgstr "Інструкція по відновленню паролю була відправлена на Вашу пошту."
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You have changed your password successfully. Now your can log in."
+msgstr "Ви успішно змінили Ваш пароль. Тепер Ви можете увійти."
 
 #: server/apps/users/models.py
 msgid "user"
@@ -552,6 +566,13 @@ msgstr "Продовжити з Google"
 #: server/apps/users/templates/partials/password_reset_key.html
 msgid "Reset password"
 msgstr "Скинути пароль"
+
+#: server/apps/users/templates/partials/password_reset_key.html
+#, python-format
+msgid ""
+"Hi, %(full_name)s 👋. You can reset your password by filling the form below."
+msgstr ""
+"Привіт, %(full_name)s 👋. Ви можете відновити Ваш пароль, заповнивши форму нижче."
 
 #: server/apps/users/templates/partials/signup.html
 msgid "Sign in"

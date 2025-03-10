@@ -22,7 +22,7 @@ class AccountAdapter(DefaultAccountAdapter):
         template_name = 'email/password_reset_key_message.html'
         body = render_to_string(template_name, context).strip()
 
-        msg = EmailMessage(_('Password reset'), body, from_email, to, headers=headers)
+        msg = EmailMessage(_('Mathlab | Password reset'), body, from_email, to, headers=headers)
         msg.content_subtype = 'html'  # Main content is now text/html
 
         return msg

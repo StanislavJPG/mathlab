@@ -31,9 +31,6 @@ document.addEventListener("htmx:afterRequest", function (event) {
                 message: lastMsg.innerText,
                 tags: lastMsg.dataset.toastTags || "success",
             });
-
-            // Show toast only for the last message
-            createToast(lastMsg.innerText, lastMsg.dataset.toastTags || "success");
         }
 
         if (messages.length > 0) {
@@ -46,7 +43,6 @@ document.addEventListener("htmx:afterRequest", function (event) {
 
 document.addEventListener("DOMContentLoaded", function () {
     const storedMessages = localStorage.getItem("flashMessages");
-    console.log(storedMessages);
     if (storedMessages) {
         JSON.parse(storedMessages).forEach(createToast);
         localStorage.removeItem("flashMessages");

@@ -1,5 +1,6 @@
 from itertools import chain
 
+from django.contrib.auth.mixins import AccessMixin
 from django.db.models import Value, CharField
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
@@ -15,16 +16,18 @@ __all__ = (
 )
 
 
-class TheoristProfileDetailView(DetailView):
+class TheoristProfileDetailView(AccessMixin, DetailView):
     model = Theorist
     template_name = 'profile/profile.html'
     context_object_name = 'theorist'
+    raise_exception = True
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
 
     def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
         theorist = get_object_or_404(Theorist, pk=self.kwargs['pk'])
         valid_full_name_slug = theorist.full_name_slug
         if valid_full_name_slug != self.kwargs['full_name_slug']:
@@ -37,6 +40,8 @@ class TheoristProfileDetailView(DetailView):
                     },
                 )
             )
+        if self.object.settings.is_profile_only_for_authenticated and not request.user.is_authenticated:
+            return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
 

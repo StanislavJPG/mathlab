@@ -11,7 +11,7 @@
     <p class="text-muted mb-0">{{ theorist.full_name }}</p>
   </div>
 </div>
-{% if theorist.about_me %}
+{% if theorist.settings.is_about_me_is_available %}
   <hr>
   <div class="row">
     <div class="col-sm-5">
@@ -37,6 +37,7 @@
     <p class="text-muted mb-0">{{ theorist.get_rank_display }}</p>
   </div>
 </div>
+{% if theorist.settings.is_show_last_activities %}
 <hr>
 <div class="row">
   <div class="col-sm-5">
@@ -47,6 +48,7 @@
     <p class="text-muted mb-0">{{ theorist.last_activity }}</p>
   </div>
 </div>
+{% endif %}
 <hr>
 <div class="row">
   <div class="col-sm-5">

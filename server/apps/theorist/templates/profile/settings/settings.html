@@ -32,13 +32,6 @@
              role="tab">
             {% translate 'Password' %}
           </a>
-          <a class="list-group-item list-group-item-action"
-             id="your-data-btn"
-             data-bs-toggle="tab"
-             href="#your-data"
-             role="tab">
-            {% translate 'Your data' %}
-          </a>
         </div>
       </div>
     </div>
@@ -53,20 +46,14 @@
              role="tabpanel"
         >
         </div>
-        <div class="tab-pane fade"
-             id="your-data"
-             hx-get="{% url 'forum:theorist_profile:settings:hx-profile-your-data-form' theorist.uuid %}"
+        <div class="tab-pane fade show active"
+             id="password"
+             hx-get="{% url 'forum:theorist_profile:settings:hx-profile-password-form' theorist.uuid %}"
              hx-target="this"
-             hx-trigger="click once from:#your-data-btn"
+             hx-trigger="click once from:#password-btn"
              role="tabpanel"
-        ></div>
-        <div class="tab-pane fade"
-             id="deactivate-profile"
-             hx-get="{% url 'forum:theorist_profile:settings:hx-profile-deactivate-account-form' theorist.uuid %}"
-             hx-target="this"
-             hx-trigger="click once from:#deactivate-profile-btn"
-             role="tabpanel"
-        ></div>
+        >
+        </div>
       </div>
     </div>
   </div>

@@ -67,11 +67,13 @@
             </div>
 
           </div>
-          <div class="card mb-4"
-               hx-get="{% url 'forum:theorist_profile:hx-theorist-last-activities' theorist.uuid %}"
-               hx-target="this"
-               hx-trigger="load"
-          ></div>
+          {% if theorist.settings.is_show_last_activities %}
+            <div class="card mb-4"
+                 hx-get="{% url 'forum:theorist_profile:hx-theorist-last-activities' theorist.uuid %}"
+                 hx-target="this"
+                 hx-trigger="load"
+            ></div>
+          {% endif %}
         </div>
       </div>
     </div>

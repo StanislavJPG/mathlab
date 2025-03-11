@@ -1,3 +1,4 @@
+from allauth.account.views import PasswordChangeView
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
@@ -7,7 +8,7 @@ from django.views.generic import UpdateView, TemplateView, DetailView
 from django.utils.translation import gettext_lazy as _
 from django_htmx.http import HttpResponseClientRedirect
 
-from server.apps.theorist.forms import TheoristProfileSettingsForm
+from server.apps.theorist.forms import TheoristProfileSettingsForm, TheoristProfileConfigurationsForm
 from server.apps.theorist.models import TheoristProfileSettings, Theorist
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -55,10 +56,31 @@ class TheoristProfilePublicInfoFormView(AbstractProfileSettingsFormView):
     form_class = TheoristProfileSettingsForm
 
 
-class TheoristProfileYourDataFormView(AbstractProfileSettingsFormView):
+class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):
     model = TheoristProfileSettings
-    template_name = 'profile/settings/partials/your_data.html'
-    fields = ('is_show_last_activities', 'is_able_to_get_messages')
+    form_class = TheoristProfileConfigurationsForm
+    template_name = 'profile/settings/partials/configurations.html'
+
+
+class TheoristProfilePasswordFormView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, PasswordChangeView):
+    template_name = 'profile/settings/partials/password.html'
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
+    form_valid_message = _('You successfully changed your password!')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['theorist'] = self.request.theorist
+        return context
+
+    def form_valid(self, form):
+        form.save()
+
+        context = {**self.get_context_data(), 'form': form}
+        block_form = render_to_string(self.template_name, context, request=self.request)
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        return HttpResponse(content=block_form)
 
 
 class TheoristProfileDeactivateAccountView(LoginRequiredMixin, FormMessagesMixin, DetailView):

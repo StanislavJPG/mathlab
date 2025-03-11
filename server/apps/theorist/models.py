@@ -81,6 +81,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
 class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     theorist = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='settings')
 
+    is_profile_only_for_authenticated = models.BooleanField(default=False)  # is only auth people can visit my profile
+
+    is_show_about_me = models.BooleanField(default=True)
     is_show_last_activities = models.BooleanField(default=True)
     is_able_to_get_messages = models.BooleanField(default=True)
 
@@ -95,3 +98,7 @@ class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleMo
         return reverse(
             'forum:theorist_profile:settings:theorist-profile-settings',
         )
+
+    @property
+    def is_about_me_is_available(self) -> bool:
+        return self.is_show_about_me and self.theorist.about_me

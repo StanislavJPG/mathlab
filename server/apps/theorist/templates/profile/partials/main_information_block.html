@@ -2,6 +2,14 @@
 
 <div class="card mb-4">
   <div class="card-body text-center">
+    {% if theorist.settings.is_profile_only_for_authenticated %}
+      <div class="d-flex justify-content-end">
+        <i class="ti ti-lock text-warning"
+           data-bs-toggle="tooltip" data-bs-placement="top"
+           title="{% translate 'This account is available only for authenticated users.' %}"
+           style="font-size: 35px"></i>
+      </div>
+    {% endif %}
     <div class="mb-3 mt-1">
       {% get_instance_avatar theorist %}
     </div>
@@ -9,13 +17,13 @@
       <img alt="country_flag" src="{{ theorist.country.flag }}">
       {{ theorist.full_name }}
     </h5>
-    <div style="margin-bottom: 1rem !important;">
-      <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
-    </div>
-    <div class="d-flex justify-content-center mb-2">
-      <a href="" type="button" class="btn btn-primary btn-sm ms-1">
-        <i class="ti ti-message"></i> {% translate 'Send message' %}
-      </a>
-    </div>
+    <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
+    {% if theorist.settings.is_able_to_get_messages and request.theorist and theorist.uuid != request.theorist.uuid %}
+      <div class="d-flex justify-content-center mb-2 mt-3">
+        <a href="" type="button" class="btn btn-primary btn-sm ms-1">
+          <i class="ti ti-message"></i> {% translate 'Send message' %}
+        </a>
+      </div>
+    {% endif %}
   </div>
 </div>

@@ -16,7 +16,9 @@ from braces.views import FormMessagesMixin
 
 from django_htmx.http import HttpResponseClientRedirect
 
+from server.apps.users.forms import CustomLoginForm
 from server.apps.users.models import CustomUser
+from server.common.mixins.views import CaptchaViewMixin
 
 
 class CustomBaseAuthenticationView(TemplateView):
@@ -28,12 +30,14 @@ class CustomBaseAuthenticationView(TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class CustomLoginView(FormMessagesMixin, LoginView):
+class CustomLoginView(FormMessagesMixin, CaptchaViewMixin, LoginView):
     template_name = 'partials/login.html'
+    form_class = CustomLoginForm
     form_valid_message = _('You have logged in successfully.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def form_valid(self, form):
+        form.clean_form_fail_attempts()
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         return response

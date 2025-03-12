@@ -3,6 +3,7 @@ from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
 from server.apps.theorist.models import Theorist, TheoristProfileSettings
+from server.common.forms import CaptchaForm
 
 
 class TheoristOnboardForm(forms.ModelForm):
@@ -25,7 +26,7 @@ class TheoristOnboardForm(forms.ModelForm):
         return theorist
 
 
-class TheoristProfileSettingsForm(forms.ModelForm):
+class TheoristProfileSettingsForm(CaptchaForm, forms.ModelForm):
     username = forms.CharField(
         widget=forms.TextInput(attrs={'placeholder': _('Username')}), required=False, max_length=150
     )
@@ -38,9 +39,11 @@ class TheoristProfileSettingsForm(forms.ModelForm):
             'username',
             'about_me',
             'country',
+            'captcha',
         )
 
     def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
         self.theorist = self.instance.theorist
         self.fields['username'].initial = self.theorist.full_name

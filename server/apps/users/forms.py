@@ -1,7 +1,7 @@
 from urllib.parse import quote
 from allauth.utils import build_absolute_uri
 
-from allauth.account.forms import app_settings
+from allauth.account.forms import app_settings, LoginForm, ChangePasswordForm
 from allauth.account.adapter import DefaultAccountAdapter, get_adapter
 from allauth.account.forms import (
     ResetPasswordForm,
@@ -12,6 +12,18 @@ from django.conf import settings
 from django.urls import reverse
 from allauth.account.app_settings import LoginMethod
 from allauth.account.internal import flows
+
+from server.common.forms import CaptchaForm
+
+
+class CustomLoginForm(CaptchaForm, LoginForm):
+    pass
+
+
+class CustomPasswordChangeForm(CaptchaForm, ChangePasswordForm):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        super().__init__(*args, **kwargs)
 
 
 class CustomResetPasswordForm(ResetPasswordForm):

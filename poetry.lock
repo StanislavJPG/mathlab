@@ -1073,6 +1073,20 @@ Django = "*"
 packaging = "*"
 
 [[package]]
+name = "django-ranged-response"
+version = "0.2.0"
+description = "Modified Django FileResponse that adds Content-Range headers."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-ranged-response-0.2.0.tar.gz", hash = "sha256:f71fff352a37316b9bead717fc76e4ddd6c9b99c4680cdf4783b9755af1cf985"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-redis"
 version = "5.4.0"
 description = "Full featured redis cache backend for Django."
@@ -1108,6 +1122,26 @@ django = ">=3.2"
 
 [package.extras]
 dev = ["Jinja2 (>=2.8)"]
+
+[[package]]
+name = "django-simple-captcha"
+version = "0.6.2"
+description = "A very simple, yet powerful, Django captcha application"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django_simple_captcha-0.6.2-py2.py3-none-any.whl", hash = "sha256:f5b7eee6bfeba6c55b47f2f8414557d5609fc29c4758da2c91ba9a91d6ac349d"},
+    {file = "django_simple_captcha-0.6.2.tar.gz", hash = "sha256:24db2bd1386c1833618465862e3518d310246d88f5e7f3bec23a5bda768ef834"},
+]
+
+[package.dependencies]
+Django = ">=4.2"
+django-ranged-response = "0.2.0"
+Pillow = ">=6.2.0"
+
+[package.extras]
+test = ["testfixtures"]
 
 [[package]]
 name = "django-tables2"
@@ -3237,4 +3271,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "10b65478b94792ae59a4e62ddde0c076bd97cec267a13c46048f94877537727a"
+content-hash = "2d5b81cb5470fa518a3b1dcd4e3ca70178204af3d24ffb86f8d8eb87423f7d1b"

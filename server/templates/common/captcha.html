@@ -1,0 +1,11 @@
+{% load i18n widened_widget_tweaks widget_tweaks %}
+
+{% if form.failed_attempts_count >= 3 %}
+  <div class="form-group mt-4">
+    <label for="{{ form.captcha.id_for_label }}">{{ form.captcha.label }}</label>
+    <br/>
+    <button type="button" class="btn btn-primary" id="refresh-captcha"><i class="ti ti-refresh"></i></button>
+    {% render_field form.captcha class="form-control w-50 mt-2" %}
+    {% render_field_errors form.captcha small=True %}
+  </div>
+{% endif %}

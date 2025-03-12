@@ -78,3 +78,18 @@ class HXViewMixin(AccessMixin):
         if self.pass_only_htmx_request and not self.request.htmx:
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
+
+
+class CaptchaViewMixin:
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_invalid(self, form):
+        form.captcha_session_push()
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.clean_form_fail_attempts()
+        return super().form_valid(form)

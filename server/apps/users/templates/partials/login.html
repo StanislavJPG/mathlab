@@ -12,6 +12,8 @@
     {% render_field_errors form.password small=True %}
   </div>
 
+  {% include 'common/captcha.html' %}
+
   {% for error in form.non_field_errors %}
     <div class="alert alert-danger">
       <strong>{{ error }}</strong>
@@ -50,3 +52,5 @@
     </button>
   </form>
 </div>
+
+<script src="{% static 'js/refresh_captcha.js' %}"></script>

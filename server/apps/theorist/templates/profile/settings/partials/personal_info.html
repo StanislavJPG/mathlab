@@ -24,6 +24,7 @@
             {% render_field form.country class="form-control" %}
             {% render_field_errors form.country small=True %}
           </div>
+          {% include 'common/captcha.html' %}
           <div class="text-center text-lg-end">
             <button type="submit" class="btn btn-primary mb-3 mt-3"><i
                 class="ti ti-device-floppy"></i> {% translate 'Save changes' %}</button>
@@ -87,3 +88,5 @@
     </div>
   </div>
 </div>
+
+<script src="{% static 'js/refresh_captcha.js' %}"></script>

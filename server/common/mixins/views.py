@@ -1,4 +1,5 @@
 from boringavatars import avatar
+from django.contrib.auth.mixins import AccessMixin
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView
@@ -68,11 +69,12 @@ class AvatarDetailViewMixin(DetailView):
         )
 
 
-class HXViewMixin:
+class HXViewMixin(AccessMixin):
     pass_only_htmx_request = True  # pass request only if it's triggered by htmx
+    raise_exception = True
 
     def dispatch(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest
         if self.pass_only_htmx_request and not self.request.htmx:
-            return HttpResponse(status=405)
+            return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)

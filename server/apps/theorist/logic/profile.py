@@ -15,6 +15,8 @@ __all__ = (
     'TheoristLastActivitiesListView',
 )
 
+from server.common.mixins.views import HXViewMixin
+
 
 class TheoristProfileDetailView(AccessMixin, DetailView):
     model = Theorist
@@ -45,7 +47,7 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class HXTheoristDetailsProfileView(DetailView):
+class HXTheoristDetailsProfileView(HXViewMixin, DetailView):
     model = Theorist
     context_object_name = 'theorist'
 

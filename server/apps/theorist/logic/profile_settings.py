@@ -10,8 +10,9 @@ from django_htmx.http import HttpResponseClientRedirect
 
 from server.apps.theorist.forms import TheoristProfileSettingsForm, TheoristProfileConfigurationsForm
 from server.apps.theorist.models import TheoristProfileSettings, Theorist
+from server.apps.users.forms import CustomPasswordChangeForm
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import HXViewMixin
+from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
 class TheoristProfileSettingsGeneralView(LoginRequiredMixin, TemplateView):
@@ -50,23 +51,10 @@ class AbstractProfileSettingsFormView(LoginRequiredMixin, FormMessagesMixin, HXV
         return HttpResponse(content=block_form)
 
 
-class TheoristProfilePublicInfoFormView(AbstractProfileSettingsFormView):
+class TheoristProfilePublicInfoFormView(CaptchaViewMixin, AbstractProfileSettingsFormView):
     model = TheoristProfileSettings
     template_name = 'profile/settings/partials/personal_info.html'
     form_class = TheoristProfileSettingsForm
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['request'] = self.request
-        return kwargs
-
-    def form_invalid(self, form):
-        form.captcha_session_push()
-        return super().form_invalid(form)
-
-    def form_valid(self, form):
-        form.clean_form_fail_attempts()
-        return super().form_valid(form)
 
 
 class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):
@@ -75,10 +63,13 @@ class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):
     template_name = 'profile/settings/partials/configurations.html'
 
 
-class TheoristProfilePasswordFormView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, PasswordChangeView):
+class TheoristProfilePasswordFormView(
+    LoginRequiredMixin, FormMessagesMixin, HXViewMixin, CaptchaViewMixin, PasswordChangeView
+):
     template_name = 'profile/settings/partials/password.html'
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
+    form_class = CustomPasswordChangeForm
     form_valid_message = _('You successfully changed your password!')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
@@ -89,6 +80,7 @@ class TheoristProfilePasswordFormView(LoginRequiredMixin, FormMessagesMixin, HXV
         return context
 
     def form_valid(self, form):
+        form.clean_form_fail_attempts()
         form.save()
 
         context = {**self.get_context_data(), 'form': form}

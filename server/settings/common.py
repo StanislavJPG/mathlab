@@ -187,6 +187,7 @@ ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 
 ACCOUNT_FORMS = {
     'login': 'server.apps.users.forms.CustomLoginForm',
+    'change_password': 'server.apps.users.forms.CustomPasswordChangeForm',
     'reset_password': 'server.apps.users.forms.CustomResetPasswordForm',
 }
 

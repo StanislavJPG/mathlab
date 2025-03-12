@@ -70,6 +70,7 @@ class TheoristProfilePasswordFormView(LoginRequiredMixin, FormMessagesMixin, HXV
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def get_context_data(self, **kwargs):
+        self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
         context['theorist'] = self.request.theorist
         return context

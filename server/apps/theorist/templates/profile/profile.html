@@ -25,7 +25,8 @@
                    data-bs-target="#about-me"
                    data-toggle="pill"
                    aria-current="page"
-                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'about-me' %}"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug %}"
+                   hx-vals='{"section": "about-me"}'
                    hx-target="#about-me"
                    hx-trigger="load once, click once"
                    href="javascript:(0);">
@@ -38,7 +39,8 @@
                    data-bs-toggle="tab"
                    data-toggle="pill"
                    data-bs-target="#statistics"
-                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'statistics' %}"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug %}"
+                   hx-vals='{"section": "statistics"}'
                    hx-target="#statistics"
                    hx-trigger="click once"
                    href="javascript:(0);">
@@ -51,7 +53,8 @@
                    data-bs-toggle="tab"
                    data-toggle="pill"
                    data-bs-target="#contact-info"
-                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug 'contact-info' %}"
+                   hx-get="{% url 'forum:theorist_profile:hx-theorist-details' theorist.pk theorist.full_name_slug %}"
+                   hx-vals='{"section": "contact-info"}'
                    hx-target="#contact-info"
                    hx-trigger="click once"
                    href="javascript:(0);">

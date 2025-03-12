@@ -115,7 +115,8 @@
                  title="{% translate 'Post deletion' %}"
                  hx-swap="innerHTML swap:0.5s"
                  hx-target=".question-{{ post.uuid }}"
-                 hx-delete="{% url 'forum:post-delete' post.uuid 'base' %}"
+                 hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                 hx-vals='{"location": "base"}'
                  hx-confirm="Are you sure?"
               >
                 <i class="text-danger ti ti-trash"></i>

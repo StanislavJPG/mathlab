@@ -54,7 +54,7 @@ class HXTheoristDetailsProfileView(DetailView):
         return super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
 
     def get_template_names(self):
-        section = self.kwargs.get('section')
+        section = self.request.GET.get('section')
         if section == 'about-me':
             return 'profile/partials/about_me.html'
         elif section == 'statistics':

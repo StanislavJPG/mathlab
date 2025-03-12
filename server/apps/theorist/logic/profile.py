@@ -24,10 +24,6 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
     context_object_name = 'theorist'
     raise_exception = True
 
-    def get_queryset(self):
-        self.request: AuthenticatedHttpRequest
-        return super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
-
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         theorist = get_object_or_404(Theorist, pk=self.kwargs['pk'])

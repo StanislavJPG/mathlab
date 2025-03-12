@@ -39,7 +39,8 @@
                   </button>
                   <button class="btn btn-danger btn-sm mb-1"
                           type="button"
-                          hx-delete="{% url 'forum:post-delete' post.uuid 'detail' %}"
+                          hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                          hx-vals='{"location": "detail"}'
                           hx-confirm="{% translate 'Are you sure?' %}"
                   >
                     <i class="ti ti-trash"></i>

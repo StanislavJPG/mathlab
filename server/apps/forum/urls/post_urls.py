@@ -19,7 +19,7 @@ urlpatterns = [
         name='post-details',
     ),
     path(
-        '<uuid:uuid>/posts/<str:location>/delete/',
+        '<uuid:uuid>/posts/delete/',
         PostDeleteView.as_view(),
         name='post-delete',
     ),

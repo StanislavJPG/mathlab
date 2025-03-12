@@ -3,8 +3,9 @@ from django.urls import path
 from server.apps.theorist.logic.profile_settings import (
     TheoristProfileSettingsGeneralView,
     TheoristProfilePublicInfoFormView,
-    TheoristProfileYourDataFormView,
+    TheoristProfileConfigurationsFormView,
     TheoristProfileDeactivateAccountView,
+    TheoristProfilePasswordFormView,
 )
 
 app_name = 'settings'
@@ -22,9 +23,14 @@ urlpatterns = [
         name='hx-profile-private-info-form',
     ),
     path(
-        'your-data/<uuid:uuid>/',
-        TheoristProfileYourDataFormView.as_view(),
-        name='hx-profile-your-data-form',
+        'configurations/<uuid:uuid>/',
+        TheoristProfileConfigurationsFormView.as_view(),
+        name='hx-profile-configurations-form',
+    ),
+    path(
+        'password/<uuid:uuid>/',
+        TheoristProfilePasswordFormView.as_view(),
+        name='hx-profile-password-form',
     ),
     path(
         'deactivate-account/<uuid:uuid>/',

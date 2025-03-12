@@ -20,7 +20,7 @@ urlpatterns = [
         name='base-page',
     ),
     path(
-        '<int:pk>/<slug:full_name_slug>/<str:section>/',
+        '<int:pk>/<slug:full_name_slug>/details/',
         HXTheoristDetailsProfileView.as_view(),
         name='hx-theorist-details',
     ),

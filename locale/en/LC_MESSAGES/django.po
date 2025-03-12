@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-10 23:42+0200\n"
+"POT-Creation-Date: 2025-03-12 01:55+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -94,7 +94,8 @@ msgstr ""
 msgid "Categories"
 msgstr ""
 
-#: server/apps/forum/filters.py server/apps/forum/templates/question_page.html
+#: server/apps/forum/filters.py
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Sort by"
 msgstr ""
 
@@ -124,7 +125,8 @@ msgstr ""
 msgid "Your comment has been added."
 msgstr ""
 
-#: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/post_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
 #: server/apps/users/logic/auths_actions.py
@@ -135,15 +137,15 @@ msgstr ""
 msgid "Your comment has been deleted."
 msgstr ""
 
-#: server/apps/forum/logic/posts.py
+#: server/apps/forum/logic/post_management.py
 msgid "You successfully created a new post."
 msgstr ""
 
-#: server/apps/forum/logic/posts.py
+#: server/apps/forum/logic/post_management.py
 msgid "Error while creating post. Please check for errors and try again."
 msgstr ""
 
-#: server/apps/forum/logic/posts.py
+#: server/apps/forum/logic/post_management.py
 msgid "Your post has been deleted."
 msgstr ""
 
@@ -151,138 +153,137 @@ msgstr ""
 msgid "Loading..."
 msgstr ""
 
-#: server/apps/forum/templates/create_question_page.html
-msgid "Create your question on forum"
-msgstr ""
-
-#: server/apps/forum/templates/create_question_page.html
-msgid "Question topic"
-msgstr ""
-
-#: server/apps/forum/templates/create_question_page.html
-msgid "Question category"
-msgstr ""
-
-#: server/apps/forum/templates/create_question_page.html
-msgid "No more than 4 categories"
-msgstr ""
-
-#: server/apps/forum/templates/create_question_page.html
-msgid "Describe your question"
-msgstr ""
-
-#: server/apps/forum/templates/create_question_page.html
-msgid "Create question"
-msgstr ""
-
-#: server/apps/forum/templates/partials/comment_block_create.html
+#: server/apps/forum/templates/comments/partials/comment_block_create.html
 msgid "Add comment"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Author"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Created at"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "ago"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Modified at"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
-#: server/apps/forum/templates/question_page.html
-#: server/templates/partials/forum/forum_navbar.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Are you sure?"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Sorry! You have to verify your email to interact."
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Thank you!"
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "You have already supported this comment."
 msgstr ""
 
-#: server/apps/forum/templates/partials/comment_list.html
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid ""
 "Do you want to support this answer? You will raise score for this user by "
 "doing that."
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "Create your question on forum"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "Question topic"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "Question category"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "No more than 4 categories"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "Describe your question"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/create_question_form.html
+msgid "Create question"
+msgstr ""
+
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Filter"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Advanced filter"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Apply"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Clear"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Recent questions"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "asked"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Post likes quantity"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Post comments quantity"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Post views quantity"
 msgstr ""
 
-#: server/apps/forum/templates/partials/posts_list.html
+#: server/apps/forum/templates/posts/partials/posts_list.html
 msgid "Post deletion"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Modified"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Viewers"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Answers"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Best"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Newest"
 msgstr ""
 
-#: server/apps/forum/templates/question_page.html
+#: server/apps/forum/templates/posts/question_page.html
 msgid "Your answer"
 msgstr ""
 
@@ -340,6 +341,10 @@ msgstr ""
 
 #: server/apps/theorist/logic/profile_settings.py
 msgid "You successfully changed your profile data!"
+msgstr ""
+
+#: server/apps/theorist/logic/profile_settings.py
+msgid "You successfully changed your password!"
 msgstr ""
 
 #: server/apps/theorist/models.py
@@ -409,6 +414,10 @@ msgid "Liked a comment in post"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This profile is available only for authorized users."
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
 msgstr ""
 
@@ -432,6 +441,47 @@ msgstr ""
 msgid "Contact info"
 msgstr ""
 
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Is profile only for authorized"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Is show about me"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Is show last activities"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit everybody to send me a private messages"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+#: server/apps/theorist/templates/profile/settings/settings.html
+msgid "Password"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+msgid "Current password"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+msgid "Forgot your password?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+msgid "New password"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+msgid "New password (again)"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/password.html
+msgid "Change password"
+msgstr ""
+
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
 msgid "Personal info"
 msgstr ""
@@ -450,6 +500,10 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
 msgid "Delete avatar"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Profile configurations"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
@@ -477,14 +531,6 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/settings.html
 msgid "Account"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/settings/settings.html
-msgid "Password"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/settings/settings.html
-msgid "Your data"
 msgstr ""
 
 #: server/apps/users/adapters.py
@@ -569,6 +615,10 @@ msgstr ""
 msgid "Sign in"
 msgstr ""
 
+#: server/templates/403.html
+msgid "Not this time, access forbidden!"
+msgstr ""
+
 #: server/templates/common/pagination.html
 msgid "Previous"
 msgstr ""
@@ -583,6 +633,10 @@ msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html
 msgid "New discussion"
+msgstr ""
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Do you want to log out from your account?"
 msgstr ""
 
 #: server/templates/partials/theme_switcher.html

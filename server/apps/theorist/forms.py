@@ -59,3 +59,14 @@ class TheoristProfileSettingsForm(forms.ModelForm):
         theorist.save()
 
         return settings
+
+
+class TheoristProfileConfigurationsForm(forms.ModelForm):
+    class Meta:
+        model = TheoristProfileSettings
+        fields = (
+            'is_profile_only_for_authenticated',
+            'is_show_about_me',
+            'is_show_last_activities',
+            'is_able_to_get_messages',
+        )

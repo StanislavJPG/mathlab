@@ -46,7 +46,8 @@ class PostDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
         post.delete()
 
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        if self.kwargs['location'] == 'base':
+        location = self.request.GET.get('location')
+        if location == 'base':
             response = HttpResponse()
             trigger_client_event(response, 'postDeleted')
         else:

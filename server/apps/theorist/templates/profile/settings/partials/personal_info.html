@@ -1,96 +1,88 @@
 {% load i18n static widened_widget_tweaks widget_tweaks avatars %}
 
 <div class="card">
-  <div class="card-header d-flex flex-row-reverse justify-content-between">
-    <div class="card-actions float-right">
-      <div class="dropdown show">
-        <a href="#" data-toggle="dropdown" data-display="static">
-          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none"
-               stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"
-               class="feather feather-more-horizontal align-middle">
-            <circle cx="12" cy="12" r="1"></circle>
-            <circle cx="19" cy="12" r="1"></circle>
-            <circle cx="5" cy="12" r="1"></circle>
-          </svg>
-        </a>
-
-        <div class="dropdown-menu dropdown-menu-right">
-          <a class="dropdown-item" href="#">Action</a>
-          <a class="dropdown-item" href="#">Another action</a>
-          <a class="dropdown-item" href="#">Something else here</a>
-        </div>
-      </div>
-    </div>
-    <h5 class="card-title mb-0">{% translate 'Personal info' %}</h5>
+  <div class="card-header">
+    <h5 class="card-title mb-0"><i class="ti ti-user"></i> {% translate 'Personal info' %}</h5>
   </div>
 
   <div class="card-body">
-    <div class="card-body">
-      <div class="row">
-        <div class="col-md-8">
-          <form hx-post="{{ request.path }}">
-            <div class="form-group">
-              <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-              {% render_field form.username class="form-control" %}
-              {% render_field_errors form.username small=True %}
-            </div>
-            <div class="form-group">
-              <label for="{{ form.about_me.id_for_label }}">{{ form.about_me.label }}</label>
-              {% render_field form.about_me class="form-control" %}
-              {% render_field_errors form.about_me small=True %}
-            </div>
-            <div class="form-group">
-              <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
-              {% render_field form.country class="form-control" %}
-              {% render_field_errors form.country small=True %}
-            </div>
-            <div class="text-center text-md-start">
-              <button type="submit" class="btn btn-primary mb-3 mt-3"><i class="ti ti-device-floppy"></i> {% translate 'Save changes' %}</button>
-            </div>
-          </form>
-        </div>
-        <div class="col-md-4">
-          <div class="text-center">
-            <div class="mb-3 mt-1"
-                 hx-get="{{ request.path }}"
-                 hx-trigger="imageChanged from:body"
-            >
-              {% get_instance_avatar theorist %}
-            </div>
-            <form hx-post="{% url 'forum:theorist_profile:theorist-avatar-upload' theorist.uuid %}"
-                  enctype="multipart/form-data" hx-trigger="change">
-              <label for="id_custom_avatar" style="cursor: pointer" class="btn btn-primary btn-sm">
-                <i class="ti ti-upload"></i> {% translate 'Update avatar' %}
-              </label>
-              <input type="file" name="custom_avatar" accept="image/*" id="id_custom_avatar" hidden>
-            </form>
-            {% if theorist.custom_avatar %}
-              <button type="button"
-                      class="btn btn-danger btn-sm mt-2"
-                      hx-confirm="{% translate 'Delete this image?' %}"
-                      hx-post="{% url 'forum:theorist_profile:theorist-avatar-delete' theorist.uuid %}"
-              >
-                <i class="ti ti-trash"></i> {% translate 'Delete avatar' %}
-              </button>
-            {% endif %}
+    <div class="row d-flex flex-lg-row flex-column-reverse">
+      <div class="col-lg-8">
+        <form hx-post="{{ request.path }}">
+          <div class="form-group">
+            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
+            {% render_field form.username class="form-control" %}
+            {% render_field_errors form.username small=True %}
           </div>
+          <div class="form-group">
+            <label for="{{ form.about_me.id_for_label }}">{{ form.about_me.label }}</label>
+            {% render_field form.about_me class="form-control" %}
+            {% render_field_errors form.about_me small=True %}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
+            {% render_field form.country class="form-control" %}
+            {% render_field_errors form.country small=True %}
+          </div>
+          <div class="text-center text-lg-end">
+            <button type="submit" class="btn btn-primary mb-3 mt-3"><i
+                class="ti ti-device-floppy"></i> {% translate 'Save changes' %}</button>
+          </div>
+        </form>
+      </div>
+      <div class="col-lg-4">
+        <div class="text-center">
+          <div class="mb-3 mt-1"
+               hx-get="{{ request.path }}"
+               hx-trigger="imageChanged from:body"
+          >
+            {% get_instance_avatar theorist %}
+          </div>
+          <form hx-post="{% url 'forum:theorist_profile:theorist-avatar-upload' theorist.uuid %}"
+                enctype="multipart/form-data" hx-trigger="change">
+            <label for="id_custom_avatar" style="cursor: pointer" class="btn btn-primary btn-sm">
+              <i class="ti ti-upload"></i> {% translate 'Update avatar' %}
+            </label>
+            <input type="file" name="custom_avatar" accept="image/*" id="id_custom_avatar" hidden>
+          </form>
+          {% if theorist.custom_avatar %}
+            <button type="button"
+                    class="btn btn-danger btn-sm mt-2"
+                    hx-confirm="{% translate 'Delete this image?' %}"
+                    hx-post="{% url 'forum:theorist_profile:theorist-avatar-delete' theorist.uuid %}"
+            >
+              <i class="ti ti-trash"></i> {% translate 'Delete avatar' %}
+            </button>
+          {% endif %}
         </div>
       </div>
+    </div>
 
-      <hr/>
-      <div class="row d-flex justify-content-center border border-danger rounded p-4 mt-4">
-        <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
-          <h6 class="mb-3 text-danger">{% translate 'Danger zone' %}</h6>
-        </div>
-        <div class="col-md-3 col-8">
-          <button type="button"
-                  class="btn btn-danger text-nowrap"
-                  hx-confirm="{% translate 'Are you sure that you want to deactivate your account? Your account will not be available anymore.' %}"
-                  hx-post="{% url 'forum:theorist_profile:settings:hx-profile-deactivate-account-form' object.uuid %}"
-          >
-            <i class="ti ti-user-minus"></i> {% translate 'Deactivate account' %}
-          </button>
-        </div>
+    <hr/>
+    <div class="row d-flex border border-secondary rounded p-4 mt-4 me-1 ms-1">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <h6 class="mb-3"><i class="ti ti-settings"></i> {% translate 'Profile configurations' %}</h6>
+      </div>
+      <div hx-get="{% url 'forum:theorist_profile:settings:hx-profile-configurations-form' theorist.uuid %}"
+           hx-trigger="load"
+           hx-target="this"
+           class="col-8 col-sm-6 col-xxl-4">
+      </div>
+    </div>
+
+    <hr/>
+    <div class="row d-flex justify-content-center border border-danger rounded p-4 mt-4 me-1 ms-1">
+      <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
+        <h6 class="mb-3 text-danger"><i class="ti ti-alert-hexagon"></i> {% translate 'Danger zone' %}</h6>
+      </div>
+      <div class="col-8 col-sm-6 col-xxl-4">
+        <button type="button"
+                class="btn btn-danger text-nowrap"
+                hx-confirm="{% translate 'Are you sure that you want to deactivate your account? Your account will not be available anymore.' %}"
+                hx-post="{% url 'forum:theorist_profile:settings:hx-profile-deactivate-account-form' object.uuid %}"
+        >
+          <i class="ti ti-user-minus"></i> {% translate 'Deactivate account' %}
+        </button>
       </div>
     </div>
   </div>

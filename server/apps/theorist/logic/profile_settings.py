@@ -55,6 +55,19 @@ class TheoristProfilePublicInfoFormView(AbstractProfileSettingsFormView):
     template_name = 'profile/settings/partials/personal_info.html'
     form_class = TheoristProfileSettingsForm
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        return kwargs
+
+    def form_invalid(self, form):
+        form.captcha_session_push()
+        return super().form_invalid(form)
+
+    def form_valid(self, form):
+        form.clean_form_fail_attempts()
+        return super().form_valid(form)
+
 
 class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):
     model = TheoristProfileSettings

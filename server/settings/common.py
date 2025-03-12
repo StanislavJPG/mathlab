@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'easy_thumbnails',
     'hitcount',
     'django_countries',
+    'captcha',
     'django_cleanup.apps.CleanupConfig',
     # common
     'server.common',
@@ -107,7 +108,6 @@ TEMPLATES = [
         },
     },
 ]
-
 
 WSGI_APPLICATION = 'server.settings.wsgi.application'
 
@@ -186,6 +186,7 @@ LOGIN_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 ACCOUNT_LOGOUT_REDIRECT_URL = reverse_lazy('forum:base-forum-page')
 
 ACCOUNT_FORMS = {
+    'login': 'server.apps.users.forms.CustomLoginForm',
     'reset_password': 'server.apps.users.forms.CustomResetPasswordForm',
 }
 
@@ -240,6 +241,11 @@ TINYMCE_DEFAULT_CONFIG = {
     'alignright alignjustify | bullist numlist outdent indent | '
     'removeformat | help',
 }
+
+CAPTCHA_2X_IMAGE = True
+CAPTCHA_CHALLENGE_FUNCT = 'captcha.helpers.math_challenge'
+CAPTCHA_IMAGE_SIZE = (120, 90)
+CAPTCHA_FONT_SIZE = 30
 
 MESSAGE_TAGS = {messages.ERROR: 'danger', messages.SUCCESS: 'success'}
 

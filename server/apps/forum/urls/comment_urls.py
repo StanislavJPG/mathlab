@@ -1,13 +1,12 @@
 from django.urls import path
 
 from server.apps.forum.logic.comments import (
-    CommentCreateView,
-    CommentDeleteView,
     HXCommentQuantityView,
     HXCommentLikesAndDislikesView,
     CommentListView,
     CommentSupportUpdateView,
 )
+from server.apps.forum.logic.comment_management import CommentCreateView, CommentDeleteView, CommentUpdateView
 
 urlpatterns = [
     path(
@@ -19,6 +18,11 @@ urlpatterns = [
         '<uuid:post_uuid>/comments/create/',
         CommentCreateView.as_view(),
         name='comment-create',
+    ),
+    path(
+        '<uuid:uuid>/comments/update/',
+        CommentUpdateView.as_view(),
+        name='comment-update',
     ),
     path(
         '<uuid:uuid>/comments/<uuid:post_uuid>/delete/',

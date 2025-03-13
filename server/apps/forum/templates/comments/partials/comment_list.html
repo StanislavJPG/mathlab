@@ -6,7 +6,7 @@
 >
   {% for comment in comments %}
     <hr/>
-    <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url request comment 'comment' %}">
+    <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url comment 'comment' %}">
       <div class="row">
         <div class="d-flex flex-column flex-md-row list-inline text-muted small text-start justify-content-between">
           <div>

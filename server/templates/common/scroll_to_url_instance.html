@@ -1,0 +1,28 @@
+<style>
+  .fade-remove {
+    transition: background-color 0.5s ease-out;
+    background-color: transparent !important;
+    border-radius: 0 !important;
+}
+</style>
+
+<script>
+    document.addEventListener("htmx:afterSettle", function () {
+        // Get URL parameters
+        const urlParams = new URLSearchParams(window.location.search);
+        const scrollToClass = urlParams.get("{{ param }}");
+        const target = "{{ target_class_suffix }}";
+
+        if (scrollToClass) {
+            const targetElement = document.querySelector(`.${target}${scrollToClass}`);
+            if (targetElement) {
+                targetElement.scrollIntoView({behavior: "smooth", block: "start"});
+            }
+            setTimeout(() => {
+                document.querySelectorAll(".fadeDiv").forEach(element => {
+                    element.classList.add("fade-remove");
+                });
+            }, 1000);
+        }
+    });
+</script>

@@ -29,25 +29,29 @@
             <li class="list-inline-item small">
               <b>{% translate 'Viewers' %}:</b> {{ post.hit_count.hits }} разів
             </li>
-            {% if post.theorist.uuid == request.theorist.uuid %}
-              <ul>
-                <li class="list-inline-item small">
-                  <button class="btn btn-warning btn-sm mb-1"
-                          type="submit"
-                  >
-                    <i class="ti ti-edit"></i>
-                  </button>
-                  <button class="btn btn-danger btn-sm mb-1"
-                          type="button"
-                          hx-delete="{% url 'forum:post-delete' post.uuid %}"
-                          hx-vals='{"location": "detail"}'
-                          hx-confirm="{% translate 'Are you sure?' %}"
-                  >
-                    <i class="ti ti-trash"></i>
-                  </button>
-                </li>
-              </ul>
-            {% endif %}
+            <li class="list-inline-item small">
+              <button class="btn btn-secondary btn-sm mb-1 me-1 btn-to-copy"
+                      data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}"
+                      type="button"
+              >
+                <i class="ti ti-link"></i>
+              </button>
+              {% if post.theorist.uuid == request.theorist.uuid %}
+                <button class="btn btn-warning btn-sm mb-1 me-1"
+                        type="submit"
+                >
+                  <i class="ti ti-edit"></i>
+                </button>
+                <button class="btn btn-danger btn-sm mb-1 me-1"
+                        type="button"
+                        hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                        hx-vals='{"location": "detail"}'
+                        hx-confirm="{% translate 'Are you sure?' %}"
+                >
+                  <i class="ti ti-trash"></i>
+                </button>
+              {% endif %}
+            </li>
           </ul>
           <hr>
           <div class="d-flex flex-row-reverse justify-content-end">
@@ -109,14 +113,15 @@
             </ul>
           </div>
           <div id="comment-list-js" class="mt-5" hx-get="{% url 'forum:comments-block' post.uuid %}"
-               hx-indicator="#comment-block-wait-spinner" hx-trigger="load">
+               hx-vals='{"comment": "{{ request.GET.comment|default:'' }}", "comment_page": "{{ request.GET.comment_page|default:'' }}"}'
+               hx-trigger="load">
             <div id="comment-block-wait-spinner" class="spinner-border text-primary" role="status"></div>
           </div>
         </div>
 
         {% if user.is_authenticated %}
           <div class="text-center">
-            <hr />
+            <hr/>
             <h2 class="h5 mb-4">{% translate 'Your answer' %}</h2>
             <div id="comment-block-js" hx-get="{% url 'forum:comment-create' post.uuid %}"
                  hx-target="this" hx-trigger="load delay:0.5s">
@@ -133,3 +138,5 @@
     </div>
   </div>
 {% endblock %}
+
+<script src="{% static 'js/actions/init_clipboard.js' %}"></script>

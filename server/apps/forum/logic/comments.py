@@ -10,7 +10,7 @@ from render_block import render_block_to_string
 from server.apps.forum.forms import CommentCreateForm
 from server.apps.forum.models import Comment, Post
 from server.common.http import AuthenticatedHttpRequest
-
+from server.common.mixins.views import HXViewMixin, ListObjectsURLSMixin
 
 __all__ = (
     'CommentListView',
@@ -21,14 +21,13 @@ __all__ = (
     'CommentSupportUpdateView',
 )
 
-from server.common.mixins.views import HXViewMixin
 
-
-class CommentListView(ListView):
+class CommentListView(HXViewMixin, ListObjectsURLSMixin, ListView):
     paginate_by = 7
     model = Comment
     context_object_name = 'comments'
     template_name = 'comments/partials/comment_list.html'
+    page_custom_kwarg = 'comment_page'
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -53,7 +52,7 @@ class CommentListView(ListView):
         return context
 
 
-class CommentCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
     model = Comment
     template_name = 'comments/partials/comment_block_create.html'
     form_valid_message = _('Your comment has been added.')
@@ -84,7 +83,7 @@ class CommentCreateView(LoginRequiredMixin, FormMessagesMixin, CreateView):
         return response
 
 
-class CommentDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
+class CommentDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, DeleteView):
     model = Comment
     template_name = 'posts/question_page.html'
     form_valid_message = _('Your comment has been deleted.')
@@ -101,7 +100,7 @@ class CommentDeleteView(LoginRequiredMixin, FormMessagesMixin, DeleteView):
         return response
 
 
-class HXCommentQuantityView(DetailView):
+class HXCommentQuantityView(HXViewMixin, DetailView):
     model = Post
     template_name = 'posts/question_page.html'
     slug_field = 'uuid'
@@ -185,7 +184,7 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView)
         return response
 
 
-class CommentSupportUpdateView(LoginRequiredMixin, DetailView):
+class CommentSupportUpdateView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Comment
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'

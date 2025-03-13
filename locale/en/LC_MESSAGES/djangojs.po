@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 00:36+0200\n"
+"POT-Creation-Date: 2025-03-14 00:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -17,14 +17,19 @@ msgstr ""
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-#: server/static/js/htmx_sweetalert.js:9
+
+#: server/static/js/actions/init_clipboard.js:4
+msgid "Copied to clipboard"
+msgstr ""
+
+#: server/static/js/htmx_sweetalert.js:10
 msgid "Proceed?"
 msgstr ""
 
-#: server/static/js/htmx_sweetalert.js:13
+#: server/static/js/htmx_sweetalert.js:15
 msgid "Yes"
 msgstr ""
 
-#: server/static/js/htmx_sweetalert.js:14
+#: server/static/js/htmx_sweetalert.js:16
 msgid "No"
 msgstr ""

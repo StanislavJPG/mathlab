@@ -1,12 +1,12 @@
-{% load i18n static widget_tweaks %}
+{% load i18n static widget_tweaks urls %}
 
-<div id="comment-list-js"
+<div id="comment-list-body-js"
      hx-get="{{ request.get_full_path }}"
      hx-trigger="commentBlockChanged from:body delay:0.6s"
 >
   {% for comment in comments %}
     <hr/>
-    <div class="container full-answer-{{ comment.uuid }} mb-5">
+    <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url comment 'comment' %}">
       <div class="row">
         <div class="d-flex flex-column flex-md-row list-inline text-muted small text-start justify-content-between">
           <div>
@@ -16,15 +16,21 @@
                  href="{{ comment.theorist.get_absolute_url }}"> {{ comment.theorist.full_name }} </a> |
               <b>{{ comment.theorist.get_rank_display }}</b></div>
             <div class="list-inline-item small"
-                class="span-base">
+                 class="span-base">
               <b>{% translate 'Created at' %}</b> {{ comment.created_at|timesince }} {% translate 'ago' %}</div>
             {% if comment.modified_at is not none %}
               <div class="list-inline-item small"
-                  class="span-base">
+                   class="span-base">
                 <b>{% translate 'Modified at' %}</b> {{ comment.modified_at|timesince }} {% translate 'ago' %}</div>
             {% endif %}
           </div>
           <div class="list-inline-item small">
+            <button class="btn btn-secondary btn-sm me-1 btn-to-copy"
+                    data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?comment_page={{ page_obj.number }}&comment={{ comment.uuid }}"
+                    type="button"
+            >
+              <i class="ti ti-link"></i>
+            </button>
             {% if comment.theorist.uuid == request.theorist.uuid %}
               <button class="btn btn-warning btn-sm me-1"
                       type="submit"
@@ -103,7 +109,9 @@
       </div>
     </div>
   {% endfor %}
-  {% if page_obj.paginator.num_pages > 1 %}
-    {% include 'common/pagination.html' with htmx_target="#comment-list-js" %}
-  {% endif %}
+  {% include 'common/pagination.html' with htmx_target="#comment-list-body-js" %}
 </div>
+
+{% include 'common/scroll_to_url_instance.html' with param='comment' target_class_suffix='full-answer-' %}
+
+<script src="{% static 'js/actions/init_clipboard.js' %}"></script>

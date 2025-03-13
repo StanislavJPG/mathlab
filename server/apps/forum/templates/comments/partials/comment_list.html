@@ -28,7 +28,6 @@
             <button class="btn btn-secondary btn-sm me-1 btn-to-copy"
                     data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?comment_page={{ page_obj.number }}&comment={{ comment.uuid }}"
                     type="button"
-
             >
               <i class="ti ti-link"></i>
             </button>
@@ -115,6 +114,4 @@
 
 {% include 'common/scroll_to_url_instance.html' with param='comment' target_class_suffix='full-answer-' %}
 
-<script>
-    new ClipboardJS('.btn-to-copy');
-</script>
+<script src="{% static 'js/actions/init_clipboard.js' %}"></script>

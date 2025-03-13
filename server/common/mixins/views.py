@@ -123,12 +123,3 @@ class InstanceURLMixin:
             else 'page'
         )
         return page_kwarg
-
-    # @property
-    # def _get_classes_by_lookup_url(self):
-    #     return 'bg-warning-subtle rounded' if self.request.GET.comment == comment.uuid"
-    #
-    # def get_context_data(self, **kwargs):
-    #     context = super().get_context_data(**kwargs)
-    #     context['get_classes_by_lookup_url'] = self
-    #     return context

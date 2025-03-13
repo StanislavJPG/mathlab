@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-02-28 00:36+0200\n"
+"POT-Creation-Date: 2025-03-14 00:05+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,14 +18,19 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
-#: server/static/js/htmx_sweetalert.js:9
+
+#: server/static/js/actions/init_clipboard.js:4
+msgid "Copied to clipboard"
+msgstr "Скопійовано до буферу обміну."
+
+#: server/static/js/htmx_sweetalert.js:10
 msgid "Proceed?"
 msgstr "Продовжити?"
 
-#: server/static/js/htmx_sweetalert.js:13
+#: server/static/js/htmx_sweetalert.js:15
 msgid "Yes"
 msgstr "Так"
 
-#: server/static/js/htmx_sweetalert.js:14
+#: server/static/js/htmx_sweetalert.js:16
 msgid "No"
 msgstr "Ні"

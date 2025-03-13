@@ -93,3 +93,42 @@ class CaptchaViewMixin:
     def form_valid(self, form):
         form.clean_form_fail_attempts()
         return super().form_valid(form)
+
+
+class InstanceURLMixin:
+    """
+    We need to pass additional page kwarg name to prevent kwargs conflicts.
+    Example:
+        We copy link from base page. We put this URL in searchbar.
+        What would be if kwargs name was `page`:
+            We went to instance what we searched by URL. But main pagination is not work (1, 2, 3).
+            Because it gets settled `page` kwarg from the base page. ?page=3?uuid=...
+            And it will try to get exact this `page` number from the searchbar, but not from pagination in HTML.
+    """
+
+    page_custom_kwarg = None
+
+    def get_page_custom_kwarg(self):
+        if not self.page_custom_kwarg:
+            raise NotImplementedError('You must to specify `page_custom_kwarg`.')
+
+        return self.page_custom_kwarg
+
+    @property
+    def page_kwarg(self):
+        page_custom_kwarg = self.get_page_custom_kwarg()
+        page_kwarg = (
+            page_custom_kwarg
+            if (self.request.GET.get(page_custom_kwarg) and not self.request.GET.get('page'))
+            else 'page'
+        )
+        return page_kwarg
+
+    # @property
+    # def _get_classes_by_lookup_url(self):
+    #     return 'bg-warning-subtle rounded' if self.request.GET.comment == comment.uuid"
+    #
+    # def get_context_data(self, **kwargs):
+    #     context = super().get_context_data(**kwargs)
+    #     context['get_classes_by_lookup_url'] = self
+    #     return context

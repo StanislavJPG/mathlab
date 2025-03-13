@@ -109,7 +109,8 @@
             </ul>
           </div>
           <div id="comment-list-js" class="mt-5" hx-get="{% url 'forum:comments-block' post.uuid %}"
-               hx-indicator="#comment-block-wait-spinner" hx-trigger="load">
+               hx-vals='{"comment": "{{ request.GET.comment|default:'' }}", "comment_page": "{{ request.GET.comment_page|default:'' }}"}'
+               hx-trigger="load">
             <div id="comment-block-wait-spinner" class="spinner-border text-primary" role="status"></div>
           </div>
         </div>

@@ -95,8 +95,10 @@ class CaptchaViewMixin:
         return super().form_valid(form)
 
 
-class InstanceURLMixin:
+class ListObjectsURLSMixin:
     """
+    This Mixin allow to get to the object even with pagination in ListView.
+
     We need to pass additional page kwarg name to prevent kwargs conflicts.
     Example:
         We copy link from base page. We put this URL in searchbar.

@@ -8,7 +8,13 @@ from server.apps.forum.logic.posts import (
     PostDefaultImageView,
     BasePostTemplateView,
 )
-from server.apps.forum.logic.post_management import PostCreateBaseView, PostCreateView, PostDeleteView
+from server.apps.forum.logic.post_management import (
+    PostCreateBaseView,
+    PostCreateView,
+    PostDeleteView,
+    PostContentUpdateView,
+    PostTitleUpdateView,
+)
 
 urlpatterns = [
     path('', BasePostTemplateView.as_view(), name='base-forum-page'),
@@ -32,6 +38,16 @@ urlpatterns = [
         'hx/posts/create/',
         PostCreateView.as_view(),
         name='hx-post-create',
+    ),
+    path(
+        'hx/<uuid:uuid>/posts/content/update/',
+        PostContentUpdateView.as_view(),
+        name='hx-post-content-update',
+    ),
+    path(
+        'hx/<uuid:uuid>/posts/title/update/',
+        PostTitleUpdateView.as_view(),  # TODO: Change redirect to dynamic reswap
+        name='hx-post-title-update',
     ),
     path(
         '<uuid:uuid>/posts/rate/',

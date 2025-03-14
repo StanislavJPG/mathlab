@@ -2,6 +2,8 @@ from braces.views import LoginRequiredMixin
 from django.db.models import Q
 
 from django.http import HttpResponse
+from django.shortcuts import redirect, get_object_or_404
+from django.urls import reverse
 from django.views.generic import DetailView, TemplateView
 from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
@@ -50,12 +52,27 @@ class PostDetailView(HitCountDetailView):
     template_name = 'posts/question_page.html'
     count_hit = True
 
+    def dispatch(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        post = get_object_or_404(Post, pk=self.kwargs['pk'])
+        valid_slug = post.slug
+        if valid_slug != self.kwargs['slug']:
+            return redirect(
+                reverse(
+                    'forum:post-details',
+                    kwargs={
+                        'pk': self.kwargs['pk'],
+                        'slug': valid_slug,
+                    },
+                )
+            )
+        return super().dispatch(request, *args, **kwargs)
+
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
         return (
             super()
             .get_queryset()
-            .filter(slug=self.kwargs['slug'])
             .prefetch_related('comments', 'categories')
             .with_likes_counters()
             .with_have_rates_per_theorist(self.request.theorist)

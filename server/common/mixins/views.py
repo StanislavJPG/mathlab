@@ -27,7 +27,8 @@ class AvatarDetailViewMixin(DetailView):
     avatar_variant = BORINGAVATARS_DEFAULT_VARIANT  # choices: {beam, marble, pixel, sunset, bauhaus, ring}
     avatar_square = BORINGAVATARS_DEFAULT_SQUARE
 
-    def _get_nested_attr(self, obj, attr, default=None):
+    @staticmethod
+    def _get_nested_attr(obj, attr, default=None):
         for part in attr.split('__'):
             obj = getattr(obj, part, default)
             if obj is default:

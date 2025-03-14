@@ -1,9 +1,8 @@
 from django import forms
 from django.utils.translation import gettext_lazy as _
-
 from tinymce.widgets import TinyMCE
 
-from server.apps.forum.models import Post, Comment
+from server.apps.forum.models import Post
 
 
 class PostCreateForm(forms.ModelForm):
@@ -36,28 +35,8 @@ class PostCreateForm(forms.ModelForm):
         return categories
 
 
-class CommentCreateForm(forms.ModelForm):
+class PostUpdateForm(forms.ModelForm):
     class Meta:
-        model = Comment
-        fields = ('comment',)
-        widgets = {'comment': TinyMCE(attrs={'cols': 30, 'rows': 30})}
-
-    def __init__(self, *args, **kwargs):
-        self.theorist = kwargs.pop('theorist')
-        self.post = kwargs.pop('post')
-        super().__init__(*args, **kwargs)
-        self.instance.theorist = self.theorist
-        self.instance.post = self.post
-
-
-class CommentUpdateForm(forms.ModelForm):
-    predefined_comment = forms.CharField(widget=TinyMCE(attrs={'cols': 30, 'rows': 30}))
-
-    class Meta:
-        model = Comment
-        # change field name only for skip form conflicts
-        fields = ('predefined_comment',)
-
-    def save(self, commit=True):
-        self.instance.comment = self.cleaned_data['predefined_comment']
-        self.instance.save(update_fields=['comment'])
+        model = Post
+        fields = ('content',)
+        widgets = {'content': TinyMCE(attrs={'cols': 30, 'rows': 30})}

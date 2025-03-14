@@ -4,7 +4,7 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django_htmx.http import trigger_client_event
 
-from server.apps.forum.forms import CommentCreateForm, CommentUpdateForm
+from server.apps.forum.forms.comments import CommentCreateForm, CommentUpdateForm
 from server.apps.forum.models import Comment, Post
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -49,6 +49,10 @@ class CommentUpdateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, Upda
     form_class = CommentUpdateForm
     form_valid_message = _('Your comment has been updated.')
     form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return super().get_queryset().filter(theorist=self.request.theorist)
 
     def form_valid(self, form):
         form.save()

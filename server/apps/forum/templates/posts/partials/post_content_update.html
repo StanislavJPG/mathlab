@@ -1,0 +1,15 @@
+{% load i18n static widget_tweaks %}
+{{ form.media }}
+
+<form hx-post="{{ request.path }}"
+      hx-trigger="submit"
+      id="post-block-update"
+      class="btn-group d-flex align-items-start"
+      hx-swap="none"
+      _="on submit toggle @hidden on #post-wait-spinner until htmx:afterOnLoad">
+  {{ form.content }}
+  <button type="submit" class="btn btn-success mt-3">
+    <span id="post-wait-spinner" class="spinner-grow spinner-grow-sm text-light mt-2" role="status" hidden></span>
+    <i class="ti ti-check"></i>
+  </button>
+</form>

@@ -12,8 +12,8 @@ class PostListFilter(filters.FilterSet):
     )
     categories = filters.ModelMultipleChoiceFilter(
         label=_('Categories'),
-        field_name='categories',
-        to_field_name='id',
+        field_name='categories__name',
+        to_field_name='name',
         queryset=PostCategory.objects.all(),
     )
     sort_by = filters.OrderingFilter(

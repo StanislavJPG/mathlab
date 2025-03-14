@@ -3,7 +3,7 @@ from typing import Final
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
-from django_lifecycle import LifecycleModel, hook, BEFORE_SAVE, AFTER_CREATE
+from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from hitcount.models import HitCountMixin
 
 from slugify import slugify
@@ -56,10 +56,11 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
             kwargs={'uuid': self.uuid},
         )
 
-    @hook(BEFORE_SAVE)
-    def before_save(self):
+    @hook(AFTER_SAVE)
+    def after_save(self):
         text = slugify(self.title)
         self.slug = text
+        self.save(update_fields=['slug'], skip_hooks=True)
 
     @hook(AFTER_CREATE)
     def posts_count_hook(self):

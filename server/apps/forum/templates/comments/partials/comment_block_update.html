@@ -1,0 +1,16 @@
+{% load i18n static widget_tweaks %}
+{{ form.media }}
+
+<form hx-post="{{ request.path }}"
+      hx-trigger="submit"
+      id="comment-block-update"
+      class="text-center"
+      hx-swap="none"
+      _="on submit toggle @hidden on #comment-wait-spinner until htmx:afterOnLoad"
+      hx-on::after-request="this.reset()">
+  {{ form.predefined_comment }}
+  <button type="submit" class="btn btn-success mt-3">
+    <span id="comment-wait-spinner" class="spinner-grow spinner-grow-sm text-light mt-2" role="status" hidden></span>
+    {% translate 'Save comment' %}
+  </button>
+</form>

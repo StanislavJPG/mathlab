@@ -8,7 +8,7 @@ from render_block import render_block_to_string
 
 from server.apps.forum.models import Comment, Post
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import HXViewMixin, ListObjectsURLSMixin
+from server.common.mixins.views import HXViewMixin
 
 __all__ = (
     'CommentListView',
@@ -18,7 +18,7 @@ __all__ = (
 )
 
 
-class CommentListView(HXViewMixin, ListObjectsURLSMixin, ListView):
+class CommentListView(HXViewMixin, ListView):
     paginate_by = 7
     model = Comment
     context_object_name = 'comments'

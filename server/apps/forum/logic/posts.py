@@ -1,3 +1,5 @@
+from urllib.parse import urlencode
+
 from braces.views import LoginRequiredMixin
 from django.db.models import Q
 
@@ -11,7 +13,7 @@ from hitcount.views import HitCountDetailView
 from render_block import render_block_to_string
 
 from server.apps.forum.filters import PostListFilter
-from server.apps.forum.models import Post, PostCategory
+from server.apps.forum.models import Post
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin
 
@@ -30,7 +32,7 @@ class BasePostTemplateView(TemplateView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['categories'] = PostCategory.objects.all()
+        context['request_get'] = urlencode(self.request.GET, doseq=True)
         return context
 
 
@@ -82,6 +84,7 @@ class PostDetailView(HitCountDetailView):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
         context['post'] = self.object
+        context['request_get'] = urlencode(self.request.GET, doseq=True)
         return context
 
 

@@ -26,7 +26,7 @@
           </div>
           <div class="list-inline-item small">
             <button class="btn btn-secondary btn-sm me-1 btn-to-copy"
-                    data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?comment_page={{ page_obj.number }}&comment={{ comment.uuid }}"
+                    data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?page={{ page_obj.number }}&comment={{ comment.uuid }}"
                     type="button"
             >
               <i class="ti ti-link"></i>

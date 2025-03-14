@@ -8,7 +8,7 @@
 {% block body %}
   <main role="main" class="container">
     <div class="my-3 p-3 rounded box-shadow"
-         hx-get="{% url 'forum:post-list' %}"
+         hx-get="{% url 'forum:post-list' %}?{{ request_get }}"
          hx-indicator="#post-list-block-wait-spinner"
          hx-trigger="load"
          hx-target="this"

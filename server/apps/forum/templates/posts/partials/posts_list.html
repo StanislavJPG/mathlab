@@ -76,7 +76,7 @@
           </a>
         </strong>
         {% for category in post.categories.all %}
-          <a hx-get="{% url 'forum:post-list' %}?categories={{ category.pk }}"
+          <a hx-get="{% url 'forum:post-list' %}?categories={{ category.name }}"
              hx-trigger="click"
              href="javascript:(0);"
              class="badge rounded-pill text-bg-secondary text-decoration-none">

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 01:55+0200\n"
+"POT-Creation-Date: 2025-03-15 23:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,20 +112,20 @@ msgstr ""
 msgid "Posts views"
 msgstr ""
 
-#: server/apps/forum/forms.py
+#: server/apps/forum/forms/posts.py
 msgid "Question topic (maximum 85 characters)"
 msgstr ""
 
-#: server/apps/forum/forms.py
+#: server/apps/forum/forms/posts.py
 #, python-format
 msgid "You cannot choose more then %s categories."
 msgstr ""
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been added."
 msgstr ""
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
@@ -133,7 +133,11 @@ msgstr ""
 msgid "Error. Please, check your input and try again."
 msgstr ""
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
+msgid "Your comment has been updated."
+msgstr ""
+
+#: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been deleted."
 msgstr ""
 
@@ -146,6 +150,10 @@ msgid "Error while creating post. Please check for errors and try again."
 msgstr ""
 
 #: server/apps/forum/logic/post_management.py
+msgid "Your post has been updated."
+msgstr ""
+
+#: server/apps/forum/logic/post_management.py
 msgid "Your post has been deleted."
 msgstr ""
 
@@ -155,6 +163,10 @@ msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_block_create.html
 msgid "Add comment"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_block_update.html
+msgid "Save comment"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-12 01:55+0200\n"
+"POT-Creation-Date: 2025-03-15 23:18+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,20 +114,20 @@ msgstr "Кількість коментарів"
 msgid "Posts views"
 msgstr "Перегляди посту"
 
-#: server/apps/forum/forms.py
+#: server/apps/forum/forms/posts.py
 msgid "Question topic (maximum 85 characters)"
 msgstr "Тема питання (не більше 85 символів)"
 
-#: server/apps/forum/forms.py
+#: server/apps/forum/forms/posts.py
 #, python-format
 msgid "You cannot choose more then %s categories."
 msgstr "Ви не можете вибрати більше %s категорій."
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been added."
 msgstr "Ваш коментар було додано."
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
@@ -135,7 +135,11 @@ msgstr "Ваш коментар було додано."
 msgid "Error. Please, check your input and try again."
 msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
 
-#: server/apps/forum/logic/comments.py
+#: server/apps/forum/logic/comment_management.py
+msgid "Your comment has been updated."
+msgstr "Ваш коментар було оновлено."
+
+#: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been deleted."
 msgstr "Ваш коментар було видалено."
 
@@ -150,6 +154,10 @@ msgstr ""
 "спробуйте ще раз."
 
 #: server/apps/forum/logic/post_management.py
+msgid "Your post has been updated."
+msgstr "Ваш пост було оновлено."
+
+#: server/apps/forum/logic/post_management.py
 msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
 
@@ -160,6 +168,10 @@ msgstr "Завантаження..."
 #: server/apps/forum/templates/comments/partials/comment_block_create.html
 msgid "Add comment"
 msgstr "Додати коментар"
+
+#: server/apps/forum/templates/comments/partials/comment_block_update.html
+msgid "Save comment"
+msgstr "Зберегти коментар"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
@@ -627,7 +639,7 @@ msgstr "Зареєструватись"
 
 #: server/templates/403.html
 msgid "Not this time, access forbidden!"
-msgstr ""
+msgstr "Не цього разу! Доступ заборонено."
 
 #: server/templates/common/pagination.html
 msgid "Previous"

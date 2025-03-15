@@ -1,0 +1,13 @@
+{% load i18n static %}
+
+{% for story in news %}
+  <div class="col-md-6 mb-4">
+    <div class="h-100 p-5 bg-body-tertiary border rounded-3"
+         style="background: radial-gradient(circle, {{ story.background_colors.0 }}60 0%, {{ story.background_colors.1 }}60 100%);"
+    >
+      <h2>{{ story.title }}</h2>
+      <p>{{ story.short_content }}</p>
+      <button class="btn btn-outline-secondary" type="button">Example button</button>
+    </div>
+  </div>
+{% endfor %}

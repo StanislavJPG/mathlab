@@ -1,5 +1,6 @@
 {% load i18n static widget_tweaks %}
 {{ form.media }}
+<script src="{% static 'js/eqneditor.js' %}"></script>
 
 <form hx-post="{{ request.path }}"
       hx-trigger="submit"

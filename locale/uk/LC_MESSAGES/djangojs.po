@@ -6,7 +6,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-14 00:05+0200\n"
+"POT-Creation-Date: 2025-03-15 23:15+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -22,6 +22,10 @@ msgstr ""
 #: server/static/js/actions/init_clipboard.js:4
 msgid "Copied to clipboard"
 msgstr "Скопійовано до буферу обміну."
+
+#: server/static/js/eqneditor.js:52
+msgid "Equation Editor"
+msgstr "Редактор рівнянь"
 
 #: server/static/js/htmx_sweetalert.js:10
 msgid "Proceed?"

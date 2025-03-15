@@ -225,6 +225,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 TINYMCE_DEFAULT_CONFIG = {
     'theme': 'silver',
+    'selector': 'textarea',
     'height': 400,
     'menubar': False,
     'setup': """
@@ -234,10 +235,10 @@ TINYMCE_DEFAULT_CONFIG = {
         editor.on('touchend', function() { editor.save(); });
     }
     """,  # that fixes bug with HTMX + TinyMCE
-    'plugins': 'advlist,autolink,lists,link,image,charmap,preview,anchor,'
+    'plugins': 'eqneditor,advlist,autolink,lists,link,image,charmap,preview,anchor,'
     'searchreplace,visualblocks,code,fullscreen,insertdatetime,media,table,'
     'code,help,wordcount',
-    'toolbar': 'undo redo | formatselect | '
+    'toolbar': 'undo redo | formatselect | eqneditor |'
     'bold italic backcolor | alignleft aligncenter '
     'alignright alignjustify | bullist numlist outdent indent | '
     'removeformat | help',

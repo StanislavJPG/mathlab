@@ -1,22 +1,20 @@
-from django.db import IntegrityError
-from rest_framework import status
-
 from server.apps.math_news.models import MathNews
 from server.apps.math_news.scraper import MathNewsSearcher
-from server.apps.mathlab.celery import app
 
 
-@app.task
-def let_find_news():
+# @app.task
+def create_news_task():
     titles = MathNewsSearcher()
-    try:
-        for title in titles:
-            MathNews.objects.create(
-                title=title['title'],
-                new_url=title['new_url'],
-                posted=title['posted'],
-                additional_info=title['add_info'],
-            )
-        return status.HTTP_201_CREATED
-    except IntegrityError:
-        return status.HTTP_500_INTERNAL_SERVER_ERROR
+    for title in titles:
+        MathNews.objects.create(
+            title=title['title'],
+            origin_url=title['new_url'],
+            # published_at=title['posted'],
+            short_content=title['add_info'],
+        )
+    return
+
+
+# @app.on_after_finalize.connect
+# def setup_periodic_tasks(sender, **kwargs):
+#     sender.add_periodic_task(10.0, create_news_task.s(), name='Create News')

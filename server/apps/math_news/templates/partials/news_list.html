@@ -7,7 +7,12 @@
     >
       <h2>{{ story.title }}</h2>
       <p>{{ story.short_content }}</p>
-      <button class="btn btn-outline-secondary" type="button">Example button</button>
+      <a class="btn btn-outline-secondary"
+         href="{{ story.origin_url }}"
+         target="_blank"
+          type="button">
+        {% translate 'Read from origin' %}
+      </a>
     </div>
   </div>
 {% endfor %}

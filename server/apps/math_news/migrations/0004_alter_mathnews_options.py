@@ -13,4 +13,9 @@ class Migration(migrations.Migration):
             name='mathnews',
             options={'get_latest_by': 'created_at', 'ordering': ('-created_at',), 'verbose_name_plural': 'news'},
         ),
+        migrations.RenameField(
+            model_name='mathnews',
+            old_name='url',
+            new_name='origin_url',
+        ),
     ]

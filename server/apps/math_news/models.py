@@ -19,7 +19,7 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     title = models.CharField(max_length=255)
     short_content = models.TextField(max_length=255, null=True)
 
-    url = models.URLField(null=True, unique=True)
+    origin_url = models.URLField(null=True, unique=True)
     published_at = models.DateField(default=timezone.now, editable=False)
 
     is_visible = models.BooleanField(default=True)

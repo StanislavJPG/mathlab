@@ -2,7 +2,6 @@ from typing import Final
 
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
-from django.utils import timezone
 from django_lifecycle import hook, AFTER_CREATE, LifecycleModel
 
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
@@ -20,7 +19,7 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     short_content = models.TextField(max_length=255, null=True)
 
     origin_url = models.URLField(null=True, unique=True)
-    published_at = models.DateField(default=timezone.now, editable=False)
+    improvised_published_at = models.CharField(null=True, editable=False)
 
     is_visible = models.BooleanField(default=True)
 
@@ -29,7 +28,7 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     )
 
     class Meta:
-        ordering = ('-created_at',)
+        ordering = ('created_at',)
         verbose_name_plural = 'news'
         get_latest_by = 'created_at'
 

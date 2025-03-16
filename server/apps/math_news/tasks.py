@@ -1,20 +1,15 @@
-from server.apps.math_news.models import MathNews
+from celery.schedules import crontab
+
 from server.apps.math_news.scraper import MathNewsSearcher
+from server.settings.celery import app
 
 
-# @app.task
+@app.task
 def create_news_task():
     titles = MathNewsSearcher()
-    for title in titles:
-        MathNews.objects.create(
-            title=title['title'],
-            origin_url=title['new_url'],
-            # published_at=title['posted'],
-            short_content=title['add_info'],
-        )
-    return
+    titles.save_news()
 
 
-# @app.on_after_finalize.connect
-# def setup_periodic_tasks(sender, **kwargs):
-#     sender.add_periodic_task(10.0, create_news_task.s(), name='Create News')
+@app.on_after_finalize.connect
+def setup_periodic_tasks(sender, **kwargs):
+    sender.add_periodic_task(crontab(hour=7, minute=30), create_news_task.s(), name='create_news')

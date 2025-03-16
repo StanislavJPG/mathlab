@@ -1,0 +1,8 @@
+{% load static %}
+
+<header class="pb-3 mb-4 border-bottom">
+  <a href="{{ request.path }}" class="d-flex align-items-center text-body-emphasis text-decoration-none">
+    <img alt="logo" class="me-2" src="{% static 'img/base/logo.png' %}" height="30" width="30">
+    <span class="fs-4">{{ header_title }}</span>
+  </a>
+</header>

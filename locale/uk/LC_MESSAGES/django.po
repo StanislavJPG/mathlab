@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-15 23:18+0200\n"
+"POT-Creation-Date: 2025-03-16 22:56+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -304,6 +304,30 @@ msgstr "Найновіші"
 #: server/apps/forum/templates/posts/question_page.html
 msgid "Your answer"
 msgstr "Ваша відповідь"
+
+#: server/apps/math_news/templates/news_base.html
+msgid "Last math-related news"
+msgstr "Останні новини зі світу Математики"
+
+#: server/apps/math_news/templates/news_base.html
+msgid "But-away!"
+msgstr "До речі!"
+
+#: server/apps/math_news/templates/news_base.html
+msgid ""
+"We have our <strong>Mathlab forum!</strong> Join to community to help people "
+"with their mathematics questions, or make your own!"
+msgstr ""
+"У нас є наш <strong>Mathlab форум!</strong> Приєднуйтесь до ком'юніті, щоб допомагати людям "
+"з їхніми математичними запитаннями, або створіть власне!"
+
+#: server/apps/math_news/templates/news_base.html
+msgid "Join"
+msgstr "Приєднатись"
+
+#: server/apps/math_news/templates/partials/news_list.html
+msgid "Read from origin"
+msgstr "Читати з першоджерела"
 
 #: server/apps/theorist/choices.py
 msgid "Junior mathematician"

@@ -60,6 +60,7 @@ INSTALLED_APPS = [
     'server.apps.forum.apps.ForumConfig',
     'server.apps.users.apps.UsersConfig',
     'server.apps.math_news.apps.MathNewsConfig',
+    'server.apps.carousel.apps.CarouselConfig',
     'server.apps.chat.apps.ChatConfig',
     'server.apps.theorist.apps.TheoristConfig',
     # templatetags

@@ -5,24 +5,14 @@
   <div class="container py-4">
     {% translate 'Last math-related news' as header_title %}
     {% include 'partials/mathlab/mathlab_header.html' %}
-  
-    <div class="p-5 mb-4 bg-body-tertiary rounded-3">
-      <div class="container-fluid py-5">
-        <h1 class="display-5 fw-bold">{% translate 'But-away!' %}</h1>
-        <p class="col-md-8 fs-4">
-          {% blocktranslate trimmed %}
-            We have our <strong>Mathlab forum!</strong> Join to community to help people with their mathematics questions, or make your own!
-          {% endblocktranslate %}
-        </p>
-        <a href="{% url 'users:base-auth' %}?signup=true" target="_blank" class="btn btn-primary btn-lg" type="button">{% translate 'Join' %}</a>
-      </div>
-    </div>
 
-    <div class="row align-items-md-stretch" 
+    <div hx-get="{% url 'mathlab:carousel:hx-base-list' %}" hx-trigger="load" hx-target="this" hx-swap="outerHTML"></div>
+
+    <div class="row align-items-md-stretch"
          hx-get="{% url 'mathlab:math_news:hx-math-news-list' %}"
          hx-trigger="load"
          hx-target="this">
-      
+
     </div>
   </div>
 {% endblock %}

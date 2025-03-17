@@ -24,6 +24,9 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
     context_object_name = 'theorist'
     raise_exception = True
 
+    def get_queryset(self):
+        return super().get_queryset().filter(is_onboarded=True)
+
     def dispatch(self, request, *args, **kwargs):
         self.object = self.get_object()
         theorist = get_object_or_404(Theorist, pk=self.kwargs['pk'])

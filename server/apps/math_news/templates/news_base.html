@@ -1,0 +1,23 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block body %}
+  <div class="container py-4">
+    {% translate 'Last math-related news' as header_title %}
+    {% include 'partials/mathlab/mathlab_header.html' %}
+
+    <div hx-get="{% url 'mathlab:carousel:hx-base-list' %}" hx-trigger="load" hx-target="this"
+         hx-swap="outerHTML"></div>
+
+    <div class="row align-items-md-stretch">
+      <div hx-get="{% url 'mathlab:math_news:hx-math-news-list' %}"
+           hx-trigger="load"
+           hx-swap="outerHTML"
+      >
+      </div>
+      <div id="wait-spinner" class="text-center">
+        <div style="width: 3rem; height: 3rem;" class="spinner-grow spinner-grow-lg" role="status"></div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

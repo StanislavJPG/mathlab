@@ -14,7 +14,7 @@ urlpatterns = [
     path('', include('server.urls.third_party_urls')),
     path(
         '',
-        RedirectView.as_view(pattern_name='mathlab:base-math-news'),
+        RedirectView.as_view(pattern_name='mathlab:math_news:base-math-news'),
         name='base-redirect',
     ),
     # nested apps urls

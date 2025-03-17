@@ -20,8 +20,6 @@ from django.contrib.messages import constants as messages
 
 from dotenv import load_dotenv
 
-from .celery import *  # noqa: F403
-
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -62,6 +60,7 @@ INSTALLED_APPS = [
     'server.apps.forum.apps.ForumConfig',
     'server.apps.users.apps.UsersConfig',
     'server.apps.math_news.apps.MathNewsConfig',
+    'server.apps.carousel.apps.CarouselConfig',
     'server.apps.chat.apps.ChatConfig',
     'server.apps.theorist.apps.TheoristConfig',
     # templatetags
@@ -172,8 +171,8 @@ SOCIALACCOUNT_PROVIDERS = {
 }
 
 ACCOUNT_ADAPTER = 'server.apps.users.adapters.AccountAdapter'
-ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_LOGIN_METHODS = {'email'}
+ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: remove this var if not debug
 
 SOCIALACCOUNT_AUTO_SIGNUP = True

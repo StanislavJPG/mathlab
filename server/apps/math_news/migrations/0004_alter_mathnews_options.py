@@ -9,10 +9,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.AlterModelOptions(
-            name='mathnews',
-            options={'get_latest_by': 'created_at', 'ordering': ('-created_at',), 'verbose_name_plural': 'news'},
-        ),
         migrations.RenameField(
             model_name='mathnews',
             old_name='url',
@@ -26,5 +22,9 @@ class Migration(migrations.Migration):
             model_name='mathnews',
             name='improvised_published_at',
             field=models.CharField(editable=False, null=True),
+        ),
+        migrations.AlterModelOptions(
+            name='mathnews',
+            options={'get_latest_by': 'created_at', 'ordering': ('created_at',), 'verbose_name_plural': 'news'},
         ),
     ]

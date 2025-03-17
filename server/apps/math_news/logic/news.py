@@ -12,7 +12,7 @@ class NewsListView(HXViewMixin, ListView):
     model = MathNews
     template_name = 'partials/news_list.html'
     context_object_name = 'news'
-    paginate_by = 15
+    paginate_by = 8
 
     def get_queryset(self):
         return super().get_queryset().filter(is_visible=True)

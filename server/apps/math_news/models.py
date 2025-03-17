@@ -40,3 +40,16 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         colors = generate_randon_hex_colors(number_of_colors=self.NUM_OF_BACKGROUND_COLORS)
         self.background_colors = colors
         self.save(update_fields=['background_colors'])
+
+    @classmethod
+    def save_unique_news(cls, titles):
+        to_create = []
+        for title in titles:
+            if not cls.objects.filter(origin_url=title['origin_url']).exists():
+                to_create.append(cls(**title))
+        objs = cls.objects.bulk_create(to_create)
+
+        for obj in objs:
+            obj.after_create()  # because bulk_create use only one create() method
+
+        return objs

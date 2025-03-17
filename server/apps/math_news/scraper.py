@@ -2,8 +2,6 @@ import httpx
 from bs4 import BeautifulSoup
 from yarl import URL
 
-from server.apps.math_news.models import MathNews
-
 
 class MathNewsSearcher:
     """
@@ -16,12 +14,11 @@ class MathNewsSearcher:
     }
     default_url = URL('https://www.google.com/search').with_query(q='математика+україна', tbm='nws', start=0)
 
-    def __init__(self, model=MathNews, limit: int = 10, url: str = None):
-        self.default_model = model
+    def __init__(self, limit: int = 10, url: str = None):
         self.url = self.default_url if not url else url
         self.limit = limit
 
-    def get_titles(self) -> list[dict]:
+    def _get_titles(self) -> list[dict]:
         news_titles = self.__get_page_content(str(self.url))
         search_results = news_titles.find_all('div', class_='SoaBEf', limit=self.limit)
         results = []
@@ -46,14 +43,17 @@ class MathNewsSearcher:
 
         return soup
 
-    def save_news(self) -> None:
-        for title in self.get_titles():
-            if not self.default_model.objects.filter(origin_url=title['origin_url']).exists():
-                self.default_model.objects.create(
-                    **{
-                        'title': title['title'],
-                        'origin_url': title['origin_url'],
-                        'improvised_published_at': title['improvised_published_at'],
-                        'short_content': title['short_content'],
-                    }
-                )
+    @property
+    def kwargs_list(self):
+        titles = self._get_titles()
+        kwargs_list = []
+        for title in titles:
+            kwargs_list.append(
+                {
+                    'title': title['title'],
+                    'origin_url': title['origin_url'],
+                    'improvised_published_at': title['improvised_published_at'],
+                    'short_content': title['short_content'],
+                }
+            )
+        return kwargs_list

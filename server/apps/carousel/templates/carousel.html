@@ -10,19 +10,10 @@
     </div>
     <div class="carousel-inner rounded">
       {% for carousel in carousels %}
-        <div class="carousel-item {% if forloop.first %}active{% endif %}" style="height: 250px;">
-          <svg preserveAspectRatio="xMidYMid slice" aria-hidden="true" height="100%" width="100%"
-               class="bd-placeholder-img">
-            <defs>
-              <linearGradient id="grad{{ forloop.counter }}" y2="100%" x2="100%" y1="0%" x1="0%">
-                <stop style="stop-color:{{ carousel.background_colors.0 }}; stop-opacity:0.8" offset="0%"></stop>
-                <stop style="stop-color:{{ carousel.background_colors.1 }}; stop-opacity:0.8" offset="100%"></stop>
-              </linearGradient>
-            </defs>
-            <rect fill="url(#grad{{ forloop.counter }})" height="100%" width="100%"></rect>
-          </svg>
+        <div class="carousel-item {% if forloop.first %}active{% endif %}"
+             style="background: linear-gradient(to right, {{ carousel.background_colors.0 }}, {{ carousel.background_colors.1 }});">
           <div class="container">
-            <div class="carousel-caption">
+            <div class="carousel-caption d-flex align-items-center justify-content-center flex-column text-center" style="position: sticky">
               <h1>{{ carousel.title|safe }}</h1>
               <p class="opacity-75" style="font-size: 20px;">
                 {{ carousel.content|safe }}
@@ -46,3 +37,9 @@
     </button>
   </div>
 {% endif %}
+
+<style>
+  .carousel-item {
+    min-height: 40vh;
+  }
+</style>

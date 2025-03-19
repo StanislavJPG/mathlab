@@ -36,7 +36,7 @@ class MathNewsSearcher:
 
     def __get_page_content(self, url) -> BeautifulSoup:
         with httpx.Client(headers=self._HEADERS) as client:
-            user_request: str = f'{url}'
+            user_request: str = url
 
             response = client.get(user_request)
             soup = BeautifulSoup(response.text, 'lxml')

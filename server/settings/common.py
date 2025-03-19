@@ -54,7 +54,6 @@ INSTALLED_APPS = [
     # common
     'server.common',
     # apps
-    'server.apps.explainme.apps.ExplainmeConfig',
     'server.apps.solvexample.apps.SolvexampleConfig',
     'server.apps.graphbuilder.apps.GraphbuilderConfig',
     'server.apps.forum.apps.ForumConfig',

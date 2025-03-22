@@ -54,14 +54,15 @@ INSTALLED_APPS = [
     # common
     'server.common',
     # apps
-    'server.apps.solvexample.apps.SolvexampleConfig',
-    'server.apps.graphbuilder.apps.GraphbuilderConfig',
-    'server.apps.forum.apps.ForumConfig',
-    'server.apps.users.apps.UsersConfig',
-    'server.apps.math_news.apps.MathNewsConfig',
     'server.apps.carousel.apps.CarouselConfig',
     'server.apps.chat.apps.ChatConfig',
+    'server.apps.chat.apps.DraftsConfig',
+    'server.apps.forum.apps.ForumConfig',
+    'server.apps.graphbuilder.apps.GraphbuilderConfig',
+    'server.apps.math_news.apps.MathNewsConfig',
+    'server.apps.solvexample.apps.SolvexampleConfig',
     'server.apps.theorist.apps.TheoristConfig',
+    'server.apps.users.apps.UsersConfig',
     # templatetags
     'server.common.templatetags.widened_widget_tweaks',
     'server.common.templatetags.avatars',

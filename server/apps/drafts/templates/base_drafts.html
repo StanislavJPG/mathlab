@@ -16,7 +16,8 @@
           <i class="ti ti-columns me-1" style="font-size: 20px"></i>
           <i class="ti ti-table ms-1" style="font-size: 20px"></i>
           <div class="form-check form-switch d-flex justify-content-center">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked" {% if request.GET.view == 'table' %}checked{% endif %}>
+            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                   {% if request.GET.view == 'table' %}checked{% endif %}>
           </div>
         </div>
       </div>
@@ -62,3 +63,19 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
   </div>
 {% endblock body %}
+
+{% block page_js %}
+  <script>
+    document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
+      const url = new URL(window.location);
+
+      if (this.checked) {
+          url.searchParams.set("view", "table");
+      } else {
+          url.searchParams.delete("view");
+      }
+
+      window.location = url;
+    });
+  </script>
+{% endblock page_js %}

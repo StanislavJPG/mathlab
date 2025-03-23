@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE
@@ -13,7 +14,7 @@ upload_to_pattern_draft = FilePattern(
 
 
 class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    label = models.CharField(max_length=95, null=True)
+    label = models.CharField(max_length=95, null=True, blank=True)
     draft = models.ImageField(max_length=300, upload_to=upload_to_pattern_draft)
     description = models.TextField(null=True, blank=True)
 
@@ -24,12 +25,15 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def __str__(self):
         return f'{self.label} | {self.__class__.__name__} | id - {self.id}'
 
+    def get_absolute_url(self):
+        return reverse('mathlab:drafts:base-drafts')
+
     @hook(AFTER_CREATE)
     def after_create(self):
         if not self.label:
             self.set_default_label()
 
     def set_default_label(self):
-        drafts_count = TheoristDrafts.objects.filter(therorist=self.theorist).count()
+        drafts_count = TheoristDrafts.objects.filter(theorist=self.theorist).count()
         self.label = _('Draft #%s') % drafts_count
         self.save(update_fields=['label'])

@@ -1,0 +1,51 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content">
+    <form hx-post="{{ request.path }}">
+      <div class="modal-header">
+        <h5 class="modal-title">Modal title</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <label for="{{ form.label.id_for_label }}" class="form-label">{% translate 'Draft label' %}</label>
+        {% render_field form.label class="form-control" %}
+        {% render_field_errors form.label %}
+
+        <label for="{{ form.description.id_for_label }}" class="form-label">{% translate 'Description' %}</label>
+        {% render_field form.description class="form-control" %}
+        {% render_field_errors form.description %}
+        {{ form.draft }}
+
+        <label for="drawingCanvas" class="form-label">{% translate 'Your draft' %}</label>
+        <canvas id="drawingCanvas" style="border:1px solid #000;"></canvas>
+        <button id="drawing-mode">Toggle Drawing Mode</button>
+        <input type="color" id="drawing-color" value="#000000">
+        <button type="button" id="clear-canvas">Clear Canvas</button>
+        <label for="drawing-line-width">Brush Width:</label>
+        <input type="number" id="drawing-line-width" value="5" min="1" max="50">
+
+        <select id="drawing-mode-selector">
+          <option value="pencil">Pencil</option>
+          <option value="hline">Horizontal Line</option>
+          <option value="vline">Vertical Line</option>
+        </select>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" onclick="saveDrawing()" class="btn btn-primary">Save changes</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function saveDrawing() {
+    var canvas = document.getElementById("drawingCanvas");
+    document.getElementById('{{ form.draft.id_for_label }}').value = canvas.toDataURL("image/png");
+  }
+</script>
+<script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>
+<script src="{% static 'js/draft.js' %}"></script>

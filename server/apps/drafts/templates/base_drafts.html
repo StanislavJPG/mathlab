@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block page_head %}
-  <title>MathLab | {{ theorist.full_name }} | Чернетки</title>
+  <title>MathLab | Чернетки</title>
 {% endblock page_head %}
 
 {% block body %}
@@ -23,14 +23,39 @@
 
     <div class="album py-5 bg-body-tertiary">
       <div class="container">
+        <button type="button"
+                hx-get="{% url 'mathlab:drafts:drafts-create' %}"
+                hx-target="#draft-create-modal"
+                hx-trigger="click"
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#draft-create-modal">
+          Launch demo modal
+        </button>
 
-        <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
-             hx-get="?view={% if request.GET.view == 'table' %}table{% else %}album{% endif %}"
-             hx-trigger="load"
-             hx-target="this"
-        ></div>
+        {% if request.user.is_authenticated %}
+          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+               {% if request.GET.view == 'table' %}
+                 hx-get="{% url 'mathlab:drafts:drafts-table-list' request.theorist.uuid %}"
+               {% else %}
+                 hx-get="{% url 'mathlab:drafts:drafts-album-list' request.theorist.uuid %}"
+               {% endif %}
+               hx-trigger="load"
+               hx-target="this"
+          ></div>
+        {% endif %}
 
       </div>
     </div>
+  </div>
+
+  <div class="modal fade"
+       id="draft-create-modal"
+       tabindex="-1"
+       aria-labelledby="exampleModalLabel"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
   </div>
 {% endblock body %}

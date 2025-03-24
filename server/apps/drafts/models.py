@@ -23,6 +23,11 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='drafts')
 
+    class Meta:
+        ordering = ('-created_at',)
+        verbose_name_plural = 'Theorist Drafts'
+        verbose_name = 'Theorist Draft'
+
     def __str__(self):
         return f'{self.label} | {self.__class__.__name__} | id - {self.id}'
 

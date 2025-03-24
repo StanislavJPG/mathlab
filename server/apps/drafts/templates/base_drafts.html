@@ -5,6 +5,15 @@
   <title>MathLab | Чернетки</title>
 {% endblock page_head %}
 
+{% block page_css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+  <style>
+    .img-bg {
+        --pswp-bg: #ffffff;
+    }
+  </style>
+{% endblock page_css %}
+
 {% block body %}
   <div>
     <section class="py-5 text-center container">
@@ -27,7 +36,7 @@
       <div class="container">
         <div class="text-end">
           <button type="button"
-                  hx-get="{% url 'mathlab:drafts:drafts-create' %}"
+                  hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
                   hx-target="#draft-create-modal"
                   hx-trigger="click"
                   class="btn btn-primary btn-lg mb-3"
@@ -39,10 +48,12 @@
         </div>
 
         {% if request.user.is_authenticated %}
-          <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+          <div
               {% if request.GET.view == 'table' %}
+              class="row row-cols-1"
                hx-get="{% url 'mathlab:drafts:drafts-table-list' request.theorist.uuid %}"
               {% else %}
+               class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
                hx-get="{% url 'mathlab:drafts:drafts-album-list' request.theorist.uuid %}"
               {% endif %}
                hx-trigger="load"
@@ -65,13 +76,14 @@
 {% endblock body %}
 
 {% block page_js %}
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
   <script type="module">
     import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
     document.body.addEventListener("htmx:afterOnLoad", function () {
         const lightbox = new PhotoSwipeLightbox({
             gallery: '#gallery',
+            mainClass: 'img-bg',
             children: 'a',
+            wheelToZoom: true,
             pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}')
         });
         lightbox.init();

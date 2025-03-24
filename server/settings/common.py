@@ -51,6 +51,7 @@ INSTALLED_APPS = [
     'django_countries',
     'captcha',
     'django_cleanup.apps.CleanupConfig',
+    'django_tables2',
     # common
     'server.common',
     # apps

@@ -3,9 +3,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import TemplateView, ListView, CreateView
 from django_htmx.http import HttpResponseClientRedirect
+from django_tables2 import SingleTableView
 
 from server.apps.drafts.forms import TheoristDraftCreateForm
 from server.apps.drafts.models import TheoristDrafts
+from server.apps.drafts.tables import DraftsTable
 from server.common.mixins.views import HXViewMixin
 
 
@@ -24,8 +26,9 @@ class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):
     template_name = 'partials/drafts_album_list.html'
 
 
-class TheoristDraftsTableListView(AbstractTheoristDraftsListView):
-    template_name = 'partials/drafts_album_list.html'
+class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListView):
+    template_name = 'partials/drafts_table.html'
+    table_class = DraftsTable
 
 
 class TheoristDraftCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
@@ -43,4 +46,5 @@ class TheoristDraftCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin
     def form_valid(self, form):
         form = form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        return HttpResponseClientRedirect(form.get_absolute_url())
+        params = self.request.GET.get('view', 'album')
+        return HttpResponseClientRedirect(form.get_absolute_url() + f'?view={params}')

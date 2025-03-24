@@ -1,10 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <title>Title</title>
-</head>
-<body>
+{% load i18n static %}
+{% load render_table from django_tables2 %}
 
-</body>
-</html>
+<div id="gallery">
+  {% render_table table %}
+</div>

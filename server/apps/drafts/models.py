@@ -4,6 +4,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE
 from dynamic_filenames import FilePattern
+from easy_thumbnails.files import get_thumbnailer
 
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
@@ -27,6 +28,17 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def get_absolute_url(self):
         return reverse('mathlab:drafts:base-drafts')
+
+    def get_draft_url(self):
+        thumbnailer = get_thumbnailer(self.draft)
+        thumb = thumbnailer.get_thumbnail(
+            {
+                'size': (555, 555),
+                'crop': 'smart',
+            }
+        )
+        draft_url = thumb.url
+        return draft_url
 
     @hook(AFTER_CREATE)
     def after_create(self):

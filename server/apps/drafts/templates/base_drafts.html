@@ -65,6 +65,18 @@
 {% endblock body %}
 
 {% block page_js %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+  <script type="module">
+    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+    document.body.addEventListener("htmx:afterOnLoad", function () {
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#gallery',
+            children: 'a',
+            pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}')
+        });
+        lightbox.init();
+    });
+  </script>
   <script>
     document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
       const url = new URL(window.location);

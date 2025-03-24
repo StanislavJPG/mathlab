@@ -17,7 +17,7 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristDrafts
     context_object_name = 'drafts'
     slug_url_kwarg = 'uuid'
-    slug_field = 'uuid'
+    slug_field = 'theorist__uuid'
 
 
 class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):

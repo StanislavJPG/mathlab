@@ -9,9 +9,14 @@ from server.common.tables.mixins import CreatedAtTableMixin
 
 class DraftsTable(CreatedAtTableMixin, tables.Table):
     label = tables.Column(verbose_name=_('Label'))
-    draft = tables.Column(verbose_name=_('Draft'), attrs={'td': {'style': 'width: 25%'}})
-    description = tables.Column(verbose_name=_('Description'), attrs={'td': {'style': 'width: 25%'}})
-    created_at = tables.Column(verbose_name=_('Created at'))
+    draft = tables.Column(verbose_name=_('Draft'), attrs={'td': {'class': 'w-25'}})
+    description = tables.Column(verbose_name=_('Description'), attrs={'td': {'class': 'w-25'}})
+    created_at = tables.Column(verbose_name=_('Created at'), attrs={'td': {'class': 'w-25'}})
+    actions = tables.TemplateColumn(
+        template_name='partials/tables/drafts_actions.html',
+        verbose_name=_('Actions'),
+        attrs={'td': {'style': 'width: 5%; text-align: center; vertical-align: middle;'}},
+    )
 
     class Meta:
         model = TheoristDrafts

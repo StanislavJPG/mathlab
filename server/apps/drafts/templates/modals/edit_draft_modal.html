@@ -1,0 +1,35 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content">
+    <form hx-post="{{ request.get_full_path }}">
+      <div class="modal-header">
+        <h5 class="modal-title">{% translate 'Edit your draft' %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <label for="{{ form.label.id_for_label }}" class="form-label">{% translate 'Draft label' %}</label>
+        {% render_field form.label class="form-control" %}
+        {% render_field_errors form.label %}
+
+        <label for="{{ form.description.id_for_label }}" class="form-label">{% translate 'Description' %}</label>
+        {% render_field form.description class="form-control" %}
+        {% render_field_errors form.description %}
+
+        <div class="form-check form-switch">
+          {% render_field form.is_public_available class="form-check-input" %}
+          <label class="form-check-label text-lg-nowrap" for="{{ form.is_public_available.id_for_label }}">{% translate 'Is draft can be accessed for public' %}</label>
+          {% render_field_errors form.is_public_available small=True %}
+        </div>
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+        <button type="submit" class="btn btn-primary">{% translate 'Save' %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>

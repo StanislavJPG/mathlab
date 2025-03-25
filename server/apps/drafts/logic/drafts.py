@@ -1,11 +1,7 @@
-from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.utils.translation import gettext_lazy as _
-from django.views.generic import TemplateView, ListView, CreateView
-from django_htmx.http import HttpResponseClientRedirect
+from django.views.generic import TemplateView, ListView
 from django_tables2 import SingleTableView
 
-from server.apps.drafts.forms import TheoristDraftCreateForm
 from server.apps.drafts.models import TheoristDrafts
 from server.apps.drafts.tables import DraftsTable
 from server.common.mixins.views import HXViewMixin
@@ -29,22 +25,3 @@ class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):
 class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListView):
     template_name = 'partials/drafts_table.html'
     table_class = DraftsTable
-
-
-class TheoristDraftCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
-    model = TheoristDrafts
-    form_class = TheoristDraftCreateForm
-    template_name = 'modals/create_draft_modal.html'
-    form_valid_message = _('You successfully created a new draft.')
-    form_invalid_message = _('Error while creating draft. Please check for errors and try again.')
-
-    def get_form_kwargs(self):
-        kwargs = super().get_form_kwargs()
-        kwargs['theorist'] = self.request.theorist
-        return kwargs
-
-    def form_valid(self, form):
-        form = form.save()
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        params = self.request.GET.get('view', 'album')
-        return HttpResponseClientRedirect(form.get_absolute_url() + f'?view={params}')

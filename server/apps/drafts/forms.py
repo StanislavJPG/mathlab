@@ -12,7 +12,7 @@ class TheoristDraftCreateForm(forms.ModelForm):
 
     class Meta:
         model = TheoristDrafts
-        fields = ('label', 'draft', 'description')
+        fields = ('label', 'draft', 'description', 'is_public_available')
         widgets = {
             'label': forms.TextInput(attrs={'placeholder': _('Draft label')}),
             'description': forms.Textarea(attrs={'placeholder': _('Description'), 'rows': 2}),
@@ -31,3 +31,18 @@ class TheoristDraftCreateForm(forms.ModelForm):
         ext = format.split('/')[-1]
         image_file = ContentFile(base64.b64decode(imgstr), name=f'drawing.{ext}')
         return image_file
+
+
+class TheoristDraftUpdateForm(forms.ModelForm):
+    class Meta:
+        model = TheoristDrafts
+        fields = ('label', 'description', 'is_public_available')
+        widgets = {
+            'label': forms.TextInput(attrs={'placeholder': _('Draft label')}),
+            'description': forms.Textarea(attrs={'placeholder': _('Description'), 'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.theorist = kwargs.pop('theorist')
+        super().__init__(*args, **kwargs)
+        self.instance.theorist = self.theorist

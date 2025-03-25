@@ -49,11 +49,11 @@
           <div class="text-end">
             <button type="button"
                     hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
-                    hx-target="#draft-create-modal"
+                    hx-target="#drafts-management-modal"
                     hx-trigger="click"
                     class="btn btn-primary btn-lg mb-3"
                     data-bs-toggle="modal"
-                    data-bs-target="#draft-create-modal">
+                    data-bs-target="#drafts-management-modal">
               <i class="ti ti-plus"></i>
               {% translate 'Add new draft' %}
             </button>
@@ -61,11 +61,10 @@
 
           <div
               {% if request.GET.view == 'table' %}
-              class="row row-cols-1"
-               hx-get="{% url 'mathlab:drafts:drafts-table-list' request.theorist.uuid %}"
+               class="row row-cols-1"
+               hx-get="{% url 'mathlab:drafts:drafts-table-list' request.theorist.uuid %}?view=table"
               {% else %}
-               class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
-               hx-get="{% url 'mathlab:drafts:drafts-album-list' request.theorist.uuid %}"
+               hx-get="{% url 'mathlab:drafts:drafts-album-list' request.theorist.uuid %}?view=album"
               {% endif %}
                hx-trigger="load"
                hx-target="this"
@@ -79,7 +78,7 @@
   </div>
 
   <div class="modal fade"
-       id="draft-create-modal"
+       id="drafts-management-modal"
        tabindex="-1"
        aria-hidden="true"
        hx-target="this"

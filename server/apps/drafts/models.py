@@ -54,3 +54,16 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         drafts_count = TheoristDrafts.objects.filter(theorist=self.theorist).count()
         self.label = _('Draft #%s') % drafts_count
         self.save(update_fields=['label'])
+
+
+class TheoristDraftsConfiguration(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    theorist = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='drafts_configuration')
+    is_public_available = models.BooleanField(default=True)
+
+    class Meta:
+        ordering = ('-created_at',)
+        verbose_name_plural = 'Theorist Drafts Configurations'
+        verbose_name = 'Theorist Draft Configuration'
+
+    def __str__(self):
+        return f'{self.theorist.full_name} | {self.__class__.__name__} | id - {self.id}'

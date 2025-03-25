@@ -6,6 +6,7 @@ from server.apps.theorist.models import Theorist, TheoristProfileSettings
 @admin.register(Theorist)
 class TheoristAdmin(admin.ModelAdmin):
     list_display = (
+        'uuid',
         'full_name',
         'user',
         'score',

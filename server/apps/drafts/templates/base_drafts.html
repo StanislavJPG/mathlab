@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block page_head %}
-  <title>MathLab | Чернетки</title>
+  <title>MathLab | {% translate 'Drafts' %}</title>
 {% endblock page_head %}
 
 {% block page_css %}
@@ -19,14 +19,25 @@
     <section class="py-5 text-center container">
       <div class="row py-lg-5">
         <div class="col-lg-6 col-md-8 mx-auto">
-          <h1 class="fw-light">Album example</h1>
-          <p class="lead text-body-secondary">Something short and leading about the collection below—its contents, the
-            creator, etc. Make it short and sweet, but not too short so folks don’t simply skip over it entirely.</p>
-          <i class="ti ti-columns me-1" style="font-size: 20px"></i>
-          <i class="ti ti-table ms-1" style="font-size: 20px"></i>
-          <div class="form-check form-switch d-flex justify-content-center">
-            <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
-                   {% if request.GET.view == 'table' %}checked{% endif %}>
+          <h1 class="fw-light"><i class="ti ti-notes"></i>{% translate 'Drafts' %}</h1>
+          <p class="lead text-body-secondary">
+            {% blocktranslate trimmed %}
+              Here you can make and manage your math drafts for future use.
+            {% endblocktranslate %}
+          </p>
+          {% if request.user.is_authenticated %}
+            <i class="ti ti-columns me-1"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Album view' %}"
+               style="font-size: 20px"></i>
+            <i class="ti ti-table ms-1"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Table view' %}"
+               style="font-size: 20px"></i>
+            <div class="form-check form-switch d-flex justify-content-center">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                     {% if request.GET.view == 'table' %}checked{% endif %}>
+          {% endif %}
           </div>
         </div>
       </div>
@@ -34,20 +45,20 @@
 
     <div class="album py-5 bg-body-tertiary">
       <div class="container">
-        <div class="text-end">
-          <button type="button"
-                  hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
-                  hx-target="#draft-create-modal"
-                  hx-trigger="click"
-                  class="btn btn-primary btn-lg mb-3"
-                  data-bs-toggle="modal"
-                  data-bs-target="#draft-create-modal">
-            <i class="ti ti-plus"></i>
-            {% translate 'Add new draft' %}
-          </button>
-        </div>
-
         {% if request.user.is_authenticated %}
+          <div class="text-end">
+            <button type="button"
+                    hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
+                    hx-target="#draft-create-modal"
+                    hx-trigger="click"
+                    class="btn btn-primary btn-lg mb-3"
+                    data-bs-toggle="modal"
+                    data-bs-target="#draft-create-modal">
+              <i class="ti ti-plus"></i>
+              {% translate 'Add new draft' %}
+            </button>
+          </div>
+
           <div
               {% if request.GET.view == 'table' %}
               class="row row-cols-1"
@@ -59,6 +70,8 @@
                hx-trigger="load"
                hx-target="this"
           ></div>
+        {% else %}
+          {% include 'common/not_auth_register_alert.html' %}
         {% endif %}
 
       </div>

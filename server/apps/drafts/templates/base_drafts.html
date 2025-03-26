@@ -93,7 +93,12 @@
                       {% endif %}
                        hx-trigger="load, click from:#search-btn"
                        hx-target="this"
-                  ></div>
+                  >
+                    <div class="text-center d-flex align-items-center flex-column">
+                      <div id="wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+                      <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+                    </div>
+                  </div>
                 {% else %}
                   <div class="text-center py-6 text-secondary container container-sm">
                     <h3><i class="ti ti-error-404"></i> {% translate 'Nothing has found...' %}</h3>
@@ -124,13 +129,13 @@
 {% block page_js %}
   <script type="module">
     import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
-    document.body.addEventListener("htmx:afterOnLoad", function () {
+    document.body.addEventListener("htmx:afterSettle", function () {
         const lightbox = new PhotoSwipeLightbox({
             gallery: '#gallery',
             mainClass: 'img-bg',
             children: 'a',
             wheelToZoom: true,
-            pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}')
+            pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
         });
         lightbox.init();
     });

@@ -1,11 +1,24 @@
+function resizeCanvas(canvas) {
+    const outerCanvasContainer = document.getElementById('fabric-canvas-wrapper');
+
+    if (!outerCanvasContainer || !canvas) return;
+    const ratio = canvas.getWidth() / canvas.getHeight();
+    const containerWidth = outerCanvasContainer.clientWidth;
+    const scale = containerWidth / canvas.getWidth();
+    const zoom = canvas.getZoom() * scale;
+
+    canvas.setDimensions({width: containerWidth, height: containerWidth / ratio});
+    canvas.setViewportTransform([zoom, 0, 0, zoom, 0, 0]);
+}
 
 if ($) {
     const $ = (id) => document.getElementById(id);
 
     const canvas = new fabric.Canvas('drawingCanvas', {
         isDrawingMode: true,
+        width: 770,
+        height: 600
     });
-    canvas.setDimensions({width: '100%', height: '100%'}, {cssOnly: true});
 
     canvas.isDrawingMode = true;
     canvas.freeDrawingBrush = new fabric.PencilBrush(canvas);
@@ -89,4 +102,8 @@ if ($) {
     drawingLineWidthEl.onchange = function () {
         if (canvas.freeDrawingBrush) canvas.freeDrawingBrush.width = parseInt(this.value, 10) || 1;
     };
+
+    window.addEventListener("resize", function () {
+        resizeCanvas(canvas);
+    });
 }

@@ -1,20 +1,19 @@
 {% load i18n static %}
 
 <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+     id="gallery"
      hx-get="{{ request.get_full_path }}"
      hx-trigger="draftDeleted from:body delay:0.6s"
 >
   {% for draft in drafts %}
     <div class="col album-draft-base-{{ draft.uuid }}">
       <div class="card shadow-sm">
-        <div id="gallery">
-          <a href="{{ draft.get_draft_url }}"
-             data-pswp-width="500"
-             data-pswp-height="300"
-             target="_blank">
-            <img class="bd-placeholder-img card-img-top" src="{{ draft.get_draft_url }}">
-          </a>
-        </div>
+        <a href="{{ draft.get_draft_url }}"
+           data-pswp-width="770"
+           data-pswp-height="600"
+           target="_blank">
+          <img class="bd-placeholder-img card-img-top" src="{{ draft.get_draft_url }}">
+        </a>
         <div class="card-body">
           <p class="card-text"><strong>{{ draft.label }}</strong></p>
           <p class="card-text">{{ draft.description }}</p>

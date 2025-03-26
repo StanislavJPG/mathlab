@@ -34,11 +34,11 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def get_absolute_url(self):
         return reverse('mathlab:drafts:base-drafts')
 
-    def get_draft_url(self):
+    def get_draft_url(self, size: list = None):
         thumbnailer = get_thumbnailer(self.draft)
         thumb = thumbnailer.get_thumbnail(
             {
-                'size': (555, 555),
+                'size': (770, 600) if not size else size,
                 'crop': 'smart',
             }
         )

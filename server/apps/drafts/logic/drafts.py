@@ -20,7 +20,8 @@ class TheoristDraftsBaseTemplateView(TemplateView):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
         context['theorist'] = self.request.theorist
-        context['configuration'] = self.request.theorist.drafts_configuration
+        if self.request.theorist:
+            context['configuration'] = self.request.theorist.drafts_configuration
         return context
 
 

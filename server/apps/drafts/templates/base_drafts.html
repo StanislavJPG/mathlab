@@ -61,11 +61,11 @@
             <div class="btn-group" role="group">
               <button type="button"
                       hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
-                      hx-target="#drafts-management-modal"
+                      hx-target="#drafts-create-modal"
                       hx-trigger="click"
                       class="btn btn-primary btn-lg"
                       data-bs-toggle="modal"
-                      data-bs-target="#drafts-management-modal">
+                      data-bs-target="#drafts-create-modal">
                 <i class="ti ti-plus"></i>
                 {% translate 'Add new draft' %}
               </button>
@@ -123,6 +123,15 @@
        hx-target="this"
   >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
+  </div>
+  
+  <div class="modal fade"
+       id="drafts-create-modal"
+       tabindex="-1"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document"></div>
   </div>
 {% endblock body %}
 

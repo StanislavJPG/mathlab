@@ -2,12 +2,11 @@ function resizeCanvas(canvas) {
     const outerCanvasContainer = document.getElementById('fabric-canvas-wrapper');
 
     if (!outerCanvasContainer || !canvas) return;
-    const ratio = canvas.getWidth() / canvas.getHeight();
     const containerWidth = outerCanvasContainer.clientWidth;
     const scale = containerWidth / canvas.getWidth();
     const zoom = canvas.getZoom() * scale;
 
-    canvas.setDimensions({width: containerWidth, height: containerWidth / ratio});
+    canvas.setDimensions({width: containerWidth});
     canvas.setViewportTransform([zoom, 0, 0, zoom, 0, 0]);
 }
 
@@ -16,8 +15,8 @@ if ($) {
 
     const canvas = new fabric.Canvas('drawingCanvas', {
         isDrawingMode: true,
-        width: 770,
-        height: 600
+        width: 1105,
+        height: 880
     });
 
     canvas.isDrawingMode = true;
@@ -106,4 +105,12 @@ if ($) {
     window.addEventListener("resize", function () {
         resizeCanvas(canvas);
     });
+
+    setTimeout(() => {
+        let id_description = document.getElementById('id_description');
+        if (id_description) {
+            canvas.setDimensions({width: id_description.clientWidth})
+        }
+    }, 100);
+
 }

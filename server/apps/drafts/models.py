@@ -38,7 +38,7 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         thumbnailer = get_thumbnailer(self.draft)
         thumb = thumbnailer.get_thumbnail(
             {
-                'size': (770, 600) if not size else size,
+                'size': (2105, 2000) if not size else size,
                 'crop': 'smart',
             }
         )

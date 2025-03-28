@@ -9,7 +9,7 @@ rebuild:
 build:
 	docker-compose build
 
-web:
+bash:
 	docker-compose run --rm web bash
 
 # for translation

@@ -41,7 +41,12 @@
           {% endif %}
 
           <div class="d-flex align-items-center mt-5">
-            <label for="id_search_draft" class="text-nowrap me-2">{% translate "Draft's UUID" %}</label>
+            <label for="id_search_draft" class="text-nowrap me-2">
+              <i data-bs-toggle="tooltip"
+                 title="{% translate "UUID is unique identifier, which you can share with anybody to show your drafts" %}"
+                 class="ti ti-help-octagon-filled text-primary"></i>
+              {% translate "Draft's UUID" %}
+            </label>
             <div class="input-group me-2">
               <input id="id_search_draft"
                      name="search_draft"

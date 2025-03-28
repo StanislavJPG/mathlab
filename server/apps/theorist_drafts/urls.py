@@ -1,12 +1,12 @@
 from django.urls import path
 
-from server.apps.drafts.logic.drafts import (
+from server.apps.theorist_drafts.logic.drafts import (
     TheoristDraftsBaseTemplateView,
     TheoristDraftsAlbumListView,
     TheoristDraftsTableListView,
     HXTheoristDraftsSearchView,
 )
-from server.apps.drafts.logic.drafts_management import (
+from server.apps.theorist_drafts.logic.drafts_management import (
     TheoristDraftCreateView,
     TheoristDraftDeleteView,
     TheoristDraftUpdateView,

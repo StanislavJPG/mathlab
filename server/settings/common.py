@@ -57,7 +57,7 @@ INSTALLED_APPS = [
     # apps
     'server.apps.carousel.apps.CarouselConfig',
     'server.apps.chat.apps.ChatConfig',
-    'server.apps.drafts.apps.DraftsConfig',
+    'server.apps.theorist_drafts.apps.DraftsConfig',
     'server.apps.forum.apps.ForumConfig',
     'server.apps.graphbuilder.apps.GraphbuilderConfig',
     'server.apps.math_news.apps.MathNewsConfig',

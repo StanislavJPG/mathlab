@@ -11,7 +11,7 @@ from django.db import migrations, models
 
 def generate_nested_theorist_configurations(apps, schema_editor):
     Theorist = apps.get_model('theorist', 'Theorist')
-    TheoristDraftsConfiguration = apps.get_model('drafts', 'TheoristDraftsConfiguration')
+    TheoristDraftsConfiguration = apps.get_model('theorist_drafts', 'TheoristDraftsConfiguration')
     to_create = []
 
     for theorist in Theorist.objects.all():
@@ -20,13 +20,6 @@ def generate_nested_theorist_configurations(apps, schema_editor):
 
 
 class Migration(migrations.Migration):
-    replaces = [
-        ('drafts', '0001_initial'),
-        ('drafts', '0002_alter_theoristdrafts_label'),
-        ('drafts', '0003_alter_theoristdrafts_options_and_more'),
-        ('drafts', '0004_theoristdraftsconfiguration'),
-    ]
-
     initial = True
 
     dependencies = [

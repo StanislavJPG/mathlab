@@ -4,7 +4,7 @@ from django import forms
 from django.core.files.base import ContentFile
 from django.utils.translation import gettext_lazy as _
 
-from server.apps.drafts.models import TheoristDrafts
+from server.apps.theorist_drafts.models import TheoristDrafts
 
 
 class TheoristDraftCreateForm(forms.ModelForm):

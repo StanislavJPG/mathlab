@@ -2,7 +2,7 @@ import django_tables2 as tables
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from server.apps.drafts.models import TheoristDrafts
+from server.apps.theorist_drafts.models import TheoristDrafts
 import server.common.tables.attrs as table_attrs
 from server.common.tables.mixins import CreatedAtTableMixin
 

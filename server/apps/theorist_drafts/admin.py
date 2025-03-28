@@ -1,6 +1,6 @@
 from django.contrib import admin
 
-from server.apps.drafts.models import TheoristDrafts, TheoristDraftsConfiguration
+from server.apps.theorist_drafts.models import TheoristDrafts, TheoristDraftsConfiguration
 
 
 @admin.register(TheoristDrafts)

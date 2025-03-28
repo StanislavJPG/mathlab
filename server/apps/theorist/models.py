@@ -8,7 +8,7 @@ from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 
 from slugify import slugify
 
-from server.apps.drafts.models import TheoristDraftsConfiguration
+from server.apps.theorist_drafts.models import TheoristDraftsConfiguration
 from server.common.mixins.models import (
     UUIDModelMixin,
     TimeStampedModelMixin,

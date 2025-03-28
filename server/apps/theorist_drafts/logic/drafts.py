@@ -7,8 +7,8 @@ from django.views.generic import TemplateView, ListView
 from django_tables2 import SingleTableView
 from render_block import render_block_to_string
 
-from server.apps.drafts.models import TheoristDrafts, TheoristDraftsConfiguration
-from server.apps.drafts.tables import DraftsTable
+from server.apps.theorist_drafts.models import TheoristDrafts, TheoristDraftsConfiguration
+from server.apps.theorist_drafts.tables import DraftsTable
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 

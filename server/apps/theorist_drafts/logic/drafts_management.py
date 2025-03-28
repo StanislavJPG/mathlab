@@ -5,8 +5,8 @@ from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView, DeleteView, UpdateView
 from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 
-from server.apps.drafts.forms import TheoristDraftCreateForm, TheoristDraftUpdateForm
-from server.apps.drafts.models import TheoristDrafts
+from server.apps.theorist_drafts.forms import TheoristDraftCreateForm, TheoristDraftUpdateForm
+from server.apps.theorist_drafts.models import TheoristDrafts
 from server.common.mixins.views import HXViewMixin
 
 

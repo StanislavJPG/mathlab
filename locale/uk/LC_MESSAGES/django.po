@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-16 22:56+0200\n"
+"POT-Creation-Date: 2025-03-28 23:12+0200\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -162,6 +162,7 @@ msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
 
 #: server/apps/forum/templates/base_articles.html
+#: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Loading..."
 msgstr "Завантаження..."
 
@@ -180,6 +181,7 @@ msgstr "Автор"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
+#: server/apps/theorist_drafts/tables.py
 msgid "Created at"
 msgstr "Створено"
 
@@ -194,6 +196,8 @@ msgstr "Модифіковано о"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+#: server/apps/theorist_drafts/templates/partials/tables/drafts_actions.html
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
 
@@ -254,6 +258,7 @@ msgid "Apply"
 msgstr "Застосувати"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 msgid "Clear"
 msgstr "Очистити"
 
@@ -308,22 +313,6 @@ msgstr "Ваша відповідь"
 #: server/apps/math_news/templates/news_base.html
 msgid "Last math-related news"
 msgstr "Останні новини зі світу Математики"
-
-#: server/apps/math_news/templates/news_base.html
-msgid "But-away!"
-msgstr "До речі!"
-
-#: server/apps/math_news/templates/news_base.html
-msgid ""
-"We have our <strong>Mathlab forum!</strong> Join to community to help people "
-"with their mathematics questions, or make your own!"
-msgstr ""
-"У нас є наш <strong>Mathlab форум!</strong> Приєднуйтесь до ком'юніті, щоб допомагати людям "
-"з їхніми математичними запитаннями, або створіть власне!"
-
-#: server/apps/math_news/templates/news_base.html
-msgid "Join"
-msgstr "Приєднатись"
 
 #: server/apps/math_news/templates/partials/news_list.html
 msgid "Read from origin"
@@ -577,6 +566,221 @@ msgstr "Налаштування"
 msgid "Account"
 msgstr "Акаунт"
 
+#: server/apps/theorist_drafts/forms.py
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Draft label"
+msgstr "Назва чернетки"
+
+#: server/apps/theorist_drafts/forms.py server/apps/theorist_drafts/tables.py
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Description"
+msgstr "Опис"
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "You successfully created a new draft."
+msgstr "Ви успішно створили нову чернетку."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "Error while creating draft. Please check for errors and try again."
+msgstr ""
+"Помилка під час створення чернетки. Будь ласка, перевірте наявність помилок "
+"і спробуйте ще раз."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "You successfully updated draft."
+msgstr "Ви успішно оновили чернетку."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "Error while updating draft. Please check for errors and try again."
+msgstr ""
+"Помилка під час оновлення чернетки. Будь ласка, перевірте наявність помилок "
+"і спробуйте ще раз."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "You successfully uploaded draft."
+msgstr "Ви успішно завантажили чернетку."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "Error while uploaded draft. Please check for errors and try again."
+msgstr ""
+"Помилка під час завантаження поста. Будь ласка, перевірте наявність помилок "
+"і спробуйте ще раз."
+
+#: server/apps/theorist_drafts/logic/drafts_management.py
+msgid "You successfully deleted draft."
+msgstr "Ви успішно видалили чернетку."
+
+#: server/apps/theorist_drafts/models.py
+#, python-format
+msgid "Draft #%s"
+msgstr "Чернетка №%s"
+
+#: server/apps/theorist_drafts/tables.py
+msgid "Label"
+msgstr "Назва"
+
+#: server/apps/theorist_drafts/tables.py
+msgid "Draft"
+msgstr "Чернетка"
+
+#: server/apps/theorist_drafts/tables.py
+msgid "Actions"
+msgstr "Дії"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Drafts"
+msgstr "Чернетки"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Here you can make and manage your math drafts for future use."
+msgstr ""
+"Тут Ви можете створити та керувати вашими чернетками для майбутнього "
+"використання."
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Album view"
+msgstr "Альбомний вигляд"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Table view"
+msgstr "Табличний вигляд"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid ""
+"UUID is unique identifier, which you can share with anybody to show your "
+"drafts"
+msgstr ""
+"UUID це унікальний ідентифікатор, який Ви можете поширити з будь-ким щоб "
+"поділитись списком власних чернеток"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Draft's UUID"
+msgstr "UUID чернетки"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Paste UUID here"
+msgstr "Вставте UUID сюди"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Fully drop search"
+msgstr "Повністю скинути пошук"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Search"
+msgstr "Пошук"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Add new draft"
+msgstr "Додати нову чернетку"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Copy my draft UUID"
+msgstr "Скопіювати UUID моєї чернетки"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Upload my own draft"
+msgstr "Завантажити мою власну чернетку"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Please check UUID that you pasted and try again!"
+msgstr "Будь ласка, перевірте введений UUID та спробуйте ще раз."
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Is draft can be accessed for public"
+msgstr "Ця чернетка може бути публічно доступною"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Your draft"
+msgstr "Ваша чернетка"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Toggle mode"
+msgstr "Переключити тип"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Color"
+msgstr "Колір"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Brush Width"
+msgstr "Ширина кісточки"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Mode"
+msgstr "Режим"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Pencil"
+msgstr "Олівець"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Horizontal Line"
+msgstr "Горизонтальна лінія"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Vertical Line"
+msgstr "Вертикальна лінія"
+
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+msgid "Add"
+msgstr "Додати"
+
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+msgid "Edit your draft"
+msgstr "Редагувати Вашу чернетку"
+
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+msgid "Save"
+msgstr "Зберегти"
+
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload draft"
+msgstr "Завантажити чернетку"
+
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload"
+msgstr "Завантажити"
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+#: server/apps/theorist_drafts/templates/partials/drafts_table.html
+msgid "Author of drafts"
+msgstr "Автор чернеток"
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+msgid "Edit"
+msgstr "Редагувати"
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+msgid "Delete"
+msgstr "Видалити"
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+#: server/apps/theorist_drafts/templates/partials/drafts_table.html
+msgid "You can add your first drafts by clicking \"Add new draft\" button"
+msgstr ""
+"Ви можете додати Вашу першу чернетку, натиснувши на \"Додати нову чернетку\""
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+#: server/apps/theorist_drafts/templates/partials/drafts_table.html
+msgid "This theorist has no any draft"
+msgstr "Цей теоретик поки не має жодної чернетки"
+
+#: server/apps/theorist_drafts/templates/partials/tables/drafts_actions.html
+msgid "Edit draft"
+msgstr "Редагувати чернетку"
+
+#: server/apps/theorist_drafts/templates/partials/tables/drafts_actions.html
+msgid "Delete draft"
+msgstr "Видалити чернетку"
+
 #: server/apps/users/adapters.py
 msgid "Mathlab | Password reset"
 msgstr "Mathlab | Відновити пароль"
@@ -619,6 +823,7 @@ msgid "Login"
 msgstr "Увійти"
 
 #: server/apps/users/templates/base_auth_site.html
+#: server/templates/alerts/not_auth_register_alert.html
 msgid "Register"
 msgstr "Зареєструватись"
 
@@ -662,8 +867,24 @@ msgid "Sign in"
 msgstr "Зареєструватись"
 
 #: server/templates/403.html
+msgid "Error"
+msgstr "Помилка"
+
+#: server/templates/403.html
 msgid "Not this time, access forbidden!"
 msgstr "Не цього разу! Доступ заборонено."
+
+#: server/templates/alerts/empty_alert.html
+msgid "Still empty!"
+msgstr "Все ще пусто!"
+
+#: server/templates/alerts/not_found_alert.html
+msgid "Nothing has found..."
+msgstr "Нічого не знайдено..."
+
+#: server/templates/alerts/not_found_alert.html
+msgid "Please check search input and try again!"
+msgstr "Будь ласка, перевірте введені дані та спробуйте ще раз."
 
 #: server/templates/common/pagination.html
 msgid "Previous"
@@ -696,3 +917,11 @@ msgstr "Темний"
 #: server/templates/partials/theme_switcher.html
 msgid "Auto"
 msgstr "Авто"
+
+#: server/templates/tables/bootstrap_htmx.html
+msgid "previous"
+msgstr "попередня"
+
+#: server/templates/tables/bootstrap_htmx.html
+msgid "next"
+msgstr "наступна"

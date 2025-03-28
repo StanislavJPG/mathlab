@@ -65,8 +65,11 @@ class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListVie
 
     def get_table_kwargs(self):
         kwargs = super().get_table_kwargs()
-        draft_from_qs = self.get_queryset().first()
-        theorist = getattr(draft_from_qs, 'theorist', None)
+        search_draft = self.request.GET.get('search_draft')
+        if search_draft:
+            theorist = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first().theorist
+        else:
+            theorist = self.request.theorist
         kwargs['theorist_from_url'] = theorist
         return kwargs
 

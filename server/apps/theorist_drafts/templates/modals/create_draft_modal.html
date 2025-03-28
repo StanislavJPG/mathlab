@@ -37,21 +37,21 @@
           </button>
 
           <div class="d-flex align-items-center">
-            <label for="drawing-color" class="me-2 fw-bold">Color:</label>
+            <label for="drawing-color" class="me-2 fw-bold">{% translate 'Color' %}:</label>
             <input type="color" id="drawing-color" class="form-control form-control-color">
           </div>
 
           <div class="d-flex align-items-center">
-            <label for="drawing-line-width" class="me-2 fw-bold">Brush Width:</label>
+            <label for="drawing-line-width" class="me-2 fw-bold">{% translate 'Brush Width' %}:</label>
             <input type="number" id="drawing-line-width" class="form-control w-auto" value="5" min="1" max="50">
           </div>
 
           <div class="d-flex align-items-center">
-            <label for="drawing-mode-selector" class="me-2 fw-bold">Mode:</label>
+            <label for="drawing-mode-selector" class="me-2 fw-bold">{% translate 'Mode' %}:</label>
             <select id="drawing-mode-selector" class="form-select w-auto">
-              <option value="pencil">Pencil</option>
-              <option value="hline">Horizontal Line</option>
-              <option value="vline">Vertical Line</option>
+              <option value="pencil">{% translate 'Pencil' %}</option>
+              <option value="hline">{% translate 'Horizontal Line' %}</option>
+              <option value="vline">{% translate 'Vertical Line' %}</option>
             </select>
           </div>
 

@@ -32,7 +32,6 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
     def before_render(self, request):
         if request.theorist != self.theorist_from_url:
             self.columns.hide('actions')
-            self.attrs['class'] = self.attrs['class'].replace('d-block', '')
 
     @mark_safe
     def render_draft(self, record, value):

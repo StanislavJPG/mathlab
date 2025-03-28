@@ -1,5 +1,5 @@
 {% extends 'base/mathlab_base.html' %}
-{% load i18n static %}
+{% load i18n static avatars %}
 
 {% block page_head %}
   <title>MathLab | {% translate 'Drafts' %}</title>
@@ -8,9 +8,9 @@
 {% block page_css %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
   <style>
-    .img-bg {
-        --pswp-bg: #ffffff;
-    }
+      .img-bg {
+          --pswp-bg: #ffffff;
+      }
   </style>
 {% endblock page_css %}
 
@@ -54,20 +54,25 @@
                      value="{{ request.GET.search_draft }}"
                      placeholder="{% translate 'Paste UUID here' %}">
               <a class="btn btn-outline-danger"
-                  data-bs-toggle="tooltip"
-                  title="{% translate 'Fully drop search' %}"
-                  href="{{ request.get }}?view={{ request.GET.view|default:'album' }}"
-                  type="button">
+                 data-bs-toggle="tooltip"
+                 title="{% translate 'Fully drop search' %}"
+                 href="{{ request.get }}?view={{ request.GET.view|default:'album' }}"
+                 type="button">
                 <i class="ti ti-xbox-x"></i>
               </a>
             </div>
-            <button type="button"
-                    id="search-btn"
-                    onclick="Search()"
-                    hx-get="{% url 'mathlab:drafts:drafts-search' %}?view={{ request.GET.view }}"
-                    hx-include="[name='search_draft']"
-                    hx-target="#block-drafts-js"
-                    class="btn btn-outline-secondary">{% translate 'Search' %}</button>
+            {% if request.user.is_authenticated %}
+              <button type="button"
+                      id="search-btn"
+                      onclick="Search()"
+                      hx-get="{% url 'mathlab:drafts:drafts-search' %}?view={{ request.GET.view }}"
+                      hx-include="[name='search_draft']"
+                      hx-target="#block-drafts-js"
+                      class="btn btn-outline-secondary">{% translate 'Search' %}</button>
+            {% else %}
+              <a href="{% url 'users:base-auth' %}?signup=true"
+                 class="btn btn-outline-secondary">{% translate 'Search' %}</a>
+            {% endif %}
           </div>
         </div>
       </div>
@@ -93,8 +98,11 @@
                         data-bs-toggle="dropdown" aria-expanded="false">
                 </button>
                 <ul class="dropdown-menu">
-                  <li><button type="button" class="dropdown-item btn-to-copy" data-clipboard-text="{{ configuration.uuid }}"
-                  ><i class="ti ti-link"></i> {% translate 'Copy my draft UUID' %}</button></li>
+                  <li>
+                    <button type="button" class="dropdown-item btn-to-copy"
+                            data-clipboard-text="{{ configuration.uuid }}"
+                    ><i class="ti ti-link"></i> {% translate 'Copy my draft UUID' %}</button>
+                  </li>
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
@@ -115,32 +123,32 @@
           <div id="block-drafts-js">
             {% with view=request.GET.view %}
               {% block drafts %}
-                {% if configuration and theorist.drafts.exists %}
+                {% if configuration %}
                   <div {% if view == 'table' %}
-                       class="row row-cols-1"
-                       hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"
-                      {% else %}
-                       hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album&search_draft={{ request.GET.search_draft }}"
-                      {% endif %}
-                       hx-trigger="load, click from:#search-btn"
-                       hx-target="this"
+                    class="row row-cols-1"
+                    hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"
+                  {% else %}
+                    hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album&search_draft={{ request.GET.search_draft }}"
+                  {% endif %}
+                    hx-trigger="load, click from:#search-btn"
+                    hx-target="this"
                   >
                     <div class="text-center d-flex align-items-center flex-column">
-                      <div id="wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+                      <div id="wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2"
+                           role="status"></div>
                       <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
                     </div>
                   </div>
                 {% else %}
                   {% translate 'Please check UUID that you pasted and try again!' as msg %}
-                  {% include 'common/not_found_alert.html' with msg=msg %}
+                  {% include 'alerts/not_found_alert.html' with msg=msg %}
                 {% endif %}
               {% endblock drafts %}
             {% endwith %}
           </div>
         {% else %}
-          {% include 'common/not_auth_register_alert.html' %}
+          {% include 'alerts/not_auth_register_alert.html' %}
         {% endif %}
-
       </div>
     </div>
   </div>
@@ -153,7 +161,7 @@
   >
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
   </div>
-  
+
   <div class="modal fade"
        id="drafts-create-modal"
        tabindex="-1"
@@ -165,42 +173,46 @@
 {% endblock body %}
 
 {% block page_js %}
+  <script src="{% static 'js/actions/init_clipboard.js' %}"></script>
   <script type="module">
-    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
-    document.body.addEventListener("htmx:afterSettle", function () {
-        const lightbox = new PhotoSwipeLightbox({
-            gallery: '#gallery',
-            mainClass: 'img-bg',
-            children: 'a',
-            wheelToZoom: true,
-            pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
-        });
-        lightbox.init();
-    });
+      import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+
+      document.body.addEventListener("htmx:afterSettle", function () {
+          const lightbox = new PhotoSwipeLightbox({
+              gallery: '#gallery',
+              mainClass: 'img-bg',
+              children: 'a',
+              wheelToZoom: true,
+              pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
+          });
+          lightbox.init();
+      });
   </script>
   <script>
-    document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
-      const url = new URL(window.location);
+      if (document.getElementById("flexSwitchCheckChecked")) {
+          document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
+              const url = new URL(window.location);
 
-      if (this.checked) {
-          url.searchParams.set("view", "table");
-      } else {
-          url.searchParams.delete("view");
+              if (this.checked) {
+                  url.searchParams.set("view", "table");
+              } else {
+                  url.searchParams.delete("view");
+              }
+
+              window.location = url;
+          });
       }
 
-      window.location = url;
-    });
-    function Search() {
-      const url = new URL(window.location);
-      let input_search_value = document.getElementById('id_search_draft').value;
+      function Search() {
+          const url = new URL(window.location);
+          let input_search_value = document.getElementById('id_search_draft').value;
 
-      if (url.searchParams.get("search_draft")) {
-          url.searchParams.delete("search_draft");
+          if (url.searchParams.get("search_draft")) {
+              url.searchParams.delete("search_draft");
+          }
+          url.searchParams.append("search_draft", input_search_value)
+          window.location = url;
       }
-      url.searchParams.append("search_draft", input_search_value)
-      window.location = url;
-    }
 
   </script>
-  <script src="{% static 'js/actions/init_clipboard.js' %}"></script>
 {% endblock page_js %}

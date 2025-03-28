@@ -38,6 +38,15 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
             return qs.filter(theorist__drafts_configuration__uuid=search_draft)
         return qs.filter(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
 
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data()
+        search_draft = self.request.GET.get('search_draft')
+        if is_valid_uuid(search_draft):
+            context['theorist'] = TheoristDraftsConfiguration.objects.get(uuid=search_draft).theorist
+        else:
+            context['theorist'] = self.request.theorist
+        return context
+
 
 class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):
     template_name = 'partials/drafts_album_list.html'

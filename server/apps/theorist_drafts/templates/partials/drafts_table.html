@@ -1,6 +1,7 @@
 {% load i18n static %}
 {% load render_table from django_tables2 %}
 
+{% if theorist %}
 <div class="text-end mt-3 mb-3">
   <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
   <small>
@@ -10,17 +11,23 @@
     </a>
   </small>
 </div>
+{% endif %}
+
 {% if drafts %}
   <div id="gallery" hx-get="{{ request.get_full_path }}" hx-trigger="draftDeleted from:body">
     {% render_table table %}
   </div>
 {% else %}
-  {% if theorist == request.theorist %}
-    {% translate 'You can add your first drafts by clicking "Add new draft" button' as msg %}
+  {% if theorist %}
+    {% if theorist == request.theorist %}
+      {% translate 'You can add your first drafts by clicking "Add new draft" button' as msg %}
+    {% else %}
+      {% translate 'This theorist has no any draft' as msg %}
+    {% endif %}
+    {% include 'alerts/empty_alert.html' with msg=msg %}
   {% else %}
-    {% translate 'This theorist has no any draft' as msg %}
+    {% include 'alerts/not_found_alert.html' %}
   {% endif %}
-  {% include 'alerts/empty_alert.html' with msg=msg %}
 {% endif %}
 
 

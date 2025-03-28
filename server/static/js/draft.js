@@ -111,6 +111,6 @@ if ($) {
         if (id_description) {
             canvas.setDimensions({width: id_description.clientWidth})
         }
-    }, 100);
+    }, 300);
 
 }

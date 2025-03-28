@@ -48,7 +48,8 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
         context = super().get_context_data()
         search_draft = self.request.GET.get('search_draft')
         if is_valid_uuid(search_draft):
-            context['theorist'] = TheoristDraftsConfiguration.objects.get(uuid=search_draft).theorist
+            conf = TheoristDraftsConfiguration.objects.filter(uuid=search_draft).first()
+            context['theorist'] = getattr(conf, 'theorist', None)
         else:
             context['theorist'] = self.request.theorist
         return context

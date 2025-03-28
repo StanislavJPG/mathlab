@@ -11,6 +11,7 @@ from server.apps.theorist_drafts.models import TheoristDrafts, TheoristDraftsCon
 from server.apps.theorist_drafts.tables import DraftsTable
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
+from server.common.utils.helpers import is_valid_uuid
 
 
 class TheoristDraftsBaseTemplateView(TemplateView):
@@ -30,7 +31,12 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
     context_object_name = 'drafts'
 
     def get_queryset(self):
-        return super().get_queryset().filter(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
+        search_draft = self.request.GET.get('search_draft')
+        qs = super().get_queryset()
+
+        if is_valid_uuid(search_draft):
+            return qs.filter(theorist__drafts_configuration__uuid=search_draft)
+        return qs.filter(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
 
 
 class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):
@@ -40,6 +46,13 @@ class TheoristDraftsAlbumListView(AbstractTheoristDraftsListView):
 class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListView):
     template_name = 'partials/drafts_table.html'
     table_class = DraftsTable
+
+    def get_table_kwargs(self):
+        kwargs = super().get_table_kwargs()
+        draft_from_qs = self.get_queryset().first()
+        theorist = getattr(draft_from_qs, 'theorist', None)
+        kwargs['theorist_from_url'] = theorist
+        return kwargs
 
 
 class HXTheoristDraftsSearchView(LoginRequiredMixin, HXViewMixin, View):

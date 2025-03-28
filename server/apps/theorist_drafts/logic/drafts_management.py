@@ -38,6 +38,9 @@ class TheoristDraftUpdateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
 
+    def get_queryset(self):
+        return super().get_queryset().filter(theorist=self.request.theorist)
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['theorist'] = self.request.theorist

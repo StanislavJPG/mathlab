@@ -42,9 +42,14 @@
 
           <div class="d-flex align-items-center mt-5">
             <label for="id_search_draft" class="text-nowrap me-2">{% translate "Draft's UUID" %}</label>
-            <input id="id_search_draft" name="search_draft" class="form-control me-2" placeholder="{% translate 'Paste UUID here' %}">
+            <input id="id_search_draft"
+                   name="search_draft"
+                   class="form-control me-2"
+                   value="{{ request.GET.search_draft }}"
+                   placeholder="{% translate 'Paste UUID here' %}">
             <button type="button"
                     id="search-btn"
+                    onclick="Search()"
                     hx-get="{% url 'mathlab:drafts:drafts-search' %}?view={{ request.GET.view }}"
                     hx-include="[name='search_draft']"
                     hx-target="#block-drafts-js"
@@ -87,9 +92,9 @@
                 {% if configuration and theorist.drafts.exists %}
                   <div {% if view == 'table' %}
                        class="row row-cols-1"
-                       hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table"
+                       hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"
                       {% else %}
-                       hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album"
+                       hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album&search_draft={{ request.GET.search_draft }}"
                       {% endif %}
                        hx-trigger="load, click from:#search-btn"
                        hx-target="this"
@@ -100,10 +105,8 @@
                     </div>
                   </div>
                 {% else %}
-                  <div class="text-center py-6 text-secondary container container-sm">
-                    <h3><i class="ti ti-error-404"></i> {% translate 'Nothing has found...' %}</h3>
-                    <p>{% translate 'Please check search input and try again!' %}</p>
-                  </div>
+                  {% translate 'Please check UUID that you pasted and try again!' as msg %}
+                  {% include 'common/not_found_alert.html' with msg=msg %}
                 {% endif %}
               {% endblock drafts %}
             {% endwith %}
@@ -161,6 +164,17 @@
 
       window.location = url;
     });
+    function Search() {
+      const url = new URL(window.location);
+      let input_search_value = document.getElementById('id_search_draft').value;
+
+      if (url.searchParams.get("search_draft")) {
+          url.searchParams.delete("search_draft");
+      }
+      url.searchParams.append("search_draft", input_search_value)
+      window.location = url;
+    }
+
   </script>
   <script src="{% static 'js/actions/init_clipboard.js' %}"></script>
 {% endblock page_js %}

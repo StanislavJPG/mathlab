@@ -15,6 +15,10 @@
            class="nav-link {% if 'graphbuilder' in request.path %}active{% endif %}">Побудуй графік</a>
       </li>
       <li class="nav-item">
+        <a href="{% url 'mathlab:drafts:base-drafts' %}"
+           class="nav-link">Чернетки</a>
+      </li>
+      <li class="nav-item">
         <a href="{% url 'forum:base-forum-page' %}"
            class="nav-link">Форум</a>
       </li>

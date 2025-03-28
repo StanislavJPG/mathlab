@@ -8,6 +8,7 @@ from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 
 from slugify import slugify
 
+from server.apps.drafts.models import TheoristDraftsConfiguration
 from server.common.mixins.models import (
     UUIDModelMixin,
     TimeStampedModelMixin,
@@ -62,6 +63,7 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     @hook(AFTER_CREATE)
     def create_initial_data(self):
         TheoristProfileSettings.objects.create(theorist=self)
+        TheoristDraftsConfiguration.objects.create(theorist=self)
 
     @hook(AFTER_SAVE)
     def after_save(self):

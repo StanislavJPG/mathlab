@@ -144,10 +144,7 @@
             </div>
           </div>
         {% else %}
-          <div class="mt-5 text-center">
-            <h2 class="h6"><a href="{% url 'users:base-auth' %}?signup=true" class="text-decoration-none">Authorize</a>,
-              to ask your questions.</h2>
-          </div>
+          {% include 'common/not_auth_register_alert.html' %}
         {% endif %}
       </div>
     </div>

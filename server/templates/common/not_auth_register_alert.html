@@ -1,0 +1,9 @@
+{% load i18n %}
+
+<div class="text-center py-6 text-secondary container container-sm">
+  <h3>You're still not registered?</h3>
+  <p>You can do it now by clicking button below!</p>
+  <a href="{% url 'users:base-auth' %}?signup=true" class="btn btn-outline-secondary" target="_blank">
+    <span class="btn-text">{% translate 'Register' %}</span>
+  </a>
+</div>

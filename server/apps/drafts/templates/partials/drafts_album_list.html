@@ -1,0 +1,46 @@
+{% load i18n static %}
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+     id="gallery"
+     hx-get="{{ request.get_full_path }}"
+     hx-trigger="draftDeleted from:body delay:0.6s"
+>
+  {% for draft in drafts %}
+    <div class="col album-draft-base-{{ draft.uuid }}">
+      <div class="card shadow-sm">
+        <a href="{{ draft.get_draft_url }}"
+           data-pswp-width="2105"
+           data-pswp-height="2000"
+           target="_blank">
+          <img class="bd-placeholder-img card-img-top" style="max-width: 230px; max-height: 180px;" src="{{ draft.get_draft_url }}">
+        </a>
+        <div class="card-body">
+          <p class="card-text"><strong>{{ draft.label }}</strong></p>
+          <p class="card-text">{{ draft.description }}</p>
+          <div class="d-flex justify-content-between align-items-center">
+            <div class="btn-group">
+              <button type="button"
+                      hx-get="{% url 'mathlab:drafts:drafts-edit' draft.uuid %}?view={{ request.GET.view }}"
+                      hx-target="#drafts-management-modal"
+                      hx-trigger="click"
+                      data-bs-toggle="modal"
+                      data-bs-target="#drafts-management-modal"
+                      class="btn btn-sm btn-outline-secondary">
+                {% translate 'Edit' %}
+              </button>
+              <button type="button"
+                      hx-delete="{% url 'mathlab:drafts:drafts-delete' draft.uuid %}?view={{ request.GET.view }}"
+                      hx-swap="innerHTML swap:0.5s"
+                      hx-target=".album-draft-base-{{ draft.uuid }}"
+                      hx-confirm="{% translate 'Are you sure?' %}"
+                      class="btn btn-sm btn-outline-danger">
+                {% translate 'Delete' %}
+              </button>
+            </div>
+            <small class="text-body-secondary small text-muted">{{ draft.created_at }}</small>
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+</div>

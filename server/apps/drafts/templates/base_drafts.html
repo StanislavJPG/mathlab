@@ -1,0 +1,166 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block page_head %}
+  <title>MathLab | {% translate 'Drafts' %}</title>
+{% endblock page_head %}
+
+{% block page_css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+  <style>
+    .img-bg {
+        --pswp-bg: #ffffff;
+    }
+  </style>
+{% endblock page_css %}
+
+{% block body %}
+  <div>
+    <section class="py-5 text-center container">
+      <div class="row py-lg-5">
+        <div class="col-lg-6 col-md-8 mx-auto">
+          <h1 class="fw-light"><i class="ti ti-notes"></i>{% translate 'Drafts' %}</h1>
+          <p class="lead text-body-secondary">
+            {% blocktranslate trimmed %}
+              Here you can make and manage your math drafts for future use.
+            {% endblocktranslate %}
+          </p>
+          {% if request.user.is_authenticated %}
+            <i class="ti ti-columns me-1"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Album view' %}"
+               style="font-size: 20px"></i>
+            <i class="ti ti-table ms-1"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Table view' %}"
+               style="font-size: 20px"></i>
+            <div class="form-check form-switch d-flex justify-content-center">
+              <input class="form-check-input" type="checkbox" role="switch" id="flexSwitchCheckChecked"
+                     {% if request.GET.view == 'table' %}checked{% endif %}>
+            </div>
+          {% endif %}
+
+          <div class="d-flex align-items-center mt-5">
+            <label for="id_search_draft" class="text-nowrap me-2">{% translate "Draft's UUID" %}</label>
+            <input id="id_search_draft" name="search_draft" class="form-control me-2" placeholder="{% translate 'Paste UUID here' %}">
+            <button type="button"
+                    id="search-btn"
+                    hx-get="{% url 'mathlab:drafts:drafts-search' %}?view={{ request.GET.view }}"
+                    hx-include="[name='search_draft']"
+                    hx-target="#block-drafts-js"
+                    class="btn btn-outline-secondary">{% translate 'Search' %}</button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <div class="album py-5 bg-body-tertiary">
+      <div class="container">
+        {% if request.user.is_authenticated %}
+          <div class="text-end mb-3">
+            <div class="btn-group" role="group">
+              <button type="button"
+                      hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
+                      hx-target="#drafts-create-modal"
+                      hx-trigger="click"
+                      class="btn btn-primary btn-lg"
+                      data-bs-toggle="modal"
+                      data-bs-target="#drafts-create-modal">
+                <i class="ti ti-plus"></i>
+                {% translate 'Add new draft' %}
+              </button>
+              <div class="btn-group" role="group">
+                <button type="button" class="btn btn-primary btn-lg dropdown-toggle"
+                        data-bs-toggle="dropdown" aria-expanded="false">
+                </button>
+                <ul class="dropdown-menu">
+                  <li><button type="button" class="dropdown-item btn-to-copy" data-clipboard-text="{{ configuration.uuid }}"
+                  ><i class="ti ti-link"></i> {% translate 'Copy my draft UUID' %}</button></li>
+                </ul>
+              </div>
+            </div>
+          </div>
+
+          <div id="block-drafts-js">
+            {% with view=request.GET.view %}
+              {% block drafts %}
+                {% if configuration and theorist.drafts.exists %}
+                  <div {% if view == 'table' %}
+                       class="row row-cols-1"
+                       hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table"
+                      {% else %}
+                       hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album"
+                      {% endif %}
+                       hx-trigger="load, click from:#search-btn"
+                       hx-target="this"
+                  >
+                    <div class="text-center d-flex align-items-center flex-column">
+                      <div id="wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+                      <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+                    </div>
+                  </div>
+                {% else %}
+                  <div class="text-center py-6 text-secondary container container-sm">
+                    <h3><i class="ti ti-error-404"></i> {% translate 'Nothing has found...' %}</h3>
+                    <p>{% translate 'Please check search input and try again!' %}</p>
+                  </div>
+                {% endif %}
+              {% endblock drafts %}
+            {% endwith %}
+          </div>
+        {% else %}
+          {% include 'common/not_auth_register_alert.html' %}
+        {% endif %}
+
+      </div>
+    </div>
+  </div>
+
+  <div class="modal fade"
+       id="drafts-management-modal"
+       tabindex="-1"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
+  </div>
+  
+  <div class="modal fade"
+       id="drafts-create-modal"
+       tabindex="-1"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-xl modal-dialog-centered" role="document"></div>
+  </div>
+{% endblock body %}
+
+{% block page_js %}
+  <script type="module">
+    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+    document.body.addEventListener("htmx:afterSettle", function () {
+        const lightbox = new PhotoSwipeLightbox({
+            gallery: '#gallery',
+            mainClass: 'img-bg',
+            children: 'a',
+            wheelToZoom: true,
+            pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
+        });
+        lightbox.init();
+    });
+  </script>
+  <script>
+    document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
+      const url = new URL(window.location);
+
+      if (this.checked) {
+          url.searchParams.set("view", "table");
+      } else {
+          url.searchParams.delete("view");
+      }
+
+      window.location = url;
+    });
+  </script>
+  <script src="{% static 'js/actions/init_clipboard.js' %}"></script>
+{% endblock page_js %}

@@ -1,0 +1,26 @@
+{% load i18n %}
+
+<div class="dropdown">
+  <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" class="ti ti-dots-vertical"></i>
+  <ul class="dropdown-menu">
+    <li><span class="dropdown-item"
+              style="cursor: pointer"
+              hx-get="{% url 'mathlab:drafts:drafts-edit' record.uuid %}?view=table"
+              hx-trigger="click"
+              hx-target="#drafts-management-modal"
+              data-bs-toggle="modal"
+              data-bs-target="#drafts-management-modal"
+    ><i class="ti ti-edit"></i> {% translate 'Edit draft' %}</span>
+    </li>
+    <li>
+      <hr class="dropdown-divider">
+    </li>
+    <li><span class="dropdown-item"
+              style="cursor: pointer"
+              hx-delete="{% url 'mathlab:drafts:drafts-delete' record.uuid %}?view={{ request.GET.view }}"
+              hx-trigger="click"
+              hx-confirm="{% translate 'Are you sure?' %}"
+    ><i class="ti ti-trash"></i> {% translate 'Delete draft' %}</span>
+    </li>
+  </ul>
+</div>

@@ -28,8 +28,8 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
     def render_draft(self, record, value):
         return f"""
         <a href="{record.get_draft_url()}"
-           data-pswp-width="2105"
-           data-pswp-height="2000"
+           data-pswp-width="1105"
+           data-pswp-height="880"
            target="_blank">
           <img class="bd-placeholder-img" style="max-width: 230px; max-height: 180px;" src="{record.get_draft_url()}">
         </a>

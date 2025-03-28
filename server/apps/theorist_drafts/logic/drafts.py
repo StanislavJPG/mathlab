@@ -35,8 +35,14 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
         qs = super().get_queryset()
 
         if is_valid_uuid(search_draft):
-            return qs.filter(theorist__drafts_configuration__uuid=search_draft)
-        return qs.filter(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
+            return qs.filter(
+                Q(theorist__drafts_configuration__uuid=search_draft)
+                & (Q(is_public_available=True) | Q(theorist=self.request.theorist))
+            )
+        return qs.filter(
+            Q(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
+            & (Q(is_public_available=True) | Q(theorist=self.request.theorist))
+        )
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()

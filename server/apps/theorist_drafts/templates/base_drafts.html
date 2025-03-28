@@ -42,11 +42,20 @@
 
           <div class="d-flex align-items-center mt-5">
             <label for="id_search_draft" class="text-nowrap me-2">{% translate "Draft's UUID" %}</label>
-            <input id="id_search_draft"
-                   name="search_draft"
-                   class="form-control me-2"
-                   value="{{ request.GET.search_draft }}"
-                   placeholder="{% translate 'Paste UUID here' %}">
+            <div class="input-group me-2">
+              <input id="id_search_draft"
+                     name="search_draft"
+                     class="form-control"
+                     value="{{ request.GET.search_draft }}"
+                     placeholder="{% translate 'Paste UUID here' %}">
+              <a class="btn btn-outline-danger"
+                  data-bs-toggle="tooltip"
+                  title="{% translate 'Fully drop search' %}"
+                  href="{{ request.get }}?view={{ request.GET.view|default:'album' }}"
+                  type="button">
+                <i class="ti ti-xbox-x"></i>
+              </a>
+            </div>
             <button type="button"
                     id="search-btn"
                     onclick="Search()"
@@ -81,6 +90,18 @@
                 <ul class="dropdown-menu">
                   <li><button type="button" class="dropdown-item btn-to-copy" data-clipboard-text="{{ configuration.uuid }}"
                   ><i class="ti ti-link"></i> {% translate 'Copy my draft UUID' %}</button></li>
+                  <li class="mt-2">
+                    <button type="button"
+                            class="dropdown-item"
+                            hx-get="{% url 'mathlab:drafts:drafts-upload' %}?view={{ request.GET.view }}"
+                            hx-target="#drafts-management-modal"
+                            hx-trigger="click"
+                            data-bs-toggle="modal"
+                            data-bs-target="#drafts-management-modal"
+                    >
+                      <i class="ti ti-upload"></i> {% translate 'Upload my own draft' %}
+                    </button>
+                  </li>
                 </ul>
               </div>
             </div>

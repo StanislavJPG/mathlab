@@ -10,6 +10,7 @@ from server.apps.theorist_drafts.logic.drafts_management import (
     TheoristDraftCreateView,
     TheoristDraftDeleteView,
     TheoristDraftUpdateView,
+    TheoristDraftUploadView,
 )
 
 app_name = 'drafts'
@@ -21,5 +22,6 @@ urlpatterns = [
     path('hx/drafts/search/', HXTheoristDraftsSearchView.as_view(), name='drafts-search'),
     path('drafts/create/', TheoristDraftCreateView.as_view(), name='drafts-create'),
     path('drafts/update/<uuid:uuid>/', TheoristDraftUpdateView.as_view(), name='drafts-edit'),
+    path('drafts/upload/', TheoristDraftUploadView.as_view(), name='drafts-upload'),
     path('drafts/delete/<uuid:uuid>/', TheoristDraftDeleteView.as_view(), name='drafts-delete'),
 ]

@@ -14,15 +14,25 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
     created_at = tables.Column(verbose_name=_('Created at'), attrs={'td': {'class': 'w-25'}})
     actions = tables.TemplateColumn(
         template_name='partials/tables/drafts_actions.html',
+        orderable=False,
         verbose_name=_('Actions'),
         attrs={'td': {'style': 'width: 5%; text-align: center; vertical-align: middle;'}},
     )
+
+    def __init__(self, *args, **kwargs):
+        self.theorist_from_url = kwargs.pop('theorist_from_url')
+        super().__init__(*args, **kwargs)
 
     class Meta:
         model = TheoristDrafts
         template_name = 'tables/bootstrap_htmx.html'
         fields = ('label', 'draft', 'description', 'created_at')
         attrs = {**table_attrs.get_default_table_attrs()}
+
+    def before_render(self, request):
+        if request.theorist != self.theorist_from_url:
+            self.columns.hide('actions')
+            self.attrs['class'] = self.attrs['class'].replace('d-block', '')
 
     @mark_safe
     def render_draft(self, record, value):

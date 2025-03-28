@@ -46,3 +46,18 @@ class TheoristDraftUpdateForm(forms.ModelForm):
         self.theorist = kwargs.pop('theorist')
         super().__init__(*args, **kwargs)
         self.instance.theorist = self.theorist
+
+
+class TheoristDraftUploadForm(forms.ModelForm):
+    class Meta:
+        model = TheoristDrafts
+        fields = ('label', 'description', 'draft', 'is_public_available')
+        widgets = {
+            'label': forms.TextInput(attrs={'placeholder': _('Draft label')}),
+            'description': forms.Textarea(attrs={'placeholder': _('Description'), 'rows': 2}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        self.theorist = kwargs.pop('theorist')
+        super().__init__(*args, **kwargs)
+        self.instance.theorist = self.theorist

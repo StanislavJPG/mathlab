@@ -56,7 +56,7 @@ INSTALLED_APPS = [
     'server.common',
     # apps
     'server.apps.carousel.apps.CarouselConfig',
-    'server.apps.chat.apps.ChatConfig',
+    'server.apps.theorist_chat.apps.ChatConfig',
     'server.apps.theorist_drafts.apps.DraftsConfig',
     'server.apps.forum.apps.ForumConfig',
     'server.apps.graphbuilder.apps.GraphbuilderConfig',
@@ -300,4 +300,4 @@ CHANNEL_LAYERS = {
     },
 }
 
-ASGI_APPLICATION = 'server.apps.chat.routing.application'
+ASGI_APPLICATION = 'server.settings.asgi.application'

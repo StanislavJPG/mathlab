@@ -48,24 +48,25 @@
         <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
           {% if user.is_authenticated %}
             <li><a class="dropdown-item"
-                   href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}">Профіль</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:post-create' %}">Задати питання...</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}">{% translate 'Settings' %}</a></li>
+                   href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}"><i class="ti ti-user"></i> {% translate 'Profile' %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:post-create' %}"><i class="ti ti-help-hexagon"></i> {% translate 'Ask question' %}...</a></li>
+            <li><a class="dropdown-item" href=""><i class="ti ti-message"></i> {% translate 'My messages' %}</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="javascript:(0);"
+            <li><a class="dropdown-item text-danger" href="javascript:(0);"
                    hx-post="{% url 'users:logout-view' %}"
                    hx-confirm="{% translate 'Do you want to log out from your account?' %}">
-              Вийти з профілю
+              <i class="ti ti-logout"></i> {% translate 'Log out' %}
             </a>
             </li>
           {% else %}
-            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}?signup=true">Задати питання...</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}?signup=true"><i class="ti ti-help-hexagon"></i> {% translate 'Ask question' %}...</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
-            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}">Увійти</a></li>
+            <li><a class="dropdown-item" href="{% url 'users:base-auth' %}"><i class="ti ti-login-2"></i> {% translate 'Log in' %}</a></li>
           {% endif %}
         </ul>
       </div>

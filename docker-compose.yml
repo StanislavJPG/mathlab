@@ -26,6 +26,17 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
+  daphne:
+    build: .
+    command: daphne server.settings.asgi:application -b 0.0.0.0 -p 8099
+    expose:
+      - 8099
+    ports:
+      - "8099:8099"
+    depends_on:
+      - redis
+      - web
+
   redis:
     image: redis:latest
     restart: always

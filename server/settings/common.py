@@ -31,6 +31,7 @@ DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     # django's
     'django.contrib.admin',
     'django.contrib.auth',

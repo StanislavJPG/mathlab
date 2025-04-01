@@ -92,13 +92,7 @@ class AvatarModelMixin(models.Model):
             f'You need to specify a `get_boringavatars_url` method in your {self.__class__.__name__} model'
         )
 
-    def html_tag_avatar(self, size: tuple[int, int] = None, square: bool = None) -> str:
-        """
-        Generate HTML <img> tag for the avatar.
-        """
-        size = size or self.AVATAR_DEFAULT_SIZE
-        square = square or self.AVATAR_DEFAULT_SQUARE
-
+    def get_current_avatar_url(self, size: tuple[int, int] = None, square: bool = None):
         if self.custom_avatar:
             # https://easy-thumbnails.readthedocs.io/en/latest/usage/?highlight=thumbnailer%20get_thumbnail#get-thumbnailer
             thumbnailer = get_thumbnailer(self.custom_avatar)
@@ -111,6 +105,15 @@ class AvatarModelMixin(models.Model):
             avatar_url = thumb.url
         else:
             avatar_url = self.get_boringavatars_url() + f'?size={size[0]}&square={"true" if square else "false"}'
+        return avatar_url
+
+    def html_tag_avatar(self, size: tuple[int, int] = None, square: bool = None) -> str:
+        """
+        Generate HTML <img> tag for the avatar.
+        """
+        size = size or self.AVATAR_DEFAULT_SIZE
+        square = square or self.AVATAR_DEFAULT_SQUARE
+        avatar_url = self.get_current_avatar_url(size, square)
 
         return (
             f'<img src="{avatar_url}" width="{size[0]}" height="{size[1]}" '

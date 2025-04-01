@@ -17,7 +17,7 @@ from server.common.third_party_apps.boringavatar import (
 
 class TimeStampedModelMixin(models.Model):
     created_at = models.DateTimeField(default=timezone.now, editable=False)
-    modified_at = models.DateTimeField(auto_now=True, editable=False)
+    modified_at = models.DateTimeField(auto_now=True, editable=False, null=True)
 
     class Meta:
         abstract = True

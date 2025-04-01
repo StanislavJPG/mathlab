@@ -1,0 +1,13 @@
+[
+    {"model": "carousel.carousel", "pk": 1,
+      "fields":
+        {
+          "title": "До речі!",
+          "content": "У нас є наш <strong>Mathlab форум!</strong> Приєднуйтесь до ком'юніті, щоб допомагати людям з їхніми математичними запитаннями, або створіть власне!",
+          "button_text": "Приєднатись",
+          "button_url": "http://127.0.0.1:8000/forum/",
+          "background_colors": ["#AAE081", "#C0E9EE"],
+          "modified_at": null
+        }
+    }
+]

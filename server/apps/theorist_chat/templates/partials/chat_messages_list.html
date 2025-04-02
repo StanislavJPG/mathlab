@@ -1,26 +1,33 @@
 {% load i18n static %}
 
-<ul class="list-unstyled" id="msg-list-js">
+<ul class="list-unstyled overflow-auto d-flex flex-column-reverse" style="max-height: 500px;" id="msg-list-js">
   {% for message in messages %}
-    {% if message.sender.uuid != request.theorist.uuid %}
-      <li class="d-flex justify-content-between mb-4">
-        <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
-             class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-        <div class="card w-100">
-          <div class="card-header d-flex justify-content-between p-3">
-            <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
-            <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+      <li class="d-flex justify-content-between mb-4"
+          id="some-sio-{{ forloop.counter }}"
+          {% if forloop.last %}
+            hx-trigger="revealed"
+            hx-get="{{ request.path }}?page={{ page_obj.number|add:1 }}"
+            hx-target="#some-sio"
+            hx-select="#some-sio"
+            hx-swap="afterend"
+          {% endif %}
+      >
+        {% if message.sender.uuid != request.theorist.uuid %}
+          <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
+               class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+          <div class="card w-100">
+            <div class="card-header d-flex justify-content-between p-3">
+              <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+              <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+            </div>
+            <div class="card-body">
+              <p class="mb-0">
+                {{ message.message }}
+              </p>
+            </div>
           </div>
-          <div class="card-body">
-            <p class="mb-0">
-              {{ message.message }}
-            </p>
-          </div>
-        </div>
-      </li>
-    {% else %}
-      <li class="d-flex justify-content-between mb-4">
-        <div class="card w-100">
+        {% else %}
+          <div class="card w-100">
           <div class="card-header d-flex justify-content-between p-3">
             <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
             <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
@@ -33,19 +40,28 @@
         </div>
         <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
              class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+        {% endif %}
       </li>
-    {% endif %}
   {% endfor %}
   {{ room_uuid|json_script:"room-uuid" }}
 </ul>
-<div class="bg-white mb-3">
+<div class="mb-3">
   <div class="form-outline">
     <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4" placeholder="{% translate 'Type here...' %}"></textarea>
-    <label class="form-label" for="chat-message-submit">{% translate 'Your message' %}</label>
-    <button id="chat-message-submit" type="button" class="btn btn-info btn-rounded float-end mt-2">{% translate 'Send' %}</button>
+    <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
+    <button id="chat-message-submit" type="button" class="btn btn-primary btn-rounded float-end mt-2">
+      <i class="ti ti-send"></i>
+      {% translate 'Send' %}
+    </button>
   </div>
 </div>
 
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+      var nestedElement = document.getElementById('msg-list-js');
+      nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
+  });
+</script>
 
 <script>
     const roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);

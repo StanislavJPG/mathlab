@@ -4,7 +4,7 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.utils import dateformat
 
-from server.apps.theorist_chat.forms import TheoristChatForm
+from server.apps.theorist_chat.forms import TheoristMessageForm
 
 
 class TheoristChatConsumer(WebsocketConsumer):
@@ -30,7 +30,7 @@ class TheoristChatConsumer(WebsocketConsumer):
         msg = kwargs.get('message', '')
         user = self.scope['user']
         kwargs.update({'room_uuid': self.room_group_uuid})
-        sanitized_form = TheoristChatForm(data={'message': msg})
+        sanitized_form = TheoristMessageForm(data={'message': msg})
         if sanitized_form.is_valid():
             sanitized_form.save(theorist=user.theorist, **kwargs)
 

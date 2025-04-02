@@ -1,9 +1,12 @@
 {% load static i18n avatars %}
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
-  <h5 class="font-weight-bold mb-3 text-center text-lg-start"><i class="ti ti-mail-opened"></i>
-    {% translate 'Mailboxes' %}
-  </h5>
+  <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
+    <h5 class="font-weight-bold"><i class="ti ti-mail-opened"></i>
+      {% translate 'Mailbox' %}
+    </h5>
+    <button class="btn btn-primary"><i class="ti ti-message-plus"></i></button>
+  </div>
   <div class="card">
     <div class="card-body">
       <ul class="list-unstyled mb-0">
@@ -34,8 +37,12 @@
 
               </div>
               <div class="pt-1">
-                <p class="small text-muted mb-1">Just now</p>
-                <span class="badge bg-danger float-end">1</span>
+                <p class="small text-muted mb-1">
+                  {% if mailbox.messages.exists %}
+                    {{ mailbox.messages.last.chat_convenient_created_at }}
+                  {% endif %}
+                </p>
+{#                <span class="badge bg-danger float-end">1</span>#}
               </div>
             </a>
           </li>
@@ -44,4 +51,6 @@
     </div>
   </div>
 </div>
-<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8"></div>
+<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8" hx-target="this">
+  {% include 'partials/alerts/go_to_chat_alert.html' %}
+</div>

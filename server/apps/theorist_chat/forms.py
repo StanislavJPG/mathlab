@@ -5,7 +5,7 @@ from django_bleach.forms import BleachField
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 
 
-class TheoristChatForm(forms.Form):
+class TheoristMessageForm(forms.Form):
     message = BleachField(widget=forms.Textarea, max_length=500, required=True)
 
     @transaction.atomic

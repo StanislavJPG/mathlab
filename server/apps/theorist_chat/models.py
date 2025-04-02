@@ -1,6 +1,9 @@
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.utils import timezone
+from django.utils.translation import gettext_lazy as _
+
 from django_lifecycle import LifecycleModel
 
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
@@ -49,6 +52,19 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
         verbose_name = 'Theorist Message'
         verbose_name_plural = 'Theorist Messages'
+
+    @property
+    def chat_convenient_created_at(self):
+        t = timezone.now() - self.created_at
+        sent = t.seconds
+        if sent <= 30:
+            return _('Just now')
+        elif 60 <= sent <= 300:
+            return _('Couple minutes ago')
+        elif 300 < sent <= 400:
+            return _('5 minutes ago')
+        else:
+            return self.created_at

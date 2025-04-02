@@ -1,16 +1,16 @@
 {% load i18n static %}
 
-<ul class="list-unstyled overflow-auto d-flex flex-column-reverse" style="max-height: 500px;" id="msg-list-js">
-  {% for message in messages %}
+<ul class="list-unstyled overflow-auto" style="max-height: 500px;" id="msg-list-js">
+  {% if messages.exists %}
+    {% for message in messages %}
       <li class="d-flex justify-content-between mb-4"
-          id="some-sio-{{ forloop.counter }}"
-          {% if forloop.last %}
-            hx-trigger="revealed"
-            hx-get="{{ request.path }}?page={{ page_obj.number|add:1 }}"
-            hx-target="#some-sio"
-            hx-select="#some-sio"
-            hx-swap="afterend"
-          {% endif %}
+  {#          {% if forloop.last %}#}
+  {#            hx-trigger="revealed"#}
+  {#            hx-get="{{ request.path }}?page={{ page_obj.number|add:1 }}"#}
+  {#            hx-target="#some-sio"#}
+  {#            hx-select="#some-sio"#}
+  {#            hx-swap="afterend"#}
+  {#          {% endif %}#}
       >
         {% if message.sender.uuid != request.theorist.uuid %}
           <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
@@ -42,7 +42,10 @@
              class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
         {% endif %}
       </li>
-  {% endfor %}
+    {% endfor %}
+  {% else %}
+    {% include 'partials/alerts/empty_chat_alert.html' %}
+  {% endif %}
   {{ room_uuid|json_script:"room-uuid" }}
 </ul>
 <div class="mb-3">
@@ -64,28 +67,34 @@
 </script>
 
 <script>
-    const roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
-    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-    const protocol = isDevelopment ? 'ws://' : 'wss://';
-    const chatSocket = new WebSocket(
-        protocol
-        + window.location.hostname
-        + (isDevelopment ? ':8099' : '')
-        + '/ws/chat/'
-        + roomUUID
-        + '/'
-    );
+    var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
+    if (typeof roomUUID !== 'undefined') {
+        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const protocol = isDevelopment ? 'ws://' : 'wss://';
+        const chatSocket = new WebSocket(
+            protocol
+            + window.location.hostname
+            + (isDevelopment ? ':8099' : '')
+            + '/ws/chat/'
+            + roomUUID
+            + '/'
+        );
 
-    chatSocket.onmessage = function (e) {
-        const data = JSON.parse(e.data);
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+            
+            const emptyLabel = document.getElementById('empty-label-js');
+            if (emptyLabel) {
+              emptyLabel.remove()
+            }
 
-        const messagesList = document.getElementById('msg-list-js');
+            const messagesList = document.getElementById('msg-list-js');
 
-        const newMessageItem = document.createElement('li');
-        newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
+            const newMessageItem = document.createElement('li');
+            newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
 
-        const messageTemplate = (data, isSender) => {
-            return `
+            const messageTemplate = (data, isSender) => {
+                return `
         ${!isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">` : ''}
         <div class="card w-100">
             <div class="card-header d-flex justify-content-between p-3">
@@ -98,33 +107,34 @@
         </div>
         ${isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">` : ''}
     `;
+            };
+
+            newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
+
+            messagesList.appendChild(newMessageItem);
+
+            messagesList.scrollTop = messagesList.scrollHeight;
         };
 
-        newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
 
-        messagesList.appendChild(newMessageItem);
-
-        messagesList.scrollTop = messagesList.scrollHeight;
-    };
-
-    chatSocket.onclose = function (e) {
-        console.error('Chat socket closed unexpectedly');
-    };
-
-    document.querySelector('#chat-message-input').focus();
-        document.querySelector('#chat-message-input').onkeyup = function(e) {
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
             if (e.key === 'Enter') {  // enter, return
                 document.querySelector('#chat-message-submit').click();
             }
         };
 
-    document.querySelector('#chat-message-submit').onclick = function (e) {
-        const messageInputDom = document.querySelector('#chat-message-input');
-        const message = messageInputDom.value;
-        chatSocket.send(JSON.stringify({
-            'message': message
-        }));
-        messageInputDom.value = '';
-    };
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    }
 </script>
 

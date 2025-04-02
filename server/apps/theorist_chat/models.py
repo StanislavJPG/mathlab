@@ -52,7 +52,7 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
 
     class Meta:
-        ordering = ('-created_at',)
+        ordering = ('created_at',)
         verbose_name = 'Theorist Message'
         verbose_name_plural = 'Theorist Messages'
 

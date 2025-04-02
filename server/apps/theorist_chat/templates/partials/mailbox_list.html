@@ -1,56 +1,62 @@
 {% load static i18n avatars %}
 
-<div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
-  <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
-    <h5 class="font-weight-bold"><i class="ti ti-mail-opened"></i>
-      {% translate 'Mailbox' %}
-    </h5>
-    <button class="btn btn-primary"><i class="ti ti-message-plus"></i></button>
-  </div>
-  <div class="card">
-    <div class="card-body">
-      <ul class="list-unstyled mb-0">
-        {% for mailbox in mailboxes %}
-          <li class="p-2 border-bottom bg-body-tertiary">
-            <a href="javascript:(0);"
-               hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
-               hx-trigger="click"
-               hx-target="#chat-list-js"
-               class="d-flex justify-content-between text-decoration-none"
-            >
-              <div class="d-flex flex-row">
-                {% if mailbox.first_member.uuid == request.theorist.uuid %}
-                  <img src="{{ mailbox.second_member.get_current_avatar_url }}" alt="avatar"
-                       class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
-                  <div class="pt-1">
-                    <p class="fw-bold mb-0">{{ mailbox.second_member.full_name }}</p>
-                    <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:30 }}</p>
-                  </div>
-                {% else %}
-                  <img src="{{ mailbox.first_member.get_current_avatar_url }}" alt="avatar"
-                       class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
-                  <div class="pt-1">
-                    <p class="fw-bold mb-0">{{ mailbox.first_member.full_name }}</p>
-                    <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:30 }}</p>
-                  </div>
-                {% endif %}
-
-              </div>
-              <div class="pt-1">
-                <p class="small text-muted mb-1">
-                  {% if mailbox.messages.exists %}
-                    {{ mailbox.messages.last.chat_convenient_created_at }}
+<div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0"
+{#     hx-get="{% url 'forum:theorist_chat:hx-mailbox' %}"#}
+{#     hx-target="this"#}
+{#     hx-trigger="click from:#chat-list-js"#}
+>
+  {% block mailbox %}
+    <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
+      <h5 class="font-weight-bold"><i class="ti ti-mail-opened"></i>
+        {% translate 'Mailbox' %}
+      </h5>
+      <button class="btn btn-primary"><i class="ti ti-message-plus"></i></button>
+    </div>
+    <div class="card">
+      <div class="card-body">
+        <ul class="list-unstyled mb-0">
+          {% for mailbox in mailboxes %}
+            <li class="p-2 border bg-body-tertiary rounded mb-1">
+              <a href="javascript:(0);"
+                 hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
+                 hx-trigger="click"
+                 hx-target="#chat-list-js"
+                 class="d-flex justify-content-between text-decoration-none"
+              >
+                <div class="d-flex flex-row">
+                  {% if mailbox.first_member.uuid == request.theorist.uuid %}
+                    <img src="{{ mailbox.second_member.get_current_avatar_url }}" alt="avatar"
+                         class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                    <div class="pt-1">
+                      <p class="fw-bold mb-0">{{ mailbox.second_member.full_name }}</p>
+                      <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:30 }}</p>
+                    </div>
+                  {% else %}
+                    <img src="{{ mailbox.first_member.get_current_avatar_url }}" alt="avatar"
+                         class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
+                    <div class="pt-1">
+                      <p class="fw-bold mb-0">{{ mailbox.first_member.full_name }}</p>
+                      <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:30 }}</p>
+                    </div>
                   {% endif %}
-                </p>
-{#                <span class="badge bg-danger float-end">1</span>#}
-              </div>
-            </a>
-          </li>
-        {% endfor %}
-      </ul>
+
+                </div>
+                <div class="pt-1">
+                  <p class="small text-muted mb-1">
+                    {% if mailbox.messages.exists %}
+                      {{ mailbox.messages.last.chat_convenient_created_at }}
+                    {% endif %}
+                  </p>
+  {#                <span class="badge bg-danger float-end">1</span>#}
+                </div>
+              </a>
+            </li>
+          {% endfor %}
+        </ul>
+      </div>
     </div>
   </div>
-</div>
-<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8" hx-target="this">
+{% endblock mailbox %}
+<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4 d-flex flex-column justify-content-between" hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>

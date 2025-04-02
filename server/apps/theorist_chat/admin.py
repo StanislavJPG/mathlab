@@ -1,6 +1,11 @@
 from django.contrib import admin
 
-from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
+from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage, TheoristChatGroupConfiguration
+
+
+@admin.register(TheoristChatGroupConfiguration)
+class TheoristChatGroupAdmin(admin.ModelAdmin):
+    list_display = ('id', 'uuid', 'theorist', 'is_chats_available')
 
 
 @admin.register(TheoristChatRoom)

@@ -1,0 +1,109 @@
+{% load i18n static %}
+
+<ul class="list-unstyled" id="msg-list-js">
+  {% for message in messages %}
+    {% if message.sender.uuid != request.theorist.uuid %}
+      <li class="d-flex justify-content-between mb-4">
+        <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
+             class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+        <div class="card">
+          <div class="card-header d-flex justify-content-between p-3">
+            <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+            <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+          </div>
+          <div class="card-body">
+            <p class="mb-0">
+              {{ message.message }}
+            </p>
+          </div>
+        </div>
+      </li>
+    {% else %}
+      <li class="d-flex justify-content-between mb-4">
+        <div class="card w-100">
+          <div class="card-header d-flex justify-content-between p-3">
+            <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+            <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+          </div>
+          <div class="card-body">
+            <p class="mb-0">
+              {{ message.message }}
+            </p>
+          </div>
+        </div>
+        <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
+             class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+      </li>
+    {% endif %}
+  {% endfor %}
+  {{ room_uuid|json_script:"room-uuid" }}
+</ul>
+<div class="bg-white mb-3">
+  <div class="form-outline">
+    <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4"></textarea>
+    <label class="form-label" for="textAreaExample2">Message</label>
+  </div>
+</div>
+<button id="chat-message-submit" type="button" class="btn btn-info btn-rounded float-end">
+  Send
+</button>
+
+
+<script>
+    const roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
+    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+    const protocol = isDevelopment ? 'ws://' : 'wss://';
+    const chatSocket = new WebSocket(
+        protocol
+        + window.location.hostname
+        + (isDevelopment ? ':8099' : '')
+        + '/ws/chat/'
+        + roomUUID
+        + '/'
+    );
+
+    chatSocket.onmessage = function (e) {
+        const data = JSON.parse(e.data);
+
+        const messagesList = document.getElementById('msg-list-js');
+
+        const newMessageItem = document.createElement('li');
+        newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
+
+        const messageTemplate = (data, isSender) => {
+            return `
+        ${!isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">` : ''}
+        <div class="card w-100">
+            <div class="card-header d-flex justify-content-between p-3">
+                <p class="fw-bold mb-0">${data.theorist_full_name}</p>
+                <p class="text-muted small mb-0"><i class="far fa-clock"></i> ${data.theorist_created_at}</p>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">${data.message}</p>
+            </div>
+        </div>
+        ${isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">` : ''}
+    `;
+        };
+
+        newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
+
+        messagesList.appendChild(newMessageItem);
+
+        messagesList.scrollTop = messagesList.scrollHeight;
+    };
+
+    chatSocket.onclose = function (e) {
+        console.error('Chat socket closed unexpectedly');
+    };
+
+    document.querySelector('#chat-message-submit').onclick = function (e) {
+        const messageInputDom = document.querySelector('#chat-message-input');
+        const message = messageInputDom.value;
+        chatSocket.send(JSON.stringify({
+            'message': message
+        }));
+        messageInputDom.value = '';
+    };
+</script>
+

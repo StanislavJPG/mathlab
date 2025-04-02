@@ -6,45 +6,10 @@
 {% endblock page_head %}
 
 {% block body %}
-  <textarea id="chat-log" cols="100" rows="20"></textarea><br>
-  <input id="chat-message-input" type="text" size="100"><br>
-  <img alt="avatar" width="43" height="43" class="rounded-circle" id="msg-avatar-1">
-  <input id="chat-message-submit" type="button" value="Send">
-  {{ room_uuid|json_script:"room-uuid" }}
+  <section>
+    <div class="container py-5">
+      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load">
+      </div>
+    </div>
+  </section>
 {% endblock body %}
-
-{% block page_js %}
-  <script>
-      const roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
-      const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-      const protocol = isDevelopment ? 'ws://' : 'wss://';
-      const chatSocket = new WebSocket(
-        protocol
-        + window.location.hostname
-        + (isDevelopment ? ':8099' : '')
-        + '/ws/chat/'
-        + roomUUID
-        + '/'
-      );
-
-      chatSocket.onmessage = function (e) {
-          const data = JSON.parse(e.data);
-          console.log(e.msg_avatar_url);
-          document.getElementById("msg-avatar-1").setAttribute("src", data.msg_avatar_url);
-          document.querySelector('#chat-log').value += (data.message + '\n');
-      };
-
-      chatSocket.onclose = function (e) {
-          console.error('Chat socket closed unexpectedly');
-      };
-
-      document.querySelector('#chat-message-submit').onclick = function (e) {
-          const messageInputDom = document.querySelector('#chat-message-input');
-          const message = messageInputDom.value;
-          chatSocket.send(JSON.stringify({
-              'message': message
-          }));
-          messageInputDom.value = '';
-      };
-  </script>
-{% endblock page_js %}

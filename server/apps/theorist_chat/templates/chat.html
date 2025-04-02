@@ -8,8 +8,7 @@
 {% block body %}
   <section>
     <div class="container py-5">
-      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load">
-      </div>
+      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load"></div>
     </div>
   </section>
 {% endblock body %}

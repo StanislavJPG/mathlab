@@ -47,6 +47,7 @@ INSTALLED_APPS = [
     'channels',
     'widget_tweaks',
     'tinymce',
+    'django_bleach',
     'easy_thumbnails',
     'hitcount',
     'django_countries',

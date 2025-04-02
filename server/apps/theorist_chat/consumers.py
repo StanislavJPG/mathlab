@@ -4,6 +4,8 @@ from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.utils import dateformat
 
+from server.apps.theorist_chat.forms import TheoristChatForm
+
 
 class TheoristChatConsumer(WebsocketConsumer):
     def connect(self):
@@ -24,11 +26,20 @@ class TheoristChatConsumer(WebsocketConsumer):
         }
         return response
 
+    def _save_data_to_db(self, **kwargs):
+        msg = kwargs.get('message', '')
+        user = self.scope['user']
+        kwargs.update({'room_uuid': self.room_group_uuid})
+        sanitized_form = TheoristChatForm(data={'message': msg})
+        if sanitized_form.is_valid():
+            sanitized_form.save(theorist=user.theorist, **kwargs)
+
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         response = self._get_context()
         response.update({'message': message})
+        self._save_data_to_db(**response)
 
         async_to_sync(self.channel_layer.group_send)(
             self.room_group_uuid, {'type': 'chat_message', 'message': response}

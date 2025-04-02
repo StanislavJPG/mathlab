@@ -6,7 +6,7 @@
       <li class="d-flex justify-content-between mb-4">
         <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}" src="{{ message.sender.get_current_avatar_url }}"
              class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-        <div class="card">
+        <div class="card w-100">
           <div class="card-header d-flex justify-content-between p-3">
             <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
             <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
@@ -40,13 +40,11 @@
 </ul>
 <div class="bg-white mb-3">
   <div class="form-outline">
-    <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4"></textarea>
-    <label class="form-label" for="textAreaExample2">Message</label>
+    <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4" placeholder="{% translate 'Type here...' %}"></textarea>
+    <label class="form-label" for="chat-message-submit">{% translate 'Your message' %}</label>
+    <button id="chat-message-submit" type="button" class="btn btn-info btn-rounded float-end mt-2">{% translate 'Send' %}</button>
   </div>
 </div>
-<button id="chat-message-submit" type="button" class="btn btn-info btn-rounded float-end">
-  Send
-</button>
 
 
 <script>
@@ -96,6 +94,13 @@
     chatSocket.onclose = function (e) {
         console.error('Chat socket closed unexpectedly');
     };
+
+    document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function(e) {
+            if (e.key === 'Enter') {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
 
     document.querySelector('#chat-message-submit').onclick = function (e) {
         const messageInputDom = document.querySelector('#chat-message-input');

@@ -3,8 +3,10 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView, ListView
+from django_filters.views import FilterView
 from render_block import render_block_to_string
 
+from server.apps.theorist_chat.filters import MailBoxFilter
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -14,11 +16,12 @@ class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
 
 
-class MailBoxListView(LoginRequiredMixin, HXViewMixin, ListView):
+class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):
     model = TheoristChatRoom
+    filterset_class = MailBoxFilter
     context_object_name = 'mailboxes'
     template_name = 'partials/mailbox_list.html'
-    paginate_by = 7
+    # paginate_by = 7
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -27,6 +30,11 @@ class MailBoxListView(LoginRequiredMixin, HXViewMixin, ListView):
             .get_queryset()
             .filter(Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist))
         )
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['theorist'] = self.request.theorist
+        return kwargs
 
 
 class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):

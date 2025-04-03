@@ -33,7 +33,7 @@ class MailBoxCreateForm(forms.ModelForm):
 
         self.fields['second_member'].queryset = Theorist.objects.filter(
             ~Q(uuid=self.first_member.uuid),
-            chat_group__is_chats_available=True,
+            chat_group__is_chats_available=True,  # todo: fix
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'

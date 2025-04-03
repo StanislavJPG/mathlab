@@ -1,9 +1,9 @@
-{% load static i18n avatars %}
+{% load static i18n avatars widget_tweaks %}
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0"
-{#     hx-get="{% url 'forum:theorist_chat:hx-mailbox' %}"#}
-{#     hx-target="this"#}
-{#     hx-trigger="click from:#chat-list-js"#}
+    {#     hx-get="{% url 'forum:theorist_chat:hx-mailbox' %}"#}
+    {#     hx-target="this"#}
+    {#     hx-trigger="click from:#chat-list-js"#}
 >
   {% block mailbox %}
     <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
@@ -22,7 +22,21 @@
     </div>
     <div class="card">
       <div class="card-body">
-        <ul class="list-unstyled mb-0">
+        <div class="d-flex flex-row align-items-center justify-content-between">
+          <span class="small text-muted">{% translate 'Last chats' %}:</span>
+          <form hx-get="{{ request.path }}"
+                hx-target="#mailboxes-list-js"
+                hx-select="#mailboxes-list-js"
+                hx-trigger="input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
+            <div class="input-group">
+              {% render_field filter.form.username class="form-control" %}
+              <button class="btn btn-outline-danger" type="reset">
+                <i class="ti ti-xbox-x"></i>
+              </button>
+            </div>
+          </form>
+        </div>
+        <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
           {% for mailbox in mailboxes %}
             <li class="p-2 border bg-body-tertiary rounded mb-1 mailbox" id="mailbox-{{ mailbox.uuid }}">
               <a href="javascript:(0);"
@@ -56,7 +70,7 @@
                       {{ mailbox.messages.last.chat_convenient_created_at }}
                     {% endif %}
                   </p>
-  {#                <span class="badge bg-danger float-end">1</span>#}
+                  {#                <span class="badge bg-danger float-end">1</span>#}
                 </div>
               </a>
             </li>
@@ -64,9 +78,10 @@
         </ul>
       </div>
     </div>
-  </div>
-{% endblock mailbox %}
+    </div>
+  {% endblock mailbox %}
 
-<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4" hx-target="this">
+<div id="chat-list-js" style="height: 900px" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4"
+     hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>

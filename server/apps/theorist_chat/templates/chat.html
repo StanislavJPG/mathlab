@@ -2,7 +2,7 @@
 {% load i18n static %}
 
 {% block page_head %}
-  <title>Chat Room</title>
+  <title>Mathlab | {% translate 'Mailbox' %}</title>
 {% endblock page_head %}
 
 {% block body %}
@@ -11,7 +11,7 @@
       <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load"></div>
     </div>
   </section>
-  
+
   <div class="modal fade"
        id="chat-create-modal"
        tabindex="-1"

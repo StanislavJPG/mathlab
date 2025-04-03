@@ -10,7 +10,15 @@
       <h5 class="font-weight-bold"><i class="ti ti-mail-opened"></i>
         {% translate 'Mailbox' %}
       </h5>
-      <button class="btn btn-primary"><i class="ti ti-message-plus"></i></button>
+      <button class="btn btn-primary"
+              hx-get="{% url 'forum:theorist_chat:mailbox-create' %}"
+              hx-trigger="click"
+              hx-target="#chat-create-modal"
+              data-bs-toggle="modal"
+              data-bs-target="#chat-create-modal"
+      >
+        <i class="ti ti-message-plus"></i>
+      </button>
     </div>
     <div class="card">
       <div class="card-body">

@@ -105,7 +105,7 @@ class Migration(migrations.Migration):
             options={
                 'verbose_name': 'Theorist Message',
                 'verbose_name_plural': 'Theorist Messages',
-                'ordering': ('-created_at',),
+                'ordering': ('created_at',),
             },
             bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
         ),

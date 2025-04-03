@@ -48,13 +48,13 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
 
-    def __str__(self):
-        return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
-
     class Meta:
         ordering = ('created_at',)
         verbose_name = 'Theorist Message'
         verbose_name_plural = 'Theorist Messages'
+
+    def __str__(self):
+        return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
 
     @property
     def chat_convenient_created_at(self):

@@ -49,6 +49,11 @@ class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['room_uuid'] = self.kwargs['room_uuid']
+
+        room = TheoristChatRoom.objects.get(uuid=self.kwargs['room_uuid'])
+        first_member = room.first_member
+        second_member = room.second_member
+        context['receiver'] = first_member if first_member != self.request.theorist else second_member
         return context
 
 

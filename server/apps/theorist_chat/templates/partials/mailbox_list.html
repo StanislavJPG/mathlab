@@ -16,11 +16,12 @@
       <div class="card-body">
         <ul class="list-unstyled mb-0">
           {% for mailbox in mailboxes %}
-            <li class="p-2 border bg-body-tertiary rounded mb-1">
+            <li class="p-2 border bg-body-tertiary rounded mb-1 mailbox" id="mailbox-{{ mailbox.uuid }}">
               <a href="javascript:(0);"
                  hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
                  hx-trigger="click"
                  hx-target="#chat-list-js"
+                 _="on click remove .bg-secondary-subtle from .mailbox add .bg-secondary-subtle to #mailbox-{{ mailbox.uuid }}"
                  class="d-flex justify-content-between text-decoration-none"
               >
                 <div class="d-flex flex-row">
@@ -57,6 +58,7 @@
     </div>
   </div>
 {% endblock mailbox %}
-<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4 d-flex flex-column justify-content-between" hx-target="this">
+
+<div id="chat-list-js" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4" hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>

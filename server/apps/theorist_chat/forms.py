@@ -32,8 +32,8 @@ class MailBoxCreateForm(forms.ModelForm):
         self.instance.first_member = self.first_member
 
         self.fields['second_member'].queryset = Theorist.objects.filter(
-            ~Q(uuid=self.first_member.uuid),
-            chat_group__is_chats_available=True,  # todo: fix
+            (~Q(uuid=self.first_member.uuid) & Q(chat_group__is_chats_available=True)),  # TODO: Set only for friends
+            (Q(settings__is_able_to_get_messages=True) | Q(settings__is_able_to_get_messages=True)),
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'

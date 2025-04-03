@@ -21,6 +21,16 @@ class MailBoxCreateView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, Crea
     form_invalid_message = _('Some error happens. Please, try again later.')
     success_url = reverse_lazy('forum:theorist_chat:chat-base-page')
 
+    def get_queryset(self):
+        return (
+            super()
+            .get_queryset()
+            .filter(
+                Q(first_member__settings__is_able_to_get_messages=True)
+                | Q(second_member__settings__is_able_to_get_messages=True)
+            )
+        )
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['theorist'] = self.request.theorist

@@ -78,6 +78,7 @@ class HXMailBoxView(LoginRequiredMixin, HXViewMixin, View):
 
         context = {
             'mailboxes': p_objs.page(1).object_list,
+            'room_uuid': self.kwargs['room_uuid'],
         }
 
         rendered_block = render_block_to_string(

@@ -32,14 +32,9 @@
           </form>
         </div>
         {% block mailbox %}
-          <ul class="list-unstyled mb-0 mt-3"
-              hx-get="{% url 'forum:theorist_chat:hx-mailbox' %}"
-              hx-target="this"
-              hx-trigger="click from:#chat-list-js delay:0.5s"
-              id="mailboxes-list-js"
-          >
+          <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
             {% for mailbox in mailboxes %}
-              <li class="p-2 border bg-body-tertiary rounded mb-1 mailbox" id="mailbox-{{ mailbox.uuid }}">
+              <li class="p-2 border {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox" id="mailbox-{{ mailbox.uuid }}">
                 <a href="javascript:(0);"
                    hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
                    hx-trigger="click"
@@ -82,7 +77,7 @@
     </div>
     </div>
 
-<div id="chat-list-js" style="height: 750px" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4"
+<div id="chat-list-js" style="height: 747px" class="col-md-6 col-lg-7 col-xl-8 bg-body-tertiary rounded p-4"
      hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>

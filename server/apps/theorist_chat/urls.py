@@ -10,7 +10,7 @@ urlpatterns = [
     path('mailbox/', ChatView.as_view(), name='chat-base-page'),
     path('hx/mailbox/list/', MailBoxListView.as_view(), name='hx-mailbox-list'),
     path('hx/chat/<uuid:room_uuid>/', ChatMessagesListView.as_view(), name='hx-chat-list'),
-    path('hx/mailbox/', HXMailBoxView.as_view(), name='hx-mailbox'),
+    path('hx/mailbox/<uuid:room_uuid>/', HXMailBoxView.as_view(), name='hx-mailbox'),
     # Management views
     path('mailbox/create/', MailBoxCreateView.as_view(), name='mailbox-create'),
     path('mailbox/<uuid:uuid>/delete/', MailBoxDeleteView.as_view(), name='mailbox-delete'),

@@ -90,7 +90,12 @@
       <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4"
                 placeholder="{% translate 'Type here...' %}"></textarea>
       <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
-      <button id="chat-message-submit" type="button" class="btn btn-primary btn-rounded float-end mt-2">
+      <button id="chat-message-submit" 
+              type="button" 
+              hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
+              hx-target="#mailboxes-list-js"
+              hx-trigger="click from:#chat-list-js > #chat-message-submit delay:0.5s"
+              class="btn btn-primary btn-rounded float-end mt-2">
         <i class="ti ti-send"></i>
         {% translate 'Send' %}
       </button>

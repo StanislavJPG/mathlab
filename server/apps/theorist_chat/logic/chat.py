@@ -1,4 +1,5 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.paginator import Paginator
 from django.db.models import Q
 from django.http import HttpResponse
 from django.views import View
@@ -21,7 +22,7 @@ class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):
     filterset_class = MailBoxFilter
     context_object_name = 'mailboxes'
     template_name = 'partials/mailbox_list.html'
-    # paginate_by = 7
+    paginate_by = 7
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -29,7 +30,7 @@ class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):
             super()
             .get_queryset()
             .filter(Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist))
-        )
+        ).order_by_last_sms_sent_relevancy()
 
     def get_filterset_kwargs(self, filterset_class):
         kwargs = super().get_filterset_kwargs(filterset_class)
@@ -70,12 +71,13 @@ class HXMailBoxView(LoginRequiredMixin, HXViewMixin, View):
 
     def get(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest
-        obj = TheoristChatRoom.objects.filter(
+        objs = TheoristChatRoom.objects.filter(
             Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist)
-        )
+        ).order_by_last_sms_sent_relevancy()
+        p_objs = Paginator(objs, 7)
 
         context = {
-            'mailboxes': obj,
+            'mailboxes': p_objs.page(1).object_list,
         }
 
         rendered_block = render_block_to_string(

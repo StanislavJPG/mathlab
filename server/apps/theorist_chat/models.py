@@ -4,8 +4,9 @@ from django.db.models import UniqueConstraint
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
-from django_lifecycle import LifecycleModel
+from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
 
+from server.apps.theorist_chat.managers import TheoristChatRoomQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
@@ -29,6 +30,9 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     second_member = models.ForeignKey(
         'theorist.Theorist', related_name='chat_rooms_received', null=True, on_delete=models.SET_NULL
     )
+    last_sms_sent_at = models.DateTimeField(null=True)
+
+    objects = TheoristChatRoomQuerySet.as_manager()
 
     def __str__(self):
         return f'{self.first_member.full_name} and {self.second_member.full_name} | {self.__class__.__name__} | id - {self.id}'
@@ -55,6 +59,11 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def __str__(self):
         return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    @hook(BEFORE_CREATE)
+    def before_create(self):
+        self.room.last_sms_sent_at = timezone.now()
+        self.room.save(update_fields=['last_sms_sent_at'])
 
     @property
     def chat_convenient_created_at(self):

@@ -69,6 +69,7 @@ class Migration(migrations.Migration):
                         to='theorist.theorist',
                     ),
                 ),
+                ('last_sms_sent_at', models.DateTimeField(null=True)),
             ],
             options={
                 'verbose_name': 'Theorist Chat Room',

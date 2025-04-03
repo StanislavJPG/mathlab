@@ -1,6 +1,7 @@
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
+from django.utils.timesince import timesince
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 
@@ -69,6 +70,11 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def after_save(self):
         self.full_name_slug = slugify(self.full_name)
         self.save(update_fields=['full_name_slug'], skip_hooks=True)
+
+    @property
+    def convenient_last_activity(self):
+        last_activity_label = _('Last activity %s ago') % timesince(self.last_activity)
+        return last_activity_label
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly

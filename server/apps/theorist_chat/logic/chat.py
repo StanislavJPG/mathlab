@@ -42,7 +42,7 @@ class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristMessage
     template_name = 'partials/chat_messages_list.html'
     context_object_name = 'messages'
-    # paginate_by = 5
+    paginate_by = 10
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -54,6 +54,18 @@ class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
                 Q(room__first_member=self.request.theorist) | Q(room__second_member=self.request.theorist),
             )
         )
+
+    def paginate_queryset(self, queryset, page_size):
+        paginate_queryset = super().paginate_queryset(queryset, page_size)
+        paginator = paginate_queryset[0]
+        vanilla_qs = self.get_queryset()
+
+        last_page = self.get_paginator(vanilla_qs, self.get_paginate_by(vanilla_qs)).num_pages
+        page_kwarg = self.kwargs.get(self.page_kwarg) or self.request.GET.get(self.page_kwarg) or last_page
+
+        # Use last page to paginate by ascending by scrolling on top
+        page = paginator.page(page_kwarg)
+        return paginator, page, page.object_list, page.has_other_pages()
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -75,10 +87,12 @@ class HXMailBoxView(LoginRequiredMixin, HXViewMixin, View):
             Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist)
         ).order_by_last_sms_sent_relevancy()
         p_objs = Paginator(objs, 7)
+        page_param = self.request.GET.get('page') or 1
 
         context = {
-            'mailboxes': p_objs.page(1).object_list,
+            'mailboxes': p_objs.page(page_param).object_list,
             'room_uuid': self.kwargs['room_uuid'],
+            'page_obj': p_objs.page(page_param),
         }
 
         rendered_block = render_block_to_string(

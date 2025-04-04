@@ -37,49 +37,52 @@
 <div class="d-flex flex-column" style="height: 88% !important;">
   <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js">
     {% if messages.exists %}
-      {% for message in messages %}
-        <li class="d-flex justify-content-between mb-4"
-            {#          {% if forloop.last %}#}
-            {#            hx-trigger="revealed"#}
-            {#            hx-get="{{ request.path }}?page={{ page_obj.number|add:1 }}"#}
-            {#            hx-target="#some-sio"#}
-            {#            hx-select="#some-sio"#}
-            {#            hx-swap="afterend"#}
-            {#          {% endif %}#}
-        >
-          {% if message.sender.uuid != request.theorist.uuid %}
-            <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                 src="{{ message.sender.get_current_avatar_url }}"
-                 class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
-            <div class="card w-100">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+      <div id="paginated-msg-list-js" data-skip-scroll>
+        {% for message in messages %}
+          <li class="d-flex justify-content-between mb-4"
+              id="scroll-anchor"
+            {% if page_obj.number > 1 and forloop.first %}
+              hx-trigger="revealed"
+              hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
+              hx-target="#paginated-msg-list-js"
+              hx-select="#paginated-msg-list-js"
+              hx-swap="beforebegin"
+            {% endif %}
+          >
+            {% if message.sender.uuid != request.theorist.uuid %}
+              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                   src="{{ message.sender.get_current_avatar_url }}"
+                   class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ message.message }}
+                  </p>
+                </div>
               </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  {{ message.message }}
-                </p>
+            {% else %}
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ message.message }}
+                  </p>
+                </div>
               </div>
-            </div>
-          {% else %}
-            <div class="card w-100">
-              <div class="card-header d-flex justify-content-between p-3">
-                <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
-                <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
-              </div>
-              <div class="card-body">
-                <p class="mb-0">
-                  {{ message.message }}
-                </p>
-              </div>
-            </div>
-            <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                 src="{{ message.sender.get_current_avatar_url }}"
-                 class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
-          {% endif %}
-        </li>
-      {% endfor %}
+              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                   src="{{ message.sender.get_current_avatar_url }}"
+                   class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+            {% endif %}
+          </li>
+        {% endfor %}
+      </div>
     {% else %}
       {% include 'partials/alerts/empty_chat_alert.html' %}
     {% endif %}
@@ -94,7 +97,7 @@
               type="button" 
               hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
               hx-target="#mailboxes-list-js"
-              hx-trigger="click from:#chat-list-js > #chat-message-submit delay:0.5s"
+              hx-trigger="click from:#chat-message-submit delay:0.5s"
               class="btn btn-primary btn-rounded float-end mt-2">
         <i class="ti ti-send"></i>
         {% translate 'Send' %}
@@ -104,10 +107,34 @@
 </div>
 
 <script>
-    document.addEventListener('htmx:afterSettle', function () {
+  let previousScrollHeight = null;
+  let msgList = document.querySelector('#msg-list-js');
+
+  document.body.addEventListener('htmx:beforeSwap', function (event) {
+    if (event.target.id === 'paginated-msg-list-js') {
+      previousScrollHeight = msgList.scrollHeight;
+    }
+  });
+
+  document.body.addEventListener('htmx:afterSwap', function (event) {
+    if (event.target.id === 'paginated-msg-list-js' && previousScrollHeight !== null) {
+      const newScrollHeight = msgList.scrollHeight;
+      const scrollDiff = newScrollHeight - previousScrollHeight;
+      msgList.scrollTop += scrollDiff;
+      previousScrollHeight = null;
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+    const target = event.detail.elt;
+    if (!target.hasAttribute('data-skip-scroll')) {
         var nestedElement = document.getElementById('msg-list-js');
         nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
-    });
+    }
+  });
 </script>
 
 <script>

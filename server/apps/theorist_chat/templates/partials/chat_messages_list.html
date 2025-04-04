@@ -113,7 +113,7 @@
 <script>
     var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
     if (typeof roomUUID !== 'undefined') {
-        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
+        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.0.110';
         const protocol = isDevelopment ? 'ws://' : 'wss://';
         const chatSocket = new WebSocket(
             protocol

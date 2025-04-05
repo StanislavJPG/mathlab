@@ -31,6 +31,7 @@ DEFAULT_ADMIN_TOKEN = os.getenv('DEFAULT_ADMIN_TOKEN')
 # Application definition
 
 INSTALLED_APPS = [
+    'daphne',
     # django's
     'django.contrib.admin',
     'django.contrib.auth',
@@ -46,6 +47,7 @@ INSTALLED_APPS = [
     'channels',
     'widget_tweaks',
     'tinymce',
+    'django_bleach',
     'easy_thumbnails',
     'hitcount',
     'django_countries',
@@ -56,7 +58,7 @@ INSTALLED_APPS = [
     'server.common',
     # apps
     'server.apps.carousel.apps.CarouselConfig',
-    'server.apps.chat.apps.ChatConfig',
+    'server.apps.theorist_chat.apps.ChatConfig',
     'server.apps.theorist_drafts.apps.DraftsConfig',
     'server.apps.forum.apps.ForumConfig',
     'server.apps.graphbuilder.apps.GraphbuilderConfig',
@@ -300,4 +302,4 @@ CHANNEL_LAYERS = {
     },
 }
 
-ASGI_APPLICATION = 'server.apps.chat.routing.application'
+ASGI_APPLICATION = 'server.settings.asgi.application'

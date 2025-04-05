@@ -1,0 +1,212 @@
+{% load i18n static %}
+
+<div class="d-flex flex-row align-items-center justify-content-between">
+  <div class="d-flex flex-row align-items-center">
+    <a class="text-decoration-none" href="{{ receiver.get_absolute_url }}" target="_blank">
+      <img src="{{ receiver.get_current_avatar_url }}" alt="avatar"
+           class="rounded-circle d-flex align-self-center me-2 shadow-1-strong" width="60">
+    </a>
+    <div>
+      <a class="text-decoration-none" href="{{ receiver.get_absolute_url }}" target="_blank">
+        <p class="fw-bold mb-0">{{ receiver.full_name }}</p>
+      </a>
+      <small><i class="ti ti-clock"></i> {{ receiver.convenient_last_activity }}</small>
+    </div>
+  </div>
+  <div>
+    <div class="dropdown">
+      <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; font-size: 25px;"
+         class="ti ti-dots-vertical z-999"></i>
+      <ul class="dropdown-menu">
+        <li><a class="dropdown-item text-danger"
+               href="javascript:(0);"
+               style="cursor: pointer"
+               hx-delete="{% url 'forum:theorist_chat:mailbox-delete' room_uuid %}"
+               hx-confirm="
+               {% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to delete this chat with {{ name }}? This cannot be undone.{% endblocktranslate %}"
+               hx-trigger="click"
+        ><i class="ti ti-trash"></i> {% translate 'Delete chat' %}</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<hr class="mb-4">
+
+<div class="d-flex flex-column" style="height: 88% !important;">
+  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js">
+    {% if messages.exists %}
+      <div id="paginated-msg-list-js" data-skip-scroll>
+        {% for message in messages %}
+          <li class="d-flex justify-content-between mb-4"
+              id="scroll-anchor"
+            {% if page_obj.number > 1 and forloop.first %}
+              hx-trigger="intersect once"
+              hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
+              hx-target="#paginated-msg-list-js"
+              hx-select="#paginated-msg-list-js"
+              hx-swap="beforebegin"
+            {% endif %}
+          >
+            {% if message.sender.uuid != request.theorist.uuid %}
+              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                   src="{{ message.sender.get_current_avatar_url }}"
+                   class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ message.message }}
+                  </p>
+                </div>
+              </div>
+            {% else %}
+              <div class="card w-100">
+                <div class="card-header d-flex justify-content-between p-3">
+                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                  <p class="text-muted small mb-0"><i class="far fa-clock"></i> {{ message.created_at }}</p>
+                </div>
+                <div class="card-body">
+                  <p class="mb-0">
+                    {{ message.message }}
+                  </p>
+                </div>
+              </div>
+              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                   src="{{ message.sender.get_current_avatar_url }}"
+                   class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+            {% endif %}
+          </li>
+        {% endfor %}
+      </div>
+    {% else %}
+      {% include 'partials/alerts/empty_chat_alert.html' %}
+    {% endif %}
+    {{ room_uuid|json_script:"room-uuid" }}
+  </ul>
+  <div class="mb-2 position-sticky">
+    <div class="form-outline">
+      <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4"
+                placeholder="{% translate 'Type here...' %}"></textarea>
+      <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
+      <button id="chat-message-submit" 
+              type="button" 
+              hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
+              hx-target="#mailboxes-list-js"
+              hx-trigger="click from:#chat-message-submit delay:0.5s"
+              class="btn btn-primary btn-rounded float-end mt-2">
+        <i class="ti ti-send"></i>
+        {% translate 'Send' %}
+      </button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let previousScrollHeight = null;
+  let msgList = document.querySelector('#msg-list-js');
+
+  document.body.addEventListener('htmx:beforeSwap', function (event) {
+    if (event.target.id === 'paginated-msg-list-js') {
+      previousScrollHeight = msgList.scrollHeight;
+    }
+  });
+
+  document.body.addEventListener('htmx:afterSwap', function (event) {
+    if (event.target.id === 'paginated-msg-list-js' && previousScrollHeight !== null) {
+      const newScrollHeight = msgList.scrollHeight;
+      const scrollDiff = newScrollHeight - previousScrollHeight;
+      msgList.scrollTop += scrollDiff;
+      previousScrollHeight = null;
+    }
+  });
+</script>
+
+
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+    const target = event.detail.elt;
+    if (!target.hasAttribute('data-skip-scroll')) {
+        setTimeout(() => {
+          var nestedElement = document.getElementById('msg-list-js');
+          nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
+    }, 300)}
+  });
+</script>
+
+<script>
+    var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
+    if (typeof roomUUID !== 'undefined') {
+        const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.0.110';
+        const protocol = isDevelopment ? 'ws://' : 'wss://';
+        const chatSocket = new WebSocket(
+            protocol
+            + window.location.hostname
+            + (isDevelopment ? ':8099' : '')
+            + '/ws/chat/'
+            + roomUUID
+            + '/'
+        );
+
+        chatSocket.onmessage = function (e) {
+            const data = JSON.parse(e.data);
+
+            const emptyLabel = document.getElementById('empty-label-js');
+            if (emptyLabel) {
+                emptyLabel.remove()
+            }
+
+            const messagesList = document.getElementById('msg-list-js');
+
+            const newMessageItem = document.createElement('li');
+            newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
+
+            const messageTemplate = (data, isSender) => {
+                return `
+        ${!isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">` : ''}
+        <div class="card w-100">
+            <div class="card-header d-flex justify-content-between p-3">
+                <p class="fw-bold mb-0">${data.theorist_full_name}</p>
+                <p class="text-muted small mb-0"><i class="far fa-clock"></i> ${data.theorist_created_at}</p>
+            </div>
+            <div class="card-body">
+                <p class="mb-0">${data.message}</p>
+            </div>
+        </div>
+        ${isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">` : ''}
+    `;
+            };
+
+            newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
+
+            messagesList.appendChild(newMessageItem);
+
+            messagesList.scrollTop = messagesList.scrollHeight;
+        };
+
+        chatSocket.onclose = function (e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-input').focus();
+        document.querySelector('#chat-message-input').onkeyup = function (e) {
+            if (e.key === 'Enter') {  // enter, return
+                document.querySelector('#chat-message-submit').click();
+            }
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function (e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message
+            }));
+            messageInputDom.value = '';
+        }
+    }
+</script>
+

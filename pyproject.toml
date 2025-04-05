@@ -20,7 +20,7 @@ billiard = "4.2.0"
 celery = "^5.4.0"
 certifi = "^2024.6.2"
 cffi = "1.16.0"
-channels = "^4.2.0"
+channels = {extras = ["daphne"], version = "^4.2.2"}
 channels-redis = "4.2.0"
 charset-normalizer = "3.3.2"
 click = "8.1.7"
@@ -93,6 +93,7 @@ django-simple-captcha = "^0.6.2"
 yarl = "^1.18.3"
 flower = "^2.0.1"
 openai = "^1.66.5"
+django-bleach = "^3.1.0"
 
 
 [tool.poetry.group.dev.dependencies]

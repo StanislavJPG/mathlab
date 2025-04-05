@@ -1,0 +1,29 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content">
+    <form hx-post="{{ request.path }}">
+      <div class="modal-header">
+        <h5 class="modal-title">{% translate 'Create new mailbox' %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <label for="{{ form.second_member.id_for_label }}" class="form-label">{% translate 'Create chat with...' %}</label>
+        {% render_field form.second_member class="form-control selectpicker" data-style="btn-default" data-live-search="true" %}
+        {% render_field_errors form.second_member %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+        <button type="submit" class="btn btn-primary">{% translate 'Create' %}</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+    $(document).ready(function () {
+        $('.selectpicker').selectpicker();
+    });
+</script>

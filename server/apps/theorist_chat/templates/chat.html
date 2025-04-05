@@ -1,0 +1,23 @@
+{% extends 'base/forum_base.html' %}
+{% load i18n static %}
+
+{% block page_head %}
+  <title>Mathlab | {% translate 'Mailbox' %}</title>
+{% endblock page_head %}
+
+{% block body %}
+  <section>
+    <div class="container py-5">
+      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load"></div>
+    </div>
+  </section>
+
+  <div class="modal fade"
+       id="chat-create-modal"
+       tabindex="-1"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
+  </div>
+{% endblock body %}

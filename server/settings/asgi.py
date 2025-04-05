@@ -22,7 +22,7 @@ os.environ.setdefault(
 
 django_asgi_app = get_asgi_application()
 
-from server.apps.theorist_chat.routing import websocket_urlpatterns  # noqa: E402
+from server.apps.theorist_chat.urls.routing import websocket_urlpatterns  # noqa: E402
 
 application = ProtocolTypeRouter(
     {

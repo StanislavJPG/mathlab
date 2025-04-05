@@ -8,12 +8,13 @@ from django.views.generic import DeleteView, CreateView
 from django_htmx.http import HttpResponseClientRedirect
 
 from server.apps.theorist_chat.forms import MailBoxCreateForm
+from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
-class MailBoxCreateView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, CreateView):
+class MailBoxCreateView(LoginRequiredMixin, ChatConfigurationRequiredMixin, FormMessagesMixin, HXViewMixin, CreateView):
     model = TheoristChatRoom
     template_name = 'modals/mailbox_create_modal.html'
     form_class = MailBoxCreateForm
@@ -43,7 +44,7 @@ class MailBoxCreateView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, Crea
         return response
 
 
-class MailBoxDeleteView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DeleteView):
+class MailBoxDeleteView(LoginRequiredMixin, ChatConfigurationRequiredMixin, FormMessagesMixin, HXViewMixin, DeleteView):
     model = TheoristChatRoom
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'

@@ -8,23 +8,17 @@ from django_filters.views import FilterView
 from render_block import render_block_to_string
 
 from server.apps.theorist_chat.filters import MailBoxFilter
+from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
-class ChatView(LoginRequiredMixin, TemplateView):
+class ChatView(LoginRequiredMixin, ChatConfigurationRequiredMixin, TemplateView):
     template_name = 'chat.html'
-    raise_exception = True
-
-    def dispatch(self, request, *args, **kwargs):
-        self.request: AuthenticatedHttpRequest
-        if self.request.theorist and not self.request.theorist.chat_configuration.is_chats_available:
-            return self.handle_no_permission()
-        return super().dispatch(request, *args, **kwargs)
 
 
-class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):
+class MailBoxListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, FilterView):
     model = TheoristChatRoom
     filterset_class = MailBoxFilter
     context_object_name = 'mailboxes'
@@ -45,7 +39,7 @@ class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):
         return kwargs
 
 
-class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
+class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, ListView):
     model = TheoristMessage
     template_name = 'partials/chat_messages_list.html'
     context_object_name = 'messages'
@@ -85,7 +79,7 @@ class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
         return context
 
 
-class HXMailBoxView(LoginRequiredMixin, HXViewMixin, View):
+class HXMailBoxView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, View):
     template_name = 'partials/mailbox_list.html'
 
     def get(self, request, *args, **kwargs):

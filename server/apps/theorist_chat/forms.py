@@ -1,6 +1,8 @@
 from django import forms
 from django.db import transaction
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
+
 from django_bleach.forms import BleachField
 
 from server.apps.theorist.models import Theorist
@@ -37,3 +39,13 @@ class MailBoxCreateForm(forms.ModelForm):
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'
+
+    def clean_second_member(self):
+        second_member = self.cleaned_data['second_member']
+        is_room_exists = TheoristChatRoom.objects.filter(
+            (Q(first_member=self.first_member) & Q(second_member=second_member))
+            | (Q(first_member=second_member) & Q(second_member=self.first_member)),
+        ).exists()
+        if is_room_exists:
+            self.add_error('second_member', _('This mailbox is already exists.'))
+        return second_member

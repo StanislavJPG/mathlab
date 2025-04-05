@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-05 21:30+0300\n"
+"POT-Creation-Date: 2025-04-05 22:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -568,6 +568,10 @@ msgstr ""
 msgid "Find chat by name"
 msgstr ""
 
+#: server/apps/theorist_chat/forms.py
+msgid "This mailbox is already exists."
+msgstr ""
+
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully created mailbox!"
 msgstr ""
@@ -604,6 +608,13 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create chat with..."
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Close"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html

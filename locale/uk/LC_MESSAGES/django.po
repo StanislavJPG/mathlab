@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-05 21:30+0300\n"
+"POT-Creation-Date: 2025-04-05 22:18+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -389,6 +389,7 @@ msgid "About me"
 msgstr "Про мене"
 
 #: server/apps/theorist/models.py
+#, python-format
 msgid "Last activity %s ago"
 msgstr "Остання активність %s тому"
 
@@ -575,6 +576,10 @@ msgstr "Акаунт"
 msgid "Find chat by name"
 msgstr "Знайти чат по імені"
 
+#: server/apps/theorist_chat/forms.py
+msgid "This mailbox is already exists."
+msgstr "Ця скринька вже існує."
+
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully created mailbox!"
 msgstr "Ви успішно створили нову скриньку!"
@@ -612,6 +617,13 @@ msgstr "Створити нову скриньку"
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create chat with..."
 msgstr "Створити чат з..."
+
+#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Close"
+msgstr "Закрити"
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create"

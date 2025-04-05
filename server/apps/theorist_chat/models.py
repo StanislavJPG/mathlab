@@ -11,7 +11,7 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
 class TheoristChatGroupConfiguration(UUIDModelMixin, TimeStampedModelMixin):
-    theorist = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='chat_group')
+    theorist = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='chat_configuration')
     is_chats_available = models.BooleanField(default=True)
 
     def __str__(self):

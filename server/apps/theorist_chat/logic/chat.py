@@ -15,6 +15,13 @@ from server.common.mixins.views import HXViewMixin
 
 class ChatView(LoginRequiredMixin, TemplateView):
     template_name = 'chat.html'
+    raise_exception = True
+
+    def dispatch(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        if self.request.theorist and not self.request.theorist.chat_configuration.is_chats_available:
+            return self.handle_no_permission()
+        return super().dispatch(request, *args, **kwargs)
 
 
 class MailBoxListView(LoginRequiredMixin, HXViewMixin, FilterView):

@@ -42,7 +42,7 @@
           <li class="d-flex justify-content-between mb-4"
               id="scroll-anchor"
             {% if page_obj.number > 1 and forloop.first %}
-              hx-trigger="revealed"
+              hx-trigger="intersect once"
               hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
               hx-target="#paginated-msg-list-js"
               hx-select="#paginated-msg-list-js"
@@ -131,9 +131,10 @@
   document.addEventListener('htmx:afterSettle', function () {
     const target = event.detail.elt;
     if (!target.hasAttribute('data-skip-scroll')) {
-        var nestedElement = document.getElementById('msg-list-js');
-        nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
-    }
+        setTimeout(() => {
+          var nestedElement = document.getElementById('msg-list-js');
+          nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
+    }, 300)}
   });
 </script>
 

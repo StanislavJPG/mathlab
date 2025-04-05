@@ -42,7 +42,7 @@ class ChatMessagesListView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristMessage
     template_name = 'partials/chat_messages_list.html'
     context_object_name = 'messages'
-    paginate_by = 10
+    paginate_by = 15
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest

@@ -74,7 +74,7 @@
               </li>
             {% endfor %}
           {% else %}
-            {% translate 'Did not found any result...' as msg %}
+            {% translate 'Not found any mailboxes' as msg %}
             <div class="mt-5">
               {% include 'alerts/not_found_alert.html' with msg=msg %}
             </div>

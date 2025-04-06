@@ -1,3 +1,5 @@
+import django_bleach.models as bleach
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
@@ -48,7 +50,7 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
 
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    message = models.TextField(max_length=500)
+    message = bleach.BleachField(max_length=500)
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
 

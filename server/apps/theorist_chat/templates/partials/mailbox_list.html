@@ -1,4 +1,4 @@
-{% load static i18n avatars widget_tweaks %}
+{% load static i18n avatars widget_tweaks bleach_tags %}
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
   <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
@@ -50,14 +50,14 @@
                            class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
                       <div class="pt-1">
                         <p class="fw-bold mb-0">{{ mailbox.second_member.full_name|truncatechars:15 }}</p>
-                        <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:25 }}</p>
+                        <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:25|bleach }}</p>
                       </div>
                     {% else %}
                       <img src="{{ mailbox.first_member.get_current_avatar_url }}" alt="avatar"
                            class="rounded-circle d-flex align-self-center me-3 shadow-1-strong" width="60">
                       <div class="pt-1">
                         <p class="fw-bold mb-0">{{ mailbox.first_member.full_name|truncatechars:15 }}</p>
-                        <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:25 }}</p>
+                        <p class="small text-muted">{{ mailbox.messages.last.message|truncatechars_html:25|bleach }}</p>
                       </div>
                     {% endif %}
 

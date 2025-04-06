@@ -1,5 +1,6 @@
 import json
 
+import bleach
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.utils import dateformat
@@ -36,7 +37,8 @@ class TheoristChatConsumer(WebsocketConsumer):
 
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
-        message = text_data_json['message']
+        message = bleach.clean(text_data_json['message'])
+        # raise Exception(message, bleach.clean(message))
         response = self._get_context()
         response.update({'message': message})
         self._save_data_to_db(**response)

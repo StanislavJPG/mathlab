@@ -1,4 +1,4 @@
-{% load i18n static %}
+{% load i18n static bleach_tags  %}
 
 <div class="d-flex flex-row align-items-center justify-content-between">
   <div class="d-flex flex-row align-items-center">
@@ -60,7 +60,7 @@
                 </div>
                 <div class="card-body">
                   <p class="mb-0">
-                    {{ message.message }}
+                    {{ message.message|bleach }}
                   </p>
                 </div>
               </div>
@@ -72,7 +72,7 @@
                 </div>
                 <div class="card-body">
                   <p class="mb-0">
-                    {{ message.message }}
+                    {{ message.message|bleach }}
                   </p>
                 </div>
               </div>

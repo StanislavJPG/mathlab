@@ -28,37 +28,37 @@
 </div>
 
 <script>
-    document.addEventListener("DOMContentLoaded", () => {
-        const themeButton = document.getElementById("bd-theme");
-        const themeButtons = document.querySelectorAll("[data-bs-theme-value]");
-        const themes = {light: "ti ti-sun-filled", dark: "ti ti-moon-filled", auto: "ti ti-circle-half-2"};
+  document.addEventListener("DOMContentLoaded", () => {
+    const themeButton = document.getElementById("bd-theme");
+    const themeButtons = document.querySelectorAll("[data-bs-theme-value]");
+    const themes = {light: "ti ti-sun-filled", dark: "ti ti-moon-filled", auto: "ti ti-circle-half-2"};
 
-        let currentTheme = localStorage.getItem("theme") || "light";
-        setTheme(currentTheme);
+    let currentTheme = localStorage.getItem("theme") || "light";
+    setTheme(currentTheme);
 
-        themeButtons.forEach(button => {
-            button.addEventListener("click", () => setTheme(button.getAttribute("data-bs-theme-value")));
-        });
-
-        function setTheme(theme) {
-            document.documentElement.setAttribute("data-bs-theme", theme);
-            localStorage.setItem("theme", theme);
-            updateThemeIcon(theme);
-            updateActiveTheme(theme);
-        }
-
-        function updateThemeIcon(theme) {
-            themeButton.innerHTML = `<i class="${themes[theme]}"></i>`;
-            localStorage.setItem("themeIconClass", themes[theme]);
-        }
-
-        function updateActiveTheme(theme) {
-            themeButtons.forEach(button => {
-                button.classList.toggle("active", button.getAttribute("data-bs-theme-value") === theme);
-                button.setAttribute("aria-pressed", button.classList.contains("active"));
-            });
-        }
+    themeButtons.forEach(button => {
+      button.addEventListener("click", () => setTheme(button.getAttribute("data-bs-theme-value")));
     });
+
+    function setTheme(theme) {
+      document.documentElement.setAttribute("data-bs-theme", theme);
+      localStorage.setItem("theme", theme);
+      updateThemeIcon(theme);
+      updateActiveTheme(theme);
+    }
+
+    function updateThemeIcon(theme) {
+      themeButton.innerHTML = `<i class="${themes[theme]}"></i>`;
+      localStorage.setItem("themeIconClass", themes[theme]);
+    }
+
+    function updateActiveTheme(theme) {
+      themeButtons.forEach(button => {
+        button.classList.toggle("active", button.getAttribute("data-bs-theme-value") === theme);
+        button.setAttribute("aria-pressed", button.classList.contains("active"));
+      });
+    }
+  });
 </script>
 
 

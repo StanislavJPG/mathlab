@@ -636,7 +636,7 @@ class Content {
       if (!this.placeholder) {
         const placeholderSrc = this.instance.applyFilters('placeholderSrc', // use  image-based placeholder only for the first slide,
         // as rendering (even small stretched thumbnail) is an expensive operation
-        this.data.msrc && this.slide.isFirstSlide ? this.data.msrc : false, this);
+          this.data.msrc && this.slide.isFirstSlide ? this.data.msrc : false, this);
         this.placeholder = new Placeholder(placeholderSrc, this.slide.container);
       } else {
         const placeholderEl = this.placeholder.element; // Add placeholder to DOM if it was already created
@@ -1707,10 +1707,10 @@ class PhotoSwipeLightbox extends PhotoSwipeBase {
   onThumbnailsClick(e) {
     // Exit and allow default browser action if:
     if (specialKeyUsed(e) // ... if clicked with a special key (ctrl/cmd...)
-    || window.pswp) {
+      || window.pswp) {
       // ... if PhotoSwipe is already open
-      return;
-    } // If both clientX and clientY are 0 or not defined,
+        return;
+      } // If both clientX and clientY are 0 or not defined,
     // the event is likely triggered by keyboard,
     // so we do not pass the initialPoint
     //
@@ -1764,7 +1764,7 @@ class PhotoSwipeLightbox extends PhotoSwipeBase {
     e.target;
     const childElements = getElementsFromOption(this.options.children, this.options.childSelector,
     /** @type {HTMLElement} */
-    e.currentTarget);
+      e.currentTarget);
     const clickedChildIndex = childElements.findIndex(child => child === clickedTarget || child.contains(clickedTarget));
 
     if (clickedChildIndex !== -1) {
@@ -1838,13 +1838,13 @@ class PhotoSwipeLightbox extends PhotoSwipeBase {
     if (isPswpClass(options.pswpModule)) {
       promiseArray.push(Promise.resolve(
       /** @type {Type<PhotoSwipe>} */
-      options.pswpModule));
+        options.pswpModule));
     } else if (pswpModuleType === 'string') {
       throw new Error('pswpModule as string is no longer supported');
     } else if (pswpModuleType === 'function') {
       promiseArray.push(
       /** @type {() => Promise<Type<PhotoSwipe>>} */
-      options.pswpModule());
+        options.pswpModule());
     } else {
       throw new Error('pswpModule is not valid');
     } // Add custom-defined promise, if any
@@ -1899,7 +1899,7 @@ class PhotoSwipeLightbox extends PhotoSwipeBase {
 
 
     const pswp = typeof module === 'object' ? new module.default(this.options) // eslint-disable-line
-    : new module(this.options); // eslint-disable-line
+      : new module(this.options); // eslint-disable-line
 
     this.pswp = pswp;
     window.pswp = pswp; // map listeners from Lightbox to PhotoSwipe Core
@@ -1912,7 +1912,7 @@ class PhotoSwipeLightbox extends PhotoSwipeBase {
       (_this$_listeners$name = this._listeners[name]) === null || _this$_listeners$name === void 0 || _this$_listeners$name.forEach(fn => {
         pswp.on(name,
         /** @type {EventCallback<typeof name>} */
-        fn);
+          fn);
       });
     }); // same with filters
 

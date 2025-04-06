@@ -1,26 +1,26 @@
 
 <header class="navbar navbar-fixed-top d-flex justify-content-center py-3">
   <ul class="nav nav-pills d-flex justify-content-center">
-      <li class="nav-item">
-        <a href="{% url 'mathlab:math_news:base-math-news' %}"
-           class="nav-link {% if 'news' in request.path %}active{% endif %}"
-           aria-current="page">Головна сторінка</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'mathlab:solve-tasks-base' %}"
-           class="nav-link {% if 'solvexample' in request.path %}active{% endif %}">Розв'яжи приклад</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'mathlab:graphbuilder' %}"
-           class="nav-link {% if 'graphbuilder' in request.path %}active{% endif %}">Побудуй графік</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'mathlab:drafts:base-drafts' %}"
-           class="nav-link">Чернетки</a>
-      </li>
-      <li class="nav-item">
-        <a href="{% url 'forum:base-forum-page' %}"
-           class="nav-link">Форум</a>
-      </li>
+    <li class="nav-item">
+      <a href="{% url 'mathlab:math_news:base-math-news' %}"
+         class="nav-link {% if 'news' in request.path %}active{% endif %}"
+         aria-current="page">Головна сторінка</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'mathlab:solve-tasks-base' %}"
+         class="nav-link {% if 'solvexample' in request.path %}active{% endif %}">Розв'яжи приклад</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'mathlab:graphbuilder' %}"
+         class="nav-link {% if 'graphbuilder' in request.path %}active{% endif %}">Побудуй графік</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'mathlab:drafts:base-drafts' %}"
+         class="nav-link">Чернетки</a>
+    </li>
+    <li class="nav-item">
+      <a href="{% url 'forum:base-forum-page' %}"
+         class="nav-link">Форум</a>
+    </li>
   </ul>
 </header>

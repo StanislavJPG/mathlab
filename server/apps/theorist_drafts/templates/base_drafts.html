@@ -8,9 +8,9 @@
 {% block page_css %}
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
   <style>
-      .img-bg {
-          --pswp-bg: #ffffff;
-      }
+    .img-bg {
+      --pswp-bg: #ffffff;
+    }
   </style>
 {% endblock page_css %}
 
@@ -125,13 +125,13 @@
               {% block drafts %}
                 {% if configuration %}
                   <div {% if view == 'table' %}
-                    class="row row-cols-1"
-                    hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"
-                  {% else %}
-                    hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album&search_draft={{ request.GET.search_draft }}"
-                  {% endif %}
-                    hx-trigger="load, click from:#search-btn"
-                    hx-target="this"
+                         class="row row-cols-1"
+                         hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"
+                       {% else %}
+                         hx-get="{% url 'mathlab:drafts:drafts-album-list' configuration.uuid %}?view=album&search_draft={{ request.GET.search_draft }}"
+                       {% endif %}
+                       hx-trigger="load, click from:#search-btn"
+                       hx-target="this"
                   >
                     <div class="text-center d-flex align-items-center flex-column">
                       <div id="wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2"
@@ -175,44 +175,44 @@
 {% block page_js %}
   <script src="{% static 'js/actions/init_clipboard.js' %}"></script>
   <script type="module">
-      import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
 
-      document.body.addEventListener("htmx:afterSettle", function () {
-          const lightbox = new PhotoSwipeLightbox({
-              gallery: '#gallery',
-              mainClass: 'img-bg',
-              children: 'a',
-              wheelToZoom: true,
-              pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
-          });
-          lightbox.init();
+    document.body.addEventListener("htmx:afterSettle", function () {
+      const lightbox = new PhotoSwipeLightbox({
+        gallery: '#gallery',
+        mainClass: 'img-bg',
+        children: 'a',
+        wheelToZoom: true,
+        pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
       });
+      lightbox.init();
+    });
   </script>
   <script>
-      if (document.getElementById("flexSwitchCheckChecked")) {
-          document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
-              const url = new URL(window.location);
+    if (document.getElementById("flexSwitchCheckChecked")) {
+      document.getElementById("flexSwitchCheckChecked").addEventListener("change", function () {
+        const url = new URL(window.location);
 
-              if (this.checked) {
-                  url.searchParams.set("view", "table");
-              } else {
-                  url.searchParams.delete("view");
-              }
+        if (this.checked) {
+          url.searchParams.set("view", "table");
+        } else {
+          url.searchParams.delete("view");
+        }
 
-              window.location = url;
-          });
+        window.location = url;
+      });
+    }
+
+    function Search() {
+      const url = new URL(window.location);
+      let input_search_value = document.getElementById('id_search_draft').value;
+
+      if (url.searchParams.get("search_draft")) {
+        url.searchParams.delete("search_draft");
       }
-
-      function Search() {
-          const url = new URL(window.location);
-          let input_search_value = document.getElementById('id_search_draft').value;
-
-          if (url.searchParams.get("search_draft")) {
-              url.searchParams.delete("search_draft");
-          }
-          url.searchParams.append("search_draft", input_search_value)
-          window.location = url;
-      }
+      url.searchParams.append("search_draft", input_search_value)
+      window.location = url;
+    }
 
   </script>
 {% endblock page_js %}

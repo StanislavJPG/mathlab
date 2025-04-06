@@ -10,7 +10,7 @@
               hx-target="#drafts-management-modal"
               data-bs-toggle="modal"
               data-bs-target="#drafts-management-modal"
-    ><i class="ti ti-edit"></i> {% translate 'Edit draft' %}</span>
+      ><i class="ti ti-edit"></i> {% translate 'Edit draft' %}</span>
     </li>
     <li>
       <hr class="dropdown-divider">
@@ -20,7 +20,7 @@
               hx-delete="{% url 'mathlab:drafts:drafts-delete' record.uuid %}?view={{ request.GET.view }}"
               hx-trigger="click"
               hx-confirm="{% translate 'Are you sure?' %}"
-    ><i class="ti ti-trash"></i> {% translate 'Delete draft' %}</span>
+      ><i class="ti ti-trash"></i> {% translate 'Delete draft' %}</span>
     </li>
   </ul>
 </div>

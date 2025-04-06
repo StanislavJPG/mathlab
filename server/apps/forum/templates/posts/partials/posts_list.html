@@ -1,138 +1,138 @@
 {% load static i18n widget_tweaks widened_widget_tweaks avatars %}
 
 <div hx-get="{{ request.get_full_path }}" hx-trigger="postDeleted from:body delay:0.6s">
-<div class="accordion" id="accordionFilter">
-  <div class="accordion-item">
-    <h5 class="accordion-header" id="headingFilter">
-      <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter"
-              aria-expanded="true" aria-controls="collapseFilter">
-        <i class="ti ti-filter me-1"></i>{% translate 'Filter' %}
-      </button>
-    </h5>
-    <div id="collapseFilter" class="accordion-collapse collapse hide" aria-labelledby="headingFilter"
-         data-bs-parent="#accordionFilter">
-      <div class="accordion-body">
-        <form hx-get="{{ request.path }}"
-              _="on submit toggle @hidden on #filter-block-wait-spinner until htmx:afterOnLoad"
-              hx-indicator="#filter-block-wait-spinner"
-              class="container">
-          <div class="row mb-3 justify-content-center justify-content-md-start">
-            <div class="col-12 col-md-3">
-              <label class="form-label" for="{{ filter.form.title.id_for_label }}">{{ filter.form.title.label }}</label>
-              {% render_field filter.form.title class="form-control" %}
+  <div class="accordion" id="accordionFilter">
+    <div class="accordion-item">
+      <h5 class="accordion-header" id="headingFilter">
+        <button class="accordion-button p-2" type="button" data-bs-toggle="collapse" data-bs-target="#collapseFilter"
+                aria-expanded="true" aria-controls="collapseFilter">
+          <i class="ti ti-filter me-1"></i>{% translate 'Filter' %}
+        </button>
+      </h5>
+      <div id="collapseFilter" class="accordion-collapse collapse hide" aria-labelledby="headingFilter"
+           data-bs-parent="#accordionFilter">
+        <div class="accordion-body">
+          <form hx-get="{{ request.path }}"
+                _="on submit toggle @hidden on #filter-block-wait-spinner until htmx:afterOnLoad"
+                hx-indicator="#filter-block-wait-spinner"
+                class="container">
+            <div class="row mb-3 justify-content-center justify-content-md-start">
+              <div class="col-12 col-md-3">
+                <label class="form-label" for="{{ filter.form.title.id_for_label }}">{{ filter.form.title.label }}</label>
+                {% render_field filter.form.title class="form-control" %}
+              </div>
+              <div class="col-12 col-md-3">
+                <label class="form-label"
+                       for="{{ filter.form.categories.id_for_label }}">{{ filter.form.categories.label }}</label>
+                {% render_field filter.form.categories class="selectpicker form-control" data-style="btn-default" data-live-search="true" %}
+              </div>
             </div>
-            <div class="col-12 col-md-3">
-              <label class="form-label"
-                     for="{{ filter.form.categories.id_for_label }}">{{ filter.form.categories.label }}</label>
-              {% render_field filter.form.categories class="selectpicker form-control" data-style="btn-default" data-live-search="true" %}
-            </div>
-          </div>
-          <div class="row my-4">
-            <div class="accordion col-12 col-md-3" id="accordionAdvancedFilter">
-              <div class="accordion-item">
-                <h2 class="accordion-header">
-                  <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
-                          data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
-                    <i class="ti ti-filter-plus me-1"></i>{% translate 'Advanced filter' %}
-                  </button>
-                </h2>
-                <div id="collapseOne" class="accordion-collapse collapse hide" data-bs-parent="#accordionAdvancedFilter">
-                  <div class="accordion-body">
-                    <div class="col-12 col-md-12">
-                      <label class="form-label" for="{{ filter.form.sort_by.id_for_label }}">{{ filter.form.sort_by.label }}</label>
-                      {% render_field filter.form.sort_by class="form-control" %}
+            <div class="row my-4">
+              <div class="accordion col-12 col-md-3" id="accordionAdvancedFilter">
+                <div class="accordion-item">
+                  <h2 class="accordion-header">
+                    <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
+                            data-bs-target="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+                      <i class="ti ti-filter-plus me-1"></i>{% translate 'Advanced filter' %}
+                    </button>
+                  </h2>
+                  <div id="collapseOne" class="accordion-collapse collapse hide" data-bs-parent="#accordionAdvancedFilter">
+                    <div class="accordion-body">
+                      <div class="col-12 col-md-12">
+                        <label class="form-label" for="{{ filter.form.sort_by.id_for_label }}">{{ filter.form.sort_by.label }}</label>
+                        {% render_field filter.form.sort_by class="form-control" %}
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
-          </div>
-          <div class="d-flex justify-content-center justify-content-md-end">
-            <button type="submit" class="btn btn-primary me-2"><i class="ti ti-filter"></i> {% translate 'Apply' %}
-              <div id="filter-block-wait-spinner" class="spinner-grow text-light spinner-grow-sm ms-2" role="status" hidden></div>
-            </button>
-            <button type="button" hx-get="{{ request.path }}" class="btn btn-outline-primary"><i
+            <div class="d-flex justify-content-center justify-content-md-end">
+              <button type="submit" class="btn btn-primary me-2"><i class="ti ti-filter"></i> {% translate 'Apply' %}
+                <div id="filter-block-wait-spinner" class="spinner-grow text-light spinner-grow-sm ms-2" role="status" hidden></div>
+              </button>
+              <button type="button" hx-get="{{ request.path }}" class="btn btn-outline-primary"><i
                 class="ti ti-backspace"></i> {% translate 'Clear' %}</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-</div>
-<h6 class="border-bottom border-gray pb-2 mt-4">{% translate 'Recent questions' %}</h6>
-<div id="main-posts-block-js">
-  {% for post in posts %}
-    <div class="media text-muted pt-3 question-{{ post.uuid }}">
-      <a href="{{ post.get_absolute_url }}">
-        <img alt="post"
-             class="me-2 rounded" style="width: 32px; height: 32px;"
-             src="{{ post.get_boringavatars_url }}"
-             data-holder-rendered="true">
-      </a>
-      <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
-        <strong class="d-block text-gray-dark mb-1">
-          <a class="text-decoration-none link-secondary" href="{{ post.get_absolute_url }}">
-            {{ post.title }}
-          </a>
-        </strong>
-        {% for category in post.categories.all %}
-          <a hx-get="{% url 'forum:post-list' %}?categories={{ category.name }}"
-             hx-trigger="click"
-             href="javascript:(0);"
-             class="badge rounded-pill text-bg-secondary text-decoration-none">
-            {{ category.get_name_display }}
-          </a>
-        {% endfor %}
-        <div class="mt-1 d-flex justify-content-between align-items-center flex-column flex-sm-row">
-          <small>
-            - <a class="text-decoration-none"
-                 href="{{ post.theorist.get_absolute_url }}">
-            {{ post.theorist.full_name }}
-          </a>
-            <time>{% translate 'asked' %} {{ post.created_at|timesince }} {% translate 'ago' %}</time>
-          </small>
-          <div>
-            <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
-                  title="{% translate 'Post likes quantity' %}">
-              <i class="ti ti-thumb-up-filled"></i> {{ post.custom_likes_counter }}
-            </span>
-            <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
-                  title="{% translate 'Post comments quantity' %}">
-              <i class="ti ti-message"></i> {{ post.comments_quantity }}
-            </span>
-            <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
-                  title="{% translate 'Post views quantity' %}">
-              <i class="ti ti-eye"></i> {{ post.hit_count.hits }}
-            </span>
-            {% if post.theorist.uuid == request.theorist.uuid %}
-              <div class="vr"></div>
-              <a id="post-delete-js"
-                 href="javascript:(0);"
-                 class="text-decoration-none"
-                 title="{% translate 'Post deletion' %}"
-                 hx-swap="innerHTML swap:0.5s"
-                 hx-target=".question-{{ post.uuid }}"
-                 hx-delete="{% url 'forum:post-delete' post.uuid %}"
-                 hx-vals='{"location": "base"}'
-                 hx-confirm="Are you sure?"
-              >
-                <i class="text-danger ti ti-trash"></i>
-              </a>
-            {% endif %}
-          </div>
+            </div>
+          </form>
         </div>
       </div>
     </div>
-  {% endfor %}
-  <small class="d-block text-right mt-4">
-    {% include 'common/pagination.html' with htmx_target="#main-posts-block-js" %}
-  </small>
-</div>
+  </div>
+  <h6 class="border-bottom border-gray pb-2 mt-4">{% translate 'Recent questions' %}</h6>
+  <div id="main-posts-block-js">
+    {% for post in posts %}
+      <div class="media text-muted pt-3 question-{{ post.uuid }}">
+        <a href="{{ post.get_absolute_url }}">
+          <img alt="post"
+               class="me-2 rounded" style="width: 32px; height: 32px;"
+               src="{{ post.get_boringavatars_url }}"
+               data-holder-rendered="true">
+        </a>
+        <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+          <strong class="d-block text-gray-dark mb-1">
+            <a class="text-decoration-none link-secondary" href="{{ post.get_absolute_url }}">
+              {{ post.title }}
+            </a>
+          </strong>
+          {% for category in post.categories.all %}
+            <a hx-get="{% url 'forum:post-list' %}?categories={{ category.name }}"
+               hx-trigger="click"
+               href="javascript:(0);"
+               class="badge rounded-pill text-bg-secondary text-decoration-none">
+              {{ category.get_name_display }}
+            </a>
+          {% endfor %}
+          <div class="mt-1 d-flex justify-content-between align-items-center flex-column flex-sm-row">
+            <small>
+              - <a class="text-decoration-none"
+                   href="{{ post.theorist.get_absolute_url }}">
+                {{ post.theorist.full_name }}
+              </a>
+              <time>{% translate 'asked' %} {{ post.created_at|timesince }} {% translate 'ago' %}</time>
+            </small>
+            <div>
+              <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
+                    title="{% translate 'Post likes quantity' %}">
+                <i class="ti ti-thumb-up-filled"></i> {{ post.custom_likes_counter }}
+              </span>
+              <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
+                    title="{% translate 'Post comments quantity' %}">
+                <i class="ti ti-message"></i> {{ post.comments_quantity }}
+              </span>
+              <span class="me-1" data-bs-toggle="tooltip" data-bs-placement="top" data-toggle="tooltip"
+                    title="{% translate 'Post views quantity' %}">
+                <i class="ti ti-eye"></i> {{ post.hit_count.hits }}
+              </span>
+              {% if post.theorist.uuid == request.theorist.uuid %}
+                <div class="vr"></div>
+                <a id="post-delete-js"
+                   href="javascript:(0);"
+                   class="text-decoration-none"
+                   title="{% translate 'Post deletion' %}"
+                   hx-swap="innerHTML swap:0.5s"
+                   hx-target=".question-{{ post.uuid }}"
+                   hx-delete="{% url 'forum:post-delete' post.uuid %}"
+                   hx-vals='{"location": "base"}'
+                   hx-confirm="Are you sure?"
+                >
+                  <i class="text-danger ti ti-trash"></i>
+                </a>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    <small class="d-block text-right mt-4">
+      {% include 'common/pagination.html' with htmx_target="#main-posts-block-js" %}
+    </small>
+  </div>
 </div>
 
 <script>
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker();
-    });
+  $(document).ready(function () {
+    $('.selectpicker').selectpicker();
+  });
 </script>
 <script src="{% static 'js/offcanvas.js' %}"></script>

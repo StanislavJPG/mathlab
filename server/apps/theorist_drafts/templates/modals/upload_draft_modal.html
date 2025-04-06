@@ -20,7 +20,7 @@
         <label for="{{ form.draft.id_for_label }}" class="form-label">{% translate 'Your draft' %}</label>
         {% render_field form.draft class="form-control" %}
         {% render_field_errors form.draft %}
-        
+
         <div class="form-check form-switch">
           {% render_field form.is_public_available class="form-check-input" %}
           <label class="form-check-label text-lg-nowrap" for="{{ form.is_public_available.id_for_label }}">

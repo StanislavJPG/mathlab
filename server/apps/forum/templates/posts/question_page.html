@@ -14,11 +14,11 @@
       <div class="col-lg-9">
         <div class="p-4">
           <h4 id="post-title-body"
-              hx-get="{% url 'forum:hx-post-title-update' post.uuid %}" 
+              hx-get="{% url 'forum:hx-post-title-update' post.uuid %}"
               hx-trigger="click from:#post-edit-btn"
               hx-swap="outerHTML"
               class="mb-2">
-                {{ post.title }}
+            {{ post.title }}
           </h4>
           <ul class="list-inline text-muted small d-flex justify-content-between align-items-center">
             <li class="list-inline-item small">
@@ -113,7 +113,7 @@
               {% block comment_quantity %}
                 <span class="mt-4">
                   {% translate 'Answers' %}: {{ comment_quantity }}
-              </span>
+                </span>
               {% endblock %}
             {% endwith %}
           </div>

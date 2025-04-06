@@ -94,6 +94,7 @@ yarl = "^1.18.3"
 flower = "^2.0.1"
 openai = "^1.66.5"
 django-bleach = "^3.1.0"
+djhtml = "^3.0.7"
 
 
 [tool.poetry.group.dev.dependencies]

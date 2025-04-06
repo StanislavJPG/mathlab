@@ -4,16 +4,16 @@
 <div class="position-relative mb-5" style="width: 100%">
   <div class="progress" style="height: 1px">
     <div class="progress-bar" role="progressbar" style="width: 50%" aria-valuenow="25" aria-valuemin="0"
-      aria-valuemax="100"></div>
+         aria-valuemax="100"></div>
   </div>
   <button type="button"
-    class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-secondary rounded-pill"
-    style="width: 3rem; height: 3rem">
+          class="position-absolute top-0 start-0 translate-middle btn btn-sm btn-secondary rounded-pill"
+          style="width: 3rem; height: 3rem">
     1
   </button>
   <button type="button"
-    class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary rounded-pill"
-    style="width: 3rem; height: 3rem">
+          class="position-absolute top-0 start-50 translate-middle btn btn-sm btn-primary rounded-pill"
+          style="width: 3rem; height: 3rem">
     2
   </button>
 </div>
@@ -25,7 +25,7 @@
     {% render_field form.country|add_bootstrap_validation_classes class="selectpicker form-control" data-style="btn-default" data-live-search="true" %}
     {% render_field_errors form.country small=True %}
   </div>
-  
+
   <div class="form-outline mb-4">
     {% render_field form.about_me|add_bootstrap_validation_classes class="form-control" %}
     {% render_field_errors form.about_me small=True %}
@@ -57,8 +57,8 @@
 </form>
 
 <script>
-    $(document).ready(function () {
-        $('.selectpicker').selectpicker();
-    });
+  $(document).ready(function () {
+    $('.selectpicker').selectpicker();
+  });
 
 </script>

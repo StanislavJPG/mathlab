@@ -68,10 +68,10 @@
                   </a>
                 {% else %}
                   <button
-                      class="btn btn-sm btn-primary text-nowrap"
-                      hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
-                      hx-swap="none"
-                      hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}"
+                    class="btn btn-sm btn-primary text-nowrap"
+                    hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
+                    hx-swap="none"
+                    hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}"
                   >
                     {% translate 'Thank you!' %}
                   </button>

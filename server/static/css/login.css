@@ -251,7 +251,7 @@ input[type=text]:placeholder {
 /* OTHERS */
 
 *:focus {
-    outline: none;
+  outline: none;
 }
 
 #icon {

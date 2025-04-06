@@ -10,55 +10,55 @@
 {% endblock page_css %}
 
 {% block body %}
-<div class="container fluid">
-  <h1 class="h3 mb-3">{% translate 'Settings' %}</h1>
-  <div class="row">
-    <div class="col-md-5 col-xl-4 mb-4">
-      <div class="card">
-        <div class="card-header">
-          <h5 class="card-title mb-0">{% translate 'Profile settings' %}</h5>
+  <div class="container fluid">
+    <h1 class="h3 mb-3">{% translate 'Settings' %}</h1>
+    <div class="row">
+      <div class="col-md-5 col-xl-4 mb-4">
+        <div class="card">
+          <div class="card-header">
+            <h5 class="card-title mb-0">{% translate 'Profile settings' %}</h5>
+          </div>
+          <div class="list-group list-group-flush" role="tablist">
+            <a class="list-group-item list-group-item-action active"
+               data-bs-toggle="tab"
+               href="#account"
+               role="tab">
+              {% translate 'Account' %}
+            </a>
+            <a class="list-group-item list-group-item-action"
+               id="password-btn"
+               data-bs-toggle="tab"
+               href="#password"
+               role="tab">
+              {% translate 'Password' %}
+            </a>
+          </div>
         </div>
-        <div class="list-group list-group-flush" role="tablist">
-          <a class="list-group-item list-group-item-action active"
-             data-bs-toggle="tab"
-             href="#account"
-             role="tab">
-            {% translate 'Account' %}
-          </a>
-          <a class="list-group-item list-group-item-action"
-             id="password-btn"
-             data-bs-toggle="tab"
-             href="#password"
-             role="tab">
-            {% translate 'Password' %}
-          </a>
+      </div>
+
+      <div class="col-md-7 col-xl-8">
+        <div class="tab-content">
+          <div class="tab-pane fade show active"
+               id="account"
+               hx-get="{% url 'forum:theorist_profile:settings:hx-profile-private-info-form' theorist.uuid %}"
+               hx-target="this"
+               hx-trigger="load"
+               role="tabpanel"
+          >
+          </div>
+          <div class="tab-pane fade show active"
+               id="password"
+               hx-get="{% url 'forum:theorist_profile:settings:hx-profile-password-form' theorist.uuid %}"
+               hx-target="this"
+               hx-trigger="click once from:#password-btn"
+               role="tabpanel"
+          >
+          </div>
         </div>
       </div>
     </div>
 
-    <div class="col-md-7 col-xl-8">
-      <div class="tab-content">
-        <div class="tab-pane fade show active"
-             id="account"
-             hx-get="{% url 'forum:theorist_profile:settings:hx-profile-private-info-form' theorist.uuid %}"
-             hx-target="this"
-             hx-trigger="load"
-             role="tabpanel"
-        >
-        </div>
-        <div class="tab-pane fade show active"
-             id="password"
-             hx-get="{% url 'forum:theorist_profile:settings:hx-profile-password-form' theorist.uuid %}"
-             hx-target="this"
-             hx-trigger="click once from:#password-btn"
-             role="tabpanel"
-        >
-        </div>
-      </div>
-    </div>
   </div>
-
-</div>
 {#<div class="container">#}
 {#<div class="row justify-content-center gutters">#}
 {#  <h1 class="display-5 mb-5 text-center">Налаштування профілю</h1>#}

@@ -44,7 +44,7 @@ tinymce.PluginManager.add("eqneditor",function(editor, url) {
     <use x='62.183256' y='67.546688' xlink:href='#g0-120'/>
     </g>
     </svg>`)
-    
+
     function showDialog( inp="" ) {
         var http = ('https:' == document.location.protocol ? 'https://' : 'http://');
 
@@ -57,11 +57,11 @@ tinymce.PluginManager.add("eqneditor",function(editor, url) {
                     {
                         type:'htmlpanel',
                         html:'<div id="equation-editor">'+
-                                '<div id="history"></div>'+
-                                '<div id="toolbar"></div>'+
-                                '<div id="latexInput" autocorrect="off"></div>'+
-                                '<div id="equation-output">'+
-                                '<img id="output"></div></div>'
+                        '<div id="history"></div>'+
+                        '<div id="toolbar"></div>'+
+                        '<div id="latexInput" autocorrect="off"></div>'+
+                        '<div id="equation-output">'+
+                        '<img id="output"></div></div>'
                     }
                 ]
             },
@@ -104,8 +104,8 @@ tinymce.PluginManager.add("eqneditor",function(editor, url) {
         loaded.then(() => {
             output = new EqEditor.Output("output");
             textarea = EqEditor.TextArea.link("latexInput")
-                        .addOutput(output)
-                        .addHistoryMenu(new EqEditor.History("history"));
+                .addOutput(output)
+                .addHistoryMenu(new EqEditor.History("history"));
             EqEditor.Toolbar.link("toolbar").addTextArea(textarea);
 
             var nodes = document.getElementById('history').childNodes;
@@ -115,22 +115,22 @@ tinymce.PluginManager.add("eqneditor",function(editor, url) {
             textarea.insert(inp.replace(/&space;/g, ' '), inp.length);
         });
     }
-    
+
     editor.ui.registry.addButton('eqneditor', {
-            title: 'Equation',
-            icon: 'menu',
-            tooltip: 'Insert Equation',
-            onAction: () => { showDialog(); }
+        title: 'Equation',
+        icon: 'menu',
+        tooltip: 'Insert Equation',
+        onAction: () => { showDialog(); }
             // stateSelector: 'img[src*="latex"]'
     });
-    
+
     editor.on('dblclick', function(e) {
-    	if (e.target.nodeName.toLowerCase() == "img") {
-    		var sName = e.target.src.match( /(gif|svg)\.image\?(.*)/ );
-    		if(sName!=null) showDialog(sName[2]);
-    	}
+        if (e.target.nodeName.toLowerCase() == "img") {
+            var sName = e.target.src.match( /(gif|svg)\.image\?(.*)/ );
+            if(sName!=null) showDialog(sName[2]);
+        }
     });
-    
+
     return {
         getMetadata: () => ({
             name: 'EqnEditor',

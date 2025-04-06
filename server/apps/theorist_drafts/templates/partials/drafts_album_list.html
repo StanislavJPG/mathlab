@@ -1,15 +1,15 @@
 {% load i18n static %}
 
 {% if theorist %}
-<div class="text-end mt-3 mb-3">
-  <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
-  <small>
-    <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
-      {% get_instance_avatar theorist size=30 %}
-      {{ theorist.full_name }}
-    </a>
-  </small>
-</div>
+  <div class="text-end mt-3 mb-3">
+    <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
+    <small>
+      <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
+        {% get_instance_avatar theorist size=30 %}
+        {{ theorist.full_name }}
+      </a>
+    </small>
+  </div>
 {% endif %}
 
 {% if drafts %}

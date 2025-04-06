@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 import os
 
+from bleach import sanitizer
 from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages
 
@@ -258,17 +259,7 @@ BLEACH_ALLOWED_TAGS = [
     'p',
     'span',
     'img',
-    'abbr',
-    'acronym',
-    'b',
-    'blockquote',
-    'code',
-    'em',
-    'i',
-    'li',
-    'ol',
-    'strong',
-    'ul',
+    *sanitizer.ALLOWED_TAGS,
 ]
 
 

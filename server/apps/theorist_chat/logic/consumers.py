@@ -38,7 +38,6 @@ class TheoristChatConsumer(WebsocketConsumer):
     def receive(self, text_data=None, bytes_data=None):
         text_data_json = json.loads(text_data)
         message = bleach.clean(text_data_json['message'])
-        # raise Exception(message, bleach.clean(message))
         response = self._get_context()
         response.update({'message': message})
         self._save_data_to_db(**response)

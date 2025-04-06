@@ -104,6 +104,13 @@
                     ><i class="ti ti-link"></i> {% translate 'Copy my draft UUID' %}</button>
                   </li>
                   <li class="mt-2">
+                    <button type="button" class="dropdown-item"
+                    ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
                             hx-get="{% url 'mathlab:drafts:drafts-upload' %}?view={{ request.GET.view }}"

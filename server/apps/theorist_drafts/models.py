@@ -45,6 +45,9 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         draft_url = thumb.url
         return draft_url
 
+    def get_share_url(self, uuid):
+        return reverse('forum:drafts:base-drafts') + f'?search_draft={uuid}'
+
     @hook(AFTER_CREATE)
     def after_create(self):
         if not self.label:

@@ -10,6 +10,7 @@ from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_VARIANT,
     BORINGAVATARS_DEFAULT_SQUARE,
 )
+from server.common.utils.translation import get_i18n_instance_name
 
 
 class CacheMixin:
@@ -94,3 +95,8 @@ class CaptchaViewMixin:
     def form_valid(self, form):
         form.clean_form_fail_attempts()
         return super().form_valid(form)
+
+
+class InstanceTranslationViewMixin:
+    def _get_i18n_instance_name(self, name=None):
+        return get_i18n_instance_name(name)

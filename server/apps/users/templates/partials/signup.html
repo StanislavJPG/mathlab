@@ -49,8 +49,8 @@
   <form method="post" action="{% provider_login_url 'google' %}">
     {% csrf_token %}
     <button class="btn btn-danger btn-block"
-       style="background-color: #DB4437"
-       type="submit">
+            style="background-color: #DB4437"
+            type="submit">
       <i class="fab fa-google me-2"></i>{% translate 'Continue with Google' %}
     </button>
   </form>

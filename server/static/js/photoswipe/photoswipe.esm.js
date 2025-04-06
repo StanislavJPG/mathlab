@@ -2180,7 +2180,7 @@ class Gestures {
     pswp.on('bindEvents', () => {
       pswp.events.add(pswp.scrollWrap, 'click',
       /** @type EventListener */
-      this._onClick.bind(this));
+        this._onClick.bind(this));
 
       if (this._pointerEventEnabled) {
         this._bindEvents('pointer', 'down', 'up', 'cancel');
@@ -2223,18 +2223,18 @@ class Gestures {
     const cancelEvent = cancel ? pref + cancel : '';
     events.add(pswp.scrollWrap, pref + down,
     /** @type EventListener */
-    this.onPointerDown.bind(this));
+      this.onPointerDown.bind(this));
     events.add(window, pref + 'move',
     /** @type EventListener */
-    this.onPointerMove.bind(this));
+      this.onPointerMove.bind(this));
     events.add(window, pref + up,
     /** @type EventListener */
-    this.onPointerUp.bind(this));
+      this.onPointerUp.bind(this));
 
     if (cancelEvent) {
       events.add(pswp.scrollWrap, cancelEvent,
       /** @type EventListener */
-      this.onPointerUp.bind(this));
+        this.onPointerUp.bind(this));
     }
   }
   /**
@@ -2440,11 +2440,11 @@ class Gestures {
         }
       } else
         /* if (this.isZooming) */
-        {
-          if (!pointsEqual(this.p1, this.prevP1) || !pointsEqual(this.p2, this.prevP2)) {
-            this.zoomLevels.change();
-          }
+      {
+        if (!pointsEqual(this.p1, this.prevP1) || !pointsEqual(this.p2, this.prevP2)) {
+          this.zoomLevels.change();
         }
+      }
 
       this._updatePrevPoints();
 
@@ -2647,7 +2647,7 @@ class Gestures {
         // Mouse Event
         this._convertEventPosToPoint(
         /** @type {PointerEvent} */
-        e, this.p1);
+          e, this.p1);
 
         if (pointerType === 'up') {
           // clear all points on mouseup
@@ -3144,12 +3144,12 @@ class Keyboard {
 
         pswp.events.add(document, 'focusin',
         /** @type EventListener */
-        this._onFocusIn.bind(this));
+          this._onFocusIn.bind(this));
       }
 
       pswp.events.add(document, 'keydown',
       /** @type EventListener */
-      this._onKeyDown.bind(this));
+        this._onKeyDown.bind(this));
     });
     const lastActiveElement =
     /** @type {HTMLElement} */
@@ -3279,10 +3279,10 @@ class Keyboard {
 
     if (template && document !== e.target && template !== e.target && !template.contains(
     /** @type {Node} */
-    e.target)) {
+      e.target)) {
       // focus root element
-      template.focus();
-    }
+        template.focus();
+      }
   }
 
 }
@@ -3604,9 +3604,9 @@ class Animations {
   _start(props, isSpring) {
     const animation = isSpring ? new SpringAnimation(
     /** @type SpringAnimationProps */
-    props) : new CSSAnimation(
+      props) : new CSSAnimation(
     /** @type CssAnimationProps */
-    props);
+        props);
     this.activeAnimations.push(animation);
 
     animation.onFinish = () => this.stop(animation);
@@ -3696,7 +3696,7 @@ class ScrollWheel {
     this.pswp = pswp;
     pswp.events.add(pswp.element, 'wheel',
     /** @type EventListener */
-    this._onWheel.bind(this));
+      this._onWheel.bind(this));
   }
   /**
    * @private
@@ -3822,7 +3822,7 @@ function addElementHTML(htmlData) {
 
   out = out.split('%d').join(
   /** @type {string} */
-  svgData.size || 32); // Icons may contain outline/shadow,
+    svgData.size || 32); // Icons may contain outline/shadow,
   // to make it we "clone" base icon shape and add border to it.
   // Icon itself and border are styled via CSS.
   //
@@ -4899,7 +4899,7 @@ class Content {
       if (!this.placeholder) {
         const placeholderSrc = this.instance.applyFilters('placeholderSrc', // use  image-based placeholder only for the first slide,
         // as rendering (even small stretched thumbnail) is an expensive operation
-        this.data.msrc && this.slide.isFirstSlide ? this.data.msrc : false, this);
+          this.data.msrc && this.slide.isFirstSlide ? this.data.msrc : false, this);
         this.placeholder = new Placeholder(placeholderSrc, this.slide.container);
       } else {
         const placeholderEl = this.placeholder.element; // Add placeholder to DOM if it was already created
@@ -6045,13 +6045,13 @@ class Opener {
         let isDelaying = true;
         decodeImage(
         /** @type {HTMLImageElement} */
-        this._placeholder).finally(() => {
-          decoded = true;
+          this._placeholder).finally(() => {
+            decoded = true;
 
-          if (!isDelaying) {
-            resolve(true);
-          }
-        });
+            if (!isDelaying) {
+              resolve(true);
+            }
+          });
         setTimeout(() => {
           isDelaying = false;
 
@@ -6076,7 +6076,7 @@ class Opener {
 
     this.pswp.dispatch(
     /** @type {'initialZoomIn' | 'initialZoomOut'} */
-    'initialZoom' + (this.isOpening ? 'In' : 'Out'));
+      'initialZoom' + (this.isOpening ? 'In' : 'Out'));
     (_this$pswp$element2 = this.pswp.element) === null || _this$pswp$element2 === void 0 || _this$pswp$element2.classList.toggle('pswp--ui-visible', this.isOpening);
 
     if (this.isOpening) {
@@ -6109,7 +6109,7 @@ class Opener {
 
     pswp.dispatch(
     /** @type {'initialZoomInEnd' | 'initialZoomOutEnd'} */
-    'initialZoom' + (this.isOpen ? 'InEnd' : 'OutEnd'));
+      'initialZoom' + (this.isOpen ? 'InEnd' : 'OutEnd'));
 
     if (this.isClosed) {
       pswp.destroy();

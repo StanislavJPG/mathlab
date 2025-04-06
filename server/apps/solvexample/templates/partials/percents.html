@@ -13,10 +13,10 @@
       <button type="button"
               class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
               onclick="getRightPercentsCalculation(
-                           document.getElementById('x1').value,
-                           document.getElementById('number_by_percent').value,
-                           null,
-                           'від відсотка x')">=
+                       document.getElementById('x1').value,
+                       document.getElementById('number_by_percent').value,
+                       null,
+                       'від відсотка x')">=
       </button>
       {% if operation_type == 'від відсотка x' %}
         <p style="margin-top: 5px;">
@@ -54,10 +54,10 @@
             <button type="button"
                     class="btn btn-primary btn-sm" style="width: 30px; height: 33px;"
                     onclick="getRightPercentsCalculation(
-                          document.getElementById('example').value,
-                          document.getElementById('percent').value,
-                          document.getElementById('num').value,
-                          'від числа x')">=
+                             document.getElementById('example').value,
+                             document.getElementById('percent').value,
+                             document.getElementById('num').value,
+                             'від числа x')">=
             </button>
             {% if operation_type == 'від числа x' %}
               <b style="font-size: 25px;"> {{ solved_example }}</b>

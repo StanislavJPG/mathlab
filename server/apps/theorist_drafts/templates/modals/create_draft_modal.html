@@ -17,7 +17,7 @@
         {% render_field form.description class="form-control" %}
         {% render_field_errors form.description %}
         {{ form.draft }}
-        
+
         <div class="form-check form-switch">
           {% render_field form.is_public_available class="form-check-input" %}
           <label class="form-check-label text-lg-nowrap" for="{{ form.is_public_available.id_for_label }}">
@@ -70,10 +70,10 @@
 </div>
 
 <script>
-    function saveDrawing() {
-        var canvas = document.getElementById("drawingCanvas");
-        document.getElementById('{{ form.draft.id_for_label }}').value = canvas.toDataURL("image/png");
-    }
+  function saveDrawing() {
+    var canvas = document.getElementById("drawingCanvas");
+    document.getElementById('{{ form.draft.id_for_label }}').value = canvas.toDataURL("image/png");
+  }
 </script>
 <script src="https://cdn.jsdelivr.net/npm/fabric@latest/dist/index.min.js"></script>
 <script src="{% static 'js/draft.js' %}"></script>

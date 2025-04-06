@@ -1266,6 +1266,20 @@ files = [
 django = ">=4.2"
 
 [[package]]
+name = "djhtml"
+version = "3.0.7"
+description = "Django/Jinja template indenter"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "djhtml-3.0.7.tar.gz", hash = "sha256:558c905b092a0c8afcbed27dea2f50aa6eb853a658b309e4e0f2bb378bdf6178"},
+]
+
+[package.extras]
+dev = ["nox", "pre-commit"]
+
+[[package]]
 name = "drf-yasg"
 version = "1.21.7"
 description = "Automated generation of real Swagger/OpenAPI 2.0 schemas from Django Rest Framework code."
@@ -3923,4 +3937,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "c8518adcaab301c0d1ef123dc363b436a1b87ec7549e1521ae0716ed968cfe39"
+content-hash = "eef32024600a58b1e16dad4d5e2cfe0829673e53b2500337831a3c8e52e8040e"

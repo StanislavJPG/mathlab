@@ -18,10 +18,10 @@ html, body {
 }
 
 .d_line {
-   border-top: 1px solid #858383;
-   width: 1000px;
-   margin: auto;
-   margin-top: 10px;
+    border-top: 1px solid #858383;
+    width: 1000px;
+    margin: auto;
+    margin-top: 10px;
 }
 
 .span-base {

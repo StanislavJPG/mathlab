@@ -267,9 +267,20 @@ BLEACH_ALLOWED_TAGS = [
 BLEACH_ALLOWED_ATTRIBUTES = [
     'href',
     'title',
-    'style',
     'src',
     'alt',
+    'style',
+]
+
+BLEACH_ALLOWED_PROTOCOLS = ['ws', 'wss', *sanitizer.ALLOWED_PROTOCOLS]
+
+BLEACH_ALLOWED_STYLES = [
+    'font-family',
+    'font-weight',
+    'text-decoration',
+    'font-variant',
+    'text-align',
+    'background-color',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

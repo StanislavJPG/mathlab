@@ -8,6 +8,7 @@ from django_filters.views import FilterView
 from render_block import render_block_to_string
 
 from server.apps.theorist_chat.filters import MailBoxFilter
+from server.apps.theorist_chat.forms import MessageMessageSingleForm
 from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 from server.common.http import AuthenticatedHttpRequest
@@ -76,6 +77,7 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
         first_member = room.first_member
         second_member = room.second_member
         context['receiver'] = first_member if first_member != self.request.theorist else second_member
+        context['message_as_form'] = MessageMessageSingleForm()
         return context
 
 

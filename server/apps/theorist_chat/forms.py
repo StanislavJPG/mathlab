@@ -4,6 +4,7 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
 from django_bleach.forms import BleachField
+from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
@@ -51,3 +52,8 @@ class MailBoxCreateForm(forms.ModelForm):
         if is_room_exists:
             self.add_error('second_member', _('This mailbox is already exists.'))
         return second_member
+
+
+class MessageMessageSingleForm(forms.Form):
+    # this form exists because of this https://github.com/django-blog-zinnia/zinnia-wysiwyg-tinymce/issues/6
+    message = forms.CharField(widget=TinyMCE(attrs={'cols': 30, 'rows': 30}), max_length=500, required=True)

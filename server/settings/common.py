@@ -15,6 +15,7 @@ import sys
 from pathlib import Path
 import os
 
+from bleach import sanitizer
 from django.urls import reverse_lazy
 from django.contrib.messages import constants as messages
 
@@ -228,7 +229,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 TINYMCE_DEFAULT_CONFIG = {
     'theme': 'silver',
     'selector': 'textarea',
-    'height': 400,
+    'height': 250,
     'menubar': False,
     'setup': """
     function(editor) {
@@ -252,6 +253,35 @@ CAPTCHA_IMAGE_SIZE = (120, 90)
 CAPTCHA_FONT_SIZE = 30
 
 MESSAGE_TAGS = {messages.ERROR: 'danger', messages.SUCCESS: 'success'}
+
+#: List of allowed tags
+BLEACH_ALLOWED_TAGS = [
+    'p',
+    'span',
+    'img',
+    *sanitizer.ALLOWED_TAGS,
+]
+
+
+#: Map of allowed attributes by tag
+BLEACH_ALLOWED_ATTRIBUTES = [
+    'href',
+    'title',
+    'src',
+    'alt',
+    'style',
+]
+
+BLEACH_ALLOWED_PROTOCOLS = ['ws', 'wss', *sanitizer.ALLOWED_PROTOCOLS]
+
+BLEACH_ALLOWED_STYLES = [
+    'font-family',
+    'font-weight',
+    'text-decoration',
+    'font-variant',
+    'text-align',
+    'background-color',
+]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'

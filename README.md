@@ -5,7 +5,14 @@
 ![Postgres](https://img.shields.io/badge/postgres-%23316192.svg?style=for-the-badge&logo=postgresql&logoColor=white)
 
 
-## **Math equations and problems solver + Mathematical Q/A forum.** 
+## Math-related web-site
+
+#### Here you can find:
+- Solvers (You can automatically solve your math equations, marices, etc)
+- Drafts (You can create your own mathematics drafts using drawing functionality and use it or share it with other theorists if you want!)
+- GraphBuuilder (Build any graph that you want!)
+- Forum (Fully math-integrated forum like stackoverflow.com or znanija.com)
+- Chat (Share your achivements, posts, comments, drafts or just communicate with any theorist that you want in one place! Or just find new friends in math area!)
 
 
 ### About this project

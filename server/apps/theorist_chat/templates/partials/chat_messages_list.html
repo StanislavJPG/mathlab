@@ -1,4 +1,8 @@
-{% load i18n static bleach_tags  %}
+{% load i18n static widget_tweaks %}
+
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
+<script src="{% static 'js/eqneditor.js' %}"></script>
 
 <div class="d-flex flex-row align-items-center justify-content-between">
   <div class="d-flex flex-row align-items-center">
@@ -60,7 +64,7 @@
                 </div>
                 <div class="card-body">
                   <p class="mb-0">
-                    {{ message.message|bleach }}
+                    {{ message.message }}
                   </p>
                 </div>
               </div>
@@ -72,7 +76,7 @@
                 </div>
                 <div class="card-body">
                   <p class="mb-0">
-                    {{ message.message|bleach }}
+                    {{ message.message }}
                   </p>
                 </div>
               </div>
@@ -90,18 +94,20 @@
   </ul>
   <div class="mb-2 position-sticky">
     <div class="form-outline">
-      <textarea class="form-control bg-body-tertiary" id="chat-message-input" rows="4"
-                placeholder="{% translate 'Type here...' %}"></textarea>
-      <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
-      <button id="chat-message-submit"
-              type="button"
-              hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
-              hx-target="#mailboxes-list-js"
-              hx-trigger="click from:#chat-message-submit delay:0.5s"
-              class="btn btn-primary btn-rounded float-end mt-2">
-        <i class="ti ti-send"></i>
-        {% translate 'Send' %}
-      </button>
+      <form id="msg-form">
+        {% render_field message_as_form.message id="chat-message-input" %}
+        <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
+        <button id="chat-message-submit"
+                type="button"
+                hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
+                hx-target="#mailboxes-list-js"
+                hx-trigger="click from:#chat-message-submit delay:0.5s"
+                _="on click call document.getElementById('msg-form').reset()"
+                class="btn btn-primary btn-rounded float-end mt-2">
+          <i class="ti ti-send"></i>
+          {% translate 'Send' %}
+        </button>
+      </form>
     </div>
   </div>
 </div>

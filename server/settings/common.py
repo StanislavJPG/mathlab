@@ -259,18 +259,14 @@ BLEACH_ALLOWED_TAGS = [
     'p',
     'span',
     'img',
+    'div',
+    'h2',
     *sanitizer.ALLOWED_TAGS,
 ]
 
 
 #: Map of allowed attributes by tag
-BLEACH_ALLOWED_ATTRIBUTES = [
-    'href',
-    'title',
-    'src',
-    'alt',
-    'style',
-]
+BLEACH_ALLOWED_ATTRIBUTES = ['href', 'title', 'src', 'alt', 'style', 'class']
 
 BLEACH_ALLOWED_PROTOCOLS = ['ws', 'wss', *sanitizer.ALLOWED_PROTOCOLS]
 

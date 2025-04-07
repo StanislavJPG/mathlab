@@ -34,7 +34,7 @@ class CaptchaForm(forms.Form):
         return self._get_failed_attempts()
 
 
-class ChoicesWithAvatarsWidget(forms.Select):
+class AbstractChoicesWithAvatarsWidget:
     def __init__(self, *args, model=Theorist, **kwargs):
         attrs = kwargs.pop('attrs', {})
         super().__init__(attrs, *args, **kwargs)
@@ -48,3 +48,9 @@ class ChoicesWithAvatarsWidget(forms.Select):
             # see more: https://jsfiddle.net/sharmamehu01/k7zq6shg/2/
             option['attrs']['data-content'] = f'{img} {label}'
         return option
+
+
+class ChoicesWithAvatarsWidget(AbstractChoicesWithAvatarsWidget, forms.Select): ...
+
+
+class MultipleChoicesWithAvatarsWidget(AbstractChoicesWithAvatarsWidget, forms.SelectMultiple): ...

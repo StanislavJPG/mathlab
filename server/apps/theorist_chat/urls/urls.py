@@ -2,7 +2,7 @@ from django.urls import path
 
 from server.apps.theorist_chat.logic.chat import ChatView, MailBoxListView, ChatMessagesListView, HXMailBoxView
 from server.apps.theorist_chat.logic.mailbox_management import MailBoxDeleteView, MailBoxCreateView
-from server.apps.theorist_chat.logic.message_management import MessageInstanceShareView
+from server.apps.theorist_chat.logic.sharing import MessageDraftShareView
 
 app_name = 'theorist_chat'
 
@@ -15,10 +15,10 @@ urlpatterns = [
     # Management mailbox views
     path('mailbox/create/', MailBoxCreateView.as_view(), name='mailbox-create'),
     path('mailbox/<uuid:uuid>/delete/', MailBoxDeleteView.as_view(), name='mailbox-delete'),
-    # Management messages views
+    # Share messages views
     path(
-        'chat/<str:instance>/<uuid:instance_uuid>/share/',
-        MessageInstanceShareView.as_view(),
-        name='share-instance-via-chat',
+        'chat/drafts/<uuid:instance_uuid>/share/',
+        MessageDraftShareView.as_view(),
+        name='share-drafts-via-chat',
     ),
 ]

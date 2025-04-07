@@ -2,16 +2,17 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content">
-    <form hx-post="{{ request.path }}">
+    <form hx-post="{{ request.path }}"
+          hx-confirm="{% blocktranslate trimmed with i18n_obj_name=i18n_obj_name %}Share {{ i18n_obj_name }}?{% endblocktranslate %}">
       <div class="modal-header">
-        <h5 class="modal-title">{% translate 'Share' %}{{ i18n_obj_name }} {% translate 'with other theorists' %}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <h5 class="modal-title">{% translate 'Share' %} {{ i18n_obj_name }} {% translate 'with other theorists' %}</h5>
+        <button type="button" class="btn-close" id="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 
       <div class="modal-body">
-        <label for="{{ form.second_member.id_for_label }}" class="form-label">{% translate 'Create chat with...' %}</label>
-        {% render_field form.second_member class="form-control selectpicker" data-style="btn-default" data-live-search="true" %}
-        {% render_field_errors form.second_member %}
+        <label for="{{ form.receiver.id_for_label }}" class="form-label">{% translate 'Share with...' %}</label>
+        {% render_field form.receiver class="form-control selectpicker" data-style="btn-default" data-live-search="true" multiple="" data-max-options="4" %}
+        {% render_field_errors form.receiver %}
       </div>
 
       <div class="modal-footer">

@@ -45,9 +45,6 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         draft_url = thumb.url
         return draft_url
 
-    def get_share_url(self, uuid):
-        return reverse('forum:drafts:base-drafts') + f'?search_draft={uuid}'
-
     @hook(AFTER_CREATE)
     def after_create(self):
         if not self.label:
@@ -70,3 +67,6 @@ class TheoristDraftsConfiguration(UUIDModelMixin, TimeStampedModelMixin, Lifecyc
 
     def __str__(self):
         return f'{self.theorist.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    def get_share_url(self):
+        return reverse('mathlab:drafts:base-drafts') + f'?search_draft={self.uuid}'

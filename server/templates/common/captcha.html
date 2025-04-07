@@ -1,6 +1,6 @@
 {% load i18n widened_widget_tweaks widget_tweaks %}
 
-{% if form.failed_attempts_count >= 3 %}
+{% if form.is_captcha_valid %}
   <div class="form-group mt-4">
     <label for="{{ form.captcha.id_for_label }}">{{ form.captcha.label }}</label>
     <br/>

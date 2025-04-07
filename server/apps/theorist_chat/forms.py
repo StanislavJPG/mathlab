@@ -9,7 +9,7 @@ from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
-from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget
+from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 
 
 class TheoristMessageForm(forms.Form):
@@ -60,11 +60,12 @@ class MessageMessageSingleForm(forms.Form):
     message = forms.CharField(widget=TinyMCE(attrs={'cols': 30, 'rows': 30}), max_length=500, required=True)
 
 
-class ShareViaMessageForm(forms.Form):
+class ShareViaMessageForm(CaptchaForm, forms.Form):
     receiver = forms.ModelMultipleChoiceField(widget=MultipleChoicesWithAvatarsWidget, queryset=None)
 
     def __init__(self, *args, **kwargs):
         self.theorist = kwargs.pop('theorist')
+        self.request = kwargs.pop('request')
         self.i18n_obj_name = kwargs.pop('i18n_obj_name')
         self.instance_uuid = kwargs.pop('instance_uuid')
         self.sharing_instance = kwargs.pop('sharing_instance')
@@ -90,7 +91,11 @@ class ShareViaMessageForm(forms.Form):
     def _get_default_share_message(self, main_text_label=None, text_label=None):
         url_to_share = self.sharing_instance.get_share_url()
         main_text_label = _("I'm sharing with you!") if not main_text_label else main_text_label
-        text_label = _('Hi! I`m sending you my %s. You are welcome by link below:') if not text_label else text_label
+        text_label = (
+            _('Hi! I`m sending you %s. You are welcome by link below:') % self.i18n_obj_name
+            if not text_label
+            else text_label
+        )
 
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">

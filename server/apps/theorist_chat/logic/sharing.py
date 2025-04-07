@@ -9,10 +9,12 @@ from django_htmx.http import HttpResponseClientRedirect
 from server.apps.theorist_chat.forms import ShareViaMessageForm
 from server.apps.theorist_drafts.models import TheoristDraftsConfiguration
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import HXViewMixin
+from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
-class AbstractMessageInstanceShareView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
+class AbstractMessageInstanceShareView(
+    LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CaptchaViewMixin, CreateView
+):
     template_name = 'modals/messages_share_instance.html'
     form_class = ShareViaMessageForm
     success_url = None
@@ -46,6 +48,8 @@ class AbstractMessageInstanceShareView(LoginRequiredMixin, HXViewMixin, FormMess
         return force_str(_('Error while sharing %s. Please check for errors and try again.') % i18n_instance)
 
     def form_valid(self, form):
+        form.clean_form_fail_attempts()  # todo: REFACTOR CODE
+        form.captcha_success_try_session_push()
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return HttpResponseClientRedirect(self.success_url)

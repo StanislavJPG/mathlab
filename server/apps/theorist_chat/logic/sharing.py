@@ -23,7 +23,12 @@ class AbstractMessageInstanceShareView(
         raise NotImplementedError('Specify `_get_i18n_instance_name` method')
 
     def get_instance_to_share(self):
+        # Actually, this method returns instance that we try to share with other theorists.
         raise NotImplementedError('Specify `get_instance_to_share` method')
+
+    def get_qs_to_filter(self):
+        # This method returns queryset of instance specific objects.
+        raise NotImplementedError('Specify `get_qs_to_filter` method')
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -36,6 +41,7 @@ class AbstractMessageInstanceShareView(
         kwargs['theorist'] = self.request.theorist
         kwargs['instance_uuid'] = self.kwargs['instance_uuid']
         kwargs['sharing_instance'] = self.get_instance_to_share()
+        kwargs['qs_to_filter'] = self.get_qs_to_filter()
         kwargs['i18n_obj_name'] = self._get_i18n_instance_name()
         return kwargs
 
@@ -48,7 +54,7 @@ class AbstractMessageInstanceShareView(
         return force_str(_('Error while sharing %s. Please check for errors and try again.') % i18n_instance)
 
     def form_valid(self, form):
-        form.clean_form_fail_attempts()  # todo: REFACTOR CODE
+        form.clean_form_fail_attempts()
         form.captcha_success_try_session_push()
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
@@ -61,5 +67,9 @@ class MessageDraftShareView(AbstractMessageInstanceShareView):
     def get_instance_to_share(self):
         return TheoristDraftsConfiguration.objects.get(uuid=self.kwargs['instance_uuid'], is_public_available=True)
 
+    def get_qs_to_filter(self):
+        instance = self.get_instance_to_share()
+        return instance.theorist.drafts.all()
+
     def _get_i18n_instance_name(self):
-        return _('my drafts')
+        return _('drafts')

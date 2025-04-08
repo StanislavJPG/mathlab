@@ -3,7 +3,7 @@
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content">
     <form hx-post="{{ request.path }}"
-          hx-confirm="{% blocktranslate trimmed with i18n_obj_name=i18n_obj_name %}Share {{ i18n_obj_name }}?{% endblocktranslate %}">
+          hx-confirm="{% blocktranslate trimmed with i18n_obj_name=i18n_obj_name %}Share my {{ i18n_obj_name }}?{% endblocktranslate %}">
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Share' %} {{ i18n_obj_name }} {% translate 'with other theorists' %}</h5>
         <button type="button" class="btn-close" id="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -13,6 +13,13 @@
         <label for="{{ form.receiver.id_for_label }}" class="form-label">{% translate 'Share with...' %}</label>
         {% render_field form.receiver class="form-control selectpicker" data-style="btn-default" data-live-search="true" multiple="" data-max-options="4" %}
         {% render_field_errors form.receiver small=True %}
+        <small class="text-danger mb-2">{{ form.receiver.help_text }}</small>
+        <small class="d-block mt-2 text-muted">
+          {% url 'forum:theorist_chat:chat-base-page' as forum_url %}
+          {% blocktranslate trimmed with forum_url=forum_url %}
+            Can't find some theorist? Firstly, create your <a href="{{ forum_url }}" target="_blank">mailbox</a> with him.
+          {% endblocktranslate %}
+        </small>
         <div class="w-50">
           {% include 'common/captcha.html' %}
         </div>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-05 22:18+0300\n"
+"POT-Creation-Date: 2025-04-09 00:11+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -655,10 +655,6 @@ msgid "Delete chat"
 msgstr "Видалити чат"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Type here..."
-msgstr "Пишіть тут..."
-
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "Your message"
 msgstr "Ваше повідомлення"
 
@@ -861,6 +857,10 @@ msgstr "Завантажити"
 #: server/apps/theorist_drafts/templates/partials/drafts_table.html
 msgid "Author of drafts"
 msgstr "Автор чернеток"
+
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+msgid "This draft is not public available."
+msgstr "Це креслення не є публічно доступним."
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "Edit"

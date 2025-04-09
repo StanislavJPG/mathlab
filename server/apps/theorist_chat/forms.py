@@ -10,14 +10,19 @@ from tinymce.widgets import TinyMCE
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
+from server.common.utils.helpers import limit_nbsp_paragraphs
 
 
 class TheoristMessageForm(forms.Form):
-    message = BleachField(widget=forms.Textarea, max_length=500, required=True)
+    message = BleachField(widget=forms.Textarea, max_length=500, min_length=1, required=True)
+
+    def clean_message(self):
+        message = self.cleaned_data['message']
+        return limit_nbsp_paragraphs(message)
 
     @transaction.atomic
     def save(self, theorist, **kwargs):
-        message = kwargs.get('message')
+        message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
         return instance

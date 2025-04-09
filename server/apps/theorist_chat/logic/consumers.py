@@ -5,6 +5,7 @@ from channels.generic.websocket import WebsocketConsumer
 from django.utils import dateformat
 
 from server.apps.theorist_chat.forms import TheoristMessageForm
+from server.common.utils.helpers import limit_nbsp_paragraphs
 
 
 class TheoristChatConsumer(WebsocketConsumer):
@@ -38,7 +39,7 @@ class TheoristChatConsumer(WebsocketConsumer):
         text_data_json = json.loads(text_data)
         message = text_data_json['message']
         response = self._get_context()
-        response.update({'message': message})
+        response.update({'message': limit_nbsp_paragraphs(message)})
         self._save_data_to_db(**response)
 
         async_to_sync(self.channel_layer.group_send)(

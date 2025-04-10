@@ -23,6 +23,7 @@ class TheoristChatConsumer(WebsocketConsumer):
             'theorist_avatar_url': user.theorist.get_current_avatar_url(),
             'theorist_uuid': str(user.theorist.uuid),
             'theorist_full_name': user.theorist.full_name,
+            'theorist_profile_url': user.theorist.get_absolute_url(),
             'theorist_created_at': dateformat.format(user.theorist.created_at, 'd E Y р. H:i'),
         }
         return response

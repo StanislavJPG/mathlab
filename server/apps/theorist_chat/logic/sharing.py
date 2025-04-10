@@ -1,11 +1,12 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponse
 from django.urls import reverse_lazy
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
-from django_htmx.http import HttpResponseClientRedirect
 
+from server.apps.forum.models import Comment, Post
 from server.apps.theorist_chat.forms import ShareViaMessageForm
 from server.apps.theorist_drafts.models import TheoristDraftsConfiguration
 from server.common.http import AuthenticatedHttpRequest
@@ -19,8 +20,8 @@ class AbstractMessageInstanceShareView(
     form_class = ShareViaMessageForm
     success_url = None
 
-    def _get_i18n_instance_name(self):
-        raise NotImplementedError('Specify `_get_i18n_instance_name` method')
+    def get_i18n_instance_name(self):
+        raise NotImplementedError('Specify `get_i18n_instance_name` method')
 
     def get_instance_to_share(self):
         # Actually, this method returns instance that we try to share with other theorists.
@@ -32,7 +33,7 @@ class AbstractMessageInstanceShareView(
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['i18n_obj_name'] = self._get_i18n_instance_name()
+        context['i18n_obj_name'] = self.get_i18n_instance_name()
         return context
 
     def get_form_kwargs(self):
@@ -42,15 +43,15 @@ class AbstractMessageInstanceShareView(
         kwargs['instance_uuid'] = self.kwargs['instance_uuid']
         kwargs['sharing_instance'] = self.get_instance_to_share()
         kwargs['qs_to_filter'] = self.get_qs_to_filter()
-        kwargs['i18n_obj_name'] = self._get_i18n_instance_name()
+        kwargs['i18n_obj_name'] = self.get_i18n_instance_name()
         return kwargs
 
     def get_form_valid_message(self):
-        i18n_instance = self._get_i18n_instance_name()
+        i18n_instance = self.get_i18n_instance_name()
         return force_str(_('You successfully shared %s.') % i18n_instance)
 
     def get_form_invalid_message(self):
-        i18n_instance = self._get_i18n_instance_name()
+        i18n_instance = self.get_i18n_instance_name()
         return force_str(_('Error while sharing %s. Please check for errors and try again.') % i18n_instance)
 
     def form_valid(self, form):
@@ -58,7 +59,7 @@ class AbstractMessageInstanceShareView(
         form.captcha_success_try_session_push()
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        return HttpResponseClientRedirect(self.success_url)
+        return HttpResponse(status=201)
 
 
 class MessageDraftShareView(AbstractMessageInstanceShareView):
@@ -67,9 +68,59 @@ class MessageDraftShareView(AbstractMessageInstanceShareView):
     def get_instance_to_share(self):
         return TheoristDraftsConfiguration.objects.get(uuid=self.kwargs['instance_uuid'], is_public_available=True)
 
+    def get_form_kwargs(self):
+        self.request: AuthenticatedHttpRequest
+        kwargs = super().get_form_kwargs()
+        kwargs['url_to_share'] = self.get_instance_to_share().get_share_url()
+        return kwargs
+
     def get_qs_to_filter(self):
         instance = self.get_instance_to_share()
         return instance.theorist.drafts.all()
 
-    def _get_i18n_instance_name(self):
+    def get_i18n_instance_name(self):
         return _('drafts')
+
+
+class MessageCommentShareView(AbstractMessageInstanceShareView):
+    def get_instance_to_share(self):
+        return Comment.objects.get(uuid=self.kwargs['instance_uuid'])
+
+    def get_qs_to_filter(self):
+        return Comment.objects.filter(uuid=self.kwargs['instance_uuid'])
+
+    def get_i18n_instance_name(self):
+        return _('comment')
+
+    def get_form_kwargs(self):
+        self.request: AuthenticatedHttpRequest
+        kwargs = super().get_form_kwargs()
+        instance = self.get_instance_to_share()
+        kwargs['url_to_share'] = instance.get_absolute_url(self.request.GET.get('page'))
+        return kwargs
+
+    def get_success_url(self):
+        instance = self.get_instance_to_share().post
+        return reverse_lazy('forum:post-details', kwargs={'pk': instance.pk, 'slug': instance.slug})
+
+
+class MessagePostShareView(AbstractMessageInstanceShareView):
+    def get_instance_to_share(self):
+        return Post.objects.get(uuid=self.kwargs['instance_uuid'])
+
+    def get_qs_to_filter(self):
+        return Post.objects.filter(uuid=self.kwargs['instance_uuid'])
+
+    def get_i18n_instance_name(self):
+        return _('post')
+
+    def get_form_kwargs(self):
+        self.request: AuthenticatedHttpRequest
+        kwargs = super().get_form_kwargs()
+        instance = self.get_instance_to_share()
+        kwargs['url_to_share'] = instance.get_absolute_url()
+        return kwargs
+
+    def get_success_url(self):
+        instance = self.get_instance_to_share()
+        return reverse_lazy('forum:post-details', kwargs={'pk': instance.pk, 'slug': instance.slug})

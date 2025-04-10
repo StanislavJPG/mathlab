@@ -1,4 +1,5 @@
 from django.db import models
+from django.urls import reverse
 from django_lifecycle import (
     LifecycleModel,
     hook,
@@ -44,8 +45,11 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def __str__(self):
         return f'{self.__class__.__name__} | id - {self.id}'
 
-    def get_absolute_url(self):
-        raise NotImplementedError  # TODO: change
+    def get_absolute_url(self, post_page: int):
+        return (
+            reverse('forum:post-details', kwargs={'pk': self.post.pk, 'slug': self.post.slug})
+            + f'?page={post_page}&comment={self.uuid}'
+        )
 
     @hook(AFTER_CREATE)
     def comments_count_hook(self):

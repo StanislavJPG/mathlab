@@ -75,6 +75,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         self.instance_uuid = kwargs.pop('instance_uuid')
         self.qs_to_filter = kwargs.pop('qs_to_filter')
         self.sharing_instance = kwargs.pop('sharing_instance')
+        self.url_to_share = kwargs.pop('url_to_share')
         self.instance = kwargs.pop('instance')
         super().__init__(*args, **kwargs)
 
@@ -105,10 +106,10 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
     @mark_safe
     def _get_default_share_message(self, main_text_label=None, text_label=None):
-        url_to_share = self.sharing_instance.get_share_url()
         main_text_label = _("I'm sharing with you!") if not main_text_label else main_text_label
         text_label = (
-            _("Hi! I'm sending %s to you. You can check it out by the link below:") % self.i18n_obj_name
+            _("Hi! I'm sending <strong>%s</strong> to you. You can check it out by the link below:")
+            % self.i18n_obj_name
             if not text_label
             else text_label
         )
@@ -118,7 +119,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
           <div class="card shadow-lg rounded-4 p-4 text-center">
             <h2 class="mb-3">🌟 {main_text_label}</h2>
             <p class="lead">{text_label}</p>
-            <a href="{url_to_share}" class="btn btn-primary mt-3">Check it out</a>
+            <a href="{self.url_to_share}" class="btn btn-primary mt-3">Check it out</a>
           </div>
         </div>
         """

@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content">
-    <form hx-post="{{ request.path }}"
+    <form hx-post="{{ request.get_full_path }}"
           hx-confirm="{% blocktranslate trimmed with i18n_obj_name=i18n_obj_name %}Share my {{ i18n_obj_name }}?{% endblocktranslate %}">
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Share' %} {{ i18n_obj_name }} {% translate 'with other theorists' %}</h5>
@@ -36,5 +36,12 @@
 <script>
   $(document).ready(function () {
     $('.selectpicker').selectpicker();
+  });
+  document.addEventListener('htmx:afterRequest', function (event) {
+    if (event.detail.xhr.status === 201) {
+      $('.modal-backdrop').remove();
+      $('#sharing-modal').close();
+      $('body').css('overflow', 'auto');
+    }
   });
 </script>

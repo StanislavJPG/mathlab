@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-09 00:11+0300\n"
+"POT-Creation-Date: 2025-04-10 21:42+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -191,10 +191,30 @@ msgid "Modified at"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Edit comment"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Share this comment with other theorist"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Copy comment link"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 #: server/apps/theorist_drafts/templates/partials/tables/drafts_actions.html
 msgid "Are you sure?"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Delete comment"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Share my comment with other theorist"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
@@ -286,6 +306,22 @@ msgstr ""
 
 #: server/apps/forum/templates/posts/question_page.html
 msgid "Viewers"
+msgstr ""
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Edit post"
+msgstr ""
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Share this post with other theorist"
+msgstr ""
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Copy post url"
+msgstr ""
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Delete post"
 msgstr ""
 
 #: server/apps/forum/templates/posts/question_page.html
@@ -572,6 +608,22 @@ msgstr ""
 msgid "This mailbox is already exists."
 msgstr ""
 
+#: server/apps/theorist_chat/forms.py
+#, python-format
+msgid "You need to have any %s to share it with others."
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+msgid "I'm sharing with you!"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+#, python-format
+msgid ""
+"Hi! I'm sending <strong>%s</strong> to you. You can check it out by the link "
+"below:"
+msgstr ""
+
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully created mailbox!"
 msgstr ""
@@ -582,6 +634,28 @@ msgstr ""
 
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully deleted chat!"
+msgstr ""
+
+#: server/apps/theorist_chat/logic/sharing.py
+#, python-format
+msgid "You successfully shared %s."
+msgstr ""
+
+#: server/apps/theorist_chat/logic/sharing.py
+#, python-format
+msgid "Error while sharing %s. Please check for errors and try again."
+msgstr ""
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "drafts"
+msgstr ""
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "comment"
+msgstr ""
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "post"
 msgstr ""
 
 #: server/apps/theorist_chat/models.py
@@ -611,6 +685,7 @@ msgid "Create chat with..."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 #: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
 #: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
@@ -618,7 +693,32 @@ msgid "Close"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 msgid "Create"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid "Share my %(i18n_obj_name)s?"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "with other theorists"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share with..."
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid ""
+"Can't find some theorist? Firstly, create your <a href=\"%(forum_url)s\" "
+"target=\"_blank\">mailbox</a> with him."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/alerts/empty_chat_alert.html
@@ -764,6 +864,10 @@ msgstr ""
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Copy my draft UUID"
+msgstr ""
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Share my drafts with other theorists"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
@@ -950,6 +1054,14 @@ msgstr ""
 
 #: server/apps/users/templates/partials/signup.html
 msgid "Sign in"
+msgstr ""
+
+#: server/common/forms.py
+msgid "Captcha"
+msgstr ""
+
+#: server/common/templatetags/text.py
+msgid "Shared content..."
 msgstr ""
 
 #: server/templates/403.html

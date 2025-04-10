@@ -67,3 +67,6 @@ class TheoristDraftsConfiguration(UUIDModelMixin, TimeStampedModelMixin, Lifecyc
 
     def __str__(self):
         return f'{self.theorist.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    def get_share_url(self):
+        return reverse('mathlab:drafts:base-drafts') + f'?search_draft={self.uuid}'

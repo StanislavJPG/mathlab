@@ -106,6 +106,19 @@
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
+                            hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
+                            hx-target="#drafts-sharing-modal"
+                            hx-trigger="click"
+                            data-bs-toggle="modal"
+                            data-bs-target="#drafts-sharing-modal"
+                    ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
+                  </li>
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li class="mt-2">
+                    <button type="button"
+                            class="dropdown-item"
                             hx-get="{% url 'mathlab:drafts:drafts-upload' %}?view={{ request.GET.view }}"
                             hx-target="#drafts-management-modal"
                             hx-trigger="click"
@@ -151,6 +164,15 @@
         {% endif %}
       </div>
     </div>
+  </div>
+
+  <div class="modal fade"
+       id="drafts-sharing-modal"
+       tabindex="-1"
+       aria-hidden="true"
+       hx-target="this"
+  >
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
   </div>
 
   <div class="modal fade"

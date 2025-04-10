@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-09 00:11+0300\n"
+"POT-Creation-Date: 2025-04-10 21:50+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -195,11 +195,31 @@ msgid "Modified at"
 msgstr "Модифіковано о"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Edit comment"
+msgstr "Редагувати коментар"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Share this comment with other theorist"
+msgstr "Поділитись цим коментарем з іншим теоретиком"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Copy comment link"
+msgstr "Скопіювати посилання на цей коментар"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 #: server/apps/theorist_drafts/templates/partials/tables/drafts_actions.html
 msgid "Are you sure?"
 msgstr "Ви впевнені?"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Delete comment"
+msgstr "Видалити коментар"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Share my comment with other theorist"
+msgstr "Поділитись цим коментарем з іншим теоретиком"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Sorry! You have to verify your email to interact."
@@ -293,6 +313,22 @@ msgstr "Модифіковано"
 #: server/apps/forum/templates/posts/question_page.html
 msgid "Viewers"
 msgstr "Переглянуто"
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Edit post"
+msgstr "Редагувати пост"
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Share this post with other theorist"
+msgstr "Поділитись цим постом з іншим теоретиком"
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Copy post url"
+msgstr "Скопіювати посилання на цей пост"
+
+#: server/apps/forum/templates/posts/question_page.html
+msgid "Delete post"
+msgstr "Видалити пост"
 
 #: server/apps/forum/templates/posts/question_page.html
 msgid "Answers"
@@ -580,6 +616,24 @@ msgstr "Знайти чат по імені"
 msgid "This mailbox is already exists."
 msgstr "Ця скринька вже існує."
 
+#: server/apps/theorist_chat/forms.py
+#, python-format
+msgid "You need to have any %s to share it with others."
+msgstr "Вам потрібно мати будь-які %s, щоб поділитись з іншими."
+
+#: server/apps/theorist_chat/forms.py
+msgid "I'm sharing with you!"
+msgstr "Я ділюсь з тобою!"
+
+#: server/apps/theorist_chat/forms.py
+#, python-format
+msgid ""
+"Hi! I'm sending <strong>%s</strong> to you. You can check it out by the link "
+"below:"
+msgstr ""
+"Привіт! Я ділюсь <strong>%s</strong> з тобою. Ти можеш це переглянути, "
+"натиснувши кнопку нижче:"
+
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully created mailbox!"
 msgstr "Ви успішно створили нову скриньку!"
@@ -591,6 +645,31 @@ msgstr "Якась помилка. Будь ласка, повторіть сп�
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully deleted chat!"
 msgstr "Ви успішно видалили чат!"
+
+#: server/apps/theorist_chat/logic/sharing.py
+#, python-format
+msgid "You successfully shared %s."
+msgstr "Ви успішно поділились %s.!"
+
+#: server/apps/theorist_chat/logic/sharing.py
+#, fuzzy, python-format
+#| msgid "Error while sharing %s. Please check for errors and try again."
+msgid "Error while sharing %s. Please check for errors and try again."
+msgstr ""
+"Помилка під час поширення. Будь ласка, перевірте наявність помилок і "
+"спробуйте ще раз."
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "drafts"
+msgstr "чернетками"
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "comment"
+msgstr "коментарем"
+
+#: server/apps/theorist_chat/logic/sharing.py
+msgid "post"
+msgstr "постом"
 
 #: server/apps/theorist_chat/models.py
 msgid "Just now"
@@ -619,6 +698,7 @@ msgid "Create chat with..."
 msgstr "Створити чат з..."
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 #: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
 #: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
@@ -626,8 +706,35 @@ msgid "Close"
 msgstr "Закрити"
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 msgid "Create"
 msgstr "Створити"
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid "Share my %(i18n_obj_name)s?"
+msgstr "Поділитись даним(ою) %(i18n_obj_name)s?"
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share"
+msgstr "Поділитись"
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "with other theorists"
+msgstr "з іншими теоретиками"
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share with..."
+msgstr "Поділитись з..."
+
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid ""
+"Can't find some theorist? Firstly, create your <a href=\"%(forum_url)s\" "
+"target=\"_blank\">mailbox</a> with him."
+msgstr ""
+"Не можете знайти якогось теоретика? Спочатку створіть Вашу <a "
+"href=\"%(forum_url)s\" target=\"_blank\">скриньку</a> з ним."
 
 #: server/apps/theorist_chat/templates/partials/alerts/empty_chat_alert.html
 msgid "Chat"
@@ -785,6 +892,10 @@ msgstr "Додати нову чернетку"
 #: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Copy my draft UUID"
 msgstr "Скопіювати UUID моєї чернетки"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Share my drafts with other theorists"
+msgstr "Поділитись моїми чернетками з іншими теоретиками"
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Upload my own draft"
@@ -974,6 +1085,14 @@ msgstr ""
 #: server/apps/users/templates/partials/signup.html
 msgid "Sign in"
 msgstr "Зареєструватись"
+
+#: server/common/forms.py
+msgid "Captcha"
+msgstr "Капча"
+
+#: server/common/templatetags/text.py
+msgid "Shared content..."
+msgstr "Поширений контент..."
 
 #: server/templates/403.html
 msgid "Error"

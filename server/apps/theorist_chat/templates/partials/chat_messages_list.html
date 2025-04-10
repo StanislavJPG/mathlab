@@ -54,9 +54,10 @@
               {% endif %}
           >
             {% if message.sender.uuid != request.theorist.uuid %}
-              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                   src="{{ message.sender.get_current_avatar_url }}"
-                   class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              <a href="{{ message.sender.get_absolute_url }}" target="_blank"><img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                                                                                   src="{{ message.sender.get_current_avatar_url }}"
+                                                                                   class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+              </a>
               <div class="card w-100">
                 <div class="card-header d-flex justify-content-between p-3">
                   <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
@@ -80,9 +81,10 @@
                   </p>
                 </div>
               </div>
-              <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                   src="{{ message.sender.get_current_avatar_url }}"
-                   class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+              <a href="{{ message.sender.get_absolute_url }}" target="_blank"><img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
+                                                                                   src="{{ message.sender.get_current_avatar_url }}"
+                                                                                   class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+              </a>
             {% endif %}
           </li>
         {% endfor %}
@@ -173,7 +175,7 @@
 
       const messageTemplate = (data, isSender) => {
         return `
-        ${!isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">` : ''}
+        ${!isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60"></a>` : ''}
         <div class="card w-100">
             <div class="card-header d-flex justify-content-between p-3">
                 <p class="fw-bold mb-0">${data.theorist_full_name}</p>
@@ -183,7 +185,7 @@
                 <p class="mb-0">${data.message}</p>
             </div>
         </div>
-        ${isSender ? `<img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">` : ''}
+        ${isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>` : ''}
     `;
       };
 

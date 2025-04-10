@@ -8,3 +8,9 @@ class TheoristRankChoices(models.TextChoices):
     TEACHER = 'teacher', _('Teacher of mathematics')
     GURU = 'guru', _('Guru of mathematics')
     MATH_LORD = 'math_lord', _('Lord of mathematics')
+
+
+class TheoristFriendshipStatusChoices(models.TextChoices):
+    PENDING = 'pending', _('Pending')
+    ACCEPTED = 'accepted', _('Accepted')
+    REJECTED = 'rejected', _('Rejected')

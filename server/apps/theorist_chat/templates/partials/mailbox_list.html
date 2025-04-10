@@ -37,12 +37,12 @@
             {% for mailbox in mailboxes %}
               <li class="p-2 border {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox"
                   id="mailbox-{{ mailbox.uuid }}">
-                <a href="javascript:(0);"
-                   hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
-                   hx-trigger="click"
-                   hx-target="#chat-list-js"
-                   _="on click remove .bg-secondary-subtle from .mailbox add .bg-secondary-subtle to #mailbox-{{ mailbox.uuid }}"
-                   class="d-flex flex-row justify-content-between text-decoration-none"
+                <div hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
+                     hx-trigger="click"
+                     hx-target="#chat-list-js"
+                     _="on click remove .bg-secondary-subtle from .mailbox add .bg-secondary-subtle to #mailbox-{{ mailbox.uuid }}"
+                     style="cursor: pointer"
+                     class="d-flex flex-row justify-content-between text-decoration-none"
                 >
                   <div class="d-flex flex-row">
                     {% if mailbox.first_member.uuid == request.theorist.uuid %}
@@ -70,7 +70,7 @@
                     </p>
                     {#                <span class="badge bg-danger float-end">1</span>#}
                   </div>
-                </a>
+                </div>
               </li>
             {% endfor %}
           {% else %}

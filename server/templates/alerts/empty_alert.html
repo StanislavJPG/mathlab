@@ -1,6 +1,6 @@
 {% load i18n %}
 
 <div class="text-center py-6 text-secondary container container-sm">
-  <h3>{% translate 'Still empty!' %}</h3>
+  <h3>{% if main_msg %}{{ main_msg }}{% else %}{% translate 'Still empty!' %}{% endif %}</h3>
   <p>{{ msg }}</p>
 </div>

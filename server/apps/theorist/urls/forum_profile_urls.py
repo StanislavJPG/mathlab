@@ -47,4 +47,6 @@ urlpatterns = [
     ),
     # settings
     path('settings/', include('server.apps.theorist.urls.settings_urls')),
+    # friendship
+    path('friends/', include('server.apps.theorist.urls.friendship_urls')),
 ]

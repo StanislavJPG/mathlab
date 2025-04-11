@@ -78,6 +78,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
+                'ordering': ('status_changed_at',),
                 'verbose_name': 'Friendship',
                 'verbose_name_plural': 'Friendships',
                 'constraints': [

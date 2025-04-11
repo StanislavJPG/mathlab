@@ -49,12 +49,11 @@
           {% if user.is_authenticated %}
             <li><a class="dropdown-item"
                    href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}"><i class="ti ti-user"></i> {% translate 'Profile' %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:post-create' %}"><i class="ti ti-help-hexagon"></i> {% translate 'Ask question' %}...</a></li>
             <li><a class="dropdown-item" href="{% url 'forum:theorist_chat:chat-base-page' %}"><i class="ti ti-mailbox"></i> {% translate 'My mailbox' %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
+            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li><a class="dropdown-item text-danger" href="javascript:(0);"
                    hx-post="{% url 'users:logout-view' %}"
                    hx-confirm="{% translate 'Do you want to log out from your account?' %}">

@@ -1,0 +1,61 @@
+{% load static i18n avatars %}
+
+<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+  <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">{% translate 'Friends' %}<span
+    class="badge text-bg-secondary fs-3 rounded-4 py-1 px-2 ms-2">{{ friends_counter }}</span></h3>
+  <form class="position-relative">
+    <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search Friends">
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+  </form>
+</div>
+<div class="row">
+  {% if friends.exists %}
+    {% for friend in friends %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="card hover-img">
+          <div class="card-body p-4 text-center border-bottom">
+            {% if friend.requester.uuid == request.theorist.uuid %}
+              {% get_instance_avatar friend.receiver size=120 %}
+              <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
+              <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
+            {% else %}
+              {% get_instance_avatar friend.requester size=120 %}
+              <h5 class="fw-semibold mt-2">{{ friend.requester.full_name }}</h5>
+              <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
+            {% endif %}
+          </div>
+          <ul class="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0">
+            <li class="position-relative">
+              <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold"
+                 href="javascript:void(0)">
+                <i class="ti ti-brand-facebook"></i>
+              </a>
+            </li>
+            <li class="position-relative">
+              <a class="text-danger d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
+                 href="javascript:void(0)">
+                <i class="ti ti-brand-instagram"></i>
+              </a>
+            </li>
+            <li class="position-relative">
+              <a class="text-info d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
+                 href="javascript:void(0)">
+                <i class="ti ti-brand-github"></i>
+              </a>
+            </li>
+            <li class="position-relative">
+              <a class="text-secondary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
+                 href="javascript:void(0)">
+                <i class="ti ti-brand-twitter"></i>
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    {% translate 'Still empty 😢' as main_msg %}
+    {% translate 'You can send friendship requests to theorists on their profiles' as msg %}
+    {% include 'alerts/empty_alert.html' with main_msg=main_msg msg=msg %}
+  {% endif %}
+</div>

@@ -30,7 +30,6 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
                 ('modified_at', models.DateTimeField(auto_now=True, null=True)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('reason_of_blocking', models.TextField(blank=True, max_length=500, null=True)),
                 ('blocked_theorists', models.ManyToManyField(related_name='blacklisted_by', to='theorist.theorist')),
                 (
                     'owner',

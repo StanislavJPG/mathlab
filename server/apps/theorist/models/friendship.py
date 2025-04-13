@@ -1,3 +1,5 @@
+import typing
+
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils import timezone
@@ -7,6 +9,9 @@ from typing_extensions import assert_never
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
+
+if typing.TYPE_CHECKING:
+    from server.apps.theorist.models import Theorist
 
 
 class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
@@ -46,12 +51,17 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         else:
             assert_never(self.status)
 
+    @classmethod
+    def create_friendship_request(cls, from_: 'Theorist', to: 'Theorist'):
+        return cls.objects.create(
+            requester=from_,
+            receiver=to,
+        )
+
 
 class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     owner = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='blacklist')
     blocked_theorists = models.ManyToManyField('theorist.Theorist', related_name='blacklisted_by')
-
-    reason_of_blocking = models.TextField(max_length=500, blank=True, null=True)
 
     class Meta:
         verbose_name = _('Blacklist')

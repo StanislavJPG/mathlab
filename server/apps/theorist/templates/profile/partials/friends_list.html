@@ -14,7 +14,7 @@
       <div class="col-sm-6 col-lg-4">
         <div class="card hover-img">
           <div class="card-body p-4 text-center border-bottom">
-            {% if friend.requester.uuid == request.theorist.uuid %}
+            {% if friend.requester.uuid == view.kwargs.uuid %}
               {% get_instance_avatar friend.receiver size=120 as_href=True %}
               <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
               <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
@@ -24,31 +24,47 @@
               <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
             {% endif %}
           </div>
-          <ul class="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0">
-            <li class="position-relative">
-              <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold"
-                 href="javascript:void(0)">
-                <i class="ti ti-brand-facebook"></i>
-              </a>
-            </li>
-            <li class="position-relative">
-              <a class="text-danger d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
-                 href="javascript:void(0)">
-                <i class="ti ti-brand-instagram"></i>
-              </a>
-            </li>
-            <li class="position-relative">
-              <a class="text-info d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
-                 href="javascript:void(0)">
-                <i class="ti ti-brand-github"></i>
-              </a>
-            </li>
-            <li class="position-relative">
-              <a class="text-secondary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold "
-                 href="javascript:void(0)">
-                <i class="ti ti-brand-twitter"></i>
-              </a>
-            </li>
+          <ul class="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
+
+            <button class="btn btn-primary">Subscribe</button>
+            {% if friend.requester.uuid == view.kwargs.uuid %}
+              {% if friend.receiver.social_media_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.receiver.social_media_url }}">
+                    <i class="ti ti-brand-linktree"></i>
+                  </a>
+                </li>
+              {% endif %}
+            {% else %}
+              {% if friend.requester.website_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.requester.website_url }}">
+                    <i class="ti ti-brand-linktree"></i>
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
+            {% if friend.receiver.uuid == view.kwargs.uuid %}
+              {% if friend.requester.social_media_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.requester.social_media_url }}">
+                    <i class="ti ti-brand-linktree"></i>
+                  </a>
+                </li>
+              {% endif %}
+            {% else %}
+              {% if friend.receiver.website_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.receiver.website_url }}">
+                    <i class="ti ti-brand-linktree"></i>
+                  </a>
+                </li>
+              {% endif %}
+            {% endif %}
           </ul>
         </div>
       </div>

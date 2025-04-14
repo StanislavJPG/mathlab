@@ -22,6 +22,7 @@ urlpatterns = [
     path('forum/', include('server.urls.forum_urls')),  # math forum
     path('theorist/onboarding/', include('server.apps.theorist.urls.onboarding_urls')),  # theorist onboarding urls
     path('', include('server.apps.users.urls')),  # for auth purposes
+    path('exception/', include('server.urls.exception_urls')),  # convenient way to get exception in ajax
 ]
 
 if settings.DEBUG:

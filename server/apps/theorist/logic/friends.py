@@ -1,5 +1,6 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.urls import reverse_lazy
 from django.views.generic import ListView
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
@@ -12,6 +13,8 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  
     template_name = 'profile/partials/friends_list.html'
     context_object_name = 'friends'
     paginate_by = 15
+    raise_exception = False
+    login_url = reverse_lazy('exception:hx-401')
 
     def get_queryset(self):
         uuid = self.kwargs['uuid']

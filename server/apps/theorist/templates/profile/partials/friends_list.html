@@ -1,77 +1,56 @@
 {% load static i18n avatars %}
 
-<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
-  <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">{% translate 'Friends' %}<span
-    class="badge text-bg-secondary fs-3 rounded-4 py-1 px-2 ms-2">{{ friends_counter }}</span></h3>
-  <form class="position-relative">
-    <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search Friends">
-    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
-  </form>
-</div>
-<div class="row">
-  {% if friends.exists %}
-    {% for friend in friends %}
-      <div class="col-sm-6 col-lg-4">
-        <div class="card hover-img">
-          <div class="card-body p-4 text-center border-bottom">
-            {% if friend.requester.uuid == view.kwargs.uuid %}
-              {% get_instance_avatar friend.receiver size=120 as_href=True %}
-              <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
-              <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
-            {% else %}
-              {% get_instance_avatar friend.requester size=120 as_href=True %}
-              <h5 class="fw-semibold mt-2">{{ friend.requester.full_name }}</h5>
-              <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
-            {% endif %}
-          </div>
-          <ul class="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
+<ul class="nav nav-tabs justify-content-end" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active"
+       id="friends"
+       data-bs-toggle="tab"
+       data-bs-target="#friends-tab"
+       hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'accepted' %}"
+       hx-trigger="load once, click once"
+       hx-target="#friends-tab"
+       type="button"
+       role="tab"
+       aria-controls="friends-tab-el"
+       aria-selected="true"
+       href="javascript:(0);"><i class="ti ti-friends"></i> {% translate 'Friends' %}</a>
+  </li>
+  {% if request.theorist.uuid == view.kwargs.uuid %}
+    <li class="nav-item" role="presentation">
+      <a class="nav-link"
+         id="pending"
+         data-bs-toggle="tab"
+         data-bs-target="#pending-tab"
+         hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'pending' %}"
+         hx-trigger="click once"
+         hx-target="#pending-tab"
+         type="button"
+         role="tab"
+         aria-controls="pending-tab-el"
+         aria-selected="false"
+         href="javascript:(0);"><i class="ti ti-clock-24"></i> {% translate 'Pending' %}</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link"
+         id="rejected"
+         data-bs-toggle="tab"
+         data-bs-target="#rejected-tab"
+         hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'rejected' %}"
+         hx-trigger="click once"
+         hx-target="#rejected-tab"
+         type="button"
+         role="tab"
+         aria-controls="rejected-tab-el"
+         aria-selected="false"
+         href="javascript:(0);"><i class="ti ti-friends-off"></i> {% translate 'Rejected' %}</a>
+    </li>
+  {% endif %}
+</ul>
 
-            <button class="btn btn-primary">Subscribe</button>
-            {% if friend.requester.uuid == view.kwargs.uuid %}
-              {% if friend.receiver.social_media_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.receiver.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% else %}
-              {% if friend.requester.website_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.requester.website_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% endif %}
-            {% if friend.receiver.uuid == view.kwargs.uuid %}
-              {% if friend.requester.social_media_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.requester.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% else %}
-              {% if friend.receiver.website_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.receiver.website_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% endif %}
-          </ul>
-        </div>
-      </div>
-    {% endfor %}
-  {% else %}
-    {% translate 'Still empty 😢' as main_msg %}
-    {% translate 'You can send friendship requests to theorists on their profiles' as msg %}
-    {% include 'alerts/empty_alert.html' with main_msg=main_msg msg=msg %}
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="friends-tab" role="tabpanel" aria-labelledby="friends-tab-el"></div>
+  {% if request.theorist.uuid == view.kwargs.uuid %}
+    <div class="tab-pane fade" id="pending-tab" role="tabpanel" aria-labelledby="pending-tab-el"></div>
+    <div class="tab-pane fade" id="rejected-tab" role="tabpanel" aria-labelledby="rejected-tab-el"></div>
   {% endif %}
 </div>

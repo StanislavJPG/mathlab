@@ -15,21 +15,13 @@
   {% if friends.exists %}
     {% for friend in friends %}
       <div class="col-sm-6 col-lg-4">
-        <div class="card hover-img">
-          <div class="card-body p-4 text-center border-bottom">
-            {% if friend.requester.uuid == view.kwargs.uuid %}
-              {% get_instance_avatar friend.receiver size=120 as_href=True %}
-              <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
-              <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
-            {% else %}
-              {% get_instance_avatar friend.requester size=120 as_href=True %}
-              <h5 class="fw-semibold mt-2">{{ friend.requester.full_name }}</h5>
-              <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
-            {% endif %}
+        <div class="card hover-img bg-danger-subtle">
+          <div class="card-body p-4 text-center {% if friend.receiver.social_media_url or friend.requester.social_media_url %}border-bottom{% endif %}">
+            {% get_instance_avatar friend.receiver size=120 as_href=True %}
+            <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
+            <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
           </div>
-          <ul class="px-2 py-2 bg-light list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
-
-            <button class="btn btn-primary">Subscribe</button>
+          <ul class="px-2 py-2 {% if friend.receiver.social_media_url or friend.requester.social_media_url %}bg-body-secondary{% endif %} list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             {% if friend.requester.uuid == view.kwargs.uuid %}
               {% if friend.receiver.social_media_url %}
                 <li class="position-relative">

@@ -49,6 +49,7 @@
           {% if user.is_authenticated %}
             <li><a class="dropdown-item"
                    href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}"><i class="ti ti-user"></i> {% translate 'Profile' %}</a></li>
+            <li><a class="dropdown-item" href=""><i class="ti ti-friends"></i> {% translate 'My environment' %}</a></li>
             <li><a class="dropdown-item" href="{% url 'forum:theorist_chat:chat-base-page' %}"><i class="ti ti-mailbox"></i> {% translate 'My mailbox' %}</a></li>
             <li>
               <hr class="dropdown-divider">

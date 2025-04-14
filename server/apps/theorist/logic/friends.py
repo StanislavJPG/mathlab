@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView
+from django.views.generic import ListView, TemplateView, UpdateView, CreateView, DeleteView
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
 from server.apps.theorist.models import TheoristFriendship
@@ -48,9 +48,29 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  
     def get_queryset(self):
         uuid = self.kwargs['uuid']
         status = self.get_friendship_status()
-        return super().get_queryset().filter((Q(requester__uuid=uuid) | Q(receiver__uuid=uuid)) & Q(status=status))
+        if status == TheoristFriendshipStatusChoices.ACCEPTED:
+            filter_query = Q(requester__uuid=uuid) | Q(receiver__uuid=uuid)
+        else:
+            filter_query = Q(requester__uuid=uuid)
+        return super().get_queryset().filter(filter_query & Q(status=status))
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         context['friends_counter'] = self.get_queryset().count()
         return context
+
+
+class TheoristFriendshipCreateView(LoginRequiredMixin, HXViewMixin, CreateView):
+    pass
+
+
+class TheoristAcceptFriendshipStatusView(LoginRequiredMixin, HXViewMixin, UpdateView):
+    pass
+
+
+class TheoristRejectFriendshipStatusView(LoginRequiredMixin, HXViewMixin, UpdateView):
+    pass
+
+
+class TheoristRemoveFriendshipView(LoginRequiredMixin, HXViewMixin, DeleteView):
+    pass

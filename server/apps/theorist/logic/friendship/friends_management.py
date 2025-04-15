@@ -2,7 +2,7 @@ from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views.generic import UpdateView, DeleteView, DetailView
-from django_htmx.http import trigger_client_event
+from django_htmx.http import trigger_client_event, HttpResponseClientRedirect
 from django.utils.translation import gettext_lazy as _
 
 from server.apps.theorist.models import TheoristFriendship, Theorist
@@ -19,11 +19,8 @@ class TheoristFriendshipCreateView(LoginRequiredMixin, FormMessagesMixin, HXView
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
-        response = HttpResponse(status=201)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-
-        trigger_client_event(response, 'friendshipBlockChanged')
-        return response
+        return HttpResponseClientRedirect(self.object.get_absolute_url())
 
 
 class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, UpdateView):

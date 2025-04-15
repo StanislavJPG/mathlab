@@ -48,26 +48,31 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.request: AuthenticatedHttpRequest
-        context['is_theorist_has_request'] = TheoristFriendship.objects.filter(
-            receiver=self.request.theorist, requester=self.get_object(), status=TheoristFriendshipStatusChoices.PENDING
-        ).exists()
-        context['is_theorist_already_requested'] = TheoristFriendship.objects.filter(
-            requester=self.request.theorist, receiver=self.get_object(), status=TheoristFriendshipStatusChoices.PENDING
-        ).exists()
-        context['is_theorists_are_friends'] = TheoristFriendship.objects.filter(
-            (
-                (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
-                | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
+        if self.request.user.is_authenticated:
+            context['is_theorist_has_request'] = TheoristFriendship.objects.filter(
+                receiver=self.request.theorist,
+                requester=self.get_object(),
+                status=TheoristFriendshipStatusChoices.PENDING,
+            ).exists()
+            context['is_theorist_already_requested'] = TheoristFriendship.objects.filter(
+                requester=self.request.theorist,
+                receiver=self.get_object(),
+                status=TheoristFriendshipStatusChoices.PENDING,
+            ).exists()
+            context['is_theorists_are_friends'] = TheoristFriendship.objects.filter(
+                (
+                    (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
+                    | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
+                )
+                & Q(status=TheoristFriendshipStatusChoices.ACCEPTED)
             )
-            & Q(status=TheoristFriendshipStatusChoices.ACCEPTED)
-        )
-        context['is_theorists_are_rejected'] = TheoristFriendship.objects.filter(
-            (
-                (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
-                | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
-            )
-            & Q(status=TheoristFriendshipStatusChoices.REJECTED)
-        ).exists()
+            context['is_theorists_are_rejected'] = TheoristFriendship.objects.filter(
+                (
+                    (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
+                    | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
+                )
+                & Q(status=TheoristFriendshipStatusChoices.REJECTED)
+            ).exists()
         return context
 
 

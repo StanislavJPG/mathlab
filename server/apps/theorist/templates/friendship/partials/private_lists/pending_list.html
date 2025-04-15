@@ -22,14 +22,16 @@
             <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
           </div>
           <div class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
-            <button class="btn btn-success"
-                    hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' friend.uuid %}"
-                    hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
-            >{% translate 'Accept' %}</button>
-            <button class="btn btn-danger mt-1"
-                    hx-get=""
-                    hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to reject {{ name }}'s friendship request?{% endblocktranslate %}"
-            >{% translate 'Reject' %}</button>
+            <div class="d-flex flex-row">
+              <button class="btn btn-success me-2"
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' friend.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
+              >{% translate 'Accept' %}</button>
+              <button class="btn btn-danger"
+                      hx-get=""
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to reject {{ name }}'s friendship request?{% endblocktranslate %}"
+              >{% translate 'Reject' %}</button>
+            </div>
             <div class="d-flex mt-2">
               {% if friend.requester.website_url %}
                 <li class="position-relative">

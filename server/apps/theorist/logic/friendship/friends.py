@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView, UpdateView, CreateView, DeleteView
+from django.views.generic import ListView, TemplateView
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
 from server.apps.theorist.models import TheoristFriendship
@@ -39,11 +39,11 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  
     def get_template_names(self):
         friendship = self.get_friendship_status()
         if friendship == TheoristFriendshipStatusChoices.PENDING:
-            return ['partials/friendship/pending_list.html']
+            return ['friendship/partials/public_lists/pending_list.html']
         elif friendship == TheoristFriendshipStatusChoices.REJECTED:
-            return ['partials/friendship/rejected_list.html']
+            return ['friendship/partials/public_lists/rejected_list.html']
         else:
-            return ['partials/friendship/accepted_list.html']
+            return ['friendship/partials/public_lists/accepted_list.html']
 
     def get_queryset(self):
         uuid = self.kwargs['uuid']
@@ -60,17 +60,38 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  
         return context
 
 
-class TheoristFriendshipCreateView(LoginRequiredMixin, HXViewMixin, CreateView):
-    pass
+class TheoristPrivateCommunityTemplateView(LoginRequiredMixin, TemplateView):
+    template_name = 'friendship/community_list.html'
 
 
-class TheoristAcceptFriendshipStatusView(LoginRequiredMixin, HXViewMixin, UpdateView):
-    pass
+class HXTheoristPrivateCommunityListView(LoginRequiredMixin, HXViewMixin, ListView):
+    model = TheoristFriendship
+    context_object_name = 'friends'
+    paginate_by = 15
 
+    def get_friendship_status(self):
+        if self.kwargs['status'] in TheoristFriendshipStatusChoices.values:
+            return self.kwargs['status']
+        return TheoristFriendshipStatusChoices.ACCEPTED
 
-class TheoristRejectFriendshipStatusView(LoginRequiredMixin, HXViewMixin, UpdateView):
-    pass
+    def get_template_names(self):
+        friendship = self.get_friendship_status()
+        if friendship == TheoristFriendshipStatusChoices.PENDING:
+            return ['friendship/partials/private_lists/pending_list.html']
+        elif friendship == TheoristFriendshipStatusChoices.REJECTED:
+            return ['friendship/partials/private_lists/rejected_list.html']
+        else:
+            return ['friendship/partials/private_lists/accepted_list.html']
 
+    def get_queryset(self):
+        status = self.get_friendship_status()
+        if status == TheoristFriendshipStatusChoices.ACCEPTED:
+            filter_query = Q(requester=self.request.theorist) | Q(receiver=self.request.theorist)
+        else:
+            filter_query = Q(receiver=self.request.theorist)
+        return super().get_queryset().filter(filter_query & Q(status=status))
 
-class TheoristRemoveFriendshipView(LoginRequiredMixin, HXViewMixin, DeleteView):
-    pass
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['friends_counter'] = self.get_queryset().count()
+        return context

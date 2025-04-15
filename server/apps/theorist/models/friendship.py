@@ -1,7 +1,8 @@
 import typing
 
+from django.core.exceptions import ValidationError
 from django.db import models
-from django.db.models import UniqueConstraint
+from django.db.models import UniqueConstraint, Q
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, BEFORE_UPDATE
@@ -35,6 +36,17 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def __str__(self):
         return f'Requester - {self.requester} | Receiver - {self.receiver} | {self.__class__.__name__} | id - {self.id}'
+
+    def clean(self):
+        if self.requester == self.receiver:
+            raise ValidationError('Requester and receiver must be different.')
+
+        if not self.pk:
+            if TheoristFriendship.objects.filter(
+                Q(requester=self.receiver, receiver=self.requester)
+                | Q(requester=self.requester, receiver=self.receiver)
+            ).exists():
+                raise ValidationError('Request already exists in the opposite direction.')
 
     @hook(BEFORE_UPDATE, when='status', has_changed=True)
     def after_update(self):

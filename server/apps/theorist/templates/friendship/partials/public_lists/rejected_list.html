@@ -15,7 +15,7 @@
   {% if friends.exists %}
     {% for friend in friends %}
       <div class="col-sm-6 col-lg-4">
-        <div class="card hover-img bg-danger-subtle">
+        <div class="card hover-img">
           <div class="card-body p-4 text-center {% if friend.receiver.social_media_url or friend.requester.social_media_url %}border-bottom{% endif %}">
             {% get_instance_avatar friend.receiver size=120 as_href=True %}
             <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
@@ -27,7 +27,7 @@
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
                      href="{{ friend.receiver.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
+                    <i class="ti ti-app-window"></i>
                   </a>
                 </li>
               {% endif %}
@@ -46,7 +46,7 @@
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
                      href="{{ friend.requester.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
+                    <i class="ti ti-app-window"></i>
                   </a>
                 </li>
               {% endif %}

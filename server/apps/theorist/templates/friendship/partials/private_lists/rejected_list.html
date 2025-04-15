@@ -15,7 +15,7 @@
   {% if friends.exists %}
     {% for friend in friends %}
       <div class="col-sm-6 col-lg-4">
-        <div class="card hover-img bg-danger-subtle">
+        <div class="card hover-img">
           <div class="card-body p-4 text-center border-bottom">
             {% get_instance_avatar friend.requester size=120 as_href=True %}
             <h5 class="fw-semibold mt-2">{{ friend.requester.full_name }}</h5>

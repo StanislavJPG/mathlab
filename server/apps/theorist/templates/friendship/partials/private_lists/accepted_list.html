@@ -30,14 +30,14 @@
           <ul class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             {% if friend.requester.uuid == request.theorist.uuid %}
               <button class="btn btn-outline-danger"
-                      hx-get=""
+                      hx-post=""
                       hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
               >{% translate 'Remove' %}</button>
               {% if friend.receiver.social_media_url %}
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
                      href="{{ friend.receiver.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
+                    <i class="ti ti-app-window"></i>
                   </a>
                 </li>
               {% endif %}
@@ -60,7 +60,7 @@
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
                      href="{{ friend.requester.social_media_url }}">
-                    <i class="ti ti-brand-linktree"></i>
+                    <i class="ti ti-app-window"></i>
                   </a>
                 </li>
               {% endif %}

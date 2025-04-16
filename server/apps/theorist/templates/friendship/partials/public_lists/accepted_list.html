@@ -30,9 +30,9 @@
           <ul class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             {% if friend.requester.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
-                <button class="btn btn-outline-primary"
+                <button class="btn btn-outline-danger"
                         hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
-                        hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
+                        hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}"
                 >{% translate 'Break up' %}</button>
               {% endif %}
               {% if friend.receiver.social_media_url %}
@@ -55,9 +55,9 @@
             {% endif %}
             {% if friend.receiver.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
-                <button class="btn btn-outline-primary"
+                <button class="btn btn-outline-danger"
                         hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
-                        hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
+                        hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}"
                 >{% translate 'Break up' %}</button>
               {% endif %}
               {% if friend.requester.social_media_url %}

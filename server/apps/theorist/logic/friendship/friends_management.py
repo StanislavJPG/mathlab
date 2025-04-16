@@ -67,10 +67,17 @@ class TheoristBrokeUpFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXVie
 
     def get_form_valid_message(self):
         self.object = self.get_object()
+        is_current_pending = self.request.GET.get('current_status', None)
+        if is_current_pending:
+            self.form_valid_message = force_str(_('You successfully canceled your friendship request to %s 😢'))
+
         theorist = (
             self.object.receiver if self.object.requester_id == self.request.theorist.id else self.object.requester
         )
         return force_str(self.form_valid_message % theorist.full_name)
+
+    def get_success_url(self):
+        return self.request.theorist.get_absolute_url()
 
     def delete(self, request, *args, **kwargs):
         self.object = self.get_object()

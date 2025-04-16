@@ -24,8 +24,8 @@
           <ul class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             {% if friend.requester.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
-                <button class="btn btn-outline-primary"
-                        hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
+                <button class="btn btn-outline-danger"
+                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?current_status=true"
                         hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to cancel your friendship request to {{ name }}?{% endblocktranslate %}"
                 >{% translate 'Cancel' %}</button>
               {% endif %}
@@ -49,8 +49,8 @@
             {% endif %}
             {% if friend.receiver.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
-                <button class="btn btn-outline-primary"
-                        hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
+                <button class="btn btn-outline-danger"
+                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?current_status=true"
                         hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to cancel your friendship request to {{ name }}?{% endblocktranslate %}"
                 >{% translate 'Cancel' %}</button>
               {% endif %}

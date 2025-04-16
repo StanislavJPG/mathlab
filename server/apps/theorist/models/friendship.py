@@ -74,6 +74,10 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.status = self.PredefinedFriendship.ACCEPTED
         self.save(update_fields=['status', 'status_changed_at'])  # status_changed_at to commit hook changes
 
+    def reject_friendship_request(self):
+        self.status = self.PredefinedFriendship.REJECTED
+        self.save(update_fields=['status', 'status_changed_at'])  # status_changed_at to commit hook changes
+
 
 class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     owner = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='blacklist')

@@ -1,7 +1,8 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.views.generic import UpdateView, DeleteView, DetailView
+from django.utils.encoding import force_str
+from django.views.generic import DeleteView, DetailView
 from django_htmx.http import trigger_client_event, HttpResponseClientRedirect
 from django.utils.translation import gettext_lazy as _
 
@@ -23,7 +24,7 @@ class TheoristFriendshipCreateView(LoginRequiredMixin, FormMessagesMixin, HXView
         return HttpResponseClientRedirect(self.object.get_absolute_url())
 
 
-class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, UpdateView):
+class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
     model = TheoristFriendship
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
@@ -36,13 +37,46 @@ class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXView
         response = HttpResponse(status=201)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
 
-        trigger_client_event(response, 'pendingBlockChanged')
+        trigger_client_event(response, 'friendshipBlockChanged')
         return response
 
 
-class TheoristRejectFriendshipStatusView(LoginRequiredMixin, HXViewMixin, UpdateView):
-    pass
+class TheoristRejectFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
+    model = TheoristFriendship
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
+    form_valid_message = _('You successfully rejected friendship request')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.object.reject_friendship_request()
+        response = HttpResponse(status=201)
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+
+        trigger_client_event(response, 'friendshipBlockChanged')
+        return response
 
 
-class TheoristRemoveFriendshipView(LoginRequiredMixin, HXViewMixin, DeleteView):
-    pass
+class TheoristBrokeUpFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DeleteView):
+    model = TheoristFriendship
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
+    form_valid_message = _('You successfully broke up friendship with %s 😢')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def get_form_valid_message(self):
+        self.object = self.get_object()
+        theorist = (
+            self.object.receiver if self.object.requester_id == self.request.theorist.id else self.object.requester
+        )
+        return force_str(self.form_valid_message % theorist.full_name)
+
+    def delete(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        self.object.delete()
+        response = HttpResponse(status=201)
+
+        trigger_client_event(response, 'friendshipBlockChanged')
+        return response

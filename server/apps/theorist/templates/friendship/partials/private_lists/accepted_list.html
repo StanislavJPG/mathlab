@@ -7,7 +7,7 @@
   </h3>
   <form class="position-relative">
     <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search theorist">
-    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y  ms-3"></i>
   </form>
 </div>
 
@@ -30,9 +30,9 @@
           <ul class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             {% if friend.requester.uuid == request.theorist.uuid %}
               <button class="btn btn-outline-danger"
-                      hx-post=""
+                      hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
-              >{% translate 'Remove' %}</button>
+              >{% translate 'Brake up' %}</button>
               {% if friend.receiver.social_media_url %}
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
@@ -53,9 +53,9 @@
             {% endif %}
             {% if friend.receiver.uuid == request.theorist.uuid %}
               <button class="btn btn-outline-danger"
-                      hx-get=""
-                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
-              >{% translate 'Remove' %}</button>
+                      hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}"
+              >{% translate 'Brake up' %}</button>
               {% if friend.requester.social_media_url %}
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
@@ -77,8 +77,10 @@
           </ul>
         </div>
       </div>
-      {% include 'common/pagination.html' with htmx_target='#accepted-list-js' %}
     {% endfor %}
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target='#accepted-list-js' %}
+    </div>
   {% else %}
     {% translate 'Still empty 😢' as main_msg %}
     {% translate 'You can send friendship requests to theorists on their profiles' as msg %}

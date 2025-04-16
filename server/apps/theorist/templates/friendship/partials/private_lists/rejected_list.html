@@ -7,7 +7,7 @@
   </h3>
   <form class="position-relative">
     <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search theorist">
-    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
   </form>
 </div>
 
@@ -23,8 +23,8 @@
           </div>
           <div class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
             <button class="btn btn-success"
-                    hx-get=""
-                    hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
+                    hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' friend.uuid %}"
+                    hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
             >{% translate 'Accept' %}</button>
             <div class="d-flex mt-2">
               {% if friend.requester.website_url %}
@@ -47,8 +47,10 @@
           </div>
         </div>
       </div>
-      {% include 'common/pagination.html' with htmx_target='#rejected-list-js' %}
     {% endfor %}
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target='#rejected-list-js' %}
+    </div>
   {% else %}
     {% translate 'Still empty 🥳' as main_msg %}
     {% translate 'You did not rejected any friendship requests!' as msg %}

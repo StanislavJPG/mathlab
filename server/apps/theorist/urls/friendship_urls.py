@@ -9,6 +9,8 @@ from server.apps.theorist.logic.friendship.friends import (
 from server.apps.theorist.logic.friendship.friends_management import (
     TheoristFriendshipCreateView,
     TheoristAcceptFriendshipView,
+    TheoristBrokeUpFriendshipView,
+    TheoristRejectFriendshipView,
 )
 
 app_name = 'friendship'
@@ -44,5 +46,15 @@ urlpatterns = [
         'hx/<uuid:uuid>/accept-pending/',
         TheoristAcceptFriendshipView.as_view(),
         name='theorist-friendship-accept',
+    ),
+    path(
+        'hx/<uuid:uuid>/reject-friendship/',
+        TheoristRejectFriendshipView.as_view(),
+        name='theorist-friendship-reject',
+    ),
+    path(
+        'hx/<uuid:uuid>/brokeup-friendship/',
+        TheoristBrokeUpFriendshipView.as_view(),
+        name='theorist-friendship-broke-up',
     ),
 ]

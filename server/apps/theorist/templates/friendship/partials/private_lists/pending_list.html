@@ -7,7 +7,7 @@
   </h3>
   <form class="position-relative">
     <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search theorist">
-    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y  ms-3"></i>
   </form>
 </div>
 
@@ -28,7 +28,7 @@
                       hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
               >{% translate 'Accept' %}</button>
               <button class="btn btn-danger"
-                      hx-get=""
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-reject' friend.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to reject {{ name }}'s friendship request?{% endblocktranslate %}"
               >{% translate 'Reject' %}</button>
             </div>
@@ -53,8 +53,10 @@
           </div>
         </div>
       </div>
-      {% include 'common/pagination.html' with htmx_target='#pending-list-js' %}
     {% endfor %}
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target='#pending-list-js' %}
+    </div>
   {% else %}
     {% translate 'Still empty! 🥱' as main_msg %}
     {% translate 'You can send friendship requests to theorists on their profiles' as msg %}

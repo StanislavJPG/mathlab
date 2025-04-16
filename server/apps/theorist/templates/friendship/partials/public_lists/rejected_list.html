@@ -7,11 +7,11 @@
   </h3>
   <form class="position-relative">
     <input type="text" class="form-control search-chat py-2 ps-5" id="text-srh" placeholder="Search theorist">
-    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y text-dark ms-3"></i>
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y  ms-3"></i>
   </form>
 </div>
 
-<div class="row">
+<div class="row" id="rejected-list-js">
   {% if friends.exists %}
     {% for friend in friends %}
       <div class="col-sm-6 col-lg-4">
@@ -64,6 +64,9 @@
         </div>
       </div>
     {% endfor %}
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target='#rejected-list-js' %}
+    </div>
   {% else %}
     {% translate 'Still empty 🥳' as main_msg %}
     {% translate 'You have not any rejected friendship requests!' as msg %}

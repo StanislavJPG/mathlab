@@ -2,9 +2,11 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.shortcuts import redirect
 from django.urls import reverse_lazy
-from django.views.generic import ListView, TemplateView
+from django.views.generic import TemplateView
+from django_filters.views import FilterView
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
+from server.apps.theorist.filters import TheoristPrivateFriendshipFilter, TheoristPublicFriendshipFilter
 from server.apps.theorist.models import TheoristFriendship
 from server.common.mixins.views import HXViewMixin
 
@@ -15,8 +17,9 @@ class HXTheoristFriendshipTemplateView(LoginRequiredMixin, HXViewMixin, Template
     login_url = reverse_lazy('exception:hx-401')
 
 
-class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  # may be FilterView
+class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, FilterView):
     model = TheoristFriendship
+    filterset_class = TheoristPublicFriendshipFilter
     context_object_name = 'friends'
     paginate_by = 15
     raise_exception = False
@@ -30,6 +33,11 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, ListView):  
         ):
             return redirect(reverse_lazy('exception:hx-404'))
         return super().dispatch(request, *args, **kwargs)
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['theorist'] = self.request.theorist
+        return kwargs
 
     def get_friendship_status(self):
         if self.kwargs['status'] in TheoristFriendshipStatusChoices.values:
@@ -64,10 +72,16 @@ class TheoristPrivateCommunityTemplateView(LoginRequiredMixin, TemplateView):
     template_name = 'friendship/community_list.html'
 
 
-class HXTheoristPrivateCommunityListView(LoginRequiredMixin, HXViewMixin, ListView):
+class HXTheoristPrivateCommunityListView(LoginRequiredMixin, HXViewMixin, FilterView):
     model = TheoristFriendship
+    filterset_class = TheoristPrivateFriendshipFilter
     context_object_name = 'friends'
     paginate_by = 15
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['theorist'] = self.request.theorist
+        return kwargs
 
     def get_friendship_status(self):
         if self.kwargs['status'] in TheoristFriendshipStatusChoices.values:

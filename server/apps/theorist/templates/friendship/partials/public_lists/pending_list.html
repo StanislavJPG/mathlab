@@ -30,7 +30,7 @@
             {% if friend.requester.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
                 <button class="btn btn-outline-danger"
-                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?current_status=true"
+                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?is_pending=true"
                         hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to cancel your friendship request to {{ name }}?{% endblocktranslate %}"
                 >{% translate 'Cancel' %}</button>
               {% endif %}
@@ -55,7 +55,7 @@
             {% if friend.receiver.uuid == view.kwargs.uuid %}
               {% if view.kwargs.uuid == request.theorist.uuid %}
                 <button class="btn btn-outline-danger"
-                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?current_status=true"
+                        hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}?is_pending=true"
                         hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to cancel your friendship request to {{ name }}?{% endblocktranslate %}"
                 >{% translate 'Cancel' %}</button>
               {% endif %}

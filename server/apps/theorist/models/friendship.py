@@ -29,7 +29,7 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     status_changed_at = models.DateTimeField(null=True, blank=True)
 
     class Meta:
-        ordering = ('status_changed_at',)
+        ordering = ('-status_changed_at', '-created_at')
         constraints = [UniqueConstraint(fields=['receiver', 'requester'], name='%(app_label)s_unique_members')]
         verbose_name = _('Friendship')
         verbose_name_plural = _('Friendships')

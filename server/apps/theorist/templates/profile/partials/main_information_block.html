@@ -2,14 +2,50 @@
 
 <div class="card mb-4">
   <div class="card-body text-center">
-    {% if theorist.settings.is_profile_only_for_authenticated %}
-      <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end">
+      {% if theorist.settings.is_profile_only_for_authenticated %}
         <i class="ti ti-lock text-warning"
            data-bs-toggle="tooltip" data-bs-placement="top"
            title="{% translate 'This profile is available only for authorized users.' %}"
            style="font-size: 35px"></i>
-      </div>
-    {% endif %}
+      {% endif %}
+      {% if request.theorist.uuid != theorist.uuid and request.user.is_authenticated %}
+        {% if not is_theorist_already_requested and not is_theorist_has_request %}
+          {% if is_theorists_are_friends %}
+            <i class="ti ti-user-check ms-1 text-success"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This is already your friend!' %}"
+               style="font-size: 35px;"></i>
+          {% elif is_theorists_are_rejected %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Someone already rejected friendship request.' %}"
+               style="font-size: 35px;"></i>
+          {% else %}
+            <i class="ti ti-user-plus ms-1"
+               hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
+               hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Make friendship request to this theorist.' %}"
+               style="font-size: 35px; cursor: pointer"></i>
+          {% endif %}
+        {% else %}
+          {% if is_theorist_has_request %}
+            <i class="ti ti-clock-2 ms-1 text-warning"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This theorist already sent friendship request to you.' %}"
+               style="font-size: 35px;"></i>
+          {% elif is_theorist_already_requested %}
+            <i class="ti ti-clock-2 ms-1 text-warning"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'You already sent friendship request to this theorist.' %}"
+               style="font-size: 35px;"></i>
+          {% else %}
+            asdasd
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
     <div class="mb-3 mt-1">
       {% get_instance_avatar theorist %}
     </div>

@@ -1,0 +1,70 @@
+{% load i18n avatars widget_tweaks %}
+
+<div class="d-sm-flex align-items-center justify-content-between mt-3 mb-4">
+  <h3 class="mb-3 mb-sm-0 fw-semibold d-flex align-items-center">
+    <i class="ti ti-clock-24 me-1"></i>{% translate 'Waiting for your friendship' %}
+    <span class="badge text-bg-warning fs-3 rounded-4 py-1 px-2 ms-2">{{ friends_counter }}</span>
+  </h3>
+  <form class="position-relative"
+        hx-get="{{ request.path }}"
+        hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"
+        hx-target="#pending-list-js"
+        hx-select="#pending-list-js"
+  >
+    {% render_field filter.form.full_name class="form-control search-chat py-2 ps-5" %}
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+  </form>
+</div>
+
+<div class="row" id="pending-list-js">
+  {% if friends.exists %}
+    {% for friend in friends %}
+      <div class="col-sm-6 col-lg-4">
+        <div class="card hover-img">
+          <div class="card-body p-4 text-center border-bottom">
+            {% get_instance_avatar friend.requester size=120 as_href=True %}
+            <h5 class="fw-semibold mt-2">{{ friend.requester.full_name }}</h5>
+            <span class="fs-4 mt-2">{{ friend.requester.get_rank_display }}</span>
+          </div>
+          <div class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
+            <div class="d-flex flex-row">
+              <button class="btn btn-success me-2"
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' friend.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
+              >{% translate 'Accept' %}</button>
+              <button class="btn btn-danger"
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-reject' friend.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to reject {{ name }}'s friendship request?{% endblocktranslate %}"
+              >{% translate 'Reject' %}</button>
+            </div>
+            <div class="d-flex mt-2">
+              {% if friend.requester.website_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.requester.website_url }}">
+                    <i class="ti ti-brand-linktree"></i>
+                  </a>
+                </li>
+              {% endif %}
+              {% if friend.requester.social_media_url %}
+                <li class="position-relative">
+                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                     href="{{ friend.requester.social_media_url }}">
+                    <i class="ti ti-app-window"></i>
+                  </a>
+                </li>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target='#pending-list-js' %}
+    </div>
+  {% else %}
+    {% translate 'Still empty! 🥱' as main_msg %}
+    {% translate 'You can send friendship requests to theorists on their profiles' as msg %}
+    {% include 'alerts/empty_alert.html' with main_msg=main_msg msg=msg %}
+  {% endif %}
+</div>

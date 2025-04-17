@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-10 21:50+0300\n"
+"POT-Creation-Date: 2025-04-16 19:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,7 @@ msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
+#: server/apps/theorist/logic/friendship/friends_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
 #: server/apps/users/logic/auths_actions.py
@@ -162,6 +163,8 @@ msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
 
 #: server/apps/forum/templates/base_articles.html
+#: server/apps/theorist/templates/friendship/community_list.html
+#: server/apps/theorist_chat/templates/chat.html
 #: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Loading..."
 msgstr "Завантаження..."
@@ -374,6 +377,22 @@ msgstr "Гуру математики"
 msgid "Lord of mathematics"
 msgstr "Володар математики"
 
+#: server/apps/theorist/choices.py
+#: server/apps/theorist/templates/friendship/community_list.html
+#: server/apps/theorist/templates/profile/partials/friends_list.html
+msgid "Pending"
+msgstr "Очікування"
+
+#: server/apps/theorist/choices.py
+msgid "Accepted"
+msgstr "Прийнято"
+
+#: server/apps/theorist/choices.py
+#: server/apps/theorist/templates/friendship/community_list.html
+#: server/apps/theorist/templates/profile/partials/friends_list.html
+msgid "Rejected"
+msgstr "Відмовлено"
+
 #: server/apps/theorist/forms.py
 msgid "Tell something about yourself... (optional)"
 msgstr "Розкажіть щось про себе... (опціонально)"
@@ -402,6 +421,28 @@ msgstr "Помилка. Будь ласка, перевірте наявніст
 msgid "You successfully deleted your avatar."
 msgstr "Ви успішно видалили аватар."
 
+#: server/apps/theorist/logic/friendship/friends_management.py
+msgid "You successfully created friendship request!"
+msgstr "Ви успішно створили новий запит дружби!"
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+msgid "You successfully accepted friendship request!"
+msgstr "Ви успішно прийняли запит на дружбу."
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+msgid "You successfully rejected friendship request"
+msgstr "Ви успішно відмовили запит на дружбу."
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+#, python-format
+msgid "You successfully broke up friendship with %s 😢"
+msgstr "Ви успішно розірвали дружбу з %s 😢"
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+#, python-format
+msgid "You successfully canceled your friendship request to %s 😢"
+msgstr "Ви успішно відмінили Ваш запит на дружбу до %s 😢"
+
 #: server/apps/theorist/logic/onboarding.py
 msgid "You successfully registered!"
 msgstr "Ви успішно зареєструвались!"
@@ -414,20 +455,170 @@ msgstr "Ви успішно змінили дані профілю."
 msgid "You successfully changed your password!"
 msgstr "Ви успішно змінили Ваш пароль!"
 
-#: server/apps/theorist/models.py
+#: server/apps/theorist/models/friendship.py
+msgid "Friendship"
+msgstr "Дружба"
+
+#: server/apps/theorist/models/friendship.py
+msgid "Friendships"
+msgstr "Дружні стосунки"
+
+#: server/apps/theorist/models/friendship.py
+#, python-format
+msgid "%s still examines yours friendship..."
+msgstr "%s все ще розглядає Вашу дружбу..."
+
+#: server/apps/theorist/models/friendship.py
+#, python-format
+msgid "%s has rejected your friendship request!"
+msgstr "%s відмовив вам у запиті на дружбу!"
+
+#: server/apps/theorist/models/friendship.py
+#, python-format
+msgid "%s has accepted your friendship request!"
+msgstr "%s прийняв ваш запит на дружбу!"
+
+#: server/apps/theorist/models/friendship.py
+msgid "Blacklist"
+msgstr "Чорний список"
+
+#: server/apps/theorist/models/friendship.py
+msgid "Blacklists"
+msgstr "Чорні списки"
+
+#: server/apps/theorist/models/theorist.py
 msgid "Country"
 msgstr "Країна"
 
-#: server/apps/theorist/models.py
+#: server/apps/theorist/models/theorist.py
 #: server/apps/theorist/templates/profile/partials/about_me.html
 #: server/apps/theorist/templates/profile/profile.html
 msgid "About me"
 msgstr "Про мене"
 
-#: server/apps/theorist/models.py
+#: server/apps/theorist/models/theorist.py
 #, python-format
 msgid "Last activity %s ago"
 msgstr "Остання активність %s тому"
+
+#: server/apps/theorist/templates/friendship/community_list.html
+#: server/templates/partials/forum/forum_navbar.html
+msgid "My community"
+msgstr "Моє оточення"
+
+#: server/apps/theorist/templates/friendship/community_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+#: server/apps/theorist/templates/profile/partials/friends_list.html
+msgid "Friends"
+msgstr "Друзі"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
+msgid "Search theorist"
+msgstr "Знайти теоретика"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#, python-format
+msgid "Are you sure you want to break friendship with %(name)s?"
+msgstr "Ви впевнені, що хочете розірвати дружбу з %(name)s?"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+msgid "Brake up"
+msgstr "Розірвати дружбу"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+#, python-format
+msgid ""
+"Are you sure you want to break friendship with %(name)s? You should make "
+"friendship request again if you change your mind after that."
+msgstr ""
+"Ви впевнені, що хочете розірвати дружбу з %(name)s? Ви повинні будете "
+"зробити запит на дружбу ще раз, якщо потім передумаєте."
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+msgid "Still empty 😢"
+msgstr "Все ще пусто 😢"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "You can send friendship requests to theorists on their profiles"
+msgstr "Ви можете відправити запит на дружбу до теоретика в його профілі."
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+msgid "Waiting for your friendship"
+msgstr "Очікують вашої відповіді на запит дружити"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+#, python-format
+msgid "Are you sure you want to accept %(name)s's friendship request?"
+msgstr "Ви впевнені, що хочете прийняти запит дружби від %(name)s?"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "Accept"
+msgstr "Прийняти"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#, python-format
+msgid "Are you sure you want to reject %(name)s's friendship request?"
+msgstr "Ви впевнені, що хочете відмовити на запит на дружбу від %(name)s?"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+msgid "Reject"
+msgstr "Відмовити"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "Still empty! 🥱"
+msgstr "Все ще пусто! 🥱"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "Theorists which you rejected in friendship"
+msgstr "Теоретики, яким Ви відмовили у дружбі"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
+msgid "Still empty 🥳"
+msgstr "Все ще пусто 🥳"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "You did not rejected any friendship requests!"
+msgstr "Ви не відмовляли ні на один запит на дружбу!"
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+msgid "Break up"
+msgstr "Розірвати дружбу"
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "Pending..."
+msgstr "Очікування..."
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+#, python-format
+msgid "Are you sure you want to cancel your friendship request to %(name)s?"
+msgstr "Ви впевнені, що хочете відмінити запит на дружбу з %(name)s?"
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "Cancel"
+msgstr "Відміна"
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
+msgid "Rejected in friendship"
+msgstr "Відмовлено у дружбі"
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
+msgid "You have not any rejected friendship requests!"
+msgstr "Ви все ще не маєте жодного відмовленого запиту на дружбу!"
 
 #: server/apps/theorist/templates/partials/onboarding_form.html
 msgid "Your profile data"
@@ -490,6 +681,31 @@ msgid "This profile is available only for authorized users."
 msgstr "Цей профіль доступний лише для авторизованих користувачів."
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This is already your friend!"
+msgstr "Цей теоретик вже є вашим другом!"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Someone already rejected friendship request."
+msgstr "Хтось вже відмовив на запит на дружбу раніше."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
+msgid "Are you sure you want to send friendship request to %(name)s?"
+msgstr "Ви впевнені, що хочете відправити запит на дружбу з %(name)s?"
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Make friendship request to this theorist."
+msgstr "Створити запит на дружбу для цього теоретика."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This theorist already sent friendship request to you."
+msgstr "Цей теоретик вже відправив запит на дружбу до Вас раніше."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "You already sent friendship request to this theorist."
+msgstr "Ви вже відправляли запит на дружбу до цього теоретика раніше."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
 msgstr "Відправити повідомлення"
 
@@ -513,6 +729,10 @@ msgstr "Статистика"
 #: server/apps/theorist/templates/profile/profile.html
 msgid "Contact info"
 msgstr "Контактна інформація"
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Friends list"
+msgstr "Список друзів"
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is profile only for authorized"
@@ -652,11 +872,10 @@ msgid "You successfully shared %s."
 msgstr "Ви успішно поділились %s.!"
 
 #: server/apps/theorist_chat/logic/sharing.py
-#, fuzzy, python-format
-#| msgid "Error while sharing %s. Please check for errors and try again."
+#, python-format
 msgid "Error while sharing %s. Please check for errors and try again."
 msgstr ""
-"Помилка під час поширення. Будь ласка, перевірте наявність помилок і "
+"Помилка під час поширення %s. Будь ласка, перевірте наявність помилок та "
 "спробуйте ще раз."
 
 #: server/apps/theorist_chat/logic/sharing.py
@@ -1106,6 +1325,14 @@ msgstr "Не цього разу! Доступ заборонено."
 msgid "Still empty!"
 msgstr "Все ще пусто!"
 
+#: server/templates/alerts/not_auth_register_alert.html
+msgid "You're still not registered?"
+msgstr "Ви все ще не зареєстровані?"
+
+#: server/templates/alerts/not_auth_register_alert.html
+msgid "You can do it now by clicking button below!"
+msgstr "Ви можете зробити це вручну, натиснувши кнопку нижче!"
+
 #: server/templates/alerts/not_found_alert.html
 msgid "Nothing has found..."
 msgstr "Нічого не знайдено..."
@@ -1113,6 +1340,14 @@ msgstr "Нічого не знайдено..."
 #: server/templates/alerts/not_found_alert.html
 msgid "Please check search input and try again!"
 msgstr "Будь ласка, перевірте введені дані та спробуйте ще раз."
+
+#: server/templates/alerts/only_for_authenticated.html
+msgid "Only for authenticated users!"
+msgstr "Тільки для автентифікованих користувачів!"
+
+#: server/templates/alerts/only_for_authenticated.html
+msgid "Please, create your account before read this block."
+msgstr "Будь ласка, створівть акаунт, перш ніж читати цей блок."
 
 #: server/templates/common/pagination.html
 msgid "Previous"
@@ -1131,10 +1366,6 @@ msgid "New discussion"
 msgstr "Нове питання"
 
 #: server/templates/partials/forum/forum_navbar.html
-msgid "Ask question"
-msgstr "Запитати"
-
-#: server/templates/partials/forum/forum_navbar.html
 msgid "My mailbox"
 msgstr "Моя скринька"
 
@@ -1145,6 +1376,10 @@ msgstr "Ви хочете вийти з вашого акаунту?"
 #: server/templates/partials/forum/forum_navbar.html
 msgid "Log out"
 msgstr "Вийти"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Ask question"
+msgstr "Запитати"
 
 #: server/templates/partials/theme_switcher.html
 msgid "Light"

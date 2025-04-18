@@ -81,11 +81,36 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
 class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     owner = models.OneToOneField('theorist.Theorist', on_delete=models.CASCADE, related_name='blacklist')
-    blocked_theorists = models.ManyToManyField('theorist.Theorist', related_name='blacklisted_by')
+    blocked_theorists = models.ManyToManyField(
+        'theorist.Theorist', through='theorist.TheoristBlacklist', symmetrical=False
+    )
 
     class Meta:
+        ordering = ('-created_at',)
         verbose_name = _('Blacklist')
         verbose_name_plural = _('Blacklists')
 
     def __str__(self):
         return f'{self.owner} | {self.__class__.__name__} | id - {self.id}'
+
+    def block(self, theorist):
+        TheoristBlacklist.objects.get_or_create(blacklist=self, theorist=theorist)
+
+    def unblock(self, theorist):
+        TheoristBlacklist.objects.filter(blacklist=self, theorist=theorist).first().delete()
+
+
+class TheoristBlacklist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    blacklist = models.ForeignKey('theorist.TheoristFriendshipBlackList', on_delete=models.CASCADE)
+    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE)
+
+    class Meta:
+        ordering = ('-created_at',)
+        constraints = [UniqueConstraint(fields=['blacklist', 'theorist'], name='%(app_label)s_unique')]
+
+    def clean(self):
+        if self.blacklist.owner == self.theorist:
+            raise ValidationError(_('You cannot blacklist yourself!'))
+
+    def __str__(self):
+        return f'{self.theorist} | {self.__class__.__name__} | id - {self.id}'

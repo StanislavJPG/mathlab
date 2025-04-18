@@ -5,6 +5,7 @@ from server.apps.theorist.models import (
     TheoristProfileSettings,
     TheoristFriendshipBlackList,
     TheoristFriendship,
+    TheoristBlacklist,
 )
 
 
@@ -54,7 +55,13 @@ class TheoristFriendshipAdmin(admin.ModelAdmin):
     )
 
 
+class TheoristBlacklistInline(admin.TabularInline):
+    model = TheoristBlacklist
+    extra = 1
+
+
 @admin.register(TheoristFriendshipBlackList)
 class TheoristFriendshipBlackListAdmin(admin.ModelAdmin):
     list_display = ('uuid', 'owner')
     list_filter = ('owner',)
+    inlines = (TheoristBlacklistInline,)

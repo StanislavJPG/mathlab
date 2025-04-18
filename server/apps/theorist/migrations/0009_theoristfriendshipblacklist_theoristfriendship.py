@@ -39,10 +39,46 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
+                'ordering': ('-created_at',),
                 'verbose_name': 'Blacklist',
                 'verbose_name_plural': 'Blacklists',
             },
             bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
+        ),
+        migrations.CreateModel(
+            name='TheoristBlacklist',
+            fields=[
+                ('id', models.BigAutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
+                ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
+                ('modified_at', models.DateTimeField(auto_now=True, null=True)),
+                ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
+                (
+                    'blacklist',
+                    models.ForeignKey(
+                        on_delete=django.db.models.deletion.CASCADE, to='theorist.theoristfriendshipblacklist'
+                    ),
+                ),
+                ('theorist', models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='theorist.theorist')),
+            ],
+            options={
+                'ordering': ('-created_at',),
+            },
+            bases=(django_lifecycle.mixins.LifecycleModelMixin, models.Model),
+        ),
+        migrations.RemoveField(
+            model_name='theoristfriendshipblacklist',
+            name='blocked_theorists',
+        ),
+        migrations.AddField(
+            model_name='theoristfriendshipblacklist',
+            name='blocked_theorists',
+            field=models.ManyToManyField(
+                to='theorist.theorist', through='theorist.TheoristBlacklist', symmetrical=False
+            ),
+        ),
+        migrations.AddConstraint(
+            model_name='theoristblacklist',
+            constraint=models.UniqueConstraint(fields=('blacklist', 'theorist'), name='theorist_unique'),
         ),
         migrations.CreateModel(
             name='TheoristFriendship',
@@ -77,7 +113,7 @@ class Migration(migrations.Migration):
                 ),
             ],
             options={
-                'ordering': ('status_changed_at',),
+                'ordering': ('-status_changed_at', '-created_at'),
                 'verbose_name': 'Friendship',
                 'verbose_name_plural': 'Friendships',
                 'constraints': [

@@ -1,5 +1,6 @@
 from django.urls import path
 
+from server.apps.theorist.logic.friendship.blacklist import HXTheoristBlacklistView, TheoristUnblockFromBlacklistView
 from server.apps.theorist.logic.friendship.friends import (
     HXTheoristFriendshipListView,
     HXTheoristFriendshipTemplateView,
@@ -56,5 +57,16 @@ urlpatterns = [
         'hx/<uuid:uuid>/brokeup-friendship/',
         TheoristBrokeUpFriendshipView.as_view(),
         name='theorist-friendship-broke-up',
+    ),
+    # Blacklist urls
+    path(
+        'hx/my-community/blacklist/',
+        HXTheoristBlacklistView.as_view(),
+        name='hx-theorist-community-blacklist',
+    ),
+    path(
+        'hx/<uuid:uuid>/my-community/blacklist/<uuid:theorist_uuid>/unblock/',
+        TheoristUnblockFromBlacklistView.as_view(),
+        name='theorist-blacklist-unblock',
     ),
 ]

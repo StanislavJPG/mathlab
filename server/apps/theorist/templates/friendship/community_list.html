@@ -55,6 +55,20 @@
              aria-selected="false"
              href="javascript:(0);"><i class="ti ti-friends-off"></i> {% translate 'Rejected' %}</a>
         </li>
+        <li class="nav-item" role="presentation">
+          <a class="nav-link text-danger"
+             id="blacklist"
+             data-bs-toggle="tab"
+             data-bs-target="#blacklist-tab"
+             hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-community-blacklist' %}"
+             hx-trigger="click once, friendshipBlockChanged from:body"
+             hx-target="#blacklist-tab"
+             type="button"
+             role="tab"
+             aria-controls="blacklist-tab-el"
+             aria-selected="false"
+             href="javascript:(0);"><i class="ti ti-playlist-x"></i> {% translate 'Blacklist' %}</a>
+        </li>
       </ul>
 
       <div class="tab-content">
@@ -73,6 +87,12 @@
         <div class="tab-pane fade" id="rejected-tab" role="tabpanel" aria-labelledby="rejected-tab-el">
           <div class="text-center d-flex align-items-center flex-column">
             <div id="rejected-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+            <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+          </div>
+        </div>
+        <div class="tab-pane fade" id="blacklist-tab" role="tabpanel" aria-labelledby="blacklist-tab-el">
+          <div class="text-center d-flex align-items-center flex-column">
+            <div id="blacklist-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
             <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
           </div>
         </div>

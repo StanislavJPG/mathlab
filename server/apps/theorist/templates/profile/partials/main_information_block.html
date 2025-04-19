@@ -21,6 +21,16 @@
                data-bs-toggle="tooltip" data-bs-placement="top"
                title="{% translate 'Someone already rejected friendship request.' %}"
                style="font-size: 35px;"></i>
+          {% elif is_theorists_are_blocked %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This theorist is blocked by you.' %}"
+               style="font-size: 35px;"></i>
+          {% elif is_theorist_has_blocked %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'You have been blocked by this theorist' %}"
+               style="font-size: 35px;"></i>
           {% else %}
             <i class="ti ti-user-plus ms-1"
                hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"

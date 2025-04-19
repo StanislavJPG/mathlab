@@ -57,7 +57,6 @@ class TheoristFriendshipAdmin(admin.ModelAdmin):
 
 class TheoristBlacklistInline(admin.TabularInline):
     model = TheoristBlacklist
-    extra = 1
 
 
 @admin.register(TheoristFriendshipBlackList)

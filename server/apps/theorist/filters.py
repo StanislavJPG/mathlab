@@ -2,7 +2,7 @@ import django_filters as filters
 from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 
-from server.apps.theorist.models import TheoristFriendship
+from server.apps.theorist.models import TheoristFriendship, TheoristBlacklist
 
 
 class AbstractTheoristFriendshipFilter(filters.FilterSet):
@@ -36,3 +36,15 @@ class TheoristPublicFriendshipFilter(AbstractTheoristFriendshipFilter):
             qs_filter = Q(receiver__full_name__icontains=value)
 
         return queryset.filter((~Q(receiver=self.theorist) | ~Q(requester=self.theorist)) & qs_filter)
+
+
+class TheoristBlacklistFilter(filters.FilterSet):
+    full_name = filters.CharFilter(field_name='theorist__full_name', lookup_expr='icontains')
+
+    class Meta:
+        model = TheoristBlacklist
+        fields = ('full_name',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters['full_name'].field.widget.attrs['placeholder'] = _('Search theorist')

@@ -2,16 +2,19 @@ from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.utils.encoding import force_str
-from django.views.generic import UpdateView, ListView, DetailView
+from django.views.generic import UpdateView, DetailView
 from django.utils.translation import gettext_lazy as _
+from django_filters.views import FilterView
 from django_htmx.http import trigger_client_event
 
+from server.apps.theorist.filters import TheoristBlacklistFilter
 from server.apps.theorist.models import TheoristFriendshipBlackList, Theorist, TheoristBlacklist
 from server.common.mixins.views import HXViewMixin
 
 
-class HXTheoristBlacklistView(LoginRequiredMixin, HXViewMixin, ListView):
+class HXTheoristBlacklistView(LoginRequiredMixin, HXViewMixin, FilterView):
     model = TheoristBlacklist
+    filterset_class = TheoristBlacklistFilter
     template_name = 'friendship/blacklist/partials/blacklist.html'
     context_object_name = 'blacklist'
     paginate_by = 15

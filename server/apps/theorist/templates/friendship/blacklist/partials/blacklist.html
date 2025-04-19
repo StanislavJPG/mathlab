@@ -5,15 +5,16 @@
     <i class="ti ti ti-playlist-x me-1"></i>{% translate 'My blacklist' %}
     <span class="badge text-bg-danger fs-3 rounded-4 py-1 px-2 ms-2">{{ blacklist.all.count }}</span>
   </h3>
-{#  <form class="position-relative"#}
-{#        hx-get="{{ request.path }}"#}
-{#        hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"#}
-{#        hx-target="#blacklist-list-js"#}
-{#        hx-select="#blacklist-list-js"#}
-{#  >#}
-{#    {% render_field filter.form.full_name class="form-control search-chat py-2 ps-5" %}#}
-{#    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>#}
-{#  </form>#}
+  <form class="position-relative"
+        hx-get="{{ request.path }}"
+        hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"
+        hx-swap="outerHTML"
+        hx-target="#blacklist-list-js"
+        hx-select="#blacklist-list-js"
+  >
+    {% render_field filter.form.full_name class="form-control search-chat py-2 ps-5" %}
+    <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+  </form>
 </div>
 
 <div class="row" id="blacklist-list-js">

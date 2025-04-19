@@ -1,6 +1,7 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.exceptions import ValidationError
+from django.db.models import Q
 from django.http import HttpResponse
 from django.utils.encoding import force_str
 from django.views.generic import DeleteView, DetailView
@@ -36,6 +37,9 @@ class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXView
     form_valid_message = _('You successfully accepted friendship request!')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
+    def get_queryset(self):
+        return super().get_queryset().filter(receiver=self.request.theorist)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.accept_friendship_request()
@@ -53,6 +57,9 @@ class TheoristRejectFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXView
     form_valid_message = _('You successfully rejected friendship request')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
+    def get_queryset(self):
+        return super().get_queryset().filter(receiver=self.request.theorist)
+
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.reject_friendship_request()
@@ -69,6 +76,9 @@ class TheoristBrokeUpFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXVie
     slug_field = 'uuid'
     form_valid_message = _('You successfully broke up friendship with %s 😢')
     form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(Q(receiver=self.request.theorist) | Q(requester=self.request.theorist))
 
     def get_form_valid_message(self):
         self.object = self.get_object()

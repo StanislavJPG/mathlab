@@ -1,5 +1,6 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.core.exceptions import ValidationError
 from django.http import HttpResponse
 from django.utils.encoding import force_str
 from django.views.generic import DeleteView, DetailView
@@ -19,9 +20,13 @@ class TheoristFriendshipCreateView(LoginRequiredMixin, FormMessagesMixin, HXView
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
-        TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
-        self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        return HttpResponseClientRedirect(self.object.get_absolute_url())
+        try:
+            TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
+            self.messages.success(self.get_form_valid_message(), fail_silently=True)
+            return HttpResponseClientRedirect(self.object.get_absolute_url())
+        except ValidationError as exc:
+            self.messages.error(exc.messages, fail_silently=True)
+            return HttpResponse()
 
 
 class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):

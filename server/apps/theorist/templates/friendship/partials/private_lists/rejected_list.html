@@ -31,6 +31,10 @@
                     hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' friend.uuid %}"
                     hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to accept {{ name }}'s friendship request?{% endblocktranslate %}"
             >{% translate 'Accept' %}</button>
+            <button class="btn btn-outline-danger btn-sm mt-2"
+                    hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid friend.requester.uuid %}"
+                    hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
+            >{% translate 'Block theorist' %}</button>
             <div class="d-flex mt-2">
               {% if friend.requester.website_url %}
                 <li class="position-relative">

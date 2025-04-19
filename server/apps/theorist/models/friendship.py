@@ -65,6 +65,8 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     @classmethod
     def create_friendship_request(cls, from_: 'Theorist', to: 'Theorist'):
+        if from_ in to.blacklist.blocked_theorists.all():
+            raise ValidationError(_('Error. You have been blocked by %s!') % to.full_name)
         return cls.objects.create(
             requester=from_,
             receiver=to,
@@ -94,6 +96,9 @@ class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, Lifecyc
         return f'{self.owner} | {self.__class__.__name__} | id - {self.id}'
 
     def block(self, theorist):
+        TheoristFriendship.objects.filter(
+            (Q(requester=self.owner) & Q(receiver=theorist)) | (Q(requester=theorist) & Q(receiver=self.owner))
+        ).delete()
         TheoristBlacklist.objects.get_or_create(blacklist=self, theorist=theorist)
 
     def unblock(self, theorist):

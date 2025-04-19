@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-16 19:31+0300\n"
+"POT-Creation-Date: 2025-04-19 19:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -129,6 +129,7 @@ msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
+#: server/apps/theorist/logic/friendship/blacklist.py
 #: server/apps/theorist/logic/friendship/friends_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
@@ -393,6 +394,10 @@ msgstr "Прийнято"
 msgid "Rejected"
 msgstr "Відмовлено"
 
+#: server/apps/theorist/filters.py
+msgid "Search theorist"
+msgstr "Знайти теоретика"
+
 #: server/apps/theorist/forms.py
 msgid "Tell something about yourself... (optional)"
 msgstr "Розкажіть щось про себе... (опціонально)"
@@ -420,6 +425,14 @@ msgstr "Помилка. Будь ласка, перевірте наявніст
 #: server/apps/theorist/logic/avatars.py
 msgid "You successfully deleted your avatar."
 msgstr "Ви успішно видалили аватар."
+
+#: server/apps/theorist/logic/friendship/blacklist.py
+msgid "You successfully unblocked %s"
+msgstr "Ви успішно розблокували %s"
+
+#: server/apps/theorist/logic/friendship/blacklist.py
+msgid "You successfully blocked %s"
+msgstr "Ви успішно заблокували %s"
 
 #: server/apps/theorist/logic/friendship/friends_management.py
 msgid "You successfully created friendship request!"
@@ -479,12 +492,22 @@ msgid "%s has accepted your friendship request!"
 msgstr "%s прийняв ваш запит на дружбу!"
 
 #: server/apps/theorist/models/friendship.py
+#, python-format
+msgid "Error. You have been blocked by %s!"
+msgstr "Помилка. %s заблокував Вас!"
+
+#: server/apps/theorist/models/friendship.py
+#: server/apps/theorist/templates/friendship/community_list.html
 msgid "Blacklist"
 msgstr "Чорний список"
 
 #: server/apps/theorist/models/friendship.py
 msgid "Blacklists"
 msgstr "Чорні списки"
+
+#: server/apps/theorist/models/friendship.py
+msgid "You cannot blacklist yourself!"
+msgstr "Ви не можете додати самого себе до чорного списку"
 
 #: server/apps/theorist/models/theorist.py
 msgid "Country"
@@ -501,6 +524,26 @@ msgstr "Про мене"
 msgid "Last activity %s ago"
 msgstr "Остання активність %s тому"
 
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "My blacklist"
+msgstr "Мій Чорний список"
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Are you sure you want to remove %(name)s from your blacklist?"
+msgstr "Ви впевнені, що хочете видалити %(name)s з вашого чорного списку?"
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Unblock"
+msgstr "Розблокувати"
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Empty"
+msgstr "Пусто"
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "You have not any blocked theorist"
+msgstr "Ви все ще не маєте жодного заблокованого теоретика"
+
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/templates/partials/forum/forum_navbar.html
 msgid "My community"
@@ -514,15 +557,6 @@ msgid "Friends"
 msgstr "Друзі"
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
-#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
-#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
-msgid "Search theorist"
-msgstr "Знайти теоретика"
-
-#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 #, python-format
 msgid "Are you sure you want to break friendship with %(name)s?"
 msgstr "Ви впевнені, що хочете розірвати дружбу з %(name)s?"
@@ -530,6 +564,18 @@ msgstr "Ви впевнені, що хочете розірвати дружбу
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 msgid "Brake up"
 msgstr "Розірвати дружбу"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "Are you sure you want to block %(name)s?"
+msgstr "Ви впевнені, що хочете заблокувати %(name)s?"
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "Block theorist"
+msgstr "Заблокувати теоретика"
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 #: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
@@ -687,6 +733,14 @@ msgstr "Цей теоретик вже є вашим другом!"
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Someone already rejected friendship request."
 msgstr "Хтось вже відмовив на запит на дружбу раніше."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This theorist is blocked by you."
+msgstr "Ви заблокували цього теоретика."
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "You have been blocked by this theorist"
+msgstr "Ви були заблоковані цим теоретиком."
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
 #, python-format
@@ -1347,7 +1401,7 @@ msgstr "Тільки для автентифікованих користува�
 
 #: server/templates/alerts/only_for_authenticated.html
 msgid "Please, create your account before read this block."
-msgstr "Будь ласка, створівть акаунт, перш ніж читати цей блок."
+msgstr "Будь ласка, створіть акаунт, перш ніж читати цей блок."
 
 #: server/templates/common/pagination.html
 msgid "Previous"

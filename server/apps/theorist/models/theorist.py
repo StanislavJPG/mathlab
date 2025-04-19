@@ -68,6 +68,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
         last_activity_label = _('Last activity %s ago') % timesince(self.last_activity)
         return last_activity_label
 
+    def is_theorist_is_blocked(self, theorist):
+        return self.blacklist.blocked_theorists.filter(uuid=theorist.uuid).exists() if theorist else False
+
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly
         self.is_onboarded = True

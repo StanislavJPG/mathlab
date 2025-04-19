@@ -8,6 +8,7 @@
   <form class="position-relative"
         hx-get="{{ request.path }}?is_accepted=true"
         hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"
+        hx-swap="outerHTML"
         hx-target="#accepted-list-js"
         hx-select="#accepted-list-js"
   >
@@ -38,6 +39,10 @@
                       hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
               >{% translate 'Brake up' %}</button>
+              <button class="btn btn-danger btn-sm mt-2"
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid friend.receiver.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
+              >{% translate 'Block theorist' %}</button>
               {% if friend.receiver.social_media_url %}
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
@@ -61,6 +66,10 @@
                       hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}"
               >{% translate 'Brake up' %}</button>
+              <button class="btn btn-danger btn-sm mt-2"
+                      hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid friend.requester.uuid %}"
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
+              >{% translate 'Block theorist' %}</button>
               {% if friend.requester.social_media_url %}
                 <li class="position-relative">
                   <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"

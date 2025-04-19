@@ -8,6 +8,7 @@
   <form class="position-relative"
         hx-get="{{ request.path }}?is_accepted=true"
         hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"
+        hx-swap="outerHTML"
         hx-target="#accepted-list-js"
         hx-select="#accepted-list-js"
   >

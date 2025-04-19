@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-16 19:31+0300\n"
+"POT-Creation-Date: 2025-04-19 19:31+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -127,6 +127,7 @@ msgstr ""
 
 #: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
+#: server/apps/theorist/logic/friendship/blacklist.py
 #: server/apps/theorist/logic/friendship/friends_management.py
 #: server/apps/theorist/logic/onboarding.py
 #: server/apps/theorist/logic/profile_settings.py
@@ -387,6 +388,10 @@ msgstr ""
 msgid "Rejected"
 msgstr ""
 
+#: server/apps/theorist/filters.py
+msgid "Search theorist"
+msgstr ""
+
 #: server/apps/theorist/forms.py
 msgid "Tell something about yourself... (optional)"
 msgstr ""
@@ -413,6 +418,16 @@ msgstr ""
 
 #: server/apps/theorist/logic/avatars.py
 msgid "You successfully deleted your avatar."
+msgstr ""
+
+#: server/apps/theorist/logic/friendship/blacklist.py
+#, python-format
+msgid "You successfully unblocked %s"
+msgstr ""
+
+#: server/apps/theorist/logic/friendship/blacklist.py
+#, python-format
+msgid "You successfully blocked %s"
 msgstr ""
 
 #: server/apps/theorist/logic/friendship/friends_management.py
@@ -473,11 +488,21 @@ msgid "%s has accepted your friendship request!"
 msgstr ""
 
 #: server/apps/theorist/models/friendship.py
+#, python-format
+msgid "Error. You have been blocked by %s!"
+msgstr ""
+
+#: server/apps/theorist/models/friendship.py
+#: server/apps/theorist/templates/friendship/community_list.html
 msgid "Blacklist"
 msgstr ""
 
 #: server/apps/theorist/models/friendship.py
 msgid "Blacklists"
+msgstr ""
+
+#: server/apps/theorist/models/friendship.py
+msgid "You cannot blacklist yourself!"
 msgstr ""
 
 #: server/apps/theorist/models/theorist.py
@@ -495,6 +520,27 @@ msgstr ""
 msgid "Last activity %s ago"
 msgstr ""
 
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "My blacklist"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+#, python-format
+msgid "Are you sure you want to remove %(name)s from your blacklist?"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Unblock"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Empty"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "You have not any blocked theorist"
+msgstr ""
+
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/templates/partials/forum/forum_navbar.html
 msgid "My community"
@@ -508,21 +554,25 @@ msgid "Friends"
 msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
-#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
-#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
-msgid "Search theorist"
-msgstr ""
-
-#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 #, python-format
 msgid "Are you sure you want to break friendship with %(name)s?"
 msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 msgid "Brake up"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+#, python-format
+msgid "Are you sure you want to block %(name)s?"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+msgid "Block theorist"
 msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
@@ -678,6 +728,14 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Someone already rejected friendship request."
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This theorist is blocked by you."
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "You have been blocked by this theorist"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html

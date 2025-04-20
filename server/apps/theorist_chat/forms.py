@@ -40,6 +40,20 @@ class MailBoxCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.first_member = self.first_member
 
+        qs_to_exclude = (
+            Theorist.objects.filter(
+                (
+                    Q(chat_rooms_initiated__first_member=self.first_member)
+                    | Q(chat_rooms_received__second_member=self.first_member)
+                )
+                | (
+                    Q(chat_rooms_received__first_member=self.first_member)
+                    | Q(chat_rooms_initiated__second_member=self.first_member)
+                )
+            )
+            .values_list('id', flat=True)
+            .distinct()
+        )
         self.fields['second_member'].queryset = Theorist.objects.filter(
             (~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True))
             & (
@@ -53,7 +67,7 @@ class MailBoxCreateForm(forms.ModelForm):
                 )
             ),
             settings__is_able_to_get_messages=True,
-        )
+        ).exclude(id__in=qs_to_exclude)
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'
 
@@ -95,6 +109,13 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
                     | Q(chat_rooms_received__second_member=self.theorist)
                     | Q(chat_rooms_initiated__second_member=self.theorist)
                     | Q(chat_rooms_received__first_member=self.theorist)
+                )
+                & (
+                    (Q(friendship_requester__requester=self.theorist) | Q(friendship_receiver__receiver=self.theorist))
+                    | (
+                        Q(friendship_requester__receiver=self.theorist)
+                        | Q(friendship_receiver__requester=self.theorist)
+                    )
                 ),
                 settings__is_able_to_get_messages=True,
                 chat_configuration__is_chats_available=True,

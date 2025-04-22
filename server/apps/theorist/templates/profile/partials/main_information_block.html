@@ -84,6 +84,7 @@
           {% if is_theorists_are_friends %}
             <button type="button"
                     hx-post="{% url 'forum:theorist_chat:mailbox-create-from-profile' theorist.uuid %}"
+                    hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to create chat with {{ name }}?{% endblocktranslate %}"
                     hx-swap="none"
                     hx-trigger="click"
                     class="btn btn-primary btn-sm ms-1">

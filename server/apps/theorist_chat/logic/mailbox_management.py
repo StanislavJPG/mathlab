@@ -54,7 +54,7 @@ class MailBoxCreateFromProfile(
     slug_field = 'uuid'
     slug_url_kwarg = 'theorist_uuid'
     form_valid_message = _('You successfully created mailbox with %s!')
-    form_invalid_message = _('Some error happens. Please, try again later.')
+    form_invalid_message = _('It looks like chat with this theorists already exists.')
 
     def get_queryset(self):
         friendship_exists = (
@@ -93,8 +93,7 @@ class MailBoxCreateFromProfile(
             self.messages.success(self.get_form_valid_message(), fail_silently=True)
             response = HttpResponseClientRedirect(reverse('forum:theorist_chat:chat-base-page'))
         else:
-            error_str = list(mailbox_form.errors.values())[0][0]  # todo: fix to get convenient errors
-            self.messages.error(error_str, fail_silently=True)
+            self.messages.error(self.get_form_invalid_message(), fail_silently=True)
             response = HttpResponse()
         return response
 

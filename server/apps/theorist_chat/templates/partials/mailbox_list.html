@@ -17,20 +17,25 @@
   </div>
   <div class="card">
     <div class="card-body">
-      <div class="d-flex flex-row align-items-center justify-content-between">
-        <span class="small text-muted">{% translate 'Last chats' %}:</span>
-        <form hx-get="{{ request.path }}"
-              hx-target="#mailboxes-list-js"
-              hx-select="#mailboxes-list-js"
-              hx-trigger="input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
-          <div class="input-group">
+      <form hx-get="{{ request.path }}"
+            hx-target="#mailboxes-list-js"
+            hx-select="#mailboxes-list-js"
+            hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
+        <div class="d-flex flex-row align-items-center justify-content-between">
+          <div class="d-flex flex-column">
+            <span class="small text-muted">{% translate 'Last chats' %}:</span>
+            <button type="button" id="{{ filter.form.show_blocked_chats.id_for_label }}" name="show_blocked_chats" value="true" class="text-decoration-none btn btn-link p-0">
+              <small style="font-size: 12px"><i class="ti ti-eye"></i> {% translate 'Show blocked chats' %}</small>
+            </button>
+          </div>
+          <div class="input-group w-50">
             {% render_field filter.form.username class="form-control" %}
             <button class="btn btn-outline-danger" type="reset">
               <i class="ti ti-xbox-x"></i>
             </button>
           </div>
-        </form>
-      </div>
+        </div>
+      </form>
       {% block mailbox %}
         <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
           {% if mailboxes %}

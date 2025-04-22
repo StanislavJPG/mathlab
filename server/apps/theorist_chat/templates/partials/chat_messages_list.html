@@ -128,7 +128,7 @@
           <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
           <button id="chat-message-submit"
                   type="button"
-                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
+                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
                   hx-target="#mailboxes-list-js"
                   hx-trigger="click from:#chat-message-submit delay:0.5s"
                   _="on click call document.getElementById('msg-form').reset()"

@@ -8,7 +8,7 @@
 {% block body %}
   <section>
     <div class="container py-5">
-      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load">
+      <div class="row" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}" hx-target="this" hx-trigger="load, friendshipBlockChanged from:body">
         <div class="text-center d-flex align-items-center flex-column">
           <div id="mailbox-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
           <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>

@@ -39,6 +39,10 @@ class MailBoxListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXView
         kwargs['theorist'] = self.request.theorist
         return kwargs
 
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        return context
+
 
 class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, ListView):
     model = TheoristMessage
@@ -73,11 +77,24 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
         context = super().get_context_data(**kwargs)
         context['room_uuid'] = self.kwargs['room_uuid']
 
-        room = TheoristChatRoom.objects.get(uuid=self.kwargs['room_uuid'])
+        room = (
+            TheoristChatRoom.objects.filter(uuid=self.kwargs['room_uuid'])
+            .select_related('first_member', 'second_member')
+            .first()
+        )
         first_member = room.first_member
         second_member = room.second_member
         context['receiver'] = first_member if first_member != self.request.theorist else second_member
         context['message_as_form'] = MessageMessageSingleForm()
+        context['is_blocked_by_first_member'] = first_member.blacklist.blocked_theorists.filter(
+            id=second_member.id
+        ).exists()
+        context['is_blocked_by_second_member'] = second_member.blacklist.blocked_theorists.filter(
+            id=first_member.id
+        ).exists()
+        context['is_request_theorist_blocked_recipient'] = self.request.theorist.blacklist.blocked_theorists.filter(
+            Q(id=first_member.id) | Q(id=second_member.id)
+        ).exists()
         return context
 
 

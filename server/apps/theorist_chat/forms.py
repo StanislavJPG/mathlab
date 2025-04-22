@@ -20,12 +20,22 @@ class TheoristMessageForm(forms.Form):
         message = self.cleaned_data['message']
         return limit_nbsp_paragraphs(message)
 
+    def validate_room(self, room) -> bool:
+        first_member = room.first_member
+        second_member = room.second_member
+        first_cond = first_member.blacklist.blocked_theorists.filter(id=second_member.id).exists()
+        second_cond = second_member.blacklist.blocked_theorists.filter(id=first_member.id).exists()
+        if first_cond or second_cond:
+            raise forms.ValidationError(_('Error. This theorist has blocked you.'))
+        return True
+
     @transaction.atomic
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
-        instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
-        return instance
+        if self.validate_room(room) is True:
+            instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
+            return instance
 
 
 class MailBoxCreateForm(forms.ModelForm):

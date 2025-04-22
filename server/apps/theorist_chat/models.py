@@ -48,6 +48,15 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         if self.first_member == self.second_member:
             raise ValidationError('Cannot assign the same members')
 
+    @property
+    def is_any_of_members_blocked_another(self):
+        return any(
+            (
+                self.first_member.blacklist.blocked_theorists.filter(id=self.second_member_id).exists(),
+                self.second_member.blacklist.blocked_theorists.filter(id=self.first_member_id).exists(),
+            )
+        )
+
 
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     message = bleach.BleachField(max_length=500)

@@ -35,7 +35,7 @@
         <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
           {% if mailboxes %}
             {% for mailbox in mailboxes %}
-              <li class="p-2 border {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox"
+              <li class="p-2 border {% if mailbox.is_any_of_members_blocked_another %}border-danger{% endif %} {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox"
                   id="mailbox-{{ mailbox.uuid }}">
                 <div hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
                      hx-trigger="click"
@@ -60,7 +60,6 @@
                         <span class="small text-muted">{{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}</span>
                       </div>
                     {% endif %}
-
                   </div>
                   <div class="pt-1">
                     <p class="small text-muted mb-1">
@@ -68,6 +67,12 @@
                         {{ mailbox.messages.last.chat_convenient_created_at }}
                       {% endif %}
                     </p>
+                    {% if mailbox.is_any_of_members_blocked_another %}
+                      <i class="ti ti-ban float-end text-danger"
+                         data-bs-toggle="tooltip" data-bs-placement="top"
+                         title="{% translate 'Someone of chat members blocked another.' %}"
+                      ></i>
+                    {% endif %}
                     {#                <span class="badge bg-danger float-end">1</span>#}
                   </div>
                 </div>

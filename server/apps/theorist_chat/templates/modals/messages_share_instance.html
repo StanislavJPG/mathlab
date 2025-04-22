@@ -40,7 +40,7 @@
   document.addEventListener('htmx:afterRequest', function (event) {
     if (event.detail.xhr.status === 201) {
       $('.modal-backdrop').remove();
-      $('#sharing-modal').close();
+      $('#sharing-modal').modal('hide');;
       $('body').css('overflow', 'auto');
     }
   });

@@ -101,7 +101,7 @@ class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, Lifecyc
     def block(self, theorist):
         TheoristFriendship.objects.filter(
             (Q(requester=self.owner) & Q(receiver=theorist)) | (Q(requester=theorist) & Q(receiver=self.owner))
-        ).delete()
+        ).delete()  # delete friendship while blocking theorist
         TheoristBlacklist.objects.get_or_create(blacklist=self, theorist=theorist)
 
     def unblock(self, theorist):

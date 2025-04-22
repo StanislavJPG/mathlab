@@ -9,6 +9,7 @@ from django_lifecycle import LifecycleModel, hook, BEFORE_UPDATE
 from typing_extensions import assert_never
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
+from server.apps.theorist.querysets import TheoristFriendshipQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 if typing.TYPE_CHECKING:
@@ -27,6 +28,8 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     # additional time-check field
     status_changed_at = models.DateTimeField(null=True, blank=True)
+
+    objects = TheoristFriendshipQuerySet.as_manager()
 
     class Meta:
         ordering = ('-status_changed_at', '-created_at')

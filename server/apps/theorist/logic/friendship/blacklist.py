@@ -5,7 +5,7 @@ from django.utils.encoding import force_str
 from django.views.generic import UpdateView, DetailView
 from django.utils.translation import gettext_lazy as _
 from django_filters.views import FilterView
-from django_htmx.http import trigger_client_event
+from django_htmx.http import trigger_client_event, HttpResponseClientRedirect
 
 from server.apps.theorist.filters import TheoristBlacklistFilter
 from server.apps.theorist.models import TheoristFriendshipBlackList, Theorist, TheoristBlacklist
@@ -46,6 +46,9 @@ class TheoristUnblockFromBlacklistView(LoginRequiredMixin, FormMessagesMixin, HX
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponse()
         trigger_client_event(response, 'friendshipBlockChanged')
+
+        if self.request.GET.get('reload_next'):
+            response = HttpResponseClientRedirect(theorist_to_unblock.get_absolute_url())
         return response
 
 
@@ -71,4 +74,7 @@ class TheoristBlockView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, Deta
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponse()
         trigger_client_event(response, 'friendshipBlockChanged')
+
+        if self.request.GET.get('reload_next'):
+            response = HttpResponseClientRedirect(theorist_to_block.get_absolute_url())
         return response

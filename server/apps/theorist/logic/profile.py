@@ -6,7 +6,6 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
-from server.apps.theorist.choices import TheoristFriendshipStatusChoices
 from server.apps.theorist.models import Theorist, TheoristFriendship, TheoristFriendshipBlackList
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -66,19 +65,16 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
                     'is_theorist_has_request': friendship_qs.filter(
                         receiver=current_theorist,
                         requester=target_theorist,
-                        status=TheoristFriendshipStatusChoices.PENDING,
-                    ).exists(),
+                    )
+                    .filter_by_pending_status()
+                    .exists(),
                     'is_theorist_already_requested': friendship_qs.filter(
-                        requester=current_theorist,
-                        receiver=target_theorist,
-                        status=TheoristFriendshipStatusChoices.PENDING,
-                    ).exists(),
-                    'is_theorists_are_friends': friendship_qs.filter(
-                        status=TheoristFriendshipStatusChoices.ACCEPTED
-                    ).exists(),
-                    'is_theorists_are_rejected': friendship_qs.filter(
-                        status=TheoristFriendshipStatusChoices.REJECTED
-                    ).exists(),
+                        requester=current_theorist, receiver=target_theorist
+                    )
+                    .filter_by_pending_status()
+                    .exists(),
+                    'is_theorists_are_friends': friendship_qs.filter_by_accepted_status().exists(),
+                    'is_theorists_are_rejected': friendship_qs.filter_by_rejected_status().exists(),
                     'is_theorists_are_blocked': TheoristFriendshipBlackList.objects.filter(
                         owner=current_theorist, blocked_theorists=target_theorist
                     ).exists(),

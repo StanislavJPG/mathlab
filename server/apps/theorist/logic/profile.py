@@ -6,8 +6,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
-from server.apps.theorist.choices import TheoristFriendshipStatusChoices
-from server.apps.theorist.models import Theorist, TheoristFriendship
+from server.apps.theorist.models import Theorist, TheoristFriendship, TheoristFriendshipBlackList
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
@@ -28,6 +27,7 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
         return super().get_queryset().filter(is_onboarded=True)
 
     def dispatch(self, request, *args, **kwargs):
+        self.request: AuthenticatedHttpRequest
         self.object = self.get_object()
         theorist = get_object_or_404(Theorist, pk=self.kwargs['pk'])
         valid_full_name_slug = theorist.full_name_slug
@@ -41,38 +41,49 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
                     },
                 )
             )
-        if self.object.settings.is_profile_only_for_authenticated and not request.user.is_authenticated:
+        if (
+            self.object.settings.is_profile_only_for_authenticated and not request.user.is_authenticated
+        ) or self.object.is_theorist_is_blocked(theorist=self.request.theorist):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.request: AuthenticatedHttpRequest
+
         if self.request.user.is_authenticated:
-            context['is_theorist_has_request'] = TheoristFriendship.objects.filter(
-                receiver=self.request.theorist,
-                requester=self.get_object(),
-                status=TheoristFriendshipStatusChoices.PENDING,
-            ).exists()
-            context['is_theorist_already_requested'] = TheoristFriendship.objects.filter(
-                requester=self.request.theorist,
-                receiver=self.get_object(),
-                status=TheoristFriendshipStatusChoices.PENDING,
-            ).exists()
-            context['is_theorists_are_friends'] = TheoristFriendship.objects.filter(
-                (
-                    (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
-                    | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
-                )
-                & Q(status=TheoristFriendshipStatusChoices.ACCEPTED)
+            current_theorist = self.request.theorist
+            target_theorist = self.get_object()
+
+            friendship_qs = TheoristFriendship.objects.filter(
+                Q(receiver=current_theorist, requester=target_theorist)
+                | Q(receiver=target_theorist, requester=current_theorist)
             )
-            context['is_theorists_are_rejected'] = TheoristFriendship.objects.filter(
-                (
-                    (Q(receiver=self.request.theorist) & Q(requester=self.get_object()))
-                    | (Q(receiver=self.get_object()) & Q(requester=self.request.theorist))
-                )
-                & Q(status=TheoristFriendshipStatusChoices.REJECTED)
-            ).exists()
+
+            context.update(
+                {
+                    'is_theorist_has_request': friendship_qs.filter(
+                        receiver=current_theorist,
+                        requester=target_theorist,
+                    )
+                    .filter_by_pending_status()
+                    .exists(),
+                    'is_theorist_already_requested': friendship_qs.filter(
+                        requester=current_theorist, receiver=target_theorist
+                    )
+                    .filter_by_pending_status()
+                    .exists(),
+                    'is_theorists_are_friends': friendship_qs.filter_by_accepted_status().exists(),
+                    'is_theorists_are_rejected': friendship_qs.filter_by_rejected_status().exists(),
+                    'is_theorists_are_blocked': TheoristFriendshipBlackList.objects.filter(
+                        owner=current_theorist, blocked_theorists=target_theorist
+                    ).exists(),
+                    'is_theorist_has_blocked': TheoristFriendshipBlackList.objects.filter(
+                        owner=target_theorist, blocked_theorists=current_theorist
+                    ).exists(),
+                }
+            )
+
         return context
 
 

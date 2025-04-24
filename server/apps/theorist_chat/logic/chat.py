@@ -1,12 +1,15 @@
+from distutils.util import strtobool
+
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.core.paginator import Paginator
-from django.db.models import Q
+from django.db.models import Q, F
 from django.http import HttpResponse
 from django.views import View
 from django.views.generic import TemplateView, ListView
 from django_filters.views import FilterView
 from render_block import render_block_to_string
 
+from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
 from server.apps.theorist_chat.filters import MailBoxFilter
 from server.apps.theorist_chat.forms import MessageMessageSingleForm
 from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
@@ -24,7 +27,7 @@ class MailBoxListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXView
     filterset_class = MailBoxFilter
     context_object_name = 'mailboxes'
     template_name = 'partials/mailbox_list.html'
-    paginate_by = 7
+    paginate_by = DEFAULT_MAILBOX_PAGINATION
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -73,23 +76,47 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
         context = super().get_context_data(**kwargs)
         context['room_uuid'] = self.kwargs['room_uuid']
 
-        room = TheoristChatRoom.objects.get(uuid=self.kwargs['room_uuid'])
+        room = (
+            TheoristChatRoom.objects.filter(uuid=self.kwargs['room_uuid'])
+            .select_related('first_member', 'second_member')
+            .first()
+        )
         first_member = room.first_member
         second_member = room.second_member
         context['receiver'] = first_member if first_member != self.request.theorist else second_member
         context['message_as_form'] = MessageMessageSingleForm()
+        context['is_blocked_by_first_member'] = first_member.blacklist.blocked_theorists.filter(
+            id=second_member.id
+        ).exists()
+        context['is_blocked_by_second_member'] = second_member.blacklist.blocked_theorists.filter(
+            id=first_member.id
+        ).exists()
+        context['is_request_theorist_blocked_recipient'] = self.request.theorist.blacklist.blocked_theorists.filter(
+            Q(id=first_member.id) | Q(id=second_member.id)
+        ).exists()
         return context
 
 
 class HXMailBoxView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, View):
     template_name = 'partials/mailbox_list.html'
+    paginate_by = DEFAULT_MAILBOX_PAGINATION
+
+    def get_paginate_by(self):
+        return self.paginate_by
 
     def get(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest
         objs = TheoristChatRoom.objects.filter(
-            Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist)
+            (Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist))
         ).order_by_last_sms_sent_relevancy()
-        p_objs = Paginator(objs, 7)
+
+        if strtobool(self.request.GET.get('show_blocked_chats')) is False:
+            objs = objs.exclude(
+                Q(first_member__blacklist__blocked_theorists=F('second_member'))
+                | Q(second_member__blacklist__blocked_theorists=F('first_member'))
+            )
+
+        p_objs = Paginator(objs, self.get_paginate_by())
         page_param = self.request.GET.get('page') or 1
 
         context = {

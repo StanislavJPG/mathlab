@@ -7,6 +7,7 @@ from django_countries.fields import CountryField
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from slugify import slugify
 
+from server.apps.theorist.querysets import TheoristQuerySet
 from server.common.data.generate_initials import GenerateInitials
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin, RankSystemModelMixin, AvatarModelMixin
 
@@ -34,6 +35,8 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     onboarding_date = models.DateTimeField(null=True)
 
     last_activity = models.DateTimeField(auto_now=True)  # TODO: fix or remove
+
+    objects = TheoristQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'theorist'
@@ -67,6 +70,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def convenient_last_activity(self):
         last_activity_label = _('Last activity %s ago') % timesince(self.last_activity)
         return last_activity_label
+
+    def is_theorist_is_blocked(self, theorist):
+        return self.blacklist.blocked_theorists.filter(uuid=theorist.uuid).exists() if theorist else False
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly

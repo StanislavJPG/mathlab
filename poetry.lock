@@ -815,18 +815,18 @@ files = [
 
 [[package]]
 name = "django"
-version = "5.2"
+version = "5.1.8"
 description = "A high-level Python web framework that encourages rapid development and clean, pragmatic design."
 optional = false
 python-versions = ">=3.10"
 groups = ["main", "dev"]
 files = [
-    {file = "Django-5.2-py3-none-any.whl", hash = "sha256:91ceed4e3a6db5aedced65e3c8f963118ea9ba753fc620831c77074e620e7d83"},
-    {file = "Django-5.2.tar.gz", hash = "sha256:1a47f7a7a3d43ce64570d350e008d2949abe8c7e21737b351b6a1611277c6d89"},
+    {file = "Django-5.1.8-py3-none-any.whl", hash = "sha256:11b28fa4b00e59d0def004e9ee012fefbb1065a5beb39ee838983fd24493ad4f"},
+    {file = "Django-5.1.8.tar.gz", hash = "sha256:42e92a1dd2810072bcc40a39a212b693f94406d0ba0749e68eb642f31dc770b4"},
 ]
 
 [package.dependencies]
-asgiref = ">=3.8.1"
+asgiref = ">=3.8.1,<4"
 sqlparse = ">=0.3.1"
 tzdata = {version = "*", markers = "sys_platform == \"win32\""}
 
@@ -1086,6 +1086,21 @@ files = [
 
 [package.dependencies]
 django-etc = ">=1.2.0"
+
+[[package]]
+name = "django-honeypot"
+version = "1.2.1"
+description = "Django honeypot field utilities"
+optional = false
+python-versions = "<4.0,>=3.8"
+groups = ["main"]
+files = [
+    {file = "django_honeypot-1.2.1-py3-none-any.whl", hash = "sha256:fdabe4ded66b6db25d04af2446de3bf7cb047cb5db097a864c8c97b081ef736f"},
+    {file = "django_honeypot-1.2.1.tar.gz", hash = "sha256:ab5c2aad214d86def2f00f6a79aa14f171db7301ac8712f20dc21a83dd5d6413"},
+]
+
+[package.dependencies]
+Django = ">=3.2,<5.2"
 
 [[package]]
 name = "django-htmx"
@@ -3953,4 +3968,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "eef32024600a58b1e16dad4d5e2cfe0829673e53b2500337831a3c8e52e8040e"
+content-hash = "7de08f550d0aec5b3322ebf3cab4c0e48fb03e8b569960b98875369eb00a2c88"

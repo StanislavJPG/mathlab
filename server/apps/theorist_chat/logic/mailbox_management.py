@@ -1,12 +1,15 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
+from django.http import HttpResponse
+from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 
-from django.urls import reverse_lazy
-from django.views.generic import DeleteView, CreateView
+from django.urls import reverse_lazy, reverse
+from django.views.generic import DeleteView, CreateView, DetailView
 from django_htmx.http import HttpResponseClientRedirect
 
+from server.apps.theorist.models import Theorist, TheoristFriendship
 from server.apps.theorist_chat.forms import MailBoxCreateForm
 from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom
@@ -41,6 +44,57 @@ class MailBoxCreateView(LoginRequiredMixin, ChatConfigurationRequiredMixin, Form
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponseClientRedirect(self.success_url)
+        return response
+
+
+class MailBoxCreateFromProfile(
+    LoginRequiredMixin, ChatConfigurationRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView
+):
+    model = Theorist
+    slug_field = 'uuid'
+    slug_url_kwarg = 'theorist_uuid'
+    form_valid_message = _('You successfully created mailbox with %s!')
+    form_invalid_message = _('It looks like chat with this theorists already exists.')
+
+    def get_queryset(self):
+        friendship_exists = (
+            TheoristFriendship.objects.filter(
+                (
+                    Q(receiver__uuid=self.request.theorist.uuid, requester__uuid=self.kwargs['theorist_uuid'])
+                    | Q(receiver__uuid=self.kwargs['theorist_uuid'], requester__uuid=self.request.theorist.uuid)
+                )
+            )
+            .filter_by_accepted_status()
+            .exists()
+        )
+        if friendship_exists:
+            return (
+                super()
+                .get_queryset()
+                .filter(
+                    ~Q(id=self.request.theorist.id),
+                    ~Q(blacklist__blocked_theorists=self.request.theorist),
+                    settings__is_able_to_get_messages=True,
+                )
+            )
+        return Theorist.objects.none()
+
+    def get_form_valid_message(self):
+        return force_str(self.form_valid_message % self.object.full_name)
+
+    def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
+        mailbox_form = MailBoxCreateForm(
+            data={'second_member': self.object},
+            theorist=self.request.theorist,
+        )
+        if mailbox_form.is_valid():
+            mailbox_form.save()
+            self.messages.success(self.get_form_valid_message(), fail_silently=True)
+            response = HttpResponseClientRedirect(reverse('forum:theorist_chat:chat-base-page'))
+        else:
+            self.messages.error(self.get_form_invalid_message(), fail_silently=True)
+            response = HttpResponse()
         return response
 
 

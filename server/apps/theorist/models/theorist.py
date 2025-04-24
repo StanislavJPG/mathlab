@@ -7,6 +7,7 @@ from django_countries.fields import CountryField
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from slugify import slugify
 
+from server.apps.theorist.querysets import TheoristQuerySet
 from server.common.data.generate_initials import GenerateInitials
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin, RankSystemModelMixin, AvatarModelMixin
 
@@ -34,6 +35,8 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     onboarding_date = models.DateTimeField(null=True)
 
     last_activity = models.DateTimeField(auto_now=True)  # TODO: fix or remove
+
+    objects = TheoristQuerySet.as_manager()
 
     class Meta:
         verbose_name = 'theorist'

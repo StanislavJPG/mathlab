@@ -64,20 +64,14 @@ class MailBoxCreateForm(forms.ModelForm):
             .values_list('id', flat=True)
             .distinct()
         )
-        self.fields['second_member'].queryset = Theorist.objects.filter(
-            (~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True))
-            & (
-                (
-                    Q(friendship_requester__requester=self.first_member)
-                    | Q(friendship_receiver__receiver=self.first_member)
-                )
-                | (
-                    Q(friendship_requester__receiver=self.first_member)
-                    | Q(friendship_receiver__requester=self.first_member)
-                )
-            ),
-            settings__is_able_to_get_messages=True,
-        ).exclude(id__in=qs_to_exclude)
+        self.fields['second_member'].queryset = (
+            Theorist.objects.filter(
+                (~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True)),
+                settings__is_able_to_get_messages=True,
+            )
+            .exclude(id__in=qs_to_exclude)
+            .filter_by_accepted_friendship_as_member(member=self.first_member)
+        )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'
 
@@ -112,18 +106,15 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         super().__init__(*args, **kwargs)
 
         if self.qs_to_filter.exists():
-            self.fields['receiver'].queryset = Theorist.objects.filter(
-                ~Q(uuid=self.theorist.uuid),
-                (
-                    (Q(friendship_requester__requester=self.theorist) | Q(friendship_receiver__receiver=self.theorist))
-                    | (
-                        Q(friendship_requester__receiver=self.theorist)
-                        | Q(friendship_receiver__requester=self.theorist)
-                    )
-                ),
-                settings__is_able_to_get_messages=True,
-                chat_configuration__is_chats_available=True,
-            ).distinct()
+            self.fields['receiver'].queryset = (
+                Theorist.objects.filter(
+                    ~Q(uuid=self.theorist.uuid),
+                    settings__is_able_to_get_messages=True,
+                    chat_configuration__is_chats_available=True,
+                )
+                .filter_by_accepted_friendship_as_member(member=self.theorist)
+                .distinct()
+            )
         else:
             self.fields['receiver'].queryset = Theorist.objects.none()
             self.fields['receiver'].disabled = True

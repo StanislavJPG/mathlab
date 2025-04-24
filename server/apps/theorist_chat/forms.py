@@ -115,12 +115,6 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             self.fields['receiver'].queryset = Theorist.objects.filter(
                 ~Q(uuid=self.theorist.uuid),
                 (
-                    Q(chat_rooms_initiated__first_member=self.theorist)
-                    | Q(chat_rooms_received__second_member=self.theorist)
-                    | Q(chat_rooms_initiated__second_member=self.theorist)
-                    | Q(chat_rooms_received__first_member=self.theorist)
-                )
-                & (
                     (Q(friendship_requester__requester=self.theorist) | Q(friendship_receiver__receiver=self.theorist))
                     | (
                         Q(friendship_requester__receiver=self.theorist)
@@ -130,9 +124,6 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
                 settings__is_able_to_get_messages=True,
                 chat_configuration__is_chats_available=True,
             ).distinct()
-            self.room_qs = TheoristChatRoom.objects.filter(
-                Q(first_member=self.theorist) | Q(second_member=self.theorist)
-            )
         else:
             self.fields['receiver'].queryset = Theorist.objects.none()
             self.fields['receiver'].disabled = True
@@ -164,13 +155,17 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         """
 
     @transaction.atomic
-    def save(self, *args):
+    def save(self):
         instances = self.cleaned_data['receiver']
         to_create = []
         for instance in instances:
-            room = self.room_qs.filter(Q(first_member=instance) | Q(second_member=instance)).first()
+            room, _ = TheoristChatRoom.objects.filter(
+                (Q(first_member=self.theorist) & Q(second_member=instance))
+                | (Q(first_member=instance) & Q(second_member=self.theorist)),
+            ).get_or_create(first_member=self.theorist, second_member=instance)
             msg_obj = TheoristMessage(sender=self.theorist, room=room, message=self._get_default_share_message())
             to_create.append(msg_obj)
+
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()

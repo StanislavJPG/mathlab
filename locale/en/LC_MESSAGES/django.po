@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-04-19 19:31+0300\n"
+"POT-Creation-Date: 2025-04-24 13:27+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -525,6 +525,7 @@ msgid "My blacklist"
 msgstr ""
 
 #: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 #, python-format
 msgid "Are you sure you want to remove %(name)s from your blacklist?"
 msgstr ""
@@ -565,6 +566,7 @@ msgstr ""
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 #: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
 #: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
 #, python-format
 msgid "Are you sure you want to block %(name)s?"
 msgstr ""
@@ -731,7 +733,12 @@ msgid "Someone already rejected friendship request."
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
-msgid "This theorist is blocked by you."
+#, python-format
+msgid "Are you sure you want to unblock %(name)s?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "This theorist is blocked by you. Unblock him?"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
@@ -756,7 +763,16 @@ msgid "You already sent friendship request to this theorist."
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
+msgid "Are you sure you want to create chat with %(name)s?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
 msgid "Send message"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Block this theorist"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/statistics.html
@@ -881,6 +897,10 @@ msgid "Find chat by name"
 msgstr ""
 
 #: server/apps/theorist_chat/forms.py
+msgid "Error. This theorist has blocked you."
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
 msgid "This mailbox is already exists."
 msgstr ""
 
@@ -909,7 +929,21 @@ msgid "Some error happens. Please, try again later."
 msgstr ""
 
 #: server/apps/theorist_chat/logic/mailbox_management.py
+#, python-format
+msgid "You successfully created mailbox with %s!"
+msgstr ""
+
+#: server/apps/theorist_chat/logic/mailbox_management.py
+msgid "It looks like chat with this theorists already exists."
+msgstr ""
+
+#: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully deleted chat!"
+msgstr ""
+
+#: server/apps/theorist_chat/logic/message_management.py
+msgid ""
+"Error. Message was not created because some of participants blocked another."
 msgstr ""
 
 #: server/apps/theorist_chat/logic/sharing.py
@@ -1011,6 +1045,21 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 #, python-format
+msgid "Unblock <strong>%(name)s</strong>"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#, python-format
+msgid "Are you sure you want to add %(name)s to your blacklist?"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#, python-format
+msgid "Block <strong>%(name)s</strong>"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#, python-format
 msgid ""
 "Are you sure you want to delete this chat with %(name)s? This cannot be "
 "undone."
@@ -1018,6 +1067,14 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "Delete chat"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "This chat is unavailable because you have blocked this theorist."
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "This chat is unavailable because this theorist has blocked you."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
@@ -1030,6 +1087,14 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Last chats"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/mailbox_list.html
+msgid "Show blocked chats"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/mailbox_list.html
+msgid "Someone of chat members blocked another."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html

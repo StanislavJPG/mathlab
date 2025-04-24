@@ -95,6 +95,7 @@ flower = "^2.0.1"
 openai = "^1.66.5"
 django-bleach = "^3.1.0"
 djhtml = "^3.0.7"
+django-honeypot = "^1.2.1"
 
 
 [tool.poetry.group.dev.dependencies]

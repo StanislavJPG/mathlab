@@ -1,0 +1,12 @@
+{% load i18n %}
+
+<div class="text-center py-6 text-secondary container container-sm">
+  <h3><i class="ti ti-lock text-danger"></i> {% translate 'Only for authenticated users!' %}</h3>
+  <p>
+    {% if msg %}
+      {{ msg }}
+    {% else %}
+      {% translate 'Please, create your account before read this block.' %}
+    {% endif %}
+  </p>
+</div>

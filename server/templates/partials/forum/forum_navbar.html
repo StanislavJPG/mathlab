@@ -33,6 +33,9 @@
           </li>
         {% endif %}
       </ul>
+      {% if request.user.is_authenticated %}
+        <a href="javascript:(0);" class="text-decoration-none link-secondary me-3" style="font-size: 25px;"><i class="ti ti-bell"></i></a>
+      {% endif %}
       <div class="dropdown_user text-end">
         <a href="#" class="d-block link-secondary text-decoration-none dropdown-toggle"
            id="dropdownUser1"
@@ -49,12 +52,12 @@
           {% if user.is_authenticated %}
             <li><a class="dropdown-item"
                    href="{% url 'forum:theorist_profile:base-page' request.theorist.id request.theorist.full_name_slug %}"><i class="ti ti-user"></i> {% translate 'Profile' %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:post-create' %}"><i class="ti ti-help-hexagon"></i> {% translate 'Ask question' %}...</a></li>
+            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:friendship:theorist-community-list' %}"><i class="ti ti-friends"></i> {% translate 'My community' %}</a></li>
             <li><a class="dropdown-item" href="{% url 'forum:theorist_chat:chat-base-page' %}"><i class="ti ti-mailbox"></i> {% translate 'My mailbox' %}</a></li>
-            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li>
               <hr class="dropdown-divider">
             </li>
+            <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li><a class="dropdown-item text-danger" href="javascript:(0);"
                    hx-post="{% url 'users:logout-view' %}"
                    hx-confirm="{% translate 'Do you want to log out from your account?' %}">

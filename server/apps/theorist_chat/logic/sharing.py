@@ -2,9 +2,11 @@ from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse_lazy
+from django.utils.decorators import method_decorator
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
+from honeypot.decorators import check_honeypot
 
 from server.apps.forum.models import Comment, Post
 from server.apps.theorist_chat.forms import ShareViaMessageForm
@@ -13,6 +15,7 @@ from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
+@method_decorator(check_honeypot, name='post')
 class AbstractMessageInstanceShareView(
     LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CaptchaViewMixin, CreateView
 ):

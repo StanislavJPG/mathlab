@@ -22,12 +22,28 @@
       <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; font-size: 25px;"
          class="ti ti-dots-vertical z-999"></i>
       <ul class="dropdown-menu">
+        {% if is_request_theorist_blocked_recipient %}
+          <li><a class="dropdown-item text-success"
+                 href="javascript:(0);"
+                 hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid receiver.uuid %}"
+                 hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to remove {{ name }} from your blacklist?{% endblocktranslate %}"
+                 hx-trigger="click"
+            ><i class="ti ti-user-check"></i> {% blocktranslate trimmed with name=receiver.full_name %}Unblock <strong>{{ name }}</strong>{% endblocktranslate %}</a>
+          </li>
+          <li class="dropdown-divider"></li>
+        {% else %}
+          <li><a class="dropdown-item text-danger"
+                 href="javascript:(0);"
+                 hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid receiver.uuid %}"
+                 hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to add {{ name }} to your blacklist?{% endblocktranslate %}"
+                 hx-trigger="click"
+            ><i class="ti ti-user-cancel"></i> {% blocktranslate trimmed with name=receiver.full_name %}Block <strong>{{ name }}</strong>{% endblocktranslate %}</a>
+          </li>
+        {% endif %}
         <li><a class="dropdown-item text-danger"
                href="javascript:(0);"
-               style="cursor: pointer"
                hx-delete="{% url 'forum:theorist_chat:mailbox-delete' room_uuid %}"
-               hx-confirm="
-                           {% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to delete this chat with {{ name }}? This cannot be undone.{% endblocktranslate %}"
+               hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to delete this chat with {{ name }}? This cannot be undone.{% endblocktranslate %}"
                hx-trigger="click"
           ><i class="ti ti-trash"></i> {% translate 'Delete chat' %}</a>
         </li>
@@ -97,18 +113,32 @@
   <div class="mb-2 position-sticky">
     <div class="form-outline">
       <form id="msg-form">
-        {% render_field message_as_form.message id="chat-message-input" %}
-        <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
-        <button id="chat-message-submit"
-                type="button"
-                hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}"
-                hx-target="#mailboxes-list-js"
-                hx-trigger="click from:#chat-message-submit delay:0.5s"
-                _="on click call document.getElementById('msg-form').reset()"
-                class="btn btn-primary btn-rounded float-end mt-2">
-          <i class="ti ti-send"></i>
-          {% translate 'Send' %}
-        </button>
+        {% if is_blocked_by_first_member or is_blocked_by_second_member %}
+          <textarea class="form-control text-danger" id="chat-message-input" rows="4" style="cursor: not-allowed;" disabled>{% if is_request_theorist_blocked_recipient %}{% translate 'This chat is unavailable because you have blocked this theorist.' %}{% else %}{% translate 'This chat is unavailable because this theorist has blocked you.' %}😢{% endif %}</textarea>
+          <label class="form-label text-muted" for="chat-message-input">{% translate 'Your message' %}</label>
+          <button type="button"
+                  hx-get="{% url 'forum:theorist_chat:invalid-chat-message-create' %}"
+                  hx-trigger="click"
+                  hx-swap="none"
+                  _="on click call document.getElementById('msg-form').reset()"
+                  class="btn btn-primary btn-rounded float-end mt-2 disabled">
+            <i class="ti ti-send"></i>
+            {% translate 'Send' %}
+          </button>
+        {% else %}
+          {% render_field message_as_form.message id="chat-message-input" %}
+          <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
+          <button id="chat-message-submit"
+                  type="button"
+                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                  hx-target="#mailboxes-list-js"
+                  hx-trigger="click from:#chat-message-submit delay:0.5s"
+                  _="on click call document.getElementById('msg-form').reset()"
+                  class="btn btn-primary btn-rounded float-end mt-2">
+            <i class="ti ti-send"></i>
+            {% translate 'Send' %}
+          </button>
+        {% endif %}
       </form>
     </div>
   </div>

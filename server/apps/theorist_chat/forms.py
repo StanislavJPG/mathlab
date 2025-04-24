@@ -20,12 +20,22 @@ class TheoristMessageForm(forms.Form):
         message = self.cleaned_data['message']
         return limit_nbsp_paragraphs(message)
 
+    def validate_room(self, room) -> bool:
+        first_member = room.first_member
+        second_member = room.second_member
+        first_cond = first_member.blacklist.blocked_theorists.filter(id=second_member.id).exists()
+        second_cond = second_member.blacklist.blocked_theorists.filter(id=first_member.id).exists()
+        if first_cond or second_cond:
+            raise forms.ValidationError(_('Error. This theorist has blocked you.'))
+        return True
+
     @transaction.atomic
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
-        instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
-        return instance
+        if self.validate_room(room) is True:
+            instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
+            return instance
 
 
 class MailBoxCreateForm(forms.ModelForm):
@@ -40,11 +50,27 @@ class MailBoxCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.first_member = self.first_member
 
-        self.fields['second_member'].queryset = Theorist.objects.filter(
-            (
-                ~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True)
-            ),  # TODO: Set only for friends
-            settings__is_able_to_get_messages=True,
+        qs_to_exclude = (
+            Theorist.objects.filter(
+                (
+                    Q(chat_rooms_initiated__first_member=self.first_member)
+                    | Q(chat_rooms_received__second_member=self.first_member)
+                )
+                | (
+                    Q(chat_rooms_received__first_member=self.first_member)
+                    | Q(chat_rooms_initiated__second_member=self.first_member)
+                )
+            )
+            .values_list('id', flat=True)
+            .distinct()
+        )
+        self.fields['second_member'].queryset = (
+            Theorist.objects.filter(
+                (~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True)),
+                settings__is_able_to_get_messages=True,
+            )
+            .exclude(id__in=qs_to_exclude)
+            .filter_by_accepted_friendship_as_member(member=self.first_member)
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'
@@ -80,19 +106,14 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         super().__init__(*args, **kwargs)
 
         if self.qs_to_filter.exists():
-            self.fields['receiver'].queryset = Theorist.objects.filter(
-                ~Q(uuid=self.theorist.uuid),
-                (
-                    Q(chat_rooms_initiated__first_member=self.theorist)
-                    | Q(chat_rooms_received__second_member=self.theorist)
-                    | Q(chat_rooms_initiated__second_member=self.theorist)
-                    | Q(chat_rooms_received__first_member=self.theorist)
-                ),
-                settings__is_able_to_get_messages=True,
-                chat_configuration__is_chats_available=True,
-            ).distinct()
-            self.room_qs = TheoristChatRoom.objects.filter(
-                Q(first_member=self.theorist) | Q(second_member=self.theorist)
+            self.fields['receiver'].queryset = (
+                Theorist.objects.filter(
+                    ~Q(uuid=self.theorist.uuid),
+                    settings__is_able_to_get_messages=True,
+                    chat_configuration__is_chats_available=True,
+                )
+                .filter_by_accepted_friendship_as_member(member=self.theorist)
+                .distinct()
             )
         else:
             self.fields['receiver'].queryset = Theorist.objects.none()
@@ -125,13 +146,17 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         """
 
     @transaction.atomic
-    def save(self, *args):
+    def save(self):
         instances = self.cleaned_data['receiver']
         to_create = []
         for instance in instances:
-            room = self.room_qs.filter(Q(first_member=instance) | Q(second_member=instance)).first()
+            room, _ = TheoristChatRoom.objects.filter(
+                (Q(first_member=self.theorist) & Q(second_member=instance))
+                | (Q(first_member=instance) & Q(second_member=self.theorist)),
+            ).get_or_create(first_member=self.theorist, second_member=instance)
             msg_obj = TheoristMessage(sender=self.theorist, room=room, message=self._get_default_share_message())
             to_create.append(msg_obj)
+
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()

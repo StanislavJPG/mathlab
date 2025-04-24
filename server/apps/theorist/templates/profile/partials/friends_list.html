@@ -1,0 +1,56 @@
+{% load static i18n avatars %}
+
+<ul class="nav nav-tabs justify-content-end" role="tablist">
+  <li class="nav-item" role="presentation">
+    <a class="nav-link active"
+       id="friends"
+       data-bs-toggle="tab"
+       data-bs-target="#friends-tab"
+       hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'accepted' %}"
+       hx-trigger="load once, click once, friendshipBlockChanged from:body"
+       hx-target="#friends-tab"
+       type="button"
+       role="tab"
+       aria-controls="friends-tab-el"
+       aria-selected="true"
+       href="javascript:(0);"><i class="ti ti-friends"></i> {% translate 'Friends' %}</a>
+  </li>
+  {% if request.theorist.uuid == view.kwargs.uuid %}
+    <li class="nav-item" role="presentation">
+      <a class="nav-link"
+         id="pending"
+         data-bs-toggle="tab"
+         data-bs-target="#pending-tab"
+         hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'pending' %}"
+         hx-trigger="click once, friendshipBlockChanged from:body"
+         hx-target="#pending-tab"
+         type="button"
+         role="tab"
+         aria-controls="pending-tab-el"
+         aria-selected="false"
+         href="javascript:(0);"><i class="ti ti-clock-24"></i> {% translate 'Pending' %}</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link"
+         id="rejected"
+         data-bs-toggle="tab"
+         data-bs-target="#rejected-tab"
+         hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-friends-list' view.kwargs.uuid 'rejected' %}"
+         hx-trigger="click once, friendshipBlockChanged from:body"
+         hx-target="#rejected-tab"
+         type="button"
+         role="tab"
+         aria-controls="rejected-tab-el"
+         aria-selected="false"
+         href="javascript:(0);"><i class="ti ti-friends-off"></i> {% translate 'Rejected' %}</a>
+    </li>
+  {% endif %}
+</ul>
+
+<div class="tab-content">
+  <div class="tab-pane fade show active" id="friends-tab" role="tabpanel" aria-labelledby="friends-tab-el"></div>
+  {% if request.theorist.uuid == view.kwargs.uuid %}
+    <div class="tab-pane fade" id="pending-tab" role="tabpanel" aria-labelledby="pending-tab-el"></div>
+    <div class="tab-pane fade" id="rejected-tab" role="tabpanel" aria-labelledby="rejected-tab-el"></div>
+  {% endif %}
+</div>

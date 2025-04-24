@@ -1,6 +1,12 @@
 from django.contrib import admin
 
-from server.apps.theorist.models import Theorist, TheoristProfileSettings
+from server.apps.theorist.models import (
+    Theorist,
+    TheoristProfileSettings,
+    TheoristFriendshipBlackList,
+    TheoristFriendship,
+    TheoristBlacklist,
+)
 
 
 @admin.register(Theorist)
@@ -38,3 +44,23 @@ class TheoristProfileSettingsAdmin(admin.ModelAdmin):
         'id',
         'theorist__full_name',
     )
+
+
+@admin.register(TheoristFriendship)
+class TheoristFriendshipAdmin(admin.ModelAdmin):
+    list_display = ('uuid', 'requester', 'receiver', 'status')
+    list_filter = (
+        'status',
+        'created_at',
+    )
+
+
+class TheoristBlacklistInline(admin.TabularInline):
+    model = TheoristBlacklist
+
+
+@admin.register(TheoristFriendshipBlackList)
+class TheoristFriendshipBlackListAdmin(admin.ModelAdmin):
+    list_display = ('uuid', 'owner')
+    list_filter = ('owner',)
+    inlines = (TheoristBlacklistInline,)

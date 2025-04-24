@@ -2,14 +2,74 @@
 
 <div class="card mb-4">
   <div class="card-body text-center">
-    {% if theorist.settings.is_profile_only_for_authenticated %}
-      <div class="d-flex justify-content-end">
+    <div class="d-flex justify-content-end">
+      {% if theorist.settings.is_profile_only_for_authenticated %}
         <i class="ti ti-lock text-warning"
            data-bs-toggle="tooltip" data-bs-placement="top"
            title="{% translate 'This profile is available only for authorized users.' %}"
            style="font-size: 35px"></i>
-      </div>
-    {% endif %}
+      {% endif %}
+      {% if request.theorist.uuid != theorist.uuid and request.user.is_authenticated %}
+        {% if not is_theorist_already_requested and not is_theorist_has_request %}
+          {% if is_theorists_are_friends and not is_theorist_has_blocked and not is_theorists_are_blocked %}
+            <i class="ti ti-user-check ms-1 text-success"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This is already your friend!' %}"
+               style="font-size: 35px;"></i>
+          {% elif is_theorists_are_rejected %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Someone already rejected friendship request.' %}"
+               style="font-size: 35px;"></i>
+          {% elif is_theorists_are_blocked %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid theorist.uuid %}?reload_next=true"
+               hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to unblock {{ name }}?{% endblocktranslate %}"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This theorist is blocked by you. Unblock him?' %}"
+               style="font-size: 35px; cursor: pointer;"></i>
+          {% elif is_theorist_has_blocked %}
+            <i class="ti ti-user-x ms-1 text-danger"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'You have been blocked by this theorist' %}"
+               style="font-size: 35px;"></i>
+          {% else %}
+            <i class="ti ti-user-plus ms-1"
+               hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
+               hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'Make friendship request to this theorist.' %}"
+               style="font-size: 35px; cursor: pointer"></i>
+          {% endif %}
+        {% else %}
+          {% if is_theorist_has_request %}
+            <i class="ti ti-clock-2 ms-1 text-warning"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'This theorist already sent friendship request to you.' %}"
+               style="font-size: 35px; cursor: pointer;"></i>
+          {% elif is_theorist_already_requested and not is_theorist_has_blocked and not is_theorists_are_blocked %}
+            <i class="ti ti-clock-2 ms-1 text-warning"
+               data-bs-toggle="tooltip" data-bs-placement="top"
+               title="{% translate 'You already sent friendship request to this theorist.' %}"
+               style="font-size: 35px;"></i>
+          {% else %}
+            {% if is_theorists_are_blocked %}
+              <i class="ti ti-user-x ms-1 text-danger"
+                 hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid theorist.uuid %}?reload_next=true"
+                 hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to unblock {{ name }}?{% endblocktranslate %}"
+                 data-bs-toggle="tooltip" data-bs-placement="top"
+                 title="{% translate 'This theorist is blocked by you. Unblock him?' %}"
+                 style="font-size: 35px; cursor: pointer;"></i>
+            {% elif is_theorist_has_blocked %}
+              <i class="ti ti-user-x ms-1 text-danger"
+                 data-bs-toggle="tooltip" data-bs-placement="top"
+                 title="{% translate 'You have been blocked by this theorist' %}"
+                 style="font-size: 35px;"></i>
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    </div>
     <div class="mb-3 mt-1">
       {% get_instance_avatar theorist %}
     </div>
@@ -19,10 +79,27 @@
     </h5>
     <p class="text-muted mb-1"><b>{{ theorist.get_rank_display }}</b></p>
     {% if theorist.settings.is_able_to_get_messages and request.theorist and theorist.uuid != request.theorist.uuid %}
-      <div class="d-flex justify-content-center mb-2 mt-3">
-        <a href="" type="button" class="btn btn-primary btn-sm ms-1">
-          <i class="ti ti-message"></i> {% translate 'Send message' %}
-        </a>
+      <div class="d-flex justify-content-center flex-column mb-2 mt-3 w-75 m-auto">
+        {% if not is_theorists_are_blocked %}
+          {% if is_theorists_are_friends %}
+            <button type="button"
+                    hx-post="{% url 'forum:theorist_chat:mailbox-create-from-profile' theorist.uuid %}"
+                    hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to create chat with {{ name }}?{% endblocktranslate %}"
+                    hx-swap="none"
+                    hx-trigger="click"
+                    class="btn btn-primary btn-sm ms-1">
+              <i class="ti ti-message"></i> {% translate 'Send message' %}
+            </button>
+          {% endif %}
+          <button type="button"
+                  class="btn btn-danger btn-sm ms-1 mt-2"
+                  hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid theorist.uuid %}?reload_next=true"
+                  hx-trigger="click"
+                  hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
+          >
+            <i class="ti ti-ban ms-1"></i> {% translate 'Block this theorist' %}
+          </button>
+        {% endif %}
       </div>
     {% endif %}
   </div>

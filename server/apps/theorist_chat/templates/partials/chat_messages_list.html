@@ -89,7 +89,7 @@
                         <li>
                           <button type="button"
                                   class="dropdown-item text-danger"
-                                  hx-get=""
+                                  hx-get="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
                                   hx-trigger="click"
                                   hx-target=""
                                   hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
@@ -124,7 +124,7 @@
                         <li>
                           <button class="dropdown-item text-danger"
                                   type="button"
-                                  hx-get=""
+                                  hx-get="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
                                   hx-trigger="click"
                                   hx-target=""
                                   hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"

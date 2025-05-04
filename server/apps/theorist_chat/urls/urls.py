@@ -6,7 +6,7 @@ from server.apps.theorist_chat.logic.mailbox_management import (
     MailBoxCreateView,
     MailBoxCreateFromProfile,
 )
-from server.apps.theorist_chat.logic.message_management import InvalidChatMessageCreateView
+from server.apps.theorist_chat.logic.message_management import InvalidChatMessageCreateView, ChatMessageSafeDeleteView
 from server.apps.theorist_chat.logic.sharing import MessageDraftShareView, MessageCommentShareView, MessagePostShareView
 
 app_name = 'theorist_chat'
@@ -26,6 +26,7 @@ urlpatterns = [
     ),
     path('mailbox/<uuid:uuid>/delete/', MailBoxDeleteView.as_view(), name='mailbox-delete'),
     # Management messages views
+    path('messages/<uuid:uuid>/safe-delete/', ChatMessageSafeDeleteView.as_view(), name='chat-message-safe-delete'),
     path('messages/fail-create/', InvalidChatMessageCreateView.as_view(), name='invalid-chat-message-create'),
     # Share messages views
     path(

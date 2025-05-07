@@ -4,13 +4,13 @@ from django.db.models import Q
 from django.http import HttpResponse
 from django.views import View
 from django.utils.translation import gettext_lazy as _
-from django.views.generic import UpdateView
+from django.views.generic import DetailView
 
 from server.apps.theorist_chat.models import TheoristMessage
 from server.common.mixins.views import HXViewMixin
 
 
-class ChatMessageSafeDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, UpdateView):
+class ChatMessageSafeDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, DetailView):
     model = TheoristMessage
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
@@ -26,6 +26,7 @@ class ChatMessageSafeDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMix
         )
 
     def post(self, request, *args, **kwargs):
+        self.object = self.get_object()
         self.object.safe_delete(deleted_by=self.request.theorist)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponse()

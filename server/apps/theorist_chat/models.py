@@ -92,7 +92,7 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         elif 300 < sent <= 400:
             return _('5 minutes ago')
         elif t.days < 1:
-            return self.created_at.time()
+            return timezone.localtime(self.created_at).time()
         else:
             return self.created_at
 

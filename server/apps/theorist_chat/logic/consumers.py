@@ -3,7 +3,7 @@ import json
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
 from django.urls import reverse
-from django.utils import dateformat
+from django.utils import dateformat, timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -48,7 +48,7 @@ class TheoristChatConsumer(WebsocketConsumer):
             'theorist_uuid': str(user.theorist.uuid),
             'theorist_full_name': user.theorist.full_name,
             'theorist_profile_url': user.theorist.get_absolute_url(),
-            'theorist_created_at': dateformat.format(user.theorist.created_at, 'd E Y р. H:i'),
+            'current_time': dateformat.format(timezone.localtime(timezone.now()), 'd E Y р. H:i'),
         }
         return response
 

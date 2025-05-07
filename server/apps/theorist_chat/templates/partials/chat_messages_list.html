@@ -87,15 +87,25 @@
                          style="cursor: pointer; font-size: 19px;"></i>
                       <ul class="dropdown-menu">
                         <li>
-                          <button type="button"
-                                  class="dropdown-item text-danger"
-                                  hx-get="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
-                                  hx-trigger="click"
-                                  hx-target=""
-                                  hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
-                                  style="cursor: pointer">
-                            <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
-                          </button>
+                          {% if message.is_safe_deleted %}
+                            <button type="button"
+                                    class="dropdown-item text-success"
+                                    hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
+                                    hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                                    hx-trigger="click"
+                                    style="cursor: pointer">
+                              <i class="ti ti-restore"></i> {% translate 'Restore message' %}
+                            </button>
+                          {% else %}
+                            <button type="button"
+                                    class="dropdown-item text-danger"
+                                    hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
+                                    hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                                    hx-trigger="click"
+                                    style="cursor: pointer">
+                              <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
+                            </button>
+                          {% endif %}
                         </li>
                       </ul>
                     </div>
@@ -122,15 +132,25 @@
                          style="cursor: pointer; font-size: 19px;"></i>
                       <ul class="dropdown-menu">
                         <li>
-                          <button class="dropdown-item text-danger"
-                                  type="button"
-                                  hx-get="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
-                                  hx-trigger="click"
-                                  hx-target=""
-                                  hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
-                                  style="cursor: pointer">
-                            <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
-                          </button>
+                          {% if message.is_safe_deleted %}
+                            <button type="button"
+                                    class="dropdown-item text-success"
+                                    hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
+                                    hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                                    hx-trigger="click"
+                                    style="cursor: pointer">
+                              <i class="ti ti-restore"></i> {% translate 'Restore message' %}
+                            </button>
+                          {% else %}
+                            <button type="button"
+                                    class="dropdown-item text-danger"
+                                    hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
+                                    hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                                    hx-trigger="click"
+                                    style="cursor: pointer">
+                              <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
+                            </button>
+                          {% endif %}
                         </li>
                       </ul>
                     </div>
@@ -285,6 +305,8 @@
       newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
 
       messagesList.appendChild(newMessageItem);
+
+      htmx.process(newMessageItem);  // hook all htmx behaviour for new ws element
 
       messagesList.scrollTop = messagesList.scrollHeight;
     };

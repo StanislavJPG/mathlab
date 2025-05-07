@@ -21,7 +21,7 @@ class TheoristChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)(self.room_group_uuid, self.channel_name)
 
     @mark_safe
-    def get_message_actions_as_html_tags(self, message_uuid):  # TODO: htmx on ws
+    def get_message_actions_as_html_tags(self, message_uuid):
         delete_msg_label = _('Delete message for all members')
         delete_confirmation_label = _(
             'Are you sure you want to delete this message? You can restore it in any time after doing that.'
@@ -30,9 +30,8 @@ class TheoristChatConsumer(WebsocketConsumer):
         <li>
         <button class="dropdown-item text-danger"
                   type="button"
-                  hx-get="{reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})}"
+                  hx-post="{reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})}"
                   hx-trigger="click"
-                  hx-target=""
                   hx-confirm="{delete_confirmation_label}"
                   style="cursor: pointer">
             <i class="ti ti-trash"></i> {delete_msg_label}

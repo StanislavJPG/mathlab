@@ -63,6 +63,11 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
 
+    was_safe_deleted_by = models.ForeignKey(
+        'theorist.Theorist', null=True, blank=True, on_delete=models.SET_NULL, related_name='deleted_messages'
+    )
+    is_safe_deleted = models.BooleanField(default=False)
+
     class Meta:
         ordering = ('created_at',)
         verbose_name = 'Theorist Message'
@@ -87,6 +92,16 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         elif 300 < sent <= 400:
             return _('5 minutes ago')
         elif t.days < 1:
-            return self.created_at.time()
+            return timezone.localtime(self.created_at).time()
         else:
             return self.created_at
+
+    def safe_delete(self, deleted_by=None):
+        self.was_safe_deleted_by = deleted_by if deleted_by else self.sender
+        self.is_safe_deleted = True
+        self.save(update_fields=['was_safe_deleted_by', 'is_safe_deleted'])
+
+    def recover_after_safe_delete(self):
+        self.was_safe_deleted_by = None
+        self.is_safe_deleted = False
+        self.save(update_fields=['was_safe_deleted_by', 'is_safe_deleted'])

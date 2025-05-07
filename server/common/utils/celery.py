@@ -1,7 +1,12 @@
 import functools
 
 
-def periodic_tasks_args(func):
+def tasks_decorator(func):
+    """
+    Wrapper that conveniently transform tuple of paths with crontabs and args to beat schedule API
+    according to https://docs.celeryq.dev/en/latest/userguide/periodic-tasks.html#solar-schedules
+    """
+
     @functools.wraps(func)
     def wrapper():
         args = func()

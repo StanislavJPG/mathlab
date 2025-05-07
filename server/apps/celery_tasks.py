@@ -3,7 +3,7 @@ from celery.schedules import crontab
 from server.common.utils import celery
 
 
-@celery.periodic_tasks_args
+@celery.tasks_decorator
 def provide_tasks():
     """
     pattern: ('task_dir', schedule, args(optionally))

@@ -10,6 +10,7 @@ from server.apps.theorist.logic.friendship.friends import (
     HXTheoristFriendshipTemplateView,
     HXTheoristPrivateCommunityListView,
     TheoristPrivateCommunityTemplateView,
+    HXCommunityListCounters,
 )
 from server.apps.theorist.logic.friendship.friends_management import (
     TheoristFriendshipCreateView,
@@ -40,6 +41,11 @@ urlpatterns = [
         'hx/<str:status>/my-community/list/',
         HXTheoristPrivateCommunityListView.as_view(),
         name='hx-theorist-community-list',
+    ),
+    path(
+        'hx/my-community/navs-counters/',
+        HXCommunityListCounters.as_view(),
+        name='hx-theorist-community-list-navs-counters',
     ),
     # Management urls
     path(

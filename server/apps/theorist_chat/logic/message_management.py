@@ -48,10 +48,10 @@ class ChatMessageRestoreAfterSafeDeleteView(LoginRequiredMixin, HXViewMixin, For
             super()
             .get_queryset()
             .filter(
-                Q(is_safe_deleted=True)
-                & (Q(was_safe_deleted_by=self.request.theorist) | Q(sender=self.request.theorist))
+                (Q(was_safe_deleted_by=self.request.theorist) | Q(sender=self.request.theorist))
                 & (Q(room__first_member=self.request.theorist) | Q(room__second_member=self.request.theorist))
             )
+            .filter_by_is_safe_deleted()
         )
 
     def post(self, request, *args, **kwargs):

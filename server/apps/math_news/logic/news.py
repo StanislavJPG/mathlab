@@ -15,4 +15,4 @@ class NewsListView(HXViewMixin, ListView):
     paginate_by = 8
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_visible=True)
+        return super().get_queryset().filter_by_is_visible()

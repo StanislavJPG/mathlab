@@ -10,4 +10,4 @@ class CarouselBaseListView(HXViewMixin, ListView):
     template_name = 'carousel.html'
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_active=True)
+        return super().get_queryset().filter_by_is_active()

@@ -65,11 +65,10 @@ class MailBoxCreateForm(forms.ModelForm):
             .distinct()
         )
         self.fields['second_member'].queryset = (
-            Theorist.objects.filter(
-                (~Q(uuid=self.first_member.uuid) & Q(chat_configuration__is_chats_available=True)),
-                settings__is_able_to_get_messages=True,
-            )
+            Theorist.objects.filter(~Q(uuid=self.first_member.uuid))
             .exclude(id__in=qs_to_exclude)
+            .filter_is_chats_available()
+            .filter_is_able_to_get_messages()
             .filter_by_accepted_friendship_as_member(member=self.first_member)
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
@@ -107,12 +106,10 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
         if self.qs_to_filter.exists():
             self.fields['receiver'].queryset = (
-                Theorist.objects.filter(
-                    ~Q(uuid=self.theorist.uuid),
-                    settings__is_able_to_get_messages=True,
-                    chat_configuration__is_chats_available=True,
-                )
+                Theorist.objects.filter(~Q(uuid=self.theorist.uuid))
                 .filter_by_accepted_friendship_as_member(member=self.theorist)
+                .filter_is_able_to_get_messages()
+                .filter_is_chats_available()
                 .distinct()
             )
         else:

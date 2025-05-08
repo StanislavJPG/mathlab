@@ -24,7 +24,7 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
     raise_exception = True
 
     def get_queryset(self):
-        return super().get_queryset().filter(is_onboarded=True)
+        return super().get_queryset().filter_by_is_onboarded()
 
     def dispatch(self, request, *args, **kwargs):
         self.request: AuthenticatedHttpRequest

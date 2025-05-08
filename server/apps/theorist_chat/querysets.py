@@ -10,3 +10,8 @@ class TheoristChatRoomQuerySet(models.QuerySet):
             ).desc(),
             F('last_sms_sent_at').desc(),
         )
+
+
+class TheoristMessageQueryset(models.QuerySet):
+    def filter_by_is_safe_deleted(self):
+        return self.filter(is_safe_deleted=True)

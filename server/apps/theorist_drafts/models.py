@@ -6,6 +6,7 @@ from django_lifecycle import LifecycleModel, hook, AFTER_CREATE
 from dynamic_filenames import FilePattern
 from easy_thumbnails.files import get_thumbnailer
 
+from server.apps.theorist_drafts.querysets import TheoristDraftsQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
@@ -22,6 +23,8 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     is_public_available = models.BooleanField(default=False)
 
     theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='drafts')
+
+    objects = TheoristDraftsQuerySet.as_manager()
 
     class Meta:
         ordering = ('-created_at',)

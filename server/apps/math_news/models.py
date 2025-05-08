@@ -4,6 +4,7 @@ from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django_lifecycle import hook, AFTER_CREATE, LifecycleModel
 
+from server.apps.math_news.querysets import MathNewsQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.helpers import generate_randon_hex_colors
 
@@ -26,6 +27,8 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     background_colors = ArrayField(
         models.CharField(max_length=200), blank=True, size=NUM_OF_BACKGROUND_COLORS, default=default_background_colors
     )
+
+    objects = MathNewsQueryset.as_manager()
 
     class Meta:
         ordering = ('created_at',)

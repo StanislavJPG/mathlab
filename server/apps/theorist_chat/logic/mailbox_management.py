@@ -74,8 +74,8 @@ class MailBoxCreateFromProfile(
                 .filter(
                     ~Q(id=self.request.theorist.id),
                     ~Q(blacklist__blocked_theorists=self.request.theorist),
-                    settings__is_able_to_get_messages=True,
                 )
+                .filter_is_able_to_get_messages()
             )
         return Theorist.objects.none()
 

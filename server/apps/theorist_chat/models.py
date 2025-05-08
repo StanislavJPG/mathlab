@@ -8,7 +8,7 @@ from django.utils.translation import gettext_lazy as _
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
 
-from server.apps.theorist_chat.managers import TheoristChatRoomQuerySet
+from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
@@ -67,6 +67,8 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         'theorist.Theorist', null=True, blank=True, on_delete=models.SET_NULL, related_name='deleted_messages'
     )
     is_safe_deleted = models.BooleanField(default=False)
+
+    objects = TheoristMessageQueryset.as_manager()
 
     class Meta:
         ordering = ('created_at',)

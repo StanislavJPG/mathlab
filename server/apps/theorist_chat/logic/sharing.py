@@ -69,7 +69,9 @@ class MessageDraftShareView(AbstractMessageInstanceShareView):
     success_url = reverse_lazy('mathlab:drafts:base-drafts')
 
     def get_instance_to_share(self):
-        return TheoristDraftsConfiguration.objects.get(uuid=self.kwargs['instance_uuid'], is_public_available=True)
+        return TheoristDraftsConfiguration.objects.get(
+            uuid=self.kwargs['instance_uuid']
+        ).filter_by_is_public_available()
 
     def get_form_kwargs(self):
         self.request: AuthenticatedHttpRequest

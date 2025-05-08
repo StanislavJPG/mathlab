@@ -147,10 +147,13 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         instances = self.cleaned_data['receiver']
         to_create = []
         for instance in instances:
-            room, _ = TheoristChatRoom.objects.filter(
+            room = TheoristChatRoom.objects.filter(
                 (Q(first_member=self.theorist) & Q(second_member=instance))
-                | (Q(first_member=instance) & Q(second_member=self.theorist)),
-            ).get_or_create(first_member=self.theorist, second_member=instance)
+                | (Q(first_member=instance) & Q(second_member=self.theorist))
+            ).first()
+            if not room:
+                room = TheoristChatRoom.objects.create(first_member=self.theorist, second_member=instance)
+
             msg_obj = TheoristMessage(sender=self.theorist, room=room, message=self._get_default_share_message())
             to_create.append(msg_obj)
 

@@ -16,6 +16,7 @@
         <ul class="nav nav-tabs justify-content-end"
             hx-get="{% url 'forum:theorist_profile:friendship:hx-theorist-community-list-navs-counters' %}"
             hx-target="this"
+            hx-on::after-request="if (event.detail.elt === this) document.getElementById('friends').click()"
             hx-trigger="friendshipBlockChanged from:body"
             role="tablist">
           <li class="nav-item" role="presentation">

@@ -1,6 +1,8 @@
 from django import forms
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
+from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -161,12 +163,15 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
+            verb_label = _('Shared with you')
             notify.send(
-                sender=self.theorist.user,
+                sender=self.theorist,
                 recipient=instance.user,
-                verb='shared with you',
-                description='desc',
+                actor_content_type=ContentType.objects.get_for_model(instance),
+                action_object_url=self.url_to_share,
+                verb=verb_label,
                 public=False,
+                timestamp=timezone.now(),
             )  # TODO: Change this boilerplate
 
         objs = TheoristMessage.objects.bulk_create(to_create)

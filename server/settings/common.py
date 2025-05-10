@@ -56,6 +56,7 @@ INSTALLED_APPS = [
     'captcha',
     'django_cleanup.apps.CleanupConfig',
     'django_tables2',
+    'notifications',
     # common
     'server.common',
     # apps

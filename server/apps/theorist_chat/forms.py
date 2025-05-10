@@ -5,6 +5,7 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from django_bleach.forms import BleachField
+from notifications.signals import notify
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
@@ -160,6 +161,13 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
+            notify.send(
+                sender=self.theorist.user,
+                recipient=instance.user,
+                verb='shared with you',
+                description='desc',
+                public=False,
+            )  # TODO: Change this boilerplate
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs

@@ -1,4 +1,7 @@
-{% load static i18n avatars %}
+{% load static i18n avatars notifications_tags %}
+
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+{% register_notify_callbacks badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" callbacks='fill_notification_list,fill_notification_badge' %}
 
 <header class="p-3 mb-3 border-bottom">
   <div class="container">
@@ -34,7 +37,16 @@
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
-        <a href="javascript:(0);" class="text-decoration-none link-secondary me-3" style="font-size: 25px;"><i class="ti ti-bell"></i></a>
+        <div class="dropdown-center">
+          <a href="javascript:(0);"
+             type="button"
+             data-bs-toggle="dropdown" aria-expanded="false"
+             class="text-decoration-none link-secondary me-3 position-relative">
+            <i class="ti ti-bell" style="font-size: 25px;"></i>
+            {% live_notify_badge badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" %}
+          </a>
+          {% live_notify_list list_class="dropdown-menu" %}
+        </div>
       {% endif %}
       <div class="dropdown_user text-end">
         <a href="#" class="d-block link-secondary text-decoration-none dropdown-toggle"

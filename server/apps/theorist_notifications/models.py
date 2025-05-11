@@ -8,16 +8,22 @@ class TheoristNotification(AbstractNotification):
     actor_display_name = models.CharField(max_length=255, null=True)
     target_display_name = models.CharField(max_length=255, null=True)
 
+    theorist = models.ForeignKey(
+        'theorist.Theorist', on_delete=models.CASCADE, related_name='notifications', null=True, blank=True
+    )
+
     class Meta(AbstractNotification.Meta):
         abstract = False
 
     def extend_notification(
         self,
+        request_theorist=None,
         action_url=None,
         actor_display_name=None,
         target_display_name=None,
     ):
-        update_fields = []
+        _props = self._important_props_create(request_theorist or self.recipient.theorist)
+        update_fields = [*_props]
         if action_url:
             self.action_url = action_url
             update_fields.append('action_url')
@@ -29,3 +35,8 @@ class TheoristNotification(AbstractNotification):
             update_fields.append('target_display_name')
 
         self.save(update_fields=update_fields)
+
+    def _important_props_create(self, theorist):
+        """create important props and return tuple of changed fields"""
+        self.theorist = theorist
+        return ('theorist',)

@@ -7,4 +7,5 @@ urlpatterns = [
     path('', include('server.apps.forum.urls.comment_urls')),
     path('theorist/', include('server.apps.theorist.urls.forum_profile_urls')),
     path('chat/', include('server.apps.theorist_chat.urls.urls')),
+    path('theorist/notifications/', include('server.apps.theorist_notifications.urls')),
 ]

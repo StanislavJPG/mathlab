@@ -25,14 +25,23 @@ function bs_fill_notification_list(data) {
                     var formattedDate = gettext("Send at") + " " + intlDate;
                     message += "<br/>" + "<small class='text-muted'>- " + formattedDate + "</small>"
                 }
-                return `<li><a class="${notify_menu_el_class}" href="${item.action_url}" style="font-size: 14px;">${message}</a></li><li><hr class="dropdown-divider"></li>`;
+                return `<li><hr class="dropdown-divider"></li><li><a class="${notify_menu_el_class}" href="${item.action_url}" style="font-size: 14px;">${message}</a></li>`;
             }).join('')
-        }else{
-            messages = `<li><span class="dropdown-item-text small text-muted text-nowrap">${gettext('Have no unread notifications yet')}</span></li>`
+            var unread_btn = `
+                <a href="javascript:(0);"
+                   hx-post="/forum/theorist/notifications/mark-all-read/"
+                   hx-trigger="click"
+                   class="small text-end d-block text-decoration-none me-2">
+                <i class="ti ti-square-rounded-x"></i> ${gettext('Unread all messages')}</a>
+            `;
+        } else {
+            messages = `<li><span class="dropdown-item-text small text-muted text-nowrap">${gettext('No unread notifications yet')}</span></li>`
         }
 
         for (var i = 0; i < menus.length; i++) {
-            menus[i].innerHTML = messages;
+            menus[i].innerHTML = unread_btn ? unread_btn : '';
+            menus[i].innerHTML += messages;
+            htmx.process(menus[i]);
         }
     }
 }

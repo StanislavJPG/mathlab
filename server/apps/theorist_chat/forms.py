@@ -14,6 +14,7 @@ from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
+from server.common.utils.notifications import get_obj_notification
 
 
 class TheoristMessageForm(forms.Form):
@@ -163,16 +164,21 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
-            verb_label = _('Shared with you')
-            notify.send(
+
+            verb_label = _('has shared with you with')
+            notification = notify.send(
                 sender=self.theorist,
                 recipient=instance.user,
                 actor_content_type=ContentType.objects.get_for_model(instance),
-                action_object_url=self.url_to_share,
+                target=self.sharing_instance,
+                action_object=self.sharing_instance,
                 verb=verb_label,
                 public=False,
                 timestamp=timezone.now(),
-            )  # TODO: Change this boilerplate
+            )
+            get_obj_notification(notification).extend_notification(
+                action_url=self.url_to_share, target_display_name=self.i18n_obj_name
+            )
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs

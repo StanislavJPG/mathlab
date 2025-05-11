@@ -8,13 +8,13 @@ function bs_fill_notification_list(data) {
             var message = "";
 
             if (typeof item.actor !== 'undefined') {
-                message = item.actor;
+                message = item.actor_display_name;
             }
             if (typeof item.verb !== 'undefined') {
                 message += " " + item.verb;
             }
             if (typeof item.target !== 'undefined') {
-                message += " " + item.target;
+                message += " " + item.target_display_name;
             }
             if (typeof item.timestamp !== 'undefined') {
                 var date = new Date(item.timestamp);
@@ -24,7 +24,7 @@ function bs_fill_notification_list(data) {
                 var formattedDate = gettext("Send at") + " " + intlDate;
                 message += "<br/>" + "<small class='text-muted'>- " + formattedDate + "</small>"
             }
-            return `<li><span class="${notify_menu_el_class}" style="font-size: 14px;">${message}</span></li>`;
+            return `<li><a class="${notify_menu_el_class}" href="${item.action_url}" style="font-size: 14px;">${message}</a></li><li><hr class="dropdown-divider"></li>`;
         }).join('')
 
         for (var i = 0; i < menus.length; i++) {

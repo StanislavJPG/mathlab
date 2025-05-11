@@ -68,6 +68,7 @@ INSTALLED_APPS = [
     'server.apps.math_news.apps.MathNewsConfig',
     'server.apps.solvexample.apps.SolvexampleConfig',
     'server.apps.theorist.apps.TheoristConfig',
+    'server.apps.theorist_notifications.apps.TheoristNotificationsConfig',
     'server.apps.users.apps.UsersConfig',
     # templatetags
     'server.common.templatetags.widened_widget_tweaks',
@@ -202,6 +203,8 @@ SITE_ID = 1
 SITE_DEFAULT_URL = reverse_lazy('forum:base-forum-page')
 
 HONEYPOT_FIELD_NAME = 'phonenumber'
+
+NOTIFICATIONS_NOTIFICATION_MODEL = 'theorist_notifications.TheoristNotification'
 
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/

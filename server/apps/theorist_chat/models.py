@@ -4,12 +4,12 @@ from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
 from django.utils import timezone
-from django.utils.translation import gettext_lazy as _
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
 
 from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
+from server.common.utils.helpers import format_relative_time
 
 
 class TheoristChatGroupConfiguration(UUIDModelMixin, TimeStampedModelMixin):
@@ -85,18 +85,7 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     @property
     def chat_convenient_created_at(self):
-        t = timezone.now() - self.created_at
-        sent = t.seconds
-        if sent <= 30:
-            return _('Just now')
-        elif 60 <= sent <= 300:
-            return _('Couple minutes ago')
-        elif 300 < sent <= 400:
-            return _('5 minutes ago')
-        elif t.days < 1:
-            return timezone.localtime(self.created_at).time()
-        else:
-            return self.created_at
+        return format_relative_time(self.created_at)
 
     def safe_delete(self, deleted_by=None):
         self.was_safe_deleted_by = deleted_by if deleted_by else self.sender

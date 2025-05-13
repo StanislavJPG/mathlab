@@ -2,7 +2,6 @@ from django import forms
 from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
-from django.utils import timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
@@ -174,7 +173,6 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
                 action_object=self.sharing_instance,
                 verb=verb_label,
                 public=False,
-                timestamp=timezone.now(),
             )
             get_obj_notification(notification).extend_notification(
                 action_url=self.url_to_share, target_display_name=self.i18n_obj_name

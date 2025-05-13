@@ -8,9 +8,7 @@ class TheoristNotification(AbstractNotification):
     actor_display_name = models.CharField(max_length=255, null=True)
     target_display_name = models.CharField(max_length=255, null=True)
 
-    theorist = models.ForeignKey(
-        'theorist.Theorist', on_delete=models.CASCADE, related_name='notifications', null=True, blank=True
-    )
+    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='notifications', null=True)
 
     class Meta(AbstractNotification.Meta):
         abstract = False

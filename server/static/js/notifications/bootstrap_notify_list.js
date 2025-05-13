@@ -9,7 +9,7 @@ function bs_fill_notification_list(data) {
                 var message = "";
 
                 if (typeof item.actor !== 'undefined') {
-                    message = item.actor_display_name;
+                    message = `<strong>${item.actor_display_name}</strong>`;
                 }
                 if (typeof item.verb !== 'undefined') {
                     message += " " + item.verb;
@@ -27,19 +27,19 @@ function bs_fill_notification_list(data) {
                 }
                 return `<li><hr class="dropdown-divider"></li><li><a class="${notify_menu_el_class}" href="${item.action_url}" style="font-size: 14px;">${message}</a></li>`;
             }).join('')
-            var unread_btn = `
+            var clear_all_btn = `
                 <a href="javascript:(0);"
-                   hx-post="/forum/theorist/notifications/mark-all-read/"
+                   hx-post="/forum/theorist/notifications/clear-all/"
                    hx-trigger="click"
                    class="small text-end d-block text-decoration-none me-2">
-                <i class="ti ti-square-rounded-x"></i> ${gettext('Unread all messages')}</a>
+                <i class="ti ti-square-rounded-x"></i> ${gettext('Clear all messages')}</a>
             `;
         } else {
             messages = `<li><span class="dropdown-item-text small text-muted text-nowrap">${gettext('No unread notifications yet')}</span></li>`
         }
 
         for (var i = 0; i < menus.length; i++) {
-            menus[i].innerHTML = unread_btn ? unread_btn : '';
+            menus[i].innerHTML = clear_all_btn ? clear_all_btn : '';
             menus[i].innerHTML += messages;
             htmx.process(menus[i]);
         }

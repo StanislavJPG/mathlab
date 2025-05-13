@@ -41,6 +41,9 @@ function bs_fill_notification_list(data) {
         for (var i = 0; i < menus.length; i++) {
             menus[i].innerHTML = clear_all_btn ? clear_all_btn : '';
             menus[i].innerHTML += messages;
+            menus[i].innerHTML += '<hr class="mt-2 mb-2"/><div class="d-grid gap-2">' +
+            `<a type="button" target="_blank" href="theorist/notifications/all/" class="btn btn-outline-primary btn-sm text-center d-block"><i class="ti ti-notification"></i> ${gettext('Read all notifications')}</a>` +
+            '</div>';
             htmx.process(menus[i]);
         }
     }

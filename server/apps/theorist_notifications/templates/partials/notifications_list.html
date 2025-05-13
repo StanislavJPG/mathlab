@@ -1,0 +1,48 @@
+{% load static i18n widget_tweaks widened_widget_tweaks text avatars %}
+
+<div id="main-notifications-block-js">
+  {% for notification in notifications %}
+    <div class="media text-muted pt-3 noti-{{ notification.uuid }}">
+      {% icon_for_contenttype_model notification.target_content_type style="font-size: 30px;" %}
+      <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
+        <a class="text-decoration-none link-secondary" href="{{ notification.share_url }}">
+          {{ notification.get_full_notification_label }}
+        </a>
+        <div class="mt-1 d-flex justify-content-between align-items-center flex-column flex-sm-row">
+          <small>
+            - <a class="text-decoration-none"
+                 href="{{ post.theorist.get_absolute_url }}">
+              {{ post.theorist.full_name }}
+            </a>
+            <time>{{ notification.timestamp|timesince }} {% translate 'ago' %}</time>
+          </small>
+          <div>
+{#              <div class="vr"></div>#}
+{#              <a id="noti-safe-delete-js"#}
+{#                 href="javascript:(0);"#}
+{#                 class="text-decoration-none"#}
+{#                 title="{% translate 'Notification deletion' %}"#}
+{#                 hx-swap="innerHTML swap:0.5s"#}
+{#                 hx-target=".noti-{{ notification.uuid }}"#}
+{#                 hx-delete="{% url 'forum:post-delete' post.uuid %}"#}
+{#                 hx-vals='{"location": "base"}'#}
+{#                 hx-confirm="Are you sure?"#}
+{#              >#}
+{#                <i class="text-danger ti ti-trash"></i>#}
+{#              </a>#}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endfor %}
+  <small class="d-block text-right mt-4">
+    {% include 'common/pagination.html' with htmx_target="#main-posts-block-js" %}
+  </small>
+</div>
+
+<script>
+  $(document).ready(function () {
+    $('.selectpicker').selectpicker();
+  });
+</script>
+<script src="{% static 'js/offcanvas.js' %}"></script>

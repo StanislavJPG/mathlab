@@ -206,6 +206,12 @@ HONEYPOT_FIELD_NAME = 'phonenumber'
 
 NOTIFICATIONS_NOTIFICATION_MODEL = 'theorist_notifications.TheoristNotification'
 
+MODELS_TO_ICONS = (
+    ('theorist_drafts.TheoristDraftsConfiguration', 'ti ti-notes'),
+    ('forum.Comment', 'ti ti-comment'),
+    ('forum.Post', 'ti ti-post'),
+)
+
 # Internationalization
 # https://docs.djangoproject.com/en/5.0/topics/i18n/
 

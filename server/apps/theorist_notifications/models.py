@@ -13,6 +13,10 @@ class TheoristNotification(AbstractNotification):
     class Meta(AbstractNotification.Meta):
         abstract = False
 
+    @property
+    def get_full_notification_label(self):
+        return f'{self.actor_display_name} {self.verb} {self.target_display_name}'
+
     def extend_notification(
         self,
         request_theorist=None,

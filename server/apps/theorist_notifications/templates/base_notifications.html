@@ -1,0 +1,73 @@
+{% extends 'base/forum_base.html' %}
+{% load i18n static widened_widget_tweaks widget_tweaks %}
+
+{% block page_head %}
+  <title>MathLab | {% translate 'Notifications' %}</title>
+{% endblock page_head %}
+
+{% block page_css %}
+  <link href="{% static 'css/common/offcanvas.css' %}" rel="stylesheet">
+{% endblock page_css %}
+
+{% block body %}
+  <main role="main" class="container my-3 p-3 rounded box-shadow w-50 m-auto mt-5">
+    <nav class="nav nav-pills flex-column flex-sm-row">
+      <a class="flex-sm-fill text-sm-center nav-link active"
+         id="unread-notifications-tab"
+         data-bs-toggle="pill"
+         data-bs-target="#unread-notifications"
+         hx-get="{% url 'forum:theorist_notifications:hx-notifications-unread' %}"
+         hx-indicator="#noti-list-block-wait-spinner"
+         hx-trigger="click once, load"
+         hx-target="#unread-notifications"
+         type="button"
+         role="tab"
+         aria-controls="unread-notifications"
+         aria-selected="true"
+         href="#">{% translate 'Unread notifications' %}</a>
+      <a class="flex-sm-fill text-sm-center nav-link"
+         id="read-notifications-tab"
+         data-bs-toggle="pill"
+         data-bs-target="#read-notifications"
+         hx-get="{% url 'forum:theorist_notifications:hx-notifications-read' %}"
+         hx-indicator="#noti-list-block-wait-spinner"
+         hx-trigger="click once"
+         hx-target="#read-notifications"
+         type="button"
+         role="tab"
+         aria-controls="read-notifications"
+         aria-selected="true"
+         href="#">{% translate 'Read notifications' %}</a>
+    </nav>
+    <div class="tab-content" id="pills-tabContent">
+      <div class="tab-pane fade show active"
+           id="unread-notifications"
+           role="tabpanel"
+           aria-labelledby="unread-notifications-tab"
+           tabindex="0"
+      >
+        {#        Content will be placed here  #}
+        <div class="text-center d-flex align-items-center flex-column">
+          <div id="post-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+          <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+        </div>
+      </div>
+      <div class="tab-pane fade show"
+           id="read-notifications"
+           role="tabpanel"
+           aria-labelledby="read-notifications-tab"
+           tabindex="0"
+      >
+        {#        Content will be placed here  #}
+        <div class="text-center d-flex align-items-center flex-column">
+          <div id="post-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+          <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+        </div>
+      </div>
+    </div>
+  </main>
+{% endblock body %}
+
+{% block page_js %}
+  <script src="{% static 'js/offcanvas.js' %}"></script>
+{% endblock page_js %}

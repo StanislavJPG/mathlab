@@ -1,20 +1,33 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import ListView
+from django.views.generic import ListView, TemplateView
 from render_block import render_block_to_string
 
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.common.mixins.views import HXViewMixin
 
 
-class UnreadNotificationsListView(LoginRequiredMixin, HXViewMixin, ListView):
+class NotificationsView(LoginRequiredMixin, TemplateView):
+    template_name = 'base_notifications.html'
+
+
+class HXReadNotificationsView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristNotification
-    template_name = 'partials/forum/forum_navbar.html'
-    context_object_name = 'unread_notifications'
+    template_name = 'partials/notifications_list.html'
+    context_object_name = 'notifications'
 
     def get_queryset(self):
-        return super().get_queryset().filter(theorist=self.request.theorist)
+        return super().get_queryset().filter(theorist=self.request.theorist).read()
+
+
+class HXUnreadNotificationsListView(LoginRequiredMixin, HXViewMixin, ListView):
+    model = TheoristNotification
+    template_name = 'partials/notifications_list.html'
+    context_object_name = 'notifications'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(theorist=self.request.theorist).unread()
 
 
 class NotificationMarkAllReadView(LoginRequiredMixin, HXViewMixin, View):

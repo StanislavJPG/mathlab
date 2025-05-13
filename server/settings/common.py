@@ -205,6 +205,7 @@ SITE_DEFAULT_URL = reverse_lazy('forum:base-forum-page')
 HONEYPOT_FIELD_NAME = 'phonenumber'
 
 NOTIFICATIONS_NOTIFICATION_MODEL = 'theorist_notifications.TheoristNotification'
+DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
 
 MODELS_TO_ICONS = (
     ('theorist_drafts.TheoristDraftsConfiguration', 'ti ti-notes'),

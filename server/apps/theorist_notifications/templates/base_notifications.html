@@ -7,10 +7,49 @@
 
 {% block page_css %}
   <link href="{% static 'css/common/offcanvas.css' %}" rel="stylesheet">
+  <style>
+    .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, 30%); }
+  </style>
 {% endblock page_css %}
 
 {% block body %}
-  <main role="main" class="container my-3 p-3 rounded box-shadow w-50 m-auto mt-5">
+  {% block notification %}
+    <ul class="nav nav-tabs container rounded w-50 m-auto mt-5 justify-content-end"
+        id="navs-items-block"
+        hx-get="{{ request.path }}"
+        hx-swap="outerHTML"
+        hx-trigger="notificationChanged from:body"
+        hx-target="#navs-items-block"
+        hx-select="#navs-items-block"
+    >
+      {% if unread_notifications.exists %}
+        <li class="nav-item">
+          <a class="nav-link"
+             title="{% translate 'Mark all notifications as read' %}"
+             data-bs-toggle="tooltip"
+             aria-current="page"
+             hx-post="{% url 'forum:theorist_notifications:mark-all-read' %}"
+             hx-confirm="{% translate 'Mark all notifications as read?' %}"
+             hx-trigger="click"
+             hx-vals='{"from_notify_page": "true"}'
+             hx-swap="none"
+             href="#">
+            <i class="ti ti-bell-check text-success"></i>
+          </a>
+        </li>
+      {% endif %}
+      <li class="nav-item">
+        <a class="nav-link"
+           title="{% translate 'Delete all notifications' %}"
+           data-bs-toggle="tooltip"
+           aria-current="page"
+           href="#">
+          <i class="ti ti-bell-x text-danger"></i>
+        </a>
+      </li>
+    </ul>
+  {% endblock notification %}
+  <main role="main" class="container p-3 rounded box-shadow w-50 m-auto">
     <nav class="nav nav-pills flex-column flex-sm-row">
       <a class="flex-sm-fill text-sm-center nav-link active"
          id="unread-notifications-tab"

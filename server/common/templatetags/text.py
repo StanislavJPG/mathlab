@@ -25,8 +25,8 @@ def truncate_by_rows(text, truncate_by):
 
 @register.simple_tag
 @mark_safe
-def icon_for_contenttype_model(contenttype, style='', add_to_class=''):
+def icon_for_contenttype_model(contenttype, style='', add_class=''):
     icon_class = get_icon_for_contenttype_model(contenttype)
-    return '<i class="{add_to_class} {icon_class}" style="{style}"></i>'.format(
-        add_to_class=add_to_class, style=style, icon_class=icon_class
+    return '<i class="{add_class} {icon_class}" style="{style}"></i>'.format(
+        add_class=add_class, style=style, icon_class=icon_class
     )

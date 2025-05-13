@@ -1,8 +1,11 @@
 from django.db import models
+from django.utils.html import format_html
 from notifications.base.models import AbstractNotification
 
+from server.common.mixins.models import UUIDModelMixin
 
-class TheoristNotification(AbstractNotification):
+
+class TheoristNotification(UUIDModelMixin, AbstractNotification):
     action_url = models.URLField(null=True, blank=True)
 
     actor_display_name = models.CharField(max_length=255, null=True)
@@ -14,8 +17,8 @@ class TheoristNotification(AbstractNotification):
         abstract = False
 
     @property
-    def get_full_notification_label(self):
-        return f'{self.actor_display_name} {self.verb} {self.target_display_name}'
+    def notification_label_as_html_tag(self):
+        return format_html(f'<strong>{self.actor_display_name}</strong> {self.verb} {self.target_display_name}')
 
     def extend_notification(
         self,
@@ -42,3 +45,8 @@ class TheoristNotification(AbstractNotification):
         """create important props and return tuple of changed fields"""
         self.theorist = theorist
         return ('theorist',)
+
+    def safe_delete(self):
+        self.deleted = True
+        self.unread = False
+        self.save(update_fields=['deleted', 'unread'])

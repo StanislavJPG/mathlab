@@ -8,75 +8,98 @@
 {% block page_css %}
   <link href="{% static 'css/common/offcanvas.css' %}" rel="stylesheet">
   <style>
-    .box-shadow { box-shadow: 0 .25rem .75rem rgba(0, 0, 0, 30%); }
+    .box-shadow {
+      box-shadow: 0 .25rem .75rem rgba(0, 0, 0, 30%);
+    }
   </style>
 {% endblock page_css %}
 
 {% block body %}
   {% block notification %}
-    <ul class="nav nav-tabs container rounded w-50 m-auto mt-5 justify-content-end"
-        id="navs-items-block"
-        hx-get="{{ request.path }}"
-        hx-swap="outerHTML"
-        hx-trigger="notificationChanged from:body"
-        hx-target="#navs-items-block"
-        hx-select="#navs-items-block"
-    >
-      {% if unread_notifications.exists %}
-        <li class="nav-item">
-          <a class="nav-link"
-             title="{% translate 'Mark all notifications as read' %}"
-             data-bs-toggle="tooltip"
-             aria-current="page"
-             hx-post="{% url 'forum:theorist_notifications:mark-all-read' %}"
-             hx-confirm="{% translate 'Mark all notifications as read?' %}"
-             hx-trigger="click"
-             hx-vals='{"from_notify_page": "true"}'
-             hx-swap="none"
-             href="#">
-            <i class="ti ti-bell-check text-success"></i>
-          </a>
-        </li>
-      {% endif %}
-      <li class="nav-item">
-        <a class="nav-link"
-           title="{% translate 'Delete all notifications' %}"
-           data-bs-toggle="tooltip"
-           aria-current="page"
-           href="#">
-          <i class="ti ti-bell-x text-danger"></i>
-        </a>
-      </li>
-    </ul>
+    <div id="main-navs-items-block">
+      <ul class="nav nav-tabs container rounded w-50 m-auto mt-5 justify-content-end"
+          id="navs-items-block"
+          hx-get="{{ request.path }}"
+          hx-swap="outerHTML"
+          hx-trigger="notificationChanged from:body delay:0.6s"
+          hx-target="#main-navs-items-block"
+          hx-select="#main-navs-items-block"
+      >
+        {% if unread_notifications.exists %}
+          <li class="nav-item">
+            <a class="nav-link"
+               title="{% translate 'Mark all notifications as read' %}"
+               data-bs-toggle="tooltip"
+               aria-current="page"
+               hx-post="{% url 'forum:theorist_notifications:mark-all-read' %}"
+               hx-confirm="{% translate 'Mark all notifications as read?' %}"
+               hx-trigger="click"
+               hx-vals='{"from_notify_page": "true"}'
+               hx-swap="none"
+               href="#">
+              <i class="ti ti-bell-check text-success"></i>
+            </a>
+          </li>
+        {% endif %}
+        {% if read_notifications.exists or unread_notifications.exists %}
+          <li class="nav-item">
+            <a class="nav-link"
+               title="{% translate 'Delete all notifications' %}"
+               data-bs-toggle="tooltip"
+               aria-current="page"
+               hx-post="{% url 'forum:theorist_notifications:mark-all-deleted' %}"
+               hx-confirm="{% translate 'Mark all notifications as deleted?' %}"
+               hx-trigger="click"
+               hx-swap="none"
+               href="#">
+              <i class="ti ti-bell-x text-danger"></i>
+            </a>
+          </li>
+        {% endif %}
+      </ul>
   {% endblock notification %}
   <main role="main" class="container p-3 rounded box-shadow w-50 m-auto">
-    <nav class="nav nav-pills flex-column flex-sm-row">
-      <a class="flex-sm-fill text-sm-center nav-link active"
+    <nav class="nav nav-pills flex-column flex-sm-row d-flex justify-content-center align-items-start">
+      <a class="flex-sm-fill text-sm-center nav-link active mb-2"
          id="unread-notifications-tab"
          data-bs-toggle="pill"
          data-bs-target="#unread-notifications"
          hx-get="{% url 'forum:theorist_notifications:hx-notifications-unread' %}"
-         hx-indicator="#noti-list-block-wait-spinner"
          hx-trigger="click once, load"
          hx-target="#unread-notifications"
          type="button"
          role="tab"
          aria-controls="unread-notifications"
          aria-selected="true"
-         href="#">{% translate 'Unread notifications' %}</a>
-      <a class="flex-sm-fill text-sm-center nav-link"
+         href="#"><i class="ti ti-bell-ringing"></i> {% translate 'Unread notifications' %}
+        <span class="badge bg-secondary">{{ unread_notifications.count }}</span></a>
+      <a class="flex-sm-fill text-sm-center nav-link mb-2"
          id="read-notifications-tab"
          data-bs-toggle="pill"
          data-bs-target="#read-notifications"
          hx-get="{% url 'forum:theorist_notifications:hx-notifications-read' %}"
-         hx-indicator="#noti-list-block-wait-spinner"
          hx-trigger="click once"
          hx-target="#read-notifications"
          type="button"
          role="tab"
          aria-controls="read-notifications"
          aria-selected="true"
-         href="#">{% translate 'Read notifications' %}</a>
+         href="#"><i class="ti ti-bell-check"></i> {% translate 'Read notifications' %}
+        <span class="badge bg-secondary">{{ read_notifications.count }}</span></a>
+      <a class="nav-link ms-3"
+         id="deleted-notifications-tab"
+         data-bs-toggle="pill"
+         data-bs-target="#deleted-notifications"
+         hx-get="{% url 'forum:theorist_notifications:hx-notifications-deleted' %}"
+         hx-trigger="click once"
+         hx-target="#deleted-notifications"
+         type="button"
+         role="tab"
+         style="border: 1px solid #6c757d;"
+         aria-controls="deleted-notifications"
+         aria-selected="true"
+         href="#"><i class="ti ti-trash text-secondary"></i>
+      </a>
     </nav>
     <div class="tab-content" id="pills-tabContent">
       <div class="tab-pane fade show active"
@@ -85,9 +108,10 @@
            aria-labelledby="unread-notifications-tab"
            tabindex="0"
       >
-        {#        Content will be placed here  #}
+      {#        Content will be placed here  #}
         <div class="text-center d-flex align-items-center flex-column">
-          <div id="post-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+          <div id="noti-unread-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
+               class="spinner-grow text-primary mt-2" role="status"></div>
           <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
         </div>
       </div>
@@ -97,14 +121,29 @@
            aria-labelledby="read-notifications-tab"
            tabindex="0"
       >
-        {#        Content will be placed here  #}
+      {#        Content will be placed here  #}
         <div class="text-center d-flex align-items-center flex-column">
-          <div id="post-list-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2" role="status"></div>
+          <div id="noti-read-block-wait-spinner" style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2"
+               role="status"></div>
+          <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+        </div>
+      </div>
+      <div class="tab-pane fade show"
+           id="deleted-notifications"
+           role="tabpanel"
+           aria-labelledby="deleted-notifications-tab"
+           tabindex="0"
+      >
+      {#        Content will be placed here  #}
+        <div class="text-center d-flex align-items-center flex-column">
+          <div id="noti-deleted-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
+               class="spinner-grow text-primary mt-2" role="status"></div>
           <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
         </div>
       </div>
     </div>
   </main>
+  </div>
 {% endblock body %}
 
 {% block page_js %}

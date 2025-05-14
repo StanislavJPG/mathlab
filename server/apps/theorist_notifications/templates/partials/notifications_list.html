@@ -1,11 +1,12 @@
 {% load static i18n widget_tweaks widened_widget_tweaks text avatars %}
 
-<div id="main-notifications-block-js"
+<div id="{{ htmx_target_block }}"
      hx-get="{{ request.get_full_path }}"
      hx-trigger="notificationChanged from:body delay:0.6s">
   {% if notifications %}
+    <p class="text-secondary text-center fw-light">{% translate 'All deleted notifications will be cleared in 3 days.' %}</p>
     {% for notification in notifications %}
-      <div class="media text-muted pt-3 m-4 mt-3 mb-3 rounded {% if notification.unread %}bg-info-subtle{% else %}bg-secondary-subtle{% endif %}" id="noti-{{ notification.uuid }}">
+      <div class="media text-muted pt-3 m-4 mt-3 mb-3 rounded {% if notification.deleted %}bg-danger-subtle{% elif notification.unread %}bg-info-subtle{% elif not notification.read %}bg-success-subtle{% endif %}" id="noti-{{ notification.uuid }}">
         {% icon_for_contenttype_model notification.target_content_type add_class="m-1 me-2" style="font-size: 35px;" %}
         <div class="media-body pb-3 mb-0 small lh-125 border-bottom border-gray">
           <a class="text-decoration-none link-secondary" href="{{ notification.action_url }}">
@@ -21,35 +22,38 @@
             </small>
           </div>
         </div>
-        <a id="noti-read-js"
-           href="javascript:(0);"
-           class="text-decoration-none me-2"
-           style="font-size: 25px;"
-           title="{% translate 'Mark notification as read?' %}"
-           hx-swap="innerHTML swap:0.5s"
-           hx-target="#noti-{{ notification.uuid }}"
-           hx-post="{% url 'forum:theorist_notifications:safe-delete' notification.uuid %}"
-           hx-confirm="{% translate 'Mark notification as read?' %}"  {# TODO: Change to real view #}
-        >
-          <i class="text-success ti ti-check"></i>
-        </a>
-{#        <i class="ti ti-bell-check"></i>#}
-        <a id="noti-safe-delete-js"
-           href="javascript:(0);"
-           class="text-decoration-none me-2"
-           style="font-size: 25px;"
-           title="{% translate 'Delete notification?' %}"
-           hx-swap="innerHTML swap:0.5s"
-           hx-target="#noti-{{ notification.uuid }}"
-           hx-post="{% url 'forum:theorist_notifications:safe-delete' notification.uuid %}"
-           hx-confirm="{% translate 'Delete notification?' %}"
-        >
-          <i class="text-secondary ti ti-x"></i>
-        </a>
+        {% if not notification.deleted and notification.unread %}
+          <a id="noti-read-js"
+             href="javascript:(0);"
+             class="text-decoration-none me-2"
+             style="font-size: 25px;"
+             title="{% translate 'Mark notification as read?' %}"
+             hx-swap="innerHTML swap:0.5s"
+             hx-target="#noti-{{ notification.uuid }}"
+             hx-post="{% url 'forum:theorist_notifications:mark-read' notification.uuid %}"
+             hx-confirm="{% translate 'Mark notification as read?' %}"
+          >
+            <i class="text-success ti ti-check"></i>
+          </a>
+        {% endif %}
+        {% if not notification.deleted %}
+          <a id="noti-safe-delete-js"
+             href="javascript:(0);"
+             class="text-decoration-none me-2"
+             style="font-size: 25px;"
+             title="{% translate 'Delete notification?' %}"
+             hx-swap="innerHTML swap:0.5s"
+             hx-target="#noti-{{ notification.uuid }}"
+             hx-post="{% url 'forum:theorist_notifications:safe-delete' notification.uuid %}"
+             hx-confirm="{% translate 'Delete notification?' %}"
+          >
+            <i class="text-secondary ti ti-x"></i>
+          </a>
+        {% endif %}
       </div>
     {% endfor %}
     <small class="d-block text-right mt-4">
-      {% include 'common/pagination.html' with htmx_target="#main-notifications-block-js" %}
+      {% include 'common/pagination.html' with htmx_target=htmx_target_block is_id_target=True %}
     </small>
   {% else %}
     <div class="mt-5">

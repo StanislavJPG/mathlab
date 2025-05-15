@@ -29,8 +29,9 @@ function bs_fill_notification_list(data) {
             }).join('')
             var clear_all_btn = `
                 <a href="javascript:(0);"
-                   hx-post="/forum/theorist/notifications/clear-all/"
-                   hx-trigger="click"
+                   hx-post="theorist/notifications/mark-all-read/"
+                   hx-target="#noti-badge"
+                   hx-trigger="click delay:0.5s"
                    class="small text-end d-block text-decoration-none me-2">
                 <i class="ti ti-square-rounded-x"></i> ${gettext('Clear all messages')}</a>
             `;

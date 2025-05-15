@@ -45,7 +45,11 @@
              data-bs-toggle="dropdown" aria-expanded="false"
              class="text-decoration-none link-secondary me-3 position-relative">
             <i class="ti ti-bell" style="font-size: 25px;"></i>
-            {% live_notify_badge badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" %}
+            {% block notification %}
+              <div id="noti-badge">
+                {% live_notify_badge badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" %}
+              </div>
+            {% endblock notification %}
           </a>
           {% live_notify_list list_class="notification dropdown-menu" %}
         </div>

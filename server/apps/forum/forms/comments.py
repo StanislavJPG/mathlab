@@ -1,6 +1,5 @@
 from django import forms
 from django.contrib.contenttypes.models import ContentType
-from django.utils.html import format_html
 from django.utils.translation import gettext_lazy as _
 
 from tinymce.widgets import TinyMCE
@@ -24,10 +23,7 @@ class CommentCreateForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=commit)
-        display_name_label = _('commented post <a href="%s"><strong>%s</strong></a>, that you are following') % (
-            instance.post.get_absolute_url(),
-            instance.post.title,
-        )
+        display_name_label = _('commented post %s, that you are following') % instance.post.title
         verb_label = _('have')
         notify.send(
             sender=self.theorist,
@@ -38,7 +34,7 @@ class CommentCreateForm(forms.ModelForm):
             public=False,
             verb=verb_label,
             action_url=instance.get_absolute_url(),
-            target_display_name=format_html(display_name_label),
+            target_display_name=display_name_label,
         )
         return instance
 

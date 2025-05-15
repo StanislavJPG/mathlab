@@ -29,7 +29,7 @@ function bs_fill_notification_list(data) {
             }).join('')
             var clear_all_btn = `
                 <a href="javascript:(0);"
-                   hx-post="theorist/notifications/mark-all-read/"
+                   hx-post="/forum/theorist/notifications/mark-all-read/"
                    hx-target="#noti-badge"
                    hx-trigger="click delay:0.5s"
                    class="small text-end d-block text-decoration-none me-2">
@@ -43,7 +43,7 @@ function bs_fill_notification_list(data) {
             menus[i].innerHTML = clear_all_btn ? clear_all_btn : '';
             menus[i].innerHTML += messages;
             menus[i].innerHTML += '<hr class="mt-2 mb-2"/><div class="d-grid gap-2">' +
-            `<a type="button" target="_blank" href="theorist/notifications/all/" class="btn btn-outline-primary btn-sm text-center d-block"><i class="ti ti-notification"></i> ${gettext('Read all notifications')}</a>` +
+            `<a type="button" target="_blank" href="/forum/theorist/notifications/all/" class="btn btn-outline-primary btn-sm text-center d-block"><i class="ti ti-notification"></i> ${gettext('Read all notifications')}</a>` +
             '</div>';
             htmx.process(menus[i]);
         }

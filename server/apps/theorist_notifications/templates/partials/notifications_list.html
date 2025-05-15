@@ -4,7 +4,9 @@
      hx-get="{{ request.get_full_path }}"
      hx-trigger="notificationChanged from:body delay:0.6s">
   {% if notifications %}
-    <p class="text-secondary text-center fw-light">{% translate 'All deleted notifications will be cleared in 3 days.' %}</p>
+    {% if 'deleted' in htmx_target_block %}
+      <p class="text-secondary text-center fw-light">{% translate 'All deleted notifications will be cleared in 3 days.' %}</p>
+    {% endif %}
     {% for notification in notifications %}
       <div class="media text-muted pt-3 m-4 mt-3 mb-3 rounded {% if notification.deleted %}bg-danger-subtle{% elif notification.unread %}bg-info-subtle{% elif not notification.read %}bg-success-subtle{% endif %}" id="noti-{{ notification.uuid }}">
         {% icon_for_contenttype_model notification.target_content_type add_class="m-1 me-2" style="font-size: 35px;" %}

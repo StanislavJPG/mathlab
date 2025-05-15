@@ -80,7 +80,7 @@ django-braces = "^1.16.0"
 django-lifecycle = "^1.2.4"
 uuid = "^1.30"
 python-slugify = {extras = ["unicode"], version = "^8.0.4"}
-django-render-block = "^0.10"
+django-render-block = "^0.11"
 django-tinymce = "^4.1.0"
 django-dynamic-filenames = "^1.4.0"
 easy-thumbnails = "^2.10"

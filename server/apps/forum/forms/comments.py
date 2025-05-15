@@ -1,8 +1,12 @@
 from django import forms
+from django.contrib.contenttypes.models import ContentType
+from django.utils.html import format_html
+from django.utils.translation import gettext_lazy as _
 
 from tinymce.widgets import TinyMCE
 
 from server.apps.forum.models import Comment
+from server.apps.theorist_notifications.signals import notify
 
 
 class CommentCreateForm(forms.ModelForm):
@@ -17,6 +21,26 @@ class CommentCreateForm(forms.ModelForm):
         super().__init__(*args, **kwargs)
         self.instance.theorist = self.theorist
         self.instance.post = self.post
+
+    def save(self, commit=True):
+        instance = super().save(commit=commit)
+        display_name_label = _('commented post <a href="%s"><strong>%s</strong></a>, that you are following') % (
+            instance.post.get_absolute_url(),
+            instance.post.title,
+        )
+        verb_label = _('have')
+        notify.send(
+            sender=self.theorist,
+            recipient=instance.post.theorist.user,
+            actor_content_type=ContentType.objects.get_for_model(instance.post.theorist),
+            target=instance,
+            action_object=instance,
+            public=False,
+            verb=verb_label,
+            action_url=instance.get_absolute_url(),
+            target_display_name=format_html(display_name_label),
+        )
+        return instance
 
 
 class CommentUpdateForm(forms.ModelForm):

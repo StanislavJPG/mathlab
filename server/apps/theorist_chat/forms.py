@@ -6,14 +6,13 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from django_bleach.forms import BleachField
-from notifications.signals import notify
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
-from server.common.utils.notifications import get_obj_notification
 
 
 class TheoristMessageForm(forms.Form):
@@ -164,18 +163,15 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
 
-            verb_label = _('has shared with you with')
-            notification = notify.send(
+            notify.send(
                 sender=self.theorist,
                 recipient=instance.user,
                 actor_content_type=ContentType.objects.get_for_model(instance),
                 target=self.sharing_instance,
                 action_object=self.sharing_instance,
-                verb=verb_label,
                 public=False,
-            )
-            get_obj_notification(notification).extend_notification(
-                action_url=self.url_to_share, target_display_name=self.i18n_obj_name
+                action_url=self.url_to_share,
+                target_display_name=self.i18n_obj_name,
             )
 
         objs = TheoristMessage.objects.bulk_create(to_create)

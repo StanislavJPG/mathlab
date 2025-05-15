@@ -65,3 +65,23 @@ def get_icon_for_contenttype_model(contenttype_obj):
     if not to_return:
         raise NotImplementedError('Model "{}" not found in `settings.MODELS_TO_ICONS`.'.format(contenttype_obj.model))
     return to_return
+
+
+def get_page_for_paginated_obj(
+    obj,
+    child_obj,
+    child_paginated_objs_label: str,
+    paginate_by: int,
+    ordered_by: str,
+):
+    if hasattr(obj, child_paginated_objs_label):
+        siblings_qs = getattr(obj, child_paginated_objs_label).all().order_by(ordered_by)
+        ids = list(siblings_qs.values_list('id', flat=True))
+
+        try:
+            index = ids.index(child_obj.id)
+        except ValueError:
+            return None
+
+        page_number = (index // paginate_by) + 1
+        return page_number

@@ -23,8 +23,7 @@ class CommentCreateForm(forms.ModelForm):
 
     def save(self, commit=True):
         instance = super().save(commit=commit)
-        display_name_label = _('commented post %s, that you are following') % instance.post.title
-        verb_label = _('have')
+        display_name_label = _('has commented post %s, that you are following') % instance.post.title
         notify.send(
             sender=self.theorist,
             recipient=instance.post.theorist.user,
@@ -32,7 +31,7 @@ class CommentCreateForm(forms.ModelForm):
             target=instance,
             action_object=instance,
             public=False,
-            verb=verb_label,
+            verb='',
             action_url=instance.get_absolute_url(),
             target_display_name=display_name_label,
         )

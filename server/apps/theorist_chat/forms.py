@@ -34,8 +34,7 @@ class TheoristMessageForm(forms.Form):
         return True
 
     def _notify_send(self, *, theorist, message, room):
-        display_name_label = _('wrote you a message')
-        verb_label = _('have')
+        display_name_label = _('has wrote you a message')
         recipient = room.first_member if room.first_member != theorist else room.second_member
         page_for_url = page_resolver.get_page_for_paginated_qs(
             qs=TheoristChatRoom.objects.filter(
@@ -52,7 +51,7 @@ class TheoristMessageForm(forms.Form):
             target=message,
             action_object=message,
             public=False,
-            verb=verb_label,
+            verb='',
             action_url=message.get_absolute_room_url(next_uuid=message.room.uuid, mailbox_page=page_for_url),
             target_display_name=display_name_label,
         )

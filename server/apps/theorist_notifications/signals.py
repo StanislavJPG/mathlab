@@ -1,6 +1,3 @@
-from django.utils.translation import gettext_lazy as _
-
-
 class ExtendedNotificationSignal:
     def send(self, sender, **kwargs):
         from notifications.signals import notify
@@ -25,10 +22,9 @@ class ExtendedNotificationSignal:
 
     @staticmethod
     def _extend_kwargs_by_defaults(**kwargs):
-        verb_label = _('has shared with you with')
         kwargs.update(
             {
-                'verb': kwargs.get('verb', verb_label),
+                'verb': kwargs.get('verb', ''),
                 'action_url': kwargs.get('action_url', None),
                 'target_display_name': kwargs.get('target_display_name', None),
             }

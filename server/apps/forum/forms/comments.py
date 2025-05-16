@@ -31,7 +31,6 @@ class CommentCreateForm(forms.ModelForm):
             target=instance,
             action_object=instance,
             public=False,
-            verb='',
             action_url=instance.get_absolute_url(),
             target_display_name=display_name_label,
         )

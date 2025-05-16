@@ -51,7 +51,6 @@ class TheoristMessageForm(forms.Form):
             target=message,
             action_object=message,
             public=False,
-            verb='',
             action_url=message.get_absolute_room_url(next_uuid=message.room.uuid, mailbox_page=page_for_url),
             target_display_name=display_name_label,
         )
@@ -189,6 +188,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
 
+            verb_label = _('has shared with you with')
             notify.send(
                 sender=self.theorist,
                 recipient=instance.user,
@@ -196,6 +196,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
                 target=self.sharing_instance,
                 action_object=self.sharing_instance,
                 public=False,
+                verb=verb_label,
                 action_url=self.url_to_share,
                 target_display_name=self.i18n_obj_name,
             )

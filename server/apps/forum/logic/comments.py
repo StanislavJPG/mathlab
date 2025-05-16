@@ -6,6 +6,7 @@ from django.views.generic import DetailView, ListView
 from django_htmx.http import trigger_client_event
 from render_block import render_block_to_string
 
+from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
 from server.apps.forum.models import Comment, Post
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -19,7 +20,7 @@ __all__ = (
 
 
 class CommentListView(HXViewMixin, ListView):
-    paginate_by = 7
+    paginate_by = COMMENTS_LIST_PAGINATED_BY
     model = Comment
     context_object_name = 'comments'
     template_name = 'comments/partials/comment_list.html'

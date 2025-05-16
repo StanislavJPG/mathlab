@@ -7,8 +7,10 @@ from django_lifecycle import (
     AFTER_DELETE,
 )
 
+from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
 from server.apps.forum.managers import CommentQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
+from server.common.utils.paginator import page_resolver
 
 
 class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
@@ -45,7 +47,14 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def __str__(self):
         return f'{self.__class__.__name__} | id - {self.id}'
 
-    def get_absolute_url(self, post_page: int):
+    def get_absolute_url(self, post_page: int = None):
+        post_page = post_page or page_resolver.get_page_for_paginated_obj(
+            obj=self.post,
+            child_obj=self,
+            child_paginated_objs_label='comments',
+            paginate_by=COMMENTS_LIST_PAGINATED_BY,
+            ordered_by='created_at',
+        )
         return (
             reverse('forum:post-details', kwargs={'pk': self.post.pk, 'slug': self.post.slug})
             + f'?page={post_page}&comment={self.uuid}'

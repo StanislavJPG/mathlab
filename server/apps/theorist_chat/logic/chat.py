@@ -16,10 +16,24 @@ from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
+from server.common.utils.paginator import page_resolver
 
 
 class ChatView(LoginRequiredMixin, ChatConfigurationRequiredMixin, TemplateView):
     template_name = 'chat.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        if next_uuid := self.request.GET.get('next_uuid'):
+            target_room = TheoristChatRoom.objects.filter(uuid=next_uuid).first()
+            if target_room:
+                room_qs = TheoristChatRoom.objects.filter(
+                    Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist)
+                ).order_by_last_sms_sent_relevancy()
+                context['page'] = page_resolver.get_page_for_paginated_qs(
+                    qs=room_qs, target_obj=target_room, paginate_by=DEFAULT_MAILBOX_PAGINATION
+                )
+        return context
 
 
 class MailBoxListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, FilterView):

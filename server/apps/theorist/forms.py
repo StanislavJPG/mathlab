@@ -72,4 +72,5 @@ class TheoristProfileConfigurationsForm(forms.ModelForm):
             'is_show_about_me',
             'is_show_last_activities',
             'is_able_to_get_messages',
+            'is_able_to_receive_notifications',
         )

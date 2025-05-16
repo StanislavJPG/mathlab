@@ -53,35 +53,17 @@ def format_relative_time(diff_time):
         return diff_time
 
 
-def get_icon_for_contenttype_model(contenttype_obj):
+def get_icon_for_contenttype_model(contenttype_obj, fail_silently=False):
     to_return = None
     try:
         for instance in settings.MODELS_TO_ICONS:
             if f'{contenttype_obj.app_label}.{contenttype_obj.model}' == instance[0].lower():
                 to_return = instance[1]
     except AttributeError:
+        if fail_silently:
+            return None
         raise TypeError('contenttype_obj must be an instance of ContentType')
 
-    if not to_return:
+    if not to_return and not fail_silently:
         raise NotImplementedError('Model "{}" not found in `settings.MODELS_TO_ICONS`.'.format(contenttype_obj.model))
     return to_return
-
-
-def get_page_for_paginated_obj(
-    obj,
-    child_obj,
-    child_paginated_objs_label: str,
-    paginate_by: int,
-    ordered_by: str,
-):
-    if hasattr(obj, child_paginated_objs_label):
-        siblings_qs = getattr(obj, child_paginated_objs_label).all().order_by(ordered_by)
-        ids = list(siblings_qs.values_list('id', flat=True))
-
-        try:
-            index = ids.index(child_obj.id)
-        except ValueError:
-            return None
-
-        page_number = (index // paginate_by) + 1
-        return page_number

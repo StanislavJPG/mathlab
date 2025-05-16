@@ -1,7 +1,7 @@
 <style>
     .fade-remove {
         transition: background-color 0.5s ease-out;
-        background-color: transparent !important;
+        background-color: {% if transition_settle_color %}{{ transition_settle_color }}{% else %}transparent{% endif %} !important;
         border-radius: 0 !important;
     }
 </style>
@@ -21,6 +21,10 @@
             setTimeout(() => {
                 document.querySelectorAll(".fadeDiv").forEach(element => {
                     element.classList.add("fade-remove");
+                    setTimeout(() => {
+                        element.classList.remove("bg-warning-subtle");
+                        element.classList.remove("fade-remove");
+                    }, 500);
                 });
             }, 1000);
         }

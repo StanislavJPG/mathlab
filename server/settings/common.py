@@ -208,9 +208,10 @@ NOTIFICATIONS_NOTIFICATION_MODEL = 'theorist_notifications.TheoristNotification'
 DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
 
 MODELS_TO_ICONS = (
-    ('theorist_drafts.TheoristDraftsConfiguration', 'ti ti-notes'),
-    ('forum.Comment', 'ti ti-comment'),
-    ('forum.Post', 'ti ti-post'),
+    ('theorist_drafts.TheoristDraftsConfiguration', 'ti ti-file-pencil'),
+    ('theorist_chat.TheoristMessage', 'ti ti-mail'),
+    ('forum.Comment', 'ti ti-message-circle'),
+    ('forum.Post', 'ti ti-article'),
 )
 
 # Internationalization

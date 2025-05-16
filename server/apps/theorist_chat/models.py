@@ -3,6 +3,7 @@ import django_bleach.models as bleach
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint
+from django.urls import reverse
 from django.utils import timezone
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
@@ -77,6 +78,10 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def __str__(self):
         return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    def get_absolute_room_url(self, next_uuid, mailbox_page=1):
+        # next_uuid is room uuid to be opened after url opening
+        return reverse('forum:theorist_chat:chat-base-page') + f'?next_uuid={next_uuid}&page={mailbox_page}'
 
     @hook(BEFORE_CREATE)
     def before_create(self):

@@ -9,10 +9,12 @@ from django_bleach.forms import BleachField
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
+from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
+from server.common.utils.paginator import page_resolver
 
 
 class TheoristMessageForm(forms.Form):
@@ -31,12 +33,37 @@ class TheoristMessageForm(forms.Form):
             raise forms.ValidationError(_('Error. This theorist has blocked you.'))
         return True
 
+    def _notify_send(self, *, theorist, message, room):
+        display_name_label = _('wrote you a message')
+        verb_label = _('have')
+        recipient = room.first_member if room.first_member != theorist else room.second_member
+        page_for_url = page_resolver.get_page_for_paginated_qs(
+            qs=TheoristChatRoom.objects.filter(
+                Q(first_member=theorist) | Q(second_member=theorist)
+            ).order_by_last_sms_sent_relevancy(),
+            target_obj=message.room,
+            paginate_by=DEFAULT_MAILBOX_PAGINATION,
+        )
+
+        notify.send(
+            sender=theorist,
+            recipient=recipient.user,
+            actor_content_type=ContentType.objects.get_for_model(recipient),
+            target=message,
+            action_object=message,
+            public=False,
+            verb=verb_label,
+            action_url=message.get_absolute_room_url(next_uuid=message.room.uuid, mailbox_page=page_for_url),
+            target_display_name=display_name_label,
+        )
+
     @transaction.atomic
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         if self.validate_room(room) is True:
             instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
+            self._notify_send(theorist=theorist, message=instance, room=room)
             return instance
 
 

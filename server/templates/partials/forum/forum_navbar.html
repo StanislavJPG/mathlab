@@ -38,7 +38,7 @@
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
-        <div class="dropdown-center">
+        <div class="dropdown" id="dropdown-noti">
           <a href="javascript:(0);"
              type="button"
              id="dropdown-bell"
@@ -94,3 +94,37 @@
     </div>
   </div>
 </header>
+
+<style>
+  .spinner-position {
+    transform: translate(-410%, 50%) !important;
+  }
+</style>
+
+<script>
+  const myDropdown = document.getElementById('dropdown-bell');
+  const dropdown = bootstrap.Dropdown.getOrCreateInstance(myDropdown);
+
+  function onShow(e) {
+    e.preventDefault();
+    myDropdown.removeEventListener('show.bs.dropdown', onShow);
+    const dropdownNoti = document.getElementById('dropdown-noti');
+
+    const spinner = document.createElement('div');
+    spinner.id = 'noti-dropdown-block-wait-spinner';
+    spinner.className = 'spinner-grow text-primary mt-2 position-absolute top-0 rounded-pill';
+    spinner.classList.add('spinner-position');
+    spinner.style.width = '10px';
+    spinner.style.height = '10px';
+    spinner.setAttribute('role', 'status');
+
+    dropdownNoti.appendChild(spinner);
+    setTimeout(() => {
+      spinner.remove()
+      dropdown.show();
+    }, 1500);
+  }
+
+  myDropdown.addEventListener('show.bs.dropdown', onShow);
+</script>
+

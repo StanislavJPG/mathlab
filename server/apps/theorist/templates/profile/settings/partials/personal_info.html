@@ -10,9 +10,9 @@
       <div class="col-lg-8">
         <form hx-post="{{ request.path }}">
           <div class="form-group">
-            <label for="{{ form.username.id_for_label }}">{{ form.username.label }}</label>
-            {% render_field form.username class="form-control" %}
-            {% render_field_errors form.username small=True %}
+            <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
+            {% render_field form.full_name class="form-control" %}
+            {% render_field_errors form.full_name small=True %}
           </div>
           <div class="form-group">
             <label for="{{ form.about_me.id_for_label }}">{{ form.about_me.label }}</label>
@@ -23,6 +23,16 @@
             <label for="{{ form.country.id_for_label }}">{{ form.country.label }}</label>
             {% render_field form.country class="form-control" %}
             {% render_field_errors form.country small=True %}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.social_media_url.id_for_label }}">{{ form.social_media_url.label }}</label>
+            {% render_field form.social_media_url class="form-control" %}
+            {% render_field_errors form.social_media_url small=True %}
+          </div>
+          <div class="form-group">
+            <label for="{{ form.website_url.id_for_label }}">{{ form.website_url.label }}</label>
+            {% render_field form.website_url class="form-control" %}
+            {% render_field_errors form.website_url small=True %}
           </div>
           {% include 'common/captcha.html' %}
           <div class="text-center text-lg-end">

@@ -27,41 +27,39 @@ class TheoristOnboardForm(forms.ModelForm):
 
 
 class TheoristProfileSettingsForm(CaptchaForm, forms.ModelForm):
-    username = forms.CharField(
-        widget=forms.TextInput(attrs={'placeholder': _('Username')}), required=False, max_length=150
-    )
-    about_me = forms.CharField(widget=forms.Textarea({'rows': 3}), required=False, max_length=150)
+    full_name = forms.CharField(widget=forms.TextInput(), required=False, max_length=150)
     country = CountryField().formfield()
 
     class Meta:
-        model = TheoristProfileSettings
+        model = Theorist
         fields = (
-            'username',
+            'full_name',
             'about_me',
             'country',
+            'social_media_url',
+            'website_url',
             'captcha',
         )
 
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
         super().__init__(*args, **kwargs)
-        self.theorist = self.instance.theorist
-        self.fields['username'].initial = self.theorist.full_name
-        self.fields['about_me'].initial = self.theorist.about_me
-        self.fields['country'].initial = self.theorist.country
-
-    def save(self, commit=True):
-        settings = super().save(commit=False)
-        if commit:
-            settings.save()
-
-        theorist = settings.theorist
-        theorist.full_name = self.cleaned_data['username']
-        theorist.about_me = self.cleaned_data['about_me']
-        theorist.country = self.cleaned_data['country']
-        theorist.save()
-
-        return settings
+        self.theorist = self.instance
+        # for username field
+        self.fields['full_name'].label = _('Username')
+        self.fields['full_name'].widget.attrs['placeholder'] = _('Username')
+        # for about_me fields
+        self.fields['about_me'].label = _('About me')
+        self.fields['about_me'].widget.attrs['placeholder'] = _('Example: Love to solve math problems and coding.')
+        self.fields['about_me'].widget.attrs['rows'] = 3
+        # for country field
+        self.fields['country'].label = _('Country')
+        # for social_media_url field
+        self.fields['social_media_url'].label = _('Social media url')
+        self.fields['social_media_url'].widget.attrs['placeholder'] = 'https://www.instagram.com'
+        # for website_url field
+        self.fields['website_url'].label = _('Website URL')
+        self.fields['website_url'].widget.attrs['placeholder'] = 'https://docs.python.org/uk/'
 
 
 class TheoristProfileConfigurationsForm(forms.ModelForm):

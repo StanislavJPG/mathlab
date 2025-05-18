@@ -2,6 +2,8 @@ class ExtendedNotificationSignal:
     def send(self, sender, **kwargs):
         from notifications.signals import notify
 
+        self.sender = sender
+
         is_notification_passed = self._pass_notification(**kwargs)
 
         if is_notification_passed:
@@ -13,11 +15,18 @@ class ExtendedNotificationSignal:
             )
             return send
 
-    @staticmethod
-    def _pass_notification(**kwargs):
+    def _exclude_sender(self, **kwargs):
         recipient = kwargs.get('recipient')
         if hasattr(recipient, 'theorist'):
+            return self.sender == recipient.theorist
+
+    def _pass_notification(self, **kwargs):
+        recipient = kwargs.get('recipient')
+        if self._exclude_sender(**kwargs):
+            return False
+        if hasattr(recipient, 'theorist'):
             return recipient.theorist.settings.is_able_to_receive_notifications
+
         return False
 
     @staticmethod

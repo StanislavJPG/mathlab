@@ -92,6 +92,7 @@ class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleMo
     is_show_about_me = models.BooleanField(default=True)
     is_show_last_activities = models.BooleanField(default=True)
     is_able_to_get_messages = models.BooleanField(default=True)
+    is_able_to_receive_notifications = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'theorist profile setting'

@@ -1,4 +1,8 @@
-{% load static i18n avatars %}
+{% load static i18n avatars notifications_tags widened_notifications_tags %}
+
+<script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
+<script src="{% static 'js/notifications/bootstrap_notify_list.js' %}" type="text/javascript"></script>  {# custom widened js script #}
+{% widened_register_notify_callbacks menu_el_class="dropdown-item" menu_class="notification dropdown-menu" badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" callbacks='bs_fill_notification_list,fill_notification_badge' %}
 
 <header class="p-3 mb-3 border-bottom">
   <div class="container">
@@ -34,7 +38,21 @@
         {% endif %}
       </ul>
       {% if request.user.is_authenticated %}
-        <a href="javascript:(0);" class="text-decoration-none link-secondary me-3" style="font-size: 25px;"><i class="ti ti-bell"></i></a>
+        <div class="dropdown" id="dropdown-noti">
+          <a href="javascript:(0);"
+             type="button"
+             id="dropdown-bell"
+             data-bs-toggle="dropdown" aria-expanded="false"
+             class="text-decoration-none link-secondary me-3 position-relative">
+            <i class="ti ti-bell" style="font-size: 25px;"></i>
+            {% block notification %}
+              <div id="noti-badge">
+                {% live_notify_badge badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" %}
+              </div>
+            {% endblock notification %}
+          </a>
+          {% live_notify_list list_class="notification dropdown-menu" %}
+        </div>
       {% endif %}
       <div class="dropdown_user text-end">
         <a href="#" class="d-block link-secondary text-decoration-none dropdown-toggle"
@@ -76,3 +94,37 @@
     </div>
   </div>
 </header>
+
+<style>
+  .spinner-position {
+    transform: translate(-410%, 50%) !important;
+  }
+</style>
+
+<script>
+  const myDropdown = document.getElementById('dropdown-bell');
+  const dropdown = bootstrap.Dropdown.getOrCreateInstance(myDropdown);
+
+  function onShow(e) {
+    e.preventDefault();
+    myDropdown.removeEventListener('show.bs.dropdown', onShow);
+    const dropdownNoti = document.getElementById('dropdown-noti');
+
+    const spinner = document.createElement('div');
+    spinner.id = 'noti-dropdown-block-wait-spinner';
+    spinner.className = 'spinner-grow text-primary mt-2 position-absolute top-0 rounded-pill';
+    spinner.classList.add('spinner-position');
+    spinner.style.width = '10px';
+    spinner.style.height = '10px';
+    spinner.setAttribute('role', 'status');
+
+    dropdownNoti.appendChild(spinner);
+    setTimeout(() => {
+      spinner.remove()
+      dropdown.show();
+    }, 1500);
+  }
+
+  myDropdown.addEventListener('show.bs.dropdown', onShow);
+</script>
+

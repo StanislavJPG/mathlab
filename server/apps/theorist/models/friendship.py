@@ -3,6 +3,7 @@ import typing
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import UniqueConstraint, Q
+from django.urls import reverse
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, BEFORE_UPDATE
@@ -39,6 +40,9 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def __str__(self):
         return f'Requester - {self.requester} | Receiver - {self.receiver} | {self.__class__.__name__} | id - {self.id}'
+
+    def get_absolute_url(self):
+        return reverse('forum:theorist_profile:friendship:theorist-community-list')
 
     def clean(self):
         if self.requester == self.receiver:

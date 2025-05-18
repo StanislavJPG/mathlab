@@ -8,34 +8,42 @@ from django.views.generic import DeleteView, DetailView
 from django_htmx.http import trigger_client_event, HttpResponseClientRedirect
 from django.utils.translation import gettext_lazy as _
 
+from server.apps.theorist.mixins import NotificationFriendshipMixin
 from server.apps.theorist.models import TheoristFriendship, Theorist
 from server.common.mixins.views import HXViewMixin
 
 
-class TheoristFriendshipCreateView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
+class TheoristFriendshipCreateView(
+    LoginRequiredMixin, FormMessagesMixin, HXViewMixin, NotificationFriendshipMixin, DetailView
+):
     model = Theorist
     slug_url_kwarg = 'theorist_uuid'
     slug_field = 'uuid'
     form_valid_message = _('You successfully created friendship request!')
     form_invalid_message = _('Error. Please, check your input and try again.')
+    notification_display_name = _('has sent friendship request to you')
 
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         try:
-            TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
+            friendship = TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
             self.messages.success(self.get_form_valid_message(), fail_silently=True)
+            self.send_notify(object=friendship)
             return HttpResponseClientRedirect(self.object.get_absolute_url())
         except ValidationError as exc:
             self.messages.error(exc.messages, fail_silently=True)
             return HttpResponse()
 
 
-class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
+class TheoristAcceptFriendshipView(
+    LoginRequiredMixin, FormMessagesMixin, HXViewMixin, NotificationFriendshipMixin, DetailView
+):
     model = TheoristFriendship
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
     form_valid_message = _('You successfully accepted friendship request!')
     form_invalid_message = _('Error. Please, check your input and try again.')
+    notification_display_name = _('has accepted your friendship request!')
 
     def get_queryset(self):
         return super().get_queryset().filter(receiver=self.request.theorist)
@@ -45,17 +53,21 @@ class TheoristAcceptFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXView
         self.object.accept_friendship_request()
         response = HttpResponse(status=201)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        self.send_notify()
 
         trigger_client_event(response, 'friendshipBlockChanged')
         return response
 
 
-class TheoristRejectFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
+class TheoristRejectFriendshipView(
+    LoginRequiredMixin, FormMessagesMixin, HXViewMixin, NotificationFriendshipMixin, DetailView
+):
     model = TheoristFriendship
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
     form_valid_message = _('You successfully rejected friendship request')
     form_invalid_message = _('Error. Please, check your input and try again.')
+    notification_display_name = _('has rejected your friendship request!')
 
     def get_queryset(self):
         return super().get_queryset().filter(receiver=self.request.theorist)
@@ -65,6 +77,7 @@ class TheoristRejectFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXView
         self.object.reject_friendship_request()
         response = HttpResponse(status=201)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        self.send_notify()
 
         trigger_client_event(response, 'friendshipBlockChanged')
         return response

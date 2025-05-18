@@ -21,6 +21,11 @@
     <label class="form-check-label text-lg-nowrap" for="{{ form.is_able_to_get_messages.id_for_label }}">{% translate 'Permit everybody to send me a private messages' %}</label>
     {% render_field_errors form.is_able_to_get_messages small=True %}
   </div>
+  <div class="form-check form-switch">
+    {% render_field form.is_able_to_receive_notifications class="form-check-input" %}
+    <label class="form-check-label text-lg-nowrap" for="{{ form.is_able_to_receive_notifications.id_for_label }}">{% translate 'Permit to send me a notifications' %}</label>
+    {% render_field_errors form.is_able_to_receive_notifications small=True %}
+  </div>
 </form>
 
 <style>

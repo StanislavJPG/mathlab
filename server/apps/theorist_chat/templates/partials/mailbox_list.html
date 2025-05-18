@@ -1,4 +1,4 @@
-{% load static i18n avatars widget_tweaks text %}
+{% load static i18n avatars widget_tweaks text urls %}
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
   <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
@@ -40,9 +40,10 @@
         <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
           {% if mailboxes %}
             {% for mailbox in mailboxes %}
-              <li class="p-2 border {% if mailbox.is_any_of_members_blocked_another %}border-danger{% endif %} {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox"
+              <li class="{% classes_by_lookup_url mailbox 'next_uuid' %} p-2 border {% if mailbox.is_any_of_members_blocked_another %}border-danger{% endif %} {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox mailbox-{{ mailbox.uuid }}"
                   id="mailbox-{{ mailbox.uuid }}">
                 <div hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
+                     id="mailbox-styled-block-{{ mailbox.uuid|stringformat:"s" }}-js"
                      hx-trigger="click"
                      hx-target="#chat-list-js"
                      _="on click remove .bg-secondary-subtle from .mailbox add .bg-secondary-subtle to #mailbox-{{ mailbox.uuid }}"
@@ -114,3 +115,14 @@
      hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>
+
+{% include 'common/scroll_to_url_instance.html' with param='next_uuid' target_class_suffix='mailbox-' transition_settle_color="#e2e3e5" %}
+
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+    var mail = document.getElementById('mailbox-styled-block-{{ request.GET.next_uuid }}-js');
+    if (mail) {
+      mail.click();
+    }
+  }, { once: true });
+</script>

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 16:21+0300\n"
+"POT-Creation-Date: 2025-05-18 14:58+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,6 +114,11 @@ msgstr "Кількість коментарів"
 msgid "Posts views"
 msgstr "Перегляди посту"
 
+#: server/apps/forum/forms/comments.py
+#, python-format
+msgid "has commented post %s, that you are following"
+msgstr "прокоментував пост %s, за яким Ви слідкуєте"
+
 #: server/apps/forum/forms/posts.py
 msgid "Question topic (maximum 85 characters)"
 msgstr "Тема питання (не більше 85 символів)"
@@ -167,6 +172,7 @@ msgstr "Ваш пост було видалено."
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/apps/theorist_chat/templates/chat.html
 #: server/apps/theorist_drafts/templates/base_drafts.html
+#: server/apps/theorist_notifications/templates/base_notifications.html
 msgid "Loading..."
 msgstr "Завантаження..."
 
@@ -191,6 +197,7 @@ msgstr "Створено"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
 msgid "ago"
 msgstr "тому"
 
@@ -203,12 +210,12 @@ msgid "Edit comment"
 msgstr "Редагувати коментар"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
-msgid "Share this comment with other theorist"
-msgstr "Поділитись цим коментарем з іншим теоретиком"
-
-#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Copy comment link"
 msgstr "Скопіювати посилання на цей коментар"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Share this comment with other theorist"
+msgstr "Поділитись цим коментарем з іншим теоретиком"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
@@ -220,10 +227,6 @@ msgstr "Ви впевнені?"
 #: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Delete comment"
 msgstr "Видалити коментар"
-
-#: server/apps/forum/templates/comments/partials/comment_list.html
-msgid "Share my comment with other theorist"
-msgstr "Поділитись цим коментарем з іншим теоретиком"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Sorry! You have to verify your email to interact."
@@ -441,12 +444,24 @@ msgid "You successfully created friendship request!"
 msgstr "Ви успішно створили новий запит дружби!"
 
 #: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has sent friendship request to you"
+msgstr "відправив Вам запит на дружбу"
+
+#: server/apps/theorist/logic/friendship/friends_management.py
 msgid "You successfully accepted friendship request!"
 msgstr "Ви успішно прийняли запит на дружбу."
 
 #: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has accepted your friendship request!"
+msgstr "прийняв Ваш запит на дружбу!"
+
+#: server/apps/theorist/logic/friendship/friends_management.py
 msgid "You successfully rejected friendship request"
 msgstr "Ви успішно відмовили запит на дружбу."
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has rejected your friendship request!"
+msgstr "відмовив Ваш запит на дружбу!"
 
 #: server/apps/theorist/logic/friendship/friends_management.py
 #, python-format
@@ -824,6 +839,10 @@ msgstr "Показувати останню активність"
 msgid "Permit everybody to send me a private messages"
 msgstr "Дозволяти будь-кому відправляти мені приватні повідомлення"
 
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit to send me a notifications"
+msgstr "Дозволяти відправляти мені системні повідомлення"
+
 #: server/apps/theorist/templates/profile/settings/partials/password.html
 #: server/apps/theorist/templates/profile/settings/settings.html
 msgid "Password"
@@ -911,6 +930,10 @@ msgid "Error. This theorist has blocked you."
 msgstr "Помилка. Цей теоретик заблокував Вас."
 
 #: server/apps/theorist_chat/forms.py
+msgid "has wrote you a message"
+msgstr "написав Вам повідомлення"
+
+#: server/apps/theorist_chat/forms.py
 msgid "This mailbox is already exists."
 msgstr "Ця скринька вже існує."
 
@@ -931,6 +954,10 @@ msgid ""
 msgstr ""
 "Привіт! Я ділюсь <strong>%s</strong> з тобою. Ти можеш це переглянути, "
 "натиснувши кнопку нижче:"
+
+#: server/apps/theorist_chat/forms.py
+msgid "has shared with you with"
+msgstr "поділився з Вами"
 
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
@@ -1013,18 +1040,6 @@ msgstr "коментарем"
 #: server/apps/theorist_chat/logic/sharing.py
 msgid "post"
 msgstr "постом"
-
-#: server/apps/theorist_chat/models.py
-msgid "Just now"
-msgstr "Тільки що"
-
-#: server/apps/theorist_chat/models.py
-msgid "Couple minutes ago"
-msgstr "Декілька хвилин назад"
-
-#: server/apps/theorist_chat/models.py
-msgid "5 minutes ago"
-msgstr "5 хвилин назад"
 
 #: server/apps/theorist_chat/templates/chat.html
 #: server/apps/theorist_chat/templates/partials/alerts/go_to_chat_alert.html
@@ -1381,6 +1396,70 @@ msgstr "Редагувати чернетку"
 msgid "Delete draft"
 msgstr "Видалити чернетку"
 
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully marked all notifications as read!"
+msgstr "Ви успішно помітили всі нотифікації як прочитані!"
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "Error. Please, try again later."
+msgstr "Помилка. Будь ласка, повторіть спробу пізніше."
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully deleted all notifications!"
+msgstr "Ви успішно видалили всі нотифікації!"
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully mark this notification as read."
+msgstr "Ви успішно помітили цю нотифікацію як прочитану!"
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully deleted notification."
+msgstr "Ви успішно видалили нотифікацію."
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Notifications"
+msgstr "Системні повідомлення"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as read"
+msgstr "Помітити всі нотифікації як прочитані"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as read?"
+msgstr "Помітити всі нотифікації як прочитані?"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Delete all notifications"
+msgstr "Видалити всі нотифікації"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as deleted?"
+msgstr "Помітити всі нотифікації як видалені?"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Unread notifications"
+msgstr "Непрочитані нотифікації"
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Read notifications"
+msgstr "Прочитані нотифікації"
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "All deleted notifications will be cleared in 3 days."
+msgstr "Всі видалені нотифікації будуть автоматично очищені через кожні 3 дні."
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Mark notification as read?"
+msgstr "Помітити нотифікацію як прочитану?"
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Delete notification?"
+msgstr "Видалити нотифікацію?"
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Empty notifications list"
+msgstr "Пустий список системних повідомлень"
+
 #: server/apps/users/adapters.py
 msgid "Mathlab | Password reset"
 msgstr "Mathlab | Відновити пароль"
@@ -1474,6 +1553,18 @@ msgstr "Капча"
 #: server/common/templatetags/text.py
 msgid "Shared content..."
 msgstr "Поширений контент..."
+
+#: server/common/utils/helpers.py
+msgid "Just now"
+msgstr "Тільки що"
+
+#: server/common/utils/helpers.py
+msgid "Couple minutes ago"
+msgstr "Декілька хвилин назад"
+
+#: server/common/utils/helpers.py
+msgid "5 minutes ago"
+msgstr "5 хвилин назад"
 
 #: server/templates/403.html
 msgid "Error"

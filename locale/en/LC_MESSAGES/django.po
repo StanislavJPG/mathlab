@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-07 16:21+0300\n"
+"POT-Creation-Date: 2025-05-18 14:58+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -112,6 +112,11 @@ msgstr ""
 msgid "Posts views"
 msgstr ""
 
+#: server/apps/forum/forms/comments.py
+#, python-format
+msgid "has commented post %s, that you are following"
+msgstr ""
+
 #: server/apps/forum/forms/posts.py
 msgid "Question topic (maximum 85 characters)"
 msgstr ""
@@ -163,6 +168,7 @@ msgstr ""
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/apps/theorist_chat/templates/chat.html
 #: server/apps/theorist_drafts/templates/base_drafts.html
+#: server/apps/theorist_notifications/templates/base_notifications.html
 msgid "Loading..."
 msgstr ""
 
@@ -187,6 +193,7 @@ msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
 msgid "ago"
 msgstr ""
 
@@ -199,11 +206,11 @@ msgid "Edit comment"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
-msgid "Share this comment with other theorist"
+msgid "Copy comment link"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
-msgid "Copy comment link"
+msgid "Share this comment with other theorist"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
@@ -215,10 +222,6 @@ msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Delete comment"
-msgstr ""
-
-#: server/apps/forum/templates/comments/partials/comment_list.html
-msgid "Share my comment with other theorist"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
@@ -435,11 +438,23 @@ msgid "You successfully created friendship request!"
 msgstr ""
 
 #: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has sent friendship request to you"
+msgstr ""
+
+#: server/apps/theorist/logic/friendship/friends_management.py
 msgid "You successfully accepted friendship request!"
 msgstr ""
 
 #: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has accepted your friendship request!"
+msgstr ""
+
+#: server/apps/theorist/logic/friendship/friends_management.py
 msgid "You successfully rejected friendship request"
+msgstr ""
+
+#: server/apps/theorist/logic/friendship/friends_management.py
+msgid "has rejected your friendship request!"
 msgstr ""
 
 #: server/apps/theorist/logic/friendship/friends_management.py
@@ -816,6 +831,10 @@ msgstr ""
 msgid "Permit everybody to send me a private messages"
 msgstr ""
 
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit to send me a notifications"
+msgstr ""
+
 #: server/apps/theorist/templates/profile/settings/partials/password.html
 #: server/apps/theorist/templates/profile/settings/settings.html
 msgid "Password"
@@ -901,6 +920,10 @@ msgid "Error. This theorist has blocked you."
 msgstr ""
 
 #: server/apps/theorist_chat/forms.py
+msgid "has wrote you a message"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
 msgid "This mailbox is already exists."
 msgstr ""
 
@@ -918,6 +941,10 @@ msgstr ""
 msgid ""
 "Hi! I'm sending <strong>%s</strong> to you. You can check it out by the link "
 "below:"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+msgid "has shared with you with"
 msgstr ""
 
 #: server/apps/theorist_chat/logic/consumers.py
@@ -994,18 +1021,6 @@ msgstr ""
 
 #: server/apps/theorist_chat/logic/sharing.py
 msgid "post"
-msgstr ""
-
-#: server/apps/theorist_chat/models.py
-msgid "Just now"
-msgstr ""
-
-#: server/apps/theorist_chat/models.py
-msgid "Couple minutes ago"
-msgstr ""
-
-#: server/apps/theorist_chat/models.py
-msgid "5 minutes ago"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/chat.html
@@ -1350,6 +1365,70 @@ msgstr ""
 msgid "Delete draft"
 msgstr ""
 
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully marked all notifications as read!"
+msgstr ""
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "Error. Please, try again later."
+msgstr ""
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully deleted all notifications!"
+msgstr ""
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully mark this notification as read."
+msgstr ""
+
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "You successfully deleted notification."
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Notifications"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as read"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as read?"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Delete all notifications"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Mark all notifications as deleted?"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Unread notifications"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/base_notifications.html
+msgid "Read notifications"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "All deleted notifications will be cleared in 3 days."
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Mark notification as read?"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Delete notification?"
+msgstr ""
+
+#: server/apps/theorist_notifications/templates/partials/notifications_list.html
+msgid "Empty notifications list"
+msgstr ""
+
 #: server/apps/users/adapters.py
 msgid "Mathlab | Password reset"
 msgstr ""
@@ -1440,6 +1519,18 @@ msgstr ""
 
 #: server/common/templatetags/text.py
 msgid "Shared content..."
+msgstr ""
+
+#: server/common/utils/helpers.py
+msgid "Just now"
+msgstr ""
+
+#: server/common/utils/helpers.py
+msgid "Couple minutes ago"
+msgstr ""
+
+#: server/common/utils/helpers.py
+msgid "5 minutes ago"
 msgstr ""
 
 #: server/templates/403.html

@@ -25,15 +25,14 @@
             {% endif %}
           </div>
           <div class="small d-flex align-items-center">
-            {% if comment.theorist.uuid == request.theorist.uuid %}
-              <div class="dropdown">
-                <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical"
-                   style="cursor: pointer; font-size: 23px;"></i>
-                <ul class="dropdown-menu">
+            <div class="dropdown">
+              <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical"
+                 style="cursor: pointer; font-size: 23px;"></i>
+              <ul class="dropdown-menu">
+                {% if comment.theorist.uuid == request.theorist.uuid %}
                   <li>
                     <button class="dropdown-item"
                             type="button"
-                            style="cursor: pointer"
                             hx-get="{% url 'forum:comment-update' comment.uuid %}"
                             hx-target="#comment-text-body-{{ comment.uuid }}">
                       <i class="ti ti-edit"></i> {% translate 'Edit comment' %}
@@ -42,8 +41,17 @@
                   <li>
                     <hr class="dropdown-divider">
                   </li>
+                {% endif %}
+                <li>
+                  <button class="dropdown-item btn-to-copy"
+                          type="button"
+                          data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?page={{ page_obj.number }}&comment={{ comment.uuid }}">
+                    <i class="ti ti-link"></i> {% translate 'Copy comment link' %}
+                  </button>
+                </li>
+                {% if request.user.is_authenticated %}
                   <li>
-                    <button class="dropdown-item mb-1"
+                    <button class="dropdown-item"
                             type="button"
                             hx-get="{% url 'forum:theorist_chat:share-comments-via-chat' comment.uuid %}?page={{ page_obj.number }}"
                             hx-target="#sharing-modal"
@@ -53,13 +61,8 @@
                       <i class="ti ti-share"></i> {% translate 'Share this comment with other theorist' %}
                     </button>
                   </li>
-                  <li>
-                    <button class="dropdown-item btn-to-copy"
-                            type="button"
-                            data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?page={{ page_obj.number }}&comment={{ comment.uuid }}">
-                      <i class="ti ti-link"></i> {% translate 'Copy comment link' %}
-                    </button>
-                  </li>
+                {% endif %}
+                {% if comment.theorist.uuid == request.theorist.uuid %}
                   <li>
                     <hr class="dropdown-divider">
                   </li>
@@ -73,62 +76,30 @@
                       <i class="text-danger ti ti-trash"></i> {% translate 'Delete comment' %}
                     </span>
                   </li>
-                </ul>
-              </div>
-            {% else %}
-              <div class="dropdown">
-                <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical"
-                   style="cursor: pointer; font-size: 23px;"></i>
-                <ul class="dropdown-menu">
-                  <li>
-                    <button class="dropdown-item btn-to-copy"
-                            type="button"
-                            data-clipboard-text="{% absolute_url 'forum:post-details' post.pk post.slug %}?page={{ page_obj.number }}&comment={{ comment.uuid }}">
-                      <i class="ti ti-link"></i> {% translate 'Copy comment link' %}
-                    </button>
-                  </li>
-                </ul>
-              </div>
-
-              {% if request.user.is_authenticated %}
-                <div class="dropdown">
-                  <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical"
-                     style="cursor: pointer; font-size: 23px;"></i>
-                  <ul class="dropdown-menu">
-                    <li>
-                      <button class="dropdown-item mb-1"
-                              type="button"
-                              hx-get=""
-                              hx-target="#drafts-sharing-modal"
-                              hx-trigger="click"
-                              data-bs-toggle="modal"
-                              data-bs-target="#drafts-sharing-modal">
-                        <i class="ti ti-share"></i> {% translate 'Share my comment with other theorist' %}
-                      </button>
-                    </li>
-                  </ul>
-                </div>
-                {% if not request.user.is_email_verified %}
-                  <a class="btn btn-sm btn-secondary text-nowrap" disabled
-                     data-bs-toggle="tooltip" data-bs-placement="top"
-                     title="{% translate 'Sorry! You have to verify your email to interact.' %}"
-                     href="{% url 'forum:theorist_profile:base-page' comment.theorist.pk comment.theorist.full_name_slug %}">
-                    {% translate 'Thank you!' %}
-                  </a>
-                {% elif comment in request.theorist.supported_comments.all %}
-                  <a class="btn btn-sm btn-outline-primary text-nowrap" disabled
-                     data-bs-toggle="tooltip" data-bs-placement="top"
-                     title="{% translate 'You have already supported this comment.' %}">
-                    {% translate 'Thank you!' %}
-                  </a>
-                {% else %}
-                  <button class="btn btn-sm btn-primary text-nowrap"
-                          hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
-                          hx-swap="none"
-                          hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}">
-                    {% translate 'Thank you!' %}
-                  </button>
                 {% endif %}
+              </ul>
+            </div>
+
+            {% if request.user.is_authenticated and comment.theorist.uuid != request.theorist.uuid %}
+              {% if not request.user.is_email_verified %}
+                <a class="btn btn-sm btn-secondary text-nowrap" disabled
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="{% translate 'Sorry! You have to verify your email to interact.' %}">
+                  {% translate 'Thank you!' %}
+                </a>
+              {% elif comment in request.theorist.supported_comments.all %}
+                <a class="btn btn-sm btn-outline-primary text-nowrap" disabled
+                   data-bs-toggle="tooltip" data-bs-placement="top"
+                   title="{% translate 'You have already supported this comment.' %}">
+                  {% translate 'Thank you!' %}
+                </a>
+              {% else %}
+                <button class="btn btn-sm btn-primary text-nowrap"
+                        hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
+                        hx-swap="none"
+                        hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}">
+                  {% translate 'Thank you!' %}
+                </button>
               {% endif %}
             {% endif %}
           </div>

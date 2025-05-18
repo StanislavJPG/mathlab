@@ -1,4 +1,5 @@
 from django import forms
+from django.contrib.contenttypes.models import ContentType
 from django.db import transaction
 from django.db.models import Q
 from django.utils.safestring import mark_safe
@@ -8,9 +9,12 @@ from django_bleach.forms import BleachField
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
+from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
+from server.common.utils.paginator import page_resolver
 
 
 class TheoristMessageForm(forms.Form):
@@ -29,12 +33,35 @@ class TheoristMessageForm(forms.Form):
             raise forms.ValidationError(_('Error. This theorist has blocked you.'))
         return True
 
+    def _notify_send(self, *, theorist, message, room):
+        display_name_label = _('has wrote you a message')
+        recipient = room.first_member if room.first_member != theorist else room.second_member
+        page_for_url = page_resolver.get_page_for_paginated_qs(
+            qs=TheoristChatRoom.objects.filter(
+                Q(first_member=theorist) | Q(second_member=theorist)
+            ).order_by_last_sms_sent_relevancy(),
+            target_obj=message.room,
+            paginate_by=DEFAULT_MAILBOX_PAGINATION,
+        )
+
+        notify.send(
+            sender=theorist,
+            recipient=recipient.user,
+            actor_content_type=ContentType.objects.get_for_model(recipient),
+            target=message,
+            action_object=message,
+            public=False,
+            action_url=message.get_absolute_room_url(next_uuid=message.room.uuid, mailbox_page=page_for_url),
+            target_display_name=display_name_label,
+        )
+
     @transaction.atomic
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         if self.validate_room(room) is True:
             instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
+            self._notify_send(theorist=theorist, message=instance, room=room)
             return instance
 
 
@@ -160,6 +187,19 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
+
+            verb_label = _('has shared with you with')
+            notify.send(
+                sender=self.theorist,
+                recipient=instance.user,
+                actor_content_type=ContentType.objects.get_for_model(instance),
+                target=self.sharing_instance,
+                action_object=self.sharing_instance,
+                public=False,
+                verb=verb_label,
+                action_url=self.url_to_share,
+                target_display_name=self.i18n_obj_name,
+            )
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs

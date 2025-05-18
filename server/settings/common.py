@@ -210,6 +210,7 @@ DJANGO_NOTIFICATIONS_CONFIG = {'SOFT_DELETE': True}
 MODELS_TO_ICONS = (
     ('theorist_drafts.TheoristDraftsConfiguration', 'ti ti-file-pencil'),
     ('theorist_chat.TheoristMessage', 'ti ti-mail'),
+    ('theorist.TheoristFriendship', 'ti ti-friends'),
     ('forum.Comment', 'ti ti-message-circle'),
     ('forum.Post', 'ti ti-article'),
 )

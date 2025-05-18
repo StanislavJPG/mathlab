@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-03-15 23:15+0200\n"
+"POT-Creation-Date: 2025-05-18 15:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -36,4 +36,24 @@ msgstr ""
 
 #: server/static/js/htmx_sweetalert.js:16
 msgid "No"
+msgstr ""
+
+#: server/static/js/notifications/bootstrap_notify_list.js:25
+msgid "Send at"
+msgstr ""
+
+#: server/static/js/notifications/bootstrap_notify_list.js:36
+msgid "Clear all messages"
+msgstr ""
+
+#: server/static/js/notifications/bootstrap_notify_list.js:39
+msgid "No unread notifications yet"
+msgstr ""
+
+#: server/static/js/notifications/bootstrap_notify_list.js:46
+msgid "Read all notifications"
+msgstr ""
+
+#: server/static/js/photoswipe/photoswipe.esm.min.js:5
+msgid "y"
 msgstr ""

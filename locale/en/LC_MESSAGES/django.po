@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-18 14:58+0300\n"
+"POT-Creation-Date: 2025-05-19 00:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -113,8 +113,7 @@ msgid "Posts views"
 msgstr ""
 
 #: server/apps/forum/forms/comments.py
-#, python-format
-msgid "has commented post %s, that you are following"
+msgid "has commented post, which you are following"
 msgstr ""
 
 #: server/apps/forum/forms/posts.py
@@ -411,6 +410,30 @@ msgstr ""
 msgid "Username"
 msgstr ""
 
+#: server/apps/theorist/forms.py server/apps/theorist/models/theorist.py
+#: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist/templates/profile/profile.html
+msgid "About me"
+msgstr ""
+
+#: server/apps/theorist/forms.py
+msgid "Example: Love to solve math problems and coding."
+msgstr ""
+
+#: server/apps/theorist/forms.py server/apps/theorist/models/theorist.py
+msgid "Country"
+msgstr ""
+
+#: server/apps/theorist/forms.py
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Social media url"
+msgstr ""
+
+#: server/apps/theorist/forms.py
+#: server/apps/theorist/templates/profile/partials/contact_info.html
+msgid "Website URL"
+msgstr ""
+
 #: server/apps/theorist/logic/avatars.py
 msgid "You successfully uploaded your avatar."
 msgstr ""
@@ -518,16 +541,6 @@ msgstr ""
 
 #: server/apps/theorist/models/friendship.py
 msgid "You cannot blacklist yourself!"
-msgstr ""
-
-#: server/apps/theorist/models/theorist.py
-msgid "Country"
-msgstr ""
-
-#: server/apps/theorist/models/theorist.py
-#: server/apps/theorist/templates/profile/partials/about_me.html
-#: server/apps/theorist/templates/profile/profile.html
-msgid "About me"
 msgstr ""
 
 #: server/apps/theorist/models/theorist.py
@@ -701,14 +714,6 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
 msgid "Joined date"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/contact_info.html
-msgid "Social media url"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/partials/contact_info.html
-msgid "Website URL"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html

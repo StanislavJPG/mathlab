@@ -20,7 +20,7 @@ urlpatterns = [
     path(
         'public-info/<uuid:uuid>/',
         TheoristProfilePublicInfoFormView.as_view(),
-        name='hx-profile-private-info-form',
+        name='hx-profile-public-info-form',
     ),
     path(
         'configurations/<uuid:uuid>/',

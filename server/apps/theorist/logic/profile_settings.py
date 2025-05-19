@@ -52,9 +52,17 @@ class AbstractProfileSettingsFormView(LoginRequiredMixin, FormMessagesMixin, HXV
 
 
 class TheoristProfilePublicInfoFormView(CaptchaViewMixin, AbstractProfileSettingsFormView):
-    model = TheoristProfileSettings
+    model = Theorist
     template_name = 'profile/settings/partials/personal_info.html'
     form_class = TheoristProfileSettingsForm
+
+    def get_object(self, queryset=None):
+        self.request: AuthenticatedHttpRequest
+        return Theorist.objects.get(uuid=self.request.theorist.uuid)
+
+    def form_valid(self, form):
+        self.captcha_process(form)
+        return super().form_valid(form)
 
 
 class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):
@@ -80,7 +88,7 @@ class TheoristProfilePasswordFormView(
         return context
 
     def form_valid(self, form):
-        form.clean_form_fail_attempts()
+        self.captcha_process(form)
         form.save()
 
         context = {**self.get_context_data(), 'form': form}

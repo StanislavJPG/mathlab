@@ -82,6 +82,17 @@ class HXViewMixin(AccessMixin):
 
 
 class CaptchaViewMixin:
+    """Use this view mixin with mixin `CaptchaForm` for your form class"""
+
+    _is_captcha_processed = False
+
+    def captcha_process(self, form):
+        self._is_captcha_processed = True
+        if not hasattr(form, 'HAS_CAPTCHA'):
+            raise NotImplementedError('Use this view mixin with mixin `CaptchaForm` for your form class')
+        form.clean_form_fail_attempts()
+        form.captcha_success_try_session_push()
+
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
@@ -92,5 +103,6 @@ class CaptchaViewMixin:
         return super().form_invalid(form)
 
     def form_valid(self, form):
-        form.clean_form_fail_attempts()
+        if not self._is_captcha_processed:
+            raise NotImplementedError('You need to call `captcha_process(form)` inside your form_valid method.')
         return super().form_valid(form)

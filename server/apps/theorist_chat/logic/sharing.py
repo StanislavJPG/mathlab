@@ -58,8 +58,7 @@ class AbstractMessageInstanceShareView(
         return force_str(_('Error while sharing %s. Please check for errors and try again.') % i18n_instance)
 
     def form_valid(self, form):
-        form.clean_form_fail_attempts()
-        form.captcha_success_try_session_push()
+        self.captcha_process(form)
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return HttpResponse(status=201)

@@ -37,7 +37,7 @@ class CustomLoginView(FormMessagesMixin, CaptchaViewMixin, LoginView):
     form_invalid_message = _('Error. Please, check your input and try again.')
 
     def form_valid(self, form):
-        form.clean_form_fail_attempts()
+        self.captcha_process(form)
         super().form_valid(form)
         response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         return response

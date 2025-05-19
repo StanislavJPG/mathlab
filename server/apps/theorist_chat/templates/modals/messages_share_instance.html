@@ -35,7 +35,7 @@
   document.addEventListener('htmx:afterRequest', function (event) {
     if (event.detail.xhr.status === 201) {
       $('.modal-backdrop').remove();
-      $('#sharing-modal').modal('hide');;
+      $('.modal.fade').modal('hide');
       $('body').css('overflow', 'auto');
     }
   });

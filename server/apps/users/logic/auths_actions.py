@@ -10,6 +10,7 @@ from allauth.account.views import (
     LogoutView,
     PasswordResetView,
     PasswordResetFromKeyView,
+    ConfirmEmailView,
 )
 
 from braces.views import FormMessagesMixin
@@ -61,6 +62,17 @@ class CustomLogoutUpView(FormMessagesMixin, LogoutView):
     def post(self, request, *args, **kwargs):
         super().post(request, *args, **kwargs)
         return HttpResponseClientRedirect(reverse('forum:base-forum-page'))  # for HTMX purposes
+
+
+class CustomConfirmEmailView(FormMessagesMixin, ConfirmEmailView):
+    template_name = 'partials/email_confirm.html'
+    form_valid_message = _('You successfully confirmed your email address.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def form_valid(self, form):
+        super().form_valid(form)
+        response = HttpResponseRedirect(reverse('forum:base-forum-page'))
+        return response
 
 
 class CustomPasswordResetView(FormMessagesMixin, PasswordResetView):

@@ -2,7 +2,7 @@ from django.urls import path
 
 from server.apps.theorist.logic.profile_settings import (
     TheoristProfileSettingsGeneralView,
-    TheoristProfilePublicInfoFormView,
+    TheoristProfilePersonalInfoFormView,
     TheoristProfileConfigurationsFormView,
     TheoristProfileDeactivateAccountView,
     TheoristProfilePasswordFormView,
@@ -18,9 +18,9 @@ urlpatterns = [
         name='theorist-profile-settings',
     ),
     path(
-        'public-info/<uuid:uuid>/',
-        TheoristProfilePublicInfoFormView.as_view(),
-        name='hx-profile-public-info-form',
+        'personal-info/<uuid:uuid>/',
+        TheoristProfilePersonalInfoFormView.as_view(),
+        name='hx-profile-personal-info-form',
     ),
     path(
         'configurations/<uuid:uuid>/',

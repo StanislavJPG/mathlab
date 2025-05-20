@@ -51,7 +51,7 @@ class AbstractProfileSettingsFormView(LoginRequiredMixin, FormMessagesMixin, HXV
         return HttpResponse(content=block_form)
 
 
-class TheoristProfilePublicInfoFormView(CaptchaViewMixin, AbstractProfileSettingsFormView):
+class TheoristProfilePersonalInfoFormView(CaptchaViewMixin, AbstractProfileSettingsFormView):
     model = Theorist
     template_name = 'profile/settings/partials/personal_info.html'
     form_class = TheoristProfileSettingsForm

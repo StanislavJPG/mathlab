@@ -7,6 +7,7 @@ from server.apps.users.logic.auths_actions import (
     CustomLogoutUpView,
     CustomPasswordResetView,
     CustomPasswordResetFromKeyView,
+    CustomConfirmEmailView,
 )
 
 app_name = 'users'
@@ -17,6 +18,11 @@ urlpatterns = [
     path('register/', CustomSignUpView.as_view(), name='register-view'),
     path('logout/', CustomLogoutUpView.as_view(), name='logout-view'),
     path('password/reset/', CustomPasswordResetView.as_view(), name='reset-password-view'),
+    re_path(
+        r'^email/confirm/(?P<key>[-:\w]+)/$',
+        CustomConfirmEmailView.as_view(),
+        name='account-confirm-email-view',
+    ),
     re_path(
         r'^password/reset/key/(?P<uidb36>[0-9A-Za-z]+)-(?P<key>.+)/$',
         CustomPasswordResetFromKeyView.as_view(),

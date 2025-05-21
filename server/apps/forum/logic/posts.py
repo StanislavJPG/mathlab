@@ -2,6 +2,7 @@ from urllib.parse import urlencode
 
 from braces.views import LoginRequiredMixin
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 
 from django.http import HttpResponse
 from django.shortcuts import redirect, get_object_or_404
@@ -14,8 +15,9 @@ from render_block import render_block_to_string
 
 from server.apps.forum.filters import PostListFilter
 from server.apps.forum.models import Post
+from server.common.enums import bool_enum
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin
+from server.common.mixins.views import CacheMixin, AvatarDetailViewMixin, HXViewMixin, RatedFormMessagesMixin
 
 __all__ = (
     'BasePostTemplateView',
@@ -88,11 +90,15 @@ class PostDetailView(HitCountDetailView):
         return context
 
 
-class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
+class HXPostLikesAndDislikesView(LoginRequiredMixin, RatedFormMessagesMixin, HXViewMixin, DetailView):
     model = Post
     template_name = 'posts/question_page.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
+
+    form_valid_like_message = _('You liked this post.')
+    form_valid_dislike_message = _('You disliked this post.')
+    form_invalid_message = _('Error. Please, try again later.')
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -119,7 +125,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
         likes_manager = self.object.likes
         dislikes_manager = self.object.dislikes
 
-        is_like = self.request.GET.get('like') == 'true'
+        is_like = self.request.GET.get(self.e.LIKE.value) == bool_enum.TRUE.value
 
         if is_like:
             if likes_manager.filter(uuid=request.theorist.uuid).exists():
@@ -127,13 +133,14 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
             else:
                 dislikes_manager.remove(request.theorist)
                 likes_manager.add(request.theorist)
+            self.messages.info(self.get_form_valid_like_message(), fail_silently=True)
         else:
             if dislikes_manager.filter(uuid=request.theorist.uuid).exists():
                 dislikes_manager.remove(request.theorist)
             else:
                 likes_manager.remove(request.theorist)
                 dislikes_manager.add(request.theorist)
-
+            self.messages.info(self.get_form_valid_dislike_message(), fail_silently=True)
         response = HttpResponse()
         trigger_client_event(response, 'postLikesAndDislikesChanged')
 

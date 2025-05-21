@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 13:52+0300\n"
+"POT-Creation-Date: 2025-05-21 16:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -147,6 +147,23 @@ msgstr ""
 msgid "Your comment has been deleted."
 msgstr ""
 
+#: server/apps/forum/logic/comments.py
+msgid "You liked this comment."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py
+msgid "You disliked this comment."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "Error. Please, try again later."
+msgstr ""
+
+#: server/apps/forum/logic/comments.py
+msgid "You successfully supported this comment."
+msgstr ""
+
 #: server/apps/forum/logic/post_management.py
 msgid "You successfully created a new post."
 msgstr ""
@@ -161,6 +178,14 @@ msgstr ""
 
 #: server/apps/forum/logic/post_management.py
 msgid "Your post has been deleted."
+msgstr ""
+
+#: server/apps/forum/logic/posts.py
+msgid "You liked this post."
+msgstr ""
+
+#: server/apps/forum/logic/posts.py
+msgid "You disliked this post."
 msgstr ""
 
 #: server/apps/forum/templates/base_articles.html
@@ -1420,10 +1445,6 @@ msgid "You successfully marked all notifications as read!"
 msgstr ""
 
 #: server/apps/theorist_notifications/logic/notifications_management.py
-msgid "Error. Please, try again later."
-msgstr ""
-
-#: server/apps/theorist_notifications/logic/notifications_management.py
 msgid "You successfully deleted all notifications!"
 msgstr ""
 
@@ -1477,10 +1498,6 @@ msgstr ""
 
 #: server/apps/theorist_notifications/templates/partials/notifications_list.html
 msgid "Empty notifications list"
-msgstr ""
-
-#: server/apps/users/adapters.py
-msgid "Mathlab | Notification"
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py

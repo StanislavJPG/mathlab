@@ -1,8 +1,12 @@
+import enum
+
 from boringavatars import avatar
+from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import AccessMixin
 from django.http import HttpResponse
 from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView
+from typing_extensions import assert_never
 
 from server.common.http import AuthenticatedHttpRequest
 from server.common.third_party_apps.boringavatar import (
@@ -106,3 +110,62 @@ class CaptchaViewMixin:
         if not self._is_captcha_processed:
             raise NotImplementedError('You need to call `captcha_process(form)` inside your form_valid method.')
         return super().form_valid(form)
+
+
+class RatedFormMessagesMixin(FormMessagesMixin):
+    form_valid_message = ''  # default required attribute
+
+    form_valid_like_message = None
+    form_valid_dislike_message = None
+
+    _through_rate = False  # attribute to check whether `get_form_valid_rated_messages` was called
+
+    class DefaultConsts(enum.Enum):
+        LIKE = 'like'
+        DISLIKE = 'dislike'
+
+    def get_form_valid_message(self):
+        self._pass_flag('_flag')
+        if self._through_rate is True:
+            return super().get_form_valid_message()
+        raise NotImplementedError(
+            'You should use whether `get_form_valid_like_message` or `get_form_valid_dislike_message` methods'
+        )
+
+    def _pass_flag(self, _flag):
+        rate_types = [item.value for item in self.DefaultConsts]
+        if _flag not in rate_types:
+            raise NotImplementedError(f'You should use next rate_types: {rate_types}')
+
+    def get_form_valid_rated_messages(self, _flag: str):
+        self._pass_flag(_flag)
+        self._through_rate = True
+
+        if _flag == self.DefaultConsts.LIKE.value:
+            self.form_valid_message = self.form_valid_like_message
+        elif _flag == self.DefaultConsts.DISLIKE.value:
+            self.form_valid_message = self.form_valid_dislike_message
+        else:
+            assert_never(_flag)
+
+        return super().get_form_valid_message()
+
+    def get_form_valid_like_message(self):
+        if not self.form_valid_like_message:
+            raise NotImplementedError(
+                'You need to specify `form_valid_like_message` attribute '
+                'or override `get_form_valid_like_message` method.'
+            )
+        return self.get_form_valid_rated_messages(_flag=self.e.LIKE.value)
+
+    def get_form_valid_dislike_message(self):
+        if not self.form_valid_dislike_message:
+            raise NotImplementedError(
+                'You need to specify `form_valid_dislike_message` attribute '
+                'or override `get_form_valid_dislike_message` method.'
+            )
+        return self.get_form_valid_rated_messages(_flag=self.e.DISLIKE.value)
+
+    @property
+    def e(self):
+        return self.DefaultConsts

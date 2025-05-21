@@ -1,6 +1,7 @@
-from braces.views import LoginRequiredMixin
+from braces.views import LoginRequiredMixin, FormMessagesMixin
 from django.db.models import Q
 from django.http import HttpResponse
+from django.utils.translation import gettext_lazy as _
 
 from django.views.generic import DetailView, ListView
 from django_htmx.http import trigger_client_event
@@ -8,8 +9,9 @@ from render_block import render_block_to_string
 
 from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
 from server.apps.forum.models import Comment, Post
+from server.common.enums import bool_enum
 from server.common.http import AuthenticatedHttpRequest
-from server.common.mixins.views import HXViewMixin
+from server.common.mixins.views import HXViewMixin, RatedFormMessagesMixin
 
 __all__ = (
     'CommentListView',
@@ -73,11 +75,15 @@ class HXCommentQuantityView(HXViewMixin, DetailView):
         return response
 
 
-class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView):
+class HXCommentLikesAndDislikesView(LoginRequiredMixin, RatedFormMessagesMixin, HXViewMixin, DetailView):
     model = Comment
     template_name = 'comments/partials/comment_list.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
+
+    form_valid_like_message = _('You liked this comment.')
+    form_valid_dislike_message = _('You disliked this comment.')
+    form_invalid_message = _('Error. Please, try again later.')
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -112,7 +118,7 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView)
         likes_manager = self.object.likes
         dislikes_manager = self.object.dislikes
 
-        is_like = self.request.GET.get('like') == 'true'
+        is_like = self.request.GET.get(self.e.LIKE.value) == bool_enum.TRUE.value
 
         if is_like:
             if likes_manager.filter(uuid=request.theorist.uuid).exists():
@@ -120,12 +126,14 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView)
             else:
                 dislikes_manager.remove(request.theorist)
                 likes_manager.add(request.theorist)
+            self.messages.info(self.get_form_valid_like_message(), fail_silently=True)
         else:
             if dislikes_manager.filter(uuid=request.theorist.uuid).exists():
                 dislikes_manager.remove(request.theorist)
             else:
                 likes_manager.remove(request.theorist)
                 dislikes_manager.add(request.theorist)
+            self.messages.info(self.get_form_valid_dislike_message(), fail_silently=True)
 
         response = HttpResponse()
         trigger_client_event(response, f'commentLikesAndDislikesChanged{self.object.uuid}')
@@ -133,10 +141,12 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, HXViewMixin, DetailView)
         return response
 
 
-class CommentSupportUpdateView(LoginRequiredMixin, HXViewMixin, DetailView):
+class CommentSupportUpdateView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView):
     model = Comment
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
+    form_valid_message = _('You successfully supported this comment.')
+    form_invalid_message = _('Error. Please, try again later.')
 
     def get_queryset(self):
         self.request: AuthenticatedHttpRequest
@@ -153,4 +163,5 @@ class CommentSupportUpdateView(LoginRequiredMixin, HXViewMixin, DetailView):
 
         response = HttpResponse()
         trigger_client_event(response, 'commentBlockChanged')
+        self.messages.success(self.get_form_valid_message(), fail_silently=True)
         return response

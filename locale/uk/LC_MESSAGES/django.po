@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 13:52+0300\n"
+"POT-Creation-Date: 2025-05-21 16:14+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -149,6 +149,23 @@ msgstr "Ваш коментар було оновлено."
 msgid "Your comment has been deleted."
 msgstr "Ваш коментар було видалено."
 
+#: server/apps/forum/logic/comments.py
+msgid "You liked this comment."
+msgstr "Ви вподобали цей коментар."
+
+#: server/apps/forum/logic/comments.py
+msgid "You disliked this comment."
+msgstr "Ви дизлайкнули цей коментар."
+
+#: server/apps/forum/logic/comments.py server/apps/forum/logic/posts.py
+#: server/apps/theorist_notifications/logic/notifications_management.py
+msgid "Error. Please, try again later."
+msgstr "Помилка. Будь ласка, повторіть спробу пізніше."
+
+#: server/apps/forum/logic/comments.py
+msgid "You successfully supported this comment."
+msgstr "Ви успішно підтримали цей коментар."
+
 #: server/apps/forum/logic/post_management.py
 msgid "You successfully created a new post."
 msgstr "Ви успішно створили новий пост."
@@ -166,6 +183,14 @@ msgstr "Ваш пост було оновлено."
 #: server/apps/forum/logic/post_management.py
 msgid "Your post has been deleted."
 msgstr "Ваш пост було видалено."
+
+#: server/apps/forum/logic/posts.py
+msgid "You liked this post."
+msgstr "Ви вподобали цей пост."
+
+#: server/apps/forum/logic/posts.py
+msgid "You disliked this post."
+msgstr "Ви дизлайкнули цей пост."
 
 #: server/apps/forum/templates/base_articles.html
 #: server/apps/theorist/templates/friendship/community_list.html
@@ -1451,10 +1476,6 @@ msgid "You successfully marked all notifications as read!"
 msgstr "Ви успішно помітили всі нотифікації як прочитані!"
 
 #: server/apps/theorist_notifications/logic/notifications_management.py
-msgid "Error. Please, try again later."
-msgstr "Помилка. Будь ласка, повторіть спробу пізніше."
-
-#: server/apps/theorist_notifications/logic/notifications_management.py
 msgid "You successfully deleted all notifications!"
 msgstr "Ви успішно видалили всі нотифікації!"
 
@@ -1509,10 +1530,6 @@ msgstr "Видалити нотифікацію?"
 #: server/apps/theorist_notifications/templates/partials/notifications_list.html
 msgid "Empty notifications list"
 msgstr "Пустий список системних повідомлень"
-
-#: server/apps/users/adapters.py
-msgid "Mathlab | Notification"
-msgstr "Mathlab | Повідомлення"
 
 #: server/apps/users/logic/auths_actions.py
 msgid "You have logged in successfully."
@@ -1569,8 +1586,9 @@ msgid ""
 "          "
 msgstr ""
 "\n"
-"            Будь ласка, підтвердіть, що пошта <a href=\"mailto:%(email)s\">%(email)s</a> "
-"належить користувачу <strong>%(user_display)s</strong>.\n"
+"            Будь ласка, підтвердіть, що пошта <a href=\"mailto:"
+"%(email)s\">%(email)s</a> належить користувачу <strong>%(user_display)s</"
+"strong>.\n"
 "          "
 
 #: server/apps/users/templates/partials/email_confirm.html

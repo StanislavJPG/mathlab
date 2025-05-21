@@ -1,7 +1,6 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.core.mail import EmailMessage
-from django.utils.translation import gettext_lazy as _
 
 from django.template.loader import render_to_string
 
@@ -21,15 +20,14 @@ class AccountAdapter(DefaultAccountAdapter):
         to = [email] if isinstance(email, str) else email
         from_email = self.get_from_email()
 
-        # subject = render_to_string("{0}_subject.txt".format(template_prefix), context)
-        # # remove superfluous line breaks
-        # subject = " ".join(subject.splitlines()).strip()
-        # subject = self.format_email_subject(subject)
+        subject = render_to_string('{0}_subject.txt'.format(template_prefix), context)
+        # remove superfluous line breaks
+        subject = ' '.join(subject.splitlines()).strip()
+        subject = f'Mathlab | {subject}'
 
         template_name = f'{template_prefix}_message.html'
         body = render_to_string(template_name, context).strip()
 
-        subject = context.get('subject', _('Mathlab | Notification'))
         msg = EmailMessage(subject, body, from_email, to, headers=headers)
         msg.content_subtype = 'html'  # Main content is now text/html
 

@@ -40,7 +40,7 @@
         <div class="tab-content">
           <div class="tab-pane fade show active"
                id="account"
-               hx-get="{% url 'forum:theorist_profile:settings:hx-profile-public-info-form' theorist.uuid %}"
+               hx-get="{% url 'forum:theorist_profile:settings:hx-profile-personal-info-form' theorist.uuid %}"
                hx-target="this"
                hx-trigger="load"
                role="tabpanel"
@@ -57,14 +57,5 @@
         </div>
       </div>
     </div>
-
   </div>
-{#<div class="container">#}
-{#<div class="row justify-content-center gutters">#}
-{#  <h1 class="display-5 mb-5 text-center">Налаштування профілю</h1>#}
-{#	<div class="col-xl-9 col-lg-9 col-md-12 col-sm-12 col-12">#}
-{#		<div hx-get="{% url 'forum:theorist_profile:hx-profile-public-info-form' theorist.uuid %}" hx-targert="this" hx-trigger="load" class="card h-100 p-5"></div>#}
-{#	</div>#}
-{#</div>#}
-{#</div>#}
 {% endblock body %}

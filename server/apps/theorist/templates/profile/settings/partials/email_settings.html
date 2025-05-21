@@ -1,0 +1,78 @@
+{% load allauth i18n static widened_widget_tweaks widget_tweaks %}
+
+{% load allauth i18n static widened_widget_tweaks widget_tweaks %}
+
+<div class="container my-4">
+
+  {% if emailaddresses %}
+    <p class="lead">
+      {% trans 'The following email addresses are associated with your account:' %}
+    </p>
+
+    {% url 'forum:theorist_profile:settings:hx-profile-email-configurations-form' as email_url %}
+    <form hx-post="{{ email_url }}" class="mb-4">
+      {% csrf_token %}
+      <div class="list-group">
+        {% for radio in emailaddress_radios %}
+          {% with emailaddress=radio.emailaddress %}
+            <div class="list-group-item d-flex flex-wrap justify-content-between align-items-center">
+              <div class="form-check">
+                <input class="form-check-input" type="radio" name="email" value="{{ emailaddress.email }}" id="{{ radio.id }}" {% if radio.checked %}checked{% endif %}>
+                <label class="form-check-label ms-2" for="{{ radio.id }}">
+                  {{ emailaddress.email }}
+                </label>
+              </div>
+              <div>
+                {% if emailaddress.verified %}
+                  <span class="badge bg-success ms-1">{% trans "Verified" %}</span>
+                {% else %}
+                  <span class="badge bg-warning text-dark ms-1">{% trans "Unverified" %}</span>
+                {% endif %}
+                {% if emailaddress.primary %}
+                  <span class="badge bg-primary ms-1">{% trans "Primary" %}</span>
+                {% endif %}
+              </div>
+            </div>
+          {% endwith %}
+        {% endfor %}
+      </div>
+
+      <div class="mt-3 d-flex gap-2">
+        <button type="submit" name="action_primary" class="btn btn-sm btn-primary">
+          {% trans 'Make Primary' %}
+        </button>
+        <button type="submit" name="action_send" class="btn btn-sm btn-outline-secondary">
+          {% trans 'Re-send Verification' %}
+        </button>
+        <button type="submit" name="action_remove" class="btn btn-sm btn-danger">
+          {% trans 'Remove' %}
+        </button>
+      </div>
+    </form>
+
+  {% else %}
+    {% include "account/snippets/warn_no_email.html" %}
+  {% endif %}
+
+
+  {% if can_add_email %}
+    <hr/>
+    <h2 class="lead">{% trans "Add Email Address" %}</h2>
+
+    {% url 'forum:theorist_profile:settings:hx-profile-email-configurations-form' as action_url %}
+    <form hx-post="{{ action_url }}" class="mt-3">
+      {% csrf_token %}
+      <div class="mb-3">
+        <div class="mb-3">
+          <label for="{{ form.email.id_for_label }}">{% translate 'Email' %}</label>
+          {% render_field form.email class="form-control" %}
+          {% render_field_errors form.email small=True %}
+        </div>
+      </div>
+      <button type="submit" name="action_add" class="btn btn-success btn-sm">
+        {% trans "Add Email" %}
+      </button>
+    </form>
+  {% endif %}
+</div>
+

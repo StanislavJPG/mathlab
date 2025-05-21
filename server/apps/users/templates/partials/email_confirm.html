@@ -1,0 +1,53 @@
+{% extends 'base_auth_site.html' %}
+{% load widened_widget_tweaks widget_tweaks %}
+{% load static i18n allauth account socialaccount %}
+{% load account %}
+{% load allauth %}
+
+{% block additional %}
+  <ul class="nav nav-pills nav-justified mb-3" id="ex1" role="tablist">
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="tab-login"
+         href="{% url 'users:base-auth' %}"
+         role="tab"
+      >Login</a>
+    </li>
+    <li class="nav-item" role="presentation">
+      <a class="nav-link" id="tab-register"
+         href="{% url 'users:base-auth' %}?signup=true"
+         role="tab"
+      >Register</a>
+    </li>
+  </ul>
+  {% if confirmation %}
+    {% if can_confirm %}
+      <form hx-post="{{ request.path }}"
+            _="on submit toggle @hidden on #wait-spinner until htmx:afterOnLoad"
+            hx-indicator="#filter-block-wait-spinner"
+      >
+        {% csrf_token %}
+        <p class="text-muted text-center">
+          {% blocktrans with email=confirmation.email_address.email user_display=user.username %}
+            Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user <strong>{{ user_display }}</strong>.
+          {% endblocktrans %}
+        </p>
+
+        <div class="text-center">
+          <button type="submit" class="btn btn-primary btn-block mb-4">
+            <div id="wait-spinner" class="spinner-grow text-light spinner-grow-sm" role="status" hidden></div>
+            {% translate 'Confirm' %}
+          </button>
+        </div>
+      </form>
+    {% else %}
+      <div>
+        {% blocktrans %}Unable to confirm {{ email }} because it is already confirmed by a different account.{% endblocktrans %}
+      </div>
+    {% endif %}
+  {% else %}
+    {% url 'account_email' as email_url %}
+    <div>
+      {% blocktrans %}This email confirmation link expired or is invalid. Please <a href="{{ email_url }}">issue a new email confirmation request</a>.{% endblocktrans %}
+    </div>
+  {% endif %}
+{% endblock additional %}

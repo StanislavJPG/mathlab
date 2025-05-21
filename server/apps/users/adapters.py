@@ -1,9 +1,10 @@
 from allauth.account.adapter import DefaultAccountAdapter
 from allauth.socialaccount.adapter import DefaultSocialAccountAdapter
 from django.core.mail import EmailMessage
-from django.utils.translation import gettext_lazy as _
 
 from django.template.loader import render_to_string
+
+from server.apps.users.utils import get_email_verification_url
 
 
 class AccountAdapter(DefaultAccountAdapter):
@@ -19,13 +20,21 @@ class AccountAdapter(DefaultAccountAdapter):
         to = [email] if isinstance(email, str) else email
         from_email = self.get_from_email()
 
-        template_name = 'email/password_reset_key_message.html'
+        subject = render_to_string('{0}_subject.txt'.format(template_prefix), context)
+        # remove superfluous line breaks
+        subject = ' '.join(subject.splitlines()).strip()
+        subject = f'Mathlab | {subject}'
+
+        template_name = f'{template_prefix}_message.html'
         body = render_to_string(template_name, context).strip()
 
-        msg = EmailMessage(_('Mathlab | Password reset'), body, from_email, to, headers=headers)
+        msg = EmailMessage(subject, body, from_email, to, headers=headers)
         msg.content_subtype = 'html'  # Main content is now text/html
 
         return msg
+
+    def get_email_confirmation_url(self, request, emailconfirmation):
+        return get_email_verification_url(request, emailconfirmation)
 
 
 class SocialAccountAdapter(DefaultSocialAccountAdapter):

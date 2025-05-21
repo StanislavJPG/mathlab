@@ -125,7 +125,6 @@ class RatedFormMessagesMixin(FormMessagesMixin):
         DISLIKE = 'dislike'
 
     def get_form_valid_message(self):
-        self._pass_flag('_flag')
         if self._through_rate is True:
             return super().get_form_valid_message()
         raise NotImplementedError(

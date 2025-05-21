@@ -41,15 +41,13 @@
     {% render_field_errors form.website_url small=True %}
   </div>
 
-  <!-- Checkbox -->
   <div class="form-check d-flex justify-content-center mb-4">
-    <input class="form-check-input me-2" type="checkbox" value="" id="form2Example33" checked/>
-    <label class="form-check-label" for="form2Example33">
-      Subscribe to our newsletter
+    {% render_field form.is_able_to_receive_notifications|add_bootstrap_validation_classes class="form-check-input me-2" %}
+    <label class="form-check-label" for="{{ form.is_able_to_receive_notifications.id_for_label }}">
+      {% translate 'Permit to send me a notifications' %}
     </label>
   </div>
 
-  <!-- Submit button -->
   <button type="submit" class="btn btn-primary btn-block mb-4">
     {% translate 'Finish registration' %}
   </button>

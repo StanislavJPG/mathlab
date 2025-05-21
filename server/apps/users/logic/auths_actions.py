@@ -69,9 +69,9 @@ class CustomConfirmEmailView(FormMessagesMixin, ConfirmEmailView):
     form_valid_message = _('You successfully confirmed your email address.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
-    def form_valid(self, form):
-        super().form_valid(form)
-        response = HttpResponseRedirect(reverse('forum:base-forum-page'))
+    def post(self, *args, **kwargs):
+        super().post(*args, **kwargs)
+        response = HttpResponseClientRedirect(reverse('forum:base-forum-page'))
         return response
 
 

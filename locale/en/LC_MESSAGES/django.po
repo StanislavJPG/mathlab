@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-19 00:41+0300\n"
+"POT-Creation-Date: 2025-05-21 13:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -697,6 +697,11 @@ msgid "Your profile data"
 msgstr ""
 
 #: server/apps/theorist/templates/partials/onboarding_form.html
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit to send me a notifications"
+msgstr ""
+
+#: server/apps/theorist/templates/partials/onboarding_form.html
 msgid "Finish registration"
 msgstr ""
 
@@ -836,8 +841,44 @@ msgstr ""
 msgid "Permit everybody to send me a private messages"
 msgstr ""
 
-#: server/apps/theorist/templates/profile/settings/partials/configurations.html
-msgid "Permit to send me a notifications"
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "The following email addresses are associated with your account:"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Verified"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Unverified"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Primary"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Make Primary"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Re-send Verification"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Remove"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Add Email Address"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Email"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/email_settings.html
+msgid "Add Email"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/password.html
@@ -887,6 +928,10 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
 msgid "Profile configurations"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/personal_info.html
+msgid "Email settings"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/personal_info.html
@@ -1435,7 +1480,7 @@ msgid "Empty notifications list"
 msgstr ""
 
 #: server/apps/users/adapters.py
-msgid "Mathlab | Password reset"
+msgid "Mathlab | Notification"
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
@@ -1453,6 +1498,10 @@ msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check for errors existing and try again."
+msgstr ""
+
+#: server/apps/users/logic/auths_actions.py
+msgid "You successfully confirmed your email address."
 msgstr ""
 
 #: server/apps/users/logic/auths_actions.py
@@ -1478,6 +1527,33 @@ msgstr ""
 #: server/apps/users/templates/base_auth_site.html
 #: server/templates/alerts/not_auth_register_alert.html
 msgid "Register"
+msgstr ""
+
+#: server/apps/users/templates/partials/email_confirm.html
+#, python-format
+msgid ""
+"\n"
+"            Please confirm that <a href=\"mailto:%(email)s\">%(email)s</a> "
+"is an email address for user <strong>%(user_display)s</strong>.\n"
+"          "
+msgstr ""
+
+#: server/apps/users/templates/partials/email_confirm.html
+msgid "Confirm"
+msgstr ""
+
+#: server/apps/users/templates/partials/email_confirm.html
+#, python-format
+msgid ""
+"Unable to confirm %(email)s because it is already confirmed by a different "
+"account."
+msgstr ""
+
+#: server/apps/users/templates/partials/email_confirm.html
+#, python-format
+msgid ""
+"This email confirmation link expired or is invalid. Please <a "
+"href=\"%(email_url)s\">issue a new email confirmation request</a>."
 msgstr ""
 
 #: server/apps/users/templates/partials/login.html

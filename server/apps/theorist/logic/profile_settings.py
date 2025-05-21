@@ -1,9 +1,9 @@
-from allauth.account.views import PasswordChangeView
+from allauth.account.views import PasswordChangeView, EmailView
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.template.loader import render_to_string
-from django.urls import reverse
+from django.urls import reverse, reverse_lazy
 from django.views.generic import UpdateView, TemplateView, DetailView
 from django.utils.translation import gettext_lazy as _
 from django_htmx.http import HttpResponseClientRedirect
@@ -63,6 +63,15 @@ class TheoristProfilePersonalInfoFormView(CaptchaViewMixin, AbstractProfileSetti
     def form_valid(self, form):
         self.captcha_process(form)
         return super().form_valid(form)
+
+
+class TheoristProfileEmailConfigurationsFormView(FormMessagesMixin, EmailView):
+    template_name = 'profile/settings/partials/email_settings.html'
+    success_url = reverse_lazy('forum:theorist_profile:settings:theorist-profile-settings')
+
+    def post(self, request, *args, **kwargs):
+        super().post(request, *args, **kwargs)
+        return HttpResponseClientRedirect(self.get_success_url())
 
 
 class TheoristProfileConfigurationsFormView(AbstractProfileSettingsFormView):

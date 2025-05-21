@@ -86,8 +86,9 @@
       <div class="col-xl-12 col-lg-12 col-md-12 col-sm-12 col-12">
         <h6 class="mb-3"><i class="ti ti-mail-cog"></i> {% translate 'Email settings' %}</h6>
       </div>
-      <div hx-get=""
-           class="col-8 col-sm-6 col-xxl-4">
+      <div hx-get="{% url 'forum:theorist_profile:settings:hx-profile-email-configurations-form' %}"
+           hx-trigger="load"
+           hx-target="this">
       </div>
     </div>
 

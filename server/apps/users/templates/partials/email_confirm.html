@@ -21,16 +21,15 @@
   </ul>
   {% if confirmation %}
     {% if can_confirm %}
-      <form method="post"
-            action="{{ request.path }}"
+      <form hx-post="{{ request.path }}"
             _="on submit toggle @hidden on #wait-spinner until htmx:afterOnLoad"
             hx-indicator="#filter-block-wait-spinner"
       >
         {% csrf_token %}
         <p class="text-muted text-center">
-          {% with user.username as user_display %}
-            {% blocktrans with confirmation.email_address.email as email %}Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user {{ user_display }}.{% endblocktrans %}
-          {% endwith %}
+          {% blocktrans with email=confirmation.email_address.email user_display=user.username %}
+            Please confirm that <a href="mailto:{{ email }}">{{ email }}</a> is an email address for user <strong>{{ user_display }}</strong>.
+          {% endblocktrans %}
         </p>
 
         <div class="text-center">

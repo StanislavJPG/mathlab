@@ -8,20 +8,24 @@ from server.common.forms import CaptchaForm
 
 class TheoristOnboardForm(forms.ModelForm):
     about_me = forms.CharField(widget=forms.Textarea(attrs={'rows': 3}), max_length=150, required=False)
+    is_able_to_receive_notifications = forms.BooleanField(required=False)
 
     class Meta:
         model = Theorist
-        fields = ('country', 'about_me', 'social_media_url', 'website_url')
+        fields = ('country', 'about_me', 'social_media_url', 'website_url', 'is_able_to_receive_notifications')
 
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.fields['about_me'].widget.attrs['placeholder'] = _('Tell something about yourself... (optional)')
         self.fields['social_media_url'].widget.attrs['placeholder'] = _('Social media url (optional)')
         self.fields['website_url'].widget.attrs['placeholder'] = _('Website url (optional)')
+        self.fields['is_able_to_receive_notifications'].initial = True
 
     def save(self, commit=True):
         theorist = super().save(commit=False)
         theorist.apply_default_onboarding_data()
+        theorist.settings.is_able_to_receive_notifications = self.cleaned_data['is_able_to_receive_notifications']
+        theorist.settings.save(update_fields=['is_able_to_receive_notifications'])
         theorist.save()
         return theorist
 

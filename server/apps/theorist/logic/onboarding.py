@@ -1,6 +1,5 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.http import HttpResponseNotFound
 from django.shortcuts import redirect
 from django.urls import reverse, reverse_lazy
 from django.utils.translation import gettext_lazy as _
@@ -9,6 +8,7 @@ from django_htmx.http import HttpResponseClientRedirect
 
 from server.apps.theorist.forms import TheoristOnboardForm
 from server.apps.theorist.models import Theorist
+from server.common.mixins.views import HXViewMixin
 
 
 class TheoristOnboardingTemplateView(LoginRequiredMixin, TemplateView):
@@ -20,7 +20,7 @@ class TheoristOnboardingTemplateView(LoginRequiredMixin, TemplateView):
         return super().dispatch(request, *args, **kwargs)
 
 
-class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, UpdateView):
+class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, HXViewMixin, UpdateView):
     model = Theorist
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
@@ -29,11 +29,6 @@ class HXTheoristOnboardFormView(LoginRequiredMixin, FormMessagesMixin, UpdateVie
     form_valid_message = _('You successfully registered!')
     form_invalid_message = _('Error. Please, check your input and try again.')
     success_url = reverse_lazy('forum:base-forum-page')
-
-    def get(self, request, *args, **kwargs):
-        if not request.htmx:
-            return HttpResponseNotFound()
-        return super().get(request, *args, **kwargs)
 
     def form_valid(self, form):
         super().form_valid(form)

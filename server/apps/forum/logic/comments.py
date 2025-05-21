@@ -126,14 +126,14 @@ class HXCommentLikesAndDislikesView(LoginRequiredMixin, RatedFormMessagesMixin, 
             else:
                 dislikes_manager.remove(request.theorist)
                 likes_manager.add(request.theorist)
-            self.messages.info(self.get_form_valid_like_message(), fail_silently=True)
+                self.messages.info(self.get_form_valid_like_message(), fail_silently=True)
         else:
             if dislikes_manager.filter(uuid=request.theorist.uuid).exists():
                 dislikes_manager.remove(request.theorist)
             else:
                 likes_manager.remove(request.theorist)
                 dislikes_manager.add(request.theorist)
-            self.messages.info(self.get_form_valid_dislike_message(), fail_silently=True)
+                self.messages.info(self.get_form_valid_dislike_message(), fail_silently=True)
 
         response = HttpResponse()
         trigger_client_event(response, f'commentLikesAndDislikesChanged{self.object.uuid}')

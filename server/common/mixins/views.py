@@ -118,7 +118,9 @@ class RatedFormMessagesMixin(FormMessagesMixin):
     form_valid_like_message = None
     form_valid_dislike_message = None
 
-    _through_rate = False  # attribute to check whether `get_form_valid_rated_messages` was called
+    # attribute to check whether `get_form_valid_rated_messages` was called
+    # use `set_default_behaviour` to make get_form_valid_message accessible
+    _through_rate = False
 
     class DefaultConsts(enum.Enum):
         LIKE = 'like'
@@ -147,7 +149,7 @@ class RatedFormMessagesMixin(FormMessagesMixin):
         else:
             assert_never(_flag)
 
-        return super().get_form_valid_message()
+        return self.get_form_valid_message()
 
     def get_form_valid_like_message(self):
         if not self.form_valid_like_message:
@@ -164,6 +166,9 @@ class RatedFormMessagesMixin(FormMessagesMixin):
                 'or override `get_form_valid_dislike_message` method.'
             )
         return self.get_form_valid_rated_messages(_flag=self.e.DISLIKE.value)
+
+    def set_default_messages_behaviour(self):
+        self._through_rate = True
 
     @property
     def e(self):

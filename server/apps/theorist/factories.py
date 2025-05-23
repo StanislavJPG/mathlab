@@ -3,6 +3,7 @@ from django.utils import timezone
 from django_countries import Countries
 from factory import fuzzy
 
+from server.apps.theorist.choices import TheoristFriendshipStatusChoices
 from server.apps.users.factories import CustomUserFactory
 
 
@@ -21,3 +22,13 @@ class TheoristFactory(factory.django.DjangoModelFactory):
 
     social_media_url = factory.Faker('uri')
     website_url = factory.Faker('uri')
+
+
+class TheoristFriendshipFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'theorist.TheoristFriendship'
+
+    requester = factory.SubFactory(TheoristFactory)
+    receiver = factory.SubFactory(TheoristFactory)
+
+    status = factory.fuzzy.FuzzyChoice(choices=TheoristFriendshipStatusChoices.choices, getter=lambda x: x[0])

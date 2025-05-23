@@ -37,7 +37,7 @@
                    title="{% translate 'This draft is not public available.' %}"></i>
               {% endif %}
             </div>
-            <p class="card-text">{{ draft.description }}</p>
+            <p class="card-text">{{ draft.description|default:'' }}</p>
             {% if request.theorist == draft.theorist %}
               <div class="d-flex justify-content-between align-items-center flex-md-row flex-column">
                 <div class="btn-group">

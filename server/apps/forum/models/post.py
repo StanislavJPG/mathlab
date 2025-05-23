@@ -64,8 +64,9 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
 
     @hook(AFTER_CREATE)
     def posts_count_hook(self):
-        self.theorist.total_posts = Post.objects.filter(theorist=self.theorist).count()
-        self.theorist.save(update_fields=['total_posts'])
+        if hasattr(self.theorist, 'total_posts'):
+            self.theorist.total_posts = Post.objects.filter(theorist=self.theorist).count()
+            self.theorist.save(update_fields=['total_posts'])
 
     # @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
     # def after_update_likes_and_dislikes(self):

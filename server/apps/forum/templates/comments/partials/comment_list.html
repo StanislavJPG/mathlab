@@ -13,7 +13,7 @@
             <div class="list-inline-item small"><b>{% translate 'Author' %}:</b>
               <a class="text-decoration-none"
                  target="_blank"
-                 href="{{ comment.theorist.get_absolute_url }}"> {{ comment.theorist.full_name }} </a> |
+                 href="{{ comment.theorist.get_absolute_url }}"> {{ comment.theorist_full_name }} </a> {% if comment.theorist %}|{% endif %}
               <b>{{ comment.theorist.get_rank_display }}</b></div>
             <div class="list-inline-item small"
                  class="span-base">

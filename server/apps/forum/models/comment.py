@@ -5,6 +5,7 @@ from django_lifecycle import (
     hook,
     AFTER_CREATE,
     AFTER_DELETE,
+    BEFORE_CREATE,
 )
 
 from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
@@ -17,12 +18,17 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     comment = models.TextField('comment', max_length=2000)
 
     post = models.ForeignKey('forum.Post', related_name='comments', on_delete=models.CASCADE)
+
     theorist = models.ForeignKey(
         'theorist.Theorist',
         related_name='comments',
         on_delete=models.SET_NULL,
         null=True,
     )
+    theorist_full_name = models.CharField(
+        max_length=255, blank=True
+    )  # denormilized field because of `on_delete=models.SET_NULL` on the FK above
+
     likes = models.ManyToManyField('theorist.Theorist', through='forum.CommentLike', related_name='liked_comments')
     dislikes = models.ManyToManyField(
         'theorist.Theorist',
@@ -59,6 +65,10 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
             reverse('forum:post-details', kwargs={'pk': self.post.pk, 'slug': self.post.slug})
             + f'?page={post_page}&comment={self.uuid}'
         )
+
+    @hook(BEFORE_CREATE)
+    def before_create(self):
+        self.theorist_full_name = self.theorist.full_name
 
     @hook(AFTER_CREATE)
     def comments_count_hook(self):

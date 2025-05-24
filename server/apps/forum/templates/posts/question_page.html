@@ -24,8 +24,8 @@
             <li class="list-inline-item small">
               <b>{% translate 'Author' %}:</b>
               <a href="{{ post.theorist.get_absolute_url }}" class="text-decoration-none">
-                {{ post.theorist.full_name }}</a>
-              | <b>{{ post.theorist.get_rank_display }}</b>
+                {{ post.theorist_full_name }}</a>
+              {% if post.theorist %}|{% endif %} <b>{{ post.theorist.get_rank_display }}</b>
             </li>
             <li class="list-inline-item small">
               <b>{% translate 'Created at' %}:</b> {{ post.created_at|timesince }} тому

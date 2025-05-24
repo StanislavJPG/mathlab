@@ -3,7 +3,7 @@ from typing import Final
 from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
-from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
+from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE, BEFORE_CREATE
 from hitcount.models import HitCountMixin
 
 from slugify import slugify
@@ -20,6 +20,10 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
     slug = models.SlugField(max_length=255, null=True, blank=True)
 
     theorist = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True, related_name='posts')
+    theorist_full_name = models.CharField(
+        max_length=255, blank=True
+    )  # denormilized field because of `on_delete=models.SET_NULL` on the FK above
+
     categories = models.ManyToManyField('forum.PostCategory', related_name='posts')
 
     likes = models.ManyToManyField('theorist.Theorist', through='forum.PostLike', related_name='liked_posts')
@@ -56,6 +60,10 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
             kwargs={'uuid': self.uuid},
         )
 
+    @hook(BEFORE_CREATE)
+    def before_create(self):
+        self.theorist_full_name = self.theorist.full_name
+
     @hook(AFTER_SAVE)
     def after_save(self):
         text = slugify(self.title)
@@ -67,8 +75,3 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
         if hasattr(self.theorist, 'total_posts'):
             self.theorist.total_posts = Post.objects.filter(theorist=self.theorist).count()
             self.theorist.save(update_fields=['total_posts'])
-
-    # @hook(AFTER_UPDATE, when_any=["likes", "dislikes"], has_changed=True)
-    # def after_update_likes_and_dislikes(self):
-    #     self.likes_counter = self.likes.count()
-    #     self.dislikes_counter = self.dislikes.count()

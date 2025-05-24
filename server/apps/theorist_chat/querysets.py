@@ -1,15 +1,19 @@
 from django.db import models
-from django.db.models import Case, When, Value, IntegerField, F
+from django.db.models import Case, When, F, Max, DateTimeField
 
 
 class TheoristChatRoomQuerySet(models.QuerySet):
     def order_by_last_sms_sent_relevancy(self):
-        return self.order_by(
-            Case(
-                When(last_sms_sent_at__isnull=True, then=Value(0)), default=Value(1), output_field=IntegerField()
-            ).desc(),
-            F('last_sms_sent_at').desc(),
-        )
+        return self.annotate(
+            # `last_sms_sent_at_max` gets the latest message time
+            last_sms_sent_at_max=Max('last_sms_sent_at'),
+            # `last_activity`: `last_sms_sent_at_max if last_sms_sent_at_max is not None else created_at`
+            last_activity=Case(
+                When(last_sms_sent_at_max__isnull=False, then=F('last_sms_sent_at_max')),
+                default=F('created_at'),
+                output_field=DateTimeField(),
+            ),
+        ).order_by('-last_activity')
 
 
 class TheoristMessageQueryset(models.QuerySet):

@@ -51,12 +51,18 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     @property
     def is_any_of_members_blocked_another(self):
-        return any(
-            (
-                self.first_member.blacklist.blocked_theorists.filter(id=self.second_member_id).exists(),
-                self.second_member.blacklist.blocked_theorists.filter(id=self.first_member_id).exists(),
-            )
+        blocked_by_first = (
+            self.first_member.blacklist.blocked_theorists.filter(id=self.second_member_id).exists()
+            if self.first_member
+            else False
         )
+        blocked_by_second = (
+            self.second_member.blacklist.blocked_theorists.filter(id=self.first_member_id).exists()
+            if self.second_member
+            else False
+        )
+
+        return any((blocked_by_first, blocked_by_second))
 
 
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):

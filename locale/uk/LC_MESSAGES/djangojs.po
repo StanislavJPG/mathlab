@@ -41,7 +41,7 @@ msgstr "Ні"
 
 #: server/static/js/notifications/bootstrap_notify_list.js:25
 msgid "Send at"
-msgstr "Відправлено"
+msgstr "Відправлено в"
 
 #: server/static/js/notifications/bootstrap_notify_list.js:36
 msgid "Clear all messages"

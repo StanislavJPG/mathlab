@@ -37,56 +37,61 @@
             {% if friend.requester.uuid == request.theorist.uuid %}
               <button class="btn btn-outline-danger"
                       hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
-                      hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}"
-              >{% translate 'Brake up' %}</button>
+                      hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}">
+                {% translate 'Brake up' %}
+              </button>
               <button class="btn btn-danger btn-sm mt-2"
                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid friend.receiver.uuid %}"
-                      hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
-              >{% translate 'Block theorist' %}</button>
-              {% if friend.receiver.social_media_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.receiver.social_media_url }}">
-                    <i class="ti ti-app-window"></i>
-                  </a>
-                </li>
-              {% endif %}
+                      hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}">
+                {% translate 'Block theorist' %}
+              </button>
+              <div class="d-flex flex-row">
+                {% if friend.receiver.social_media_url %}
+                  <li class="position-relative mt-2">
+                    <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                       href="{{ friend.receiver.social_media_url }}">
+                      <i class="ti ti-app-window"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if friend.receiver.website_url %}
+                  <li class="position-relative mt-2">
+                    <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                       href="{{ friend.receiver.website_url }}">
+                      <i class="ti ti-brand-linktree"></i>
+                    </a>
+                  </li>
+                {% endif %}
+              </div>
             {% else %}
-              {% if friend.requester.website_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.requester.website_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% endif %}
-            {% if friend.receiver.uuid == request.theorist.uuid %}
               <button class="btn btn-outline-danger"
                       hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
-                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}"
-              >{% translate 'Brake up' %}</button>
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}?{% endblocktranslate %}">
+                {% translate 'Brake up' %}
+              </button>
               <button class="btn btn-danger btn-sm mt-2"
                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid friend.requester.uuid %}"
-                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
-              >{% translate 'Block theorist' %}</button>
-              {% if friend.requester.social_media_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.requester.social_media_url }}">
-                    <i class="ti ti-app-window"></i>
-                  </a>
-                </li>
-              {% endif %}
-            {% else %}
-              {% if friend.receiver.website_url %}
-                <li class="position-relative">
-                  <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
-                     href="{{ friend.receiver.website_url }}">
-                    <i class="ti ti-brand-linktree"></i>
-                  </a>
-                </li>
-              {% endif %}
+                      hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}">
+                {% translate 'Block theorist' %}
+              </button>
+              <div class="d-flex flex-row">
+                {% if friend.requester.social_media_url %}
+                  <li class="position-relative mt-2">
+                    <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                       href="{{ friend.requester.social_media_url }}">
+                      <i class="ti ti-app-window"></i>
+                    </a>
+                  </li>
+                {% endif %}
+                {% if friend.requester.website_url %}
+                  <li class="position-relative mt-2">
+                    <a class="text-primary d-flex align-items-center justify-content-center p-2 fs-5 rounded-circle fw-semibold text-decoration-none"
+                       href="{{ friend.requester.website_url }}">
+                      <i class="ti ti-brand-linktree"></i>
+                    </a>
+                  </li>
+                {% endif %}
+              </div>
             {% endif %}
           </ul>
         </div>

@@ -59,17 +59,6 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def after_update(self):
         self.status_changed_at = timezone.now()
 
-    @property
-    def convenience_status_for_requester(self):
-        if self.status == self.PredefinedFriendship.PENDING:
-            return _('%s still examines yours friendship...') % self.receiver
-        elif self.status == self.PredefinedFriendship.REJECTED:
-            return _('%s has rejected your friendship request!') % self.receiver
-        elif self.status == self.PredefinedFriendship.ACCEPTED:
-            return _('%s has accepted your friendship request!') % self.receiver
-        else:
-            assert_never(self.status)
-
     @classmethod
     def create_friendship_request(cls, from_: 'Theorist', to: 'Theorist'):
         if from_ in to.blacklist.blocked_theorists.all():
@@ -86,6 +75,17 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def reject_friendship_request(self):
         self.status = self.PredefinedFriendship.REJECTED
         self.save(update_fields=['status', 'status_changed_at'])  # status_changed_at to commit hook changes
+
+    @property
+    def convenience_status_for_requester(self):
+        if self.status == self.PredefinedFriendship.PENDING:
+            return _('%s still examines yours friendship...') % self.receiver
+        elif self.status == self.PredefinedFriendship.REJECTED:
+            return _('%s has rejected your friendship request!') % self.receiver
+        elif self.status == self.PredefinedFriendship.ACCEPTED:
+            return _('%s has accepted your friendship request!') % self.receiver
+        else:
+            assert_never(self.status)
 
 
 class TheoristFriendshipBlackList(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):

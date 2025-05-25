@@ -67,11 +67,6 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
         self.full_name_slug = slugify(self.full_name)
         self.save(update_fields=['full_name_slug'], skip_hooks=True)
 
-    @property
-    def convenient_last_activity(self):
-        last_activity_label = _('Last activity %s ago') % timesince(self.last_activity)
-        return last_activity_label
-
     def is_theorist_is_blocked(self, theorist):
         return self.blacklist.blocked_theorists.filter(uuid=theorist.uuid).exists() if theorist else False
 
@@ -83,6 +78,11 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def deactivate(self):
         self.user.is_active = False
         self.user.save(update_fields=['is_active'])
+
+    @property
+    def convenient_last_activity(self):
+        last_activity_label = _('Last activity %s ago') % timesince(self.last_activity)
+        return last_activity_label
 
 
 class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):

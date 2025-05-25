@@ -94,10 +94,6 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.room.last_sms_sent_at = timezone.now()
         self.room.save(update_fields=['last_sms_sent_at'])
 
-    @property
-    def chat_convenient_created_at(self):
-        return format_relative_time(self.created_at)
-
     def safe_delete(self, deleted_by=None):
         self.was_safe_deleted_by = deleted_by if deleted_by else self.sender
         self.is_safe_deleted = True
@@ -107,3 +103,7 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.was_safe_deleted_by = None
         self.is_safe_deleted = False
         self.save(update_fields=['was_safe_deleted_by', 'is_safe_deleted'])
+
+    @property
+    def chat_convenient_created_at(self):
+        return format_relative_time(self.created_at)

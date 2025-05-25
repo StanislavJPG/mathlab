@@ -16,10 +16,6 @@ class TheoristNotification(UUIDModelMixin, AbstractNotification):
     class Meta(AbstractNotification.Meta):
         abstract = False
 
-    @property
-    def notification_label_as_html_tag(self):
-        return format_html(f'<strong>{self.actor_display_name}</strong> {self.verb} {self.target_display_name}')
-
     def extend_notification(
         self,
         request_theorist=None,
@@ -50,3 +46,7 @@ class TheoristNotification(UUIDModelMixin, AbstractNotification):
         self.deleted = True
         self.unread = False
         self.save(update_fields=['deleted', 'unread'])
+
+    @property
+    def notification_label_as_html_tag(self):
+        return format_html(f'<strong>{self.actor_display_name}</strong> {self.verb} {self.target_display_name}')

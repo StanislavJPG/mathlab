@@ -13,14 +13,13 @@
     >
       <h2>{{ story.title }}</h2>
       <p>{{ story.short_content }}</p>
-      <div class="d-flex align-items-center justify-content-between">
+      <div class="text-center">
         <a class="btn btn-outline-secondary"
            href="{{ story.origin_url }}"
            target="_blank"
            type="button">
           {% translate 'Read from origin' %}
         </a>
-        <span class="text-muted small">{{ story.improvised_published_at }}</span>
       </div>
     </div>
   </div>

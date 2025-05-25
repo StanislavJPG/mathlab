@@ -20,7 +20,10 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     short_content = models.TextField(max_length=255, null=True)
 
     origin_url = models.URLField(null=True, unique=True)
-    improvised_published_at = models.CharField(null=True, editable=False)
+
+    improvised_published_at = models.CharField(
+        null=True, editable=False
+    )  # actually, this is deprecated and will be removed or replaced in the future
 
     is_visible = models.BooleanField(default=True)
 
@@ -31,7 +34,7 @@ class MathNews(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     objects = MathNewsQueryset.as_manager()
 
     class Meta:
-        ordering = ('created_at',)
+        ordering = ('-created_at',)
         verbose_name_plural = 'news'
         get_latest_by = 'created_at'
 

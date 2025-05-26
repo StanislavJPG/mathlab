@@ -1,7 +1,7 @@
 # ruff: noqa: F405
 from server.settings.common import *  # noqa: F403
 
-DEBUG = True
+DEBUG = os.getenv('DEBUG', 'True') == 'True'
 
 ALLOWED_HOSTS = ['127.0.0.1', 'localhost', '192.168.0.110']
 
@@ -21,12 +21,6 @@ MIDDLEWARE += [
 INTERNAL_IPS = [
     '127.0.0.1',
 ]
-
-STATICFILES_DIRS = [BASE_DIR / 'static/']
-
-# Media
-MEDIA_ROOT = os.path.join(BASE_DIR.parent, 'media')
-MEDIA_URL = '/media/'
 
 DEBUG_TOOLBAR_CONFIG = {
     'SHOW_TOOLBAR_CALLBACK': lambda request: DEBUG,

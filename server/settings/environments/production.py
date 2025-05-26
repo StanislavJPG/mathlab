@@ -9,7 +9,8 @@ SECRET_KEY = os.getenv('SECRET_KEY')
 
 # CSRF_TRUSTED_ORIGINS = ['']
 
-ALLOWED_HOSTS = [os.getenv('ALLOWED_HOST', '')]
+allowed_hosts = os.getenv('ALLOWED_HOSTS', '')
+ALLOWED_HOSTS = allowed_hosts.split(',')
 
 ACCOUNT_DEFAULT_HTTP_PROTOCOL = 'https'
 

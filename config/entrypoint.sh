@@ -13,14 +13,16 @@ start_gunicorn() {
     fi
 }
 
-# Start migrations
-echo "📦 Making migrations..."
-python manage.py migrate --noinput
+if [ "$DJANGO_ENV" = "prod" ]; then
+  # Start migrations
+  echo "📦 Making migrations..."
+  python manage.py migrate --noinput
 
-echo "Preparing data..."
-python manage.py loaddata post_categories
-python manage.py loaddata mathlab_carousels
-python manage.py createsuperuser --username shokk
+  echo "Automatically preparing production data..."
+  python manage.py loaddata post_categories
+  python manage.py loaddata mathlab_carousels
+  python manage.py createsuperuser --noinput
+fi
 
 # Start Gunicorn
 start_gunicorn

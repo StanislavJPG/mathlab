@@ -1094,7 +1094,7 @@ msgstr ""
 #: server/apps/theorist_chat/logic/sharing.py
 #, python-format
 msgid "You successfully shared %s."
-msgstr "Ви успішно поділились %s.!"
+msgstr "Ви успішно поділились %s."
 
 #: server/apps/theorist_chat/logic/sharing.py
 #, python-format

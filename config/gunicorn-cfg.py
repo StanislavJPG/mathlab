@@ -6,7 +6,7 @@ Copyright (c) 2019 - present AppSeed.us
 import os
 
 bind = os.getenv('GUNICORN_BIND_HOST')
-workers = os.getenv('WORKERS')
+workers = int(os.getenv('WORKERS'))  # only integers
 # workers = (
 #     multiprocessing.cpu_count() * 2 + 1
 # )  # Gunicorn docs suggest this formula as the default number of workers.

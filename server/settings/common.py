@@ -181,7 +181,7 @@ SOCIALACCOUNT_PROVIDERS = {
 ACCOUNT_ADAPTER = 'server.apps.users.adapters.AccountAdapter'
 ACCOUNT_LOGIN_METHODS = {'email'}
 ACCOUNT_SIGNUP_FIELDS = ['email*', 'username*', 'password1*', 'password2*']
-ACCOUNT_EMAIL_VERIFICATION = 'none'  # TODO: remove this var if not debug
+ACCOUNT_EMAIL_VERIFICATION = 'none' if os.getenv('DJANGO_ENV') == 'dev' else 'optional'
 
 SOCIALACCOUNT_AUTO_SIGNUP = True
 SOCIALACCOUNT_ADAPTER = 'server.apps.users.adapters.SocialAccountAdapter'
@@ -312,7 +312,7 @@ TIME_ZONE = 'Europe/Kiev'
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
-        'LOCATION': f'redis://redis:{os.getenv("REDIS_PORT")}',
+        'LOCATION': os.getenv('REDIS_FULL_URL', f'redis://redis:{os.getenv("REDIS_PORT")}'),
         'OPTIONS': {
             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
         },
@@ -332,19 +332,17 @@ LOGGING = {
 }
 logging.config.dictConfig(LOGGING)
 
-# ELASTICSEARCH_DSL = {
-#     'default': {
-#         'hosts': os.getenv('ELASTICSEARCH_HOST'),
-#         'http_auth': (os.getenv('ELASTICSEARCH_NAME'), os.getenv('ELASTICSEARCH_PASS'))
-#     }
-# }
-
+REDIS_TLS_HOST = {
+    'address': os.getenv('REDIS_FULL_URL'),
+    'ssl_cert_reqs': None,
+}
+REDIS_HOSTS = ('redis', os.getenv('REDIS_PORT')) if not os.getenv('REDIS_FULL_URL') else REDIS_TLS_HOST
 
 CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            'hosts': [('redis', os.getenv('REDIS_PORT'))],
+            'hosts': [REDIS_HOSTS],
         },
     },
 }

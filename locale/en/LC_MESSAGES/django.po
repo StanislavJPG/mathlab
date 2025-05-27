@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-21 16:14+0300\n"
+"POT-Creation-Date: 2025-05-27 17:09+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -537,6 +537,11 @@ msgstr ""
 
 #: server/apps/theorist/models/friendship.py
 #, python-format
+msgid "Error. You have been blocked by %s!"
+msgstr ""
+
+#: server/apps/theorist/models/friendship.py
+#, python-format
 msgid "%s still examines yours friendship..."
 msgstr ""
 
@@ -548,11 +553,6 @@ msgstr ""
 #: server/apps/theorist/models/friendship.py
 #, python-format
 msgid "%s has accepted your friendship request!"
-msgstr ""
-
-#: server/apps/theorist/models/friendship.py
-#, python-format
-msgid "Error. You have been blocked by %s!"
 msgstr ""
 
 #: server/apps/theorist/models/friendship.py
@@ -632,14 +632,6 @@ msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
 #: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
-#, python-format
-msgid ""
-"Are you sure you want to break friendship with %(name)s? You should make "
-"friendship request again if you change your mind after that."
-msgstr ""
-
-#: server/apps/theorist/templates/friendship/partials/private_lists/accepted_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
 msgid "Still empty 😢"
 msgstr ""
 
@@ -690,6 +682,13 @@ msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
 msgid "You did not rejected any friendship requests!"
+msgstr ""
+
+#: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
+#, python-format
+msgid ""
+"Are you sure you want to break friendship with %(name)s? You should make "
+"friendship request again if you change your mind after that."
 msgstr ""
 
 #: server/apps/theorist/templates/friendship/partials/public_lists/accepted_list.html
@@ -1288,6 +1287,7 @@ msgid "Actions"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
+#: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Drafts"
 msgstr ""
 
@@ -1676,6 +1676,7 @@ msgid "Next"
 msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html
+#: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
 msgstr ""
 
@@ -1697,6 +1698,22 @@ msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html
 msgid "Ask question"
+msgstr ""
+
+#: server/templates/partials/mathlab/mathlab_navbar.html
+msgid "Main page"
+msgstr ""
+
+#: server/templates/partials/mathlab/mathlab_navbar.html
+msgid "This feature in development! Stay tuned with updates!"
+msgstr ""
+
+#: server/templates/partials/mathlab/mathlab_navbar.html
+msgid "Solve equation"
+msgstr ""
+
+#: server/templates/partials/mathlab/mathlab_navbar.html
+msgid "Build a graph"
 msgstr ""
 
 #: server/templates/partials/theme_switcher.html

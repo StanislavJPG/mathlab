@@ -13,5 +13,9 @@ start_gunicorn() {
     fi
 }
 
+# Start migrations
+echo "📦 Making migrations..."
+python manage.py migrate --noinput
+
 # Start Gunicorn
 start_gunicorn

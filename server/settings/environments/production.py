@@ -7,7 +7,8 @@ DEBUG = os.getenv('DEBUG', 'False') == 'True'
 
 SECRET_KEY = os.getenv('SECRET_KEY')
 
-# CSRF_TRUSTED_ORIGINS = ['']
+csrf_trusted_origins = os.getenv('CSRF_TRUSTED_ORIGINS', '')
+CSRF_TRUSTED_ORIGINS = csrf_trusted_origins.split(',')
 
 allowed_hosts = os.getenv('ALLOWED_HOSTS', '')
 ALLOWED_HOSTS = allowed_hosts.split(',')

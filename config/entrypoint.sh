@@ -13,5 +13,34 @@ start_gunicorn() {
     fi
 }
 
+if [ "$DJANGO_ENV" = "prod" ]; then
+  # Start migrations
+  echo "📦 Making migrations..."
+  python manage.py migrate --noinput
+
+  echo "Automatically preparing production data..."
+  python manage.py loaddata post_categories
+  python manage.py loaddata mathlab_carousels
+
+  if [ "$SUPERUSER_CREATE" = "True" ]; then
+    echo "Superuser creation..."
+    python manage.py createsuperuser --noinput
+  fi
+
+  if [ "$COLLECTSTATIC" = "True" ]; then
+    echo "Collecting static..."
+    python manage.py collectstatic
+  fi
+
+  # Starting daphne and celery
+  echo "Starting daphne and celery..."
+  daphne server.settings.asgi:application -b 0.0.0.0 -p 8099 &
+
+  # uncomment this line to start celery on production
+#  celery -A server.settings.celery worker -l INFO &
+
+  wait
+fi
+
 # Start Gunicorn
 start_gunicorn

@@ -31,6 +31,15 @@ if [ "$DJANGO_ENV" = "prod" ]; then
     echo "Collecting static..."
     python manage.py collectstatic
   fi
+
+  # Starting daphne and celery
+  echo "Starting daphne and celery..."
+  daphne server.settings.asgi:application -b 0.0.0.0 -p 8099 &
+
+  # uncomment this line to start celery on production
+#  celery -A server.settings.celery worker -l INFO &
+
+  wait
 fi
 
 # Start Gunicorn

@@ -17,5 +17,10 @@ start_gunicorn() {
 echo "📦 Making migrations..."
 python manage.py migrate --noinput
 
+echo "Preparing data..."
+python manage.py loaddata post_categories
+python manage.py loaddata mathlab_carousels
+python manage.py createsuperuser --username shokk
+
 # Start Gunicorn
 start_gunicorn

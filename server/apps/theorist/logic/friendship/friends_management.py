@@ -29,7 +29,12 @@ class TheoristFriendshipCreateView(
             friendship = TheoristFriendship.create_friendship_request(from_=self.request.theorist, to=self.object)
             self.messages.success(self.get_form_valid_message(), fail_silently=True)
             self.send_notify(object=friendship)
-            return HttpResponseClientRedirect(self.object.get_absolute_url())
+            if self.request.GET.get('reload_next'):
+                return HttpResponseClientRedirect(self.object.get_absolute_url())
+
+            response = HttpResponse()
+            trigger_client_event(response, 'friendshipBlockChanged')
+            return response
         except ValidationError as exc:
             self.messages.error(exc.messages, fail_silently=True)
             return HttpResponse()

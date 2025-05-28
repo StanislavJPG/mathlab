@@ -9,12 +9,11 @@ from django_bleach.forms import BleachField
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
-from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
+from server.apps.theorist.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
-from server.common.utils.paginator import page_resolver
 
 
 class TheoristMessageForm(forms.Form):
@@ -36,14 +35,6 @@ class TheoristMessageForm(forms.Form):
     def _notify_send(self, *, theorist, message, room):
         display_name_label = _('has wrote you a message')
         recipient = room.first_member if room.first_member != theorist else room.second_member
-        page_for_url = page_resolver.get_page_for_paginated_qs(
-            qs=TheoristChatRoom.objects.filter(
-                Q(first_member=theorist) | Q(second_member=theorist)
-            ).order_by_last_sms_sent_relevancy(),
-            target_obj=message.room,
-            paginate_by=DEFAULT_MAILBOX_PAGINATION,
-        )
-
         notify.send(
             sender=theorist,
             recipient=recipient.user,
@@ -51,7 +42,7 @@ class TheoristMessageForm(forms.Form):
             target=message,
             action_object=message,
             public=False,
-            action_url=message.get_absolute_room_url(next_uuid=message.room.uuid, mailbox_page=page_for_url),
+            action_url=get_mailbox_url(target_room=message.room, some_member=theorist),
             target_display_name=display_name_label,
         )
 

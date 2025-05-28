@@ -1,6 +1,8 @@
 from django.template.defaultfilters import register
 from django.urls import reverse
 
+from server.apps.theorist.utils import get_mailbox_url
+
 
 @register.simple_tag(takes_context=True)
 def absolute_url(context, view_name, *args, **kwargs):
@@ -16,3 +18,9 @@ def classes_by_lookup_url(context, instance, url_lookup_kwarg):
     """
     request = context['request']
     return 'bg-warning-subtle rounded fadeDiv' if request.GET.get(url_lookup_kwarg) == str(instance.uuid) else ''
+
+
+@register.simple_tag(takes_context=True, name='mailbox_url')
+def get_to_the_mailbox_url(context, target_room):
+    request = context['request']
+    return get_mailbox_url(target_room=target_room, some_member=request.theorist)

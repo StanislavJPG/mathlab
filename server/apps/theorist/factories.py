@@ -32,3 +32,4 @@ class TheoristFriendshipFactory(factory.django.DjangoModelFactory):
     receiver = factory.SubFactory(TheoristFactory)
 
     status = factory.fuzzy.FuzzyChoice(choices=TheoristFriendshipStatusChoices.choices, getter=lambda x: x[0])
+    status_changed_at = fuzzy.FuzzyDateTime(timezone.now())

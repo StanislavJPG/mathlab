@@ -49,6 +49,10 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         if self.first_member == self.second_member:
             raise ValidationError('Cannot assign the same members')
 
+    def get_absolute_url(self, next_uuid, mailbox_page=1):
+        # next_uuid is room uuid to be opened after url opening
+        return reverse('forum:theorist_chat:chat-base-page') + f'?next_uuid={next_uuid}&page={mailbox_page}'
+
     @property
     def is_any_of_members_blocked_another(self):
         blocked_by_first = (

@@ -53,6 +53,7 @@ class TheoristFriendshipAdmin(admin.ModelAdmin):
         'status',
         'created_at',
     )
+    search_fields = ('requester__full_name', 'receiver__full_name')
 
 
 class TheoristBlacklistInline(admin.TabularInline):

@@ -38,7 +38,9 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     objects = TheoristChatRoomQuerySet.as_manager()
 
     def __str__(self):
-        return f'{self.first_member.full_name} and {self.second_member.full_name} | {self.__class__.__name__} | id - {self.id}'
+        first_member = getattr(self.first_member, 'full_name', 'None person')
+        second_member = getattr(self.second_member, 'full_name', 'None person')
+        return f'{first_member} and {second_member} | {self.__class__.__name__} | id - {self.id}'
 
     class Meta:
         constraints = [UniqueConstraint(fields=['first_member', 'second_member'], name='%(app_label)s_unique_members')]

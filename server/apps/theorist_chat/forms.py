@@ -11,6 +11,7 @@ from tinymce.widgets import TinyMCE
 from server.apps.theorist.models import Theorist
 from server.apps.theorist.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.utils.helpers import limit_nbsp_paragraphs
@@ -32,7 +33,7 @@ class TheoristMessageForm(forms.Form):
             raise forms.ValidationError(_('Error. This theorist has blocked you.'))
         return True
 
-    def _notify_send(self, *, theorist, message, room):
+    def _process_notifications(self, *, theorist, message, room):
         display_name_label = _('has wrote you a message')
         recipient = room.first_member if room.first_member != theorist else room.second_member
         notify.send(
@@ -46,13 +47,20 @@ class TheoristMessageForm(forms.Form):
             target_display_name=display_name_label,
         )
 
+        # next we are clearing all unread messages for sender in current chat
+        message_ids = list(map(str, room.messages.values_list('id', flat=True)))
+        TheoristNotification.objects.filter(
+            target_object_id__in=message_ids,
+            theorist=theorist,
+        ).unread().mark_all_as_read()
+
     @transaction.atomic
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         if self.validate_room(room) is True:
             instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
-            self._notify_send(theorist=theorist, message=instance, room=room)
+            self._process_notifications(theorist=theorist, message=instance, room=room)
             return instance
 
 

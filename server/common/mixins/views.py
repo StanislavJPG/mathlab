@@ -30,6 +30,7 @@ class AvatarDetailViewMixin(DetailView):
     avatar_unique_field = None  # this is unique identifier of instance to render avatar
     avatar_variant = BORINGAVATARS_DEFAULT_VARIANT  # choices: {beam, marble, pixel, sunset, bauhaus, ring}
     avatar_square = BORINGAVATARS_DEFAULT_SQUARE
+    avatar_colors = BORINGAVATARS_DEFAULT_COLORS
 
     @staticmethod
     def _get_nested_attr(obj, attr, default=None):
@@ -58,6 +59,15 @@ class AvatarDetailViewMixin(DetailView):
 
         return getattr(self.object, self.avatar_unique_field)
 
+    def get_avatar_variant(self):
+        return self.avatar_variant
+
+    def get_avatar_colors(self):
+        return self.avatar_colors
+
+    def get_avatar_square(self):
+        return self.avatar_square
+
     def get(self, request, *args, **kwargs):
         """
         See: https://github.com/riquedev/django-initials-avatar/blob/2d297bd449b8d02785b6b079a968e9a7cf044784/django_initials_avatar/views.py#L59
@@ -66,9 +76,9 @@ class AvatarDetailViewMixin(DetailView):
         return HttpResponse(
             avatar(
                 name=name,
-                variant=self.avatar_variant,
-                colors=BORINGAVATARS_DEFAULT_COLORS,
-                square=self.avatar_square,
+                variant=self.get_avatar_variant(),
+                colors=self.get_avatar_colors(),
+                square=self.get_avatar_square(),
             ),
             content_type='image/svg+xml',
         )

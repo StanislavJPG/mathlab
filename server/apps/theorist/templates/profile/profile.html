@@ -2,7 +2,7 @@
 {% load static i18n avatars %}
 
 {% block page_head %}
-  <title>MathLab | Мій профіль</title>
+  <title>MathLab | {% if theorist.uuid == request.theorist.uuid %}{% translate 'My profile' %}{% else %}{% translate "Theorist's profile" %} {{ theorist.full_name }}{% endif %}</title>
 {% endblock page_head %}
 
 {% block body %}

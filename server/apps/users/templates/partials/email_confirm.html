@@ -21,10 +21,7 @@
   </ul>
   {% if confirmation %}
     {% if can_confirm %}
-      <form hx-post="{{ request.path }}"
-            _="on submit toggle @hidden on #wait-spinner until htmx:afterOnLoad"
-            hx-indicator="#filter-block-wait-spinner"
-      >
+      <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
         {% csrf_token %}
         <p class="text-muted text-center">
           {% blocktrans with email=confirmation.email_address.email user_display=user.username %}
@@ -33,10 +30,8 @@
         </p>
 
         <div class="text-center">
-          <button type="submit" class="btn btn-primary btn-block mb-4">
-            <div id="wait-spinner" class="spinner-grow text-light spinner-grow-sm" role="status" hidden></div>
-            {% translate 'Confirm' %}
-          </button>
+          {% translate 'Confirm' as btn_label %}
+          {% render_submit_button btn_label class="btn btn-primary btn-block mb-4" %}
         </div>
       </form>
     {% else %}

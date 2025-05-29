@@ -8,7 +8,7 @@
   <div class="card-body">
     <div class="row d-flex flex-lg-row flex-column-reverse">
       <div class="col-lg-8">
-        <form hx-post="{{ request.path }}">
+        <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
           <div class="form-group">
             <label for="{{ form.full_name.id_for_label }}">{{ form.full_name.label }}</label>
             {% render_field form.full_name class="form-control" %}
@@ -36,8 +36,8 @@
           </div>
           {% include 'common/captcha.html' %}
           <div class="text-center text-lg-end">
-            <button type="submit" class="btn btn-primary mb-3 mt-3"><i
-              class="ti ti-device-floppy"></i> {% translate 'Save changes' %}</button>
+            {% translate 'Save changes' as btn_label %}
+            {% render_submit_button btn_label class="btn btn-primary mb-3 mt-3" with_icon="ti ti-device-floppy" %}
           </div>
         </form>
       </div>

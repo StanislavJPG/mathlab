@@ -14,6 +14,7 @@ from server.apps.theorist_chat.filters import MailBoxFilter
 from server.apps.theorist_chat.forms import MessageMessageSingleForm
 from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
+from server.apps.theorist_notifications.models import TheoristNotification
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 from server.common.utils.paginator import page_resolver
@@ -73,6 +74,15 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
                 Q(room__first_member=self.request.theorist) | Q(room__second_member=self.request.theorist),
             )
         )
+
+    def get(self, request, *args, **kwargs):
+        room = TheoristChatRoom.objects.filter(uuid=kwargs['room_uuid']).first()
+        message_ids = list(map(str, room.messages.values_list('id', flat=True)))
+        TheoristNotification.objects.filter(
+            target_object_id__in=message_ids,
+            theorist=self.request.theorist,
+        ).unread().mark_all_as_read()
+        return super().get(request, *args, **kwargs)
 
     def paginate_queryset(self, queryset, page_size):
         paginate_queryset = super().paginate_queryset(queryset, page_size)

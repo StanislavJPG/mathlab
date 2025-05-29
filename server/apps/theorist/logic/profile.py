@@ -7,11 +7,13 @@ from django.urls import reverse
 from django.views.generic import DetailView, ListView
 
 from server.apps.theorist.models import Theorist, TheoristFriendship, TheoristFriendshipBlackList
+from server.apps.theorist_chat.models import TheoristChatRoom
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 __all__ = (
     'TheoristProfileDetailView',
+    'HXTheoristProfileMainBlockDetailView',
     'HXTheoristDetailsProfileView',
     'TheoristLastActivitiesListView',
 )
@@ -47,6 +49,16 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
             return self.handle_no_permission()
         return super().dispatch(request, *args, **kwargs)
 
+
+class HXTheoristProfileMainBlockDetailView(HXViewMixin, DetailView):
+    model = Theorist
+    context_object_name = 'theorist'
+    template_name = 'profile/partials/main_information_block.html'
+
+    def get_queryset(self):
+        self.request: AuthenticatedHttpRequest
+        return super().get_queryset().filter(full_name_slug=self.kwargs['full_name_slug'])
+
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         self.request: AuthenticatedHttpRequest
@@ -59,15 +71,21 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
                 Q(receiver=current_theorist, requester=target_theorist)
                 | Q(receiver=target_theorist, requester=current_theorist)
             )
+            chat_room_qs = TheoristChatRoom.objects.filter(
+                (Q(first_member=target_theorist) & Q(second_member=current_theorist))
+                | (Q(first_member=current_theorist) & Q(second_member=target_theorist))
+            )
 
             context.update(
                 {
+                    # is request theorist has ever requested friendship to profile's theorist
                     'is_theorist_has_request': friendship_qs.filter(
                         receiver=current_theorist,
                         requester=target_theorist,
                     )
                     .filter_by_pending_status()
                     .exists(),
+                    # is requested theorist has ever received friendship from profile's theorist
                     'is_theorist_already_requested': friendship_qs.filter(
                         requester=current_theorist, receiver=target_theorist
                     )
@@ -81,6 +99,12 @@ class TheoristProfileDetailView(AccessMixin, DetailView):
                     'is_theorist_has_blocked': TheoristFriendshipBlackList.objects.filter(
                         owner=target_theorist, blocked_theorists=current_theorist
                     ).exists(),
+                    # chat room between request theorist and target theorist
+                    'chat_room': chat_room_qs,
+                    # profile's theorist friendship obj request to current theorist
+                    'theorist_request': target_theorist.friendship_requester.filter(receiver=current_theorist)
+                    .filter_by_pending_status()
+                    .first(),
                 }
             )
 

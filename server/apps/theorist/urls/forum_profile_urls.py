@@ -4,6 +4,7 @@ from server.apps.theorist.logic.profile import (
     TheoristProfileDetailView,
     HXTheoristDetailsProfileView,
     TheoristLastActivitiesListView,
+    HXTheoristProfileMainBlockDetailView,
 )
 from server.apps.theorist.logic.avatars import (
     TheoristDefaultProfileImageView,
@@ -18,6 +19,11 @@ urlpatterns = [
         '<int:pk>/<slug:full_name_slug>/',
         TheoristProfileDetailView.as_view(),
         name='base-page',
+    ),
+    path(
+        '<int:pk>/<slug:full_name_slug>/main-block/',
+        HXTheoristProfileMainBlockDetailView.as_view(),
+        name='hx-theorist-main-block',
     ),
     path(
         '<int:pk>/<slug:full_name_slug>/details/',

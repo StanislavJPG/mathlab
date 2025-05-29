@@ -38,7 +38,9 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     objects = TheoristChatRoomQuerySet.as_manager()
 
     def __str__(self):
-        return f'{self.first_member.full_name} and {self.second_member.full_name} | {self.__class__.__name__} | id - {self.id}'
+        first_member = getattr(self.first_member, 'full_name', 'None person')
+        second_member = getattr(self.second_member, 'full_name', 'None person')
+        return f'{first_member} and {second_member} | {self.__class__.__name__} | id - {self.id}'
 
     class Meta:
         constraints = [UniqueConstraint(fields=['first_member', 'second_member'], name='%(app_label)s_unique_members')]
@@ -48,6 +50,10 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def clean(self, *args, **kwargs):
         if self.first_member == self.second_member:
             raise ValidationError('Cannot assign the same members')
+
+    def get_absolute_url(self, next_uuid, mailbox_page=1):
+        # next_uuid is room uuid to be opened after url opening
+        return reverse('forum:theorist_chat:chat-base-page') + f'?next_uuid={next_uuid}&page={mailbox_page}'
 
     @property
     def is_any_of_members_blocked_another(self):

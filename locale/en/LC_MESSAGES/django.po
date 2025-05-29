@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-27 17:09+0300\n"
+"POT-Creation-Date: 2025-05-28 19:52+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -813,6 +813,24 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
 #, python-format
+msgid "Are you sure you want to accept friendship request from %(name)s?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Accept friendship request"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
+msgid "Are you sure you want to reject friendship request from %(name)s?"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+msgid "Reject friendship request"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
 msgid "Are you sure you want to create chat with %(name)s?"
 msgstr ""
 
@@ -830,6 +848,14 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/statistics.html
 msgid "Posts quantity"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "My profile"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/profile.html
+msgid "Theorist's profile"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/profile.html

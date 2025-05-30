@@ -19,7 +19,7 @@
 </div>
 
 <h2 class="fw-bold mb-5"><i class="ti ti-home-question"></i> {% translate 'Your profile data' %}</h2>
-<form hx-post="{% url 'theorist_onboarding:hx-onboard-view' request.theorist.uuid %}">
+<form hx-post="{% url 'theorist_onboarding:hx-onboard-view' request.theorist.uuid %}" {% render_form_spinner_attrs %}>
 
   <div class="form-outline mb-4">
     {% render_field form.country|add_bootstrap_validation_classes class="selectpicker form-control" data-style="btn-default" data-live-search="true" %}
@@ -48,9 +48,8 @@
     </label>
   </div>
 
-  <button type="submit" class="btn btn-primary btn-block mb-4">
-    {% translate 'Finish registration' %}
-  </button>
+  {% translate 'Finish registration' as btn_label %}
+  {% render_submit_button btn_label class="btn btn-primary btn-block mb-4" with_icon="ti ti-circle-check" %}
 
 </form>
 

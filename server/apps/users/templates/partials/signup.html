@@ -1,7 +1,7 @@
 {% load widened_widget_tweaks widget_tweaks %}
 {% load static i18n allauth account socialaccount %}
 
-<form hx-post="{% url 'users:register-view' %}">
+<form hx-post="{% url 'users:register-view' %}" {% render_form_spinner_attrs %}>
   <div class="form-group mb-2">
     {% render_field form.email|add_bootstrap_validation_classes class="form-control" %}
     {% render_field_errors form.email class_="invalid-feedback" small=True %}
@@ -35,9 +35,8 @@
   {% endif %}
 
   <div class="text-center mt-4">
-    <button type="submit" class="btn btn-primary btn-block mb-3">
-      {% translate 'Sign in' %}
-    </button>
+    {% translate 'Sign in' as btn_label %}
+    {% render_submit_button btn_label class="btn btn-primary btn-block mb-3" with_icon="ti ti-door-enter" %}
   </div>
 </form>
 
@@ -51,7 +50,7 @@
     <button class="btn btn-danger btn-block"
             style="background-color: #DB4437"
             type="submit">
-      <i class="fab fa-google me-2"></i>{% translate 'Continue with Google' %}
+      <i class="ti ti-brand-google me-2"></i>{% translate 'Continue with Google' %}
     </button>
   </form>
 </div>

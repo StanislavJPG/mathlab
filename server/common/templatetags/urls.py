@@ -1,7 +1,7 @@
 from django.template.defaultfilters import register
 from django.urls import reverse
 
-from server.apps.theorist.utils import get_mailbox_url
+from server.apps.theorist_chat.utils import get_mailbox_url
 
 
 @register.simple_tag(takes_context=True)

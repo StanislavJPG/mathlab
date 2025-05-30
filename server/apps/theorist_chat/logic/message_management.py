@@ -2,13 +2,13 @@ from braces.views import FormInvalidMessageMixin, FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.db.models import Q
 from django.http import HttpResponse
-from django.urls import reverse
 from django.views import View
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
 from django_htmx.http import HttpResponseClientRedirect
 
 from server.apps.theorist_chat.models import TheoristMessage
+from server.apps.theorist_chat.utils import get_mailbox_url
 from server.common.mixins.views import HXViewMixin
 
 
@@ -31,7 +31,9 @@ class ChatMessageSafeDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMix
         self.object = self.get_object()
         self.object.safe_delete(deleted_by=self.request.theorist)
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        response = HttpResponseClientRedirect(reverse('forum:theorist_chat:chat-base-page'))
+        response = HttpResponseClientRedirect(
+            get_mailbox_url(target_room=self.object.room, some_member=self.request.theorist)
+        )
         return response
 
 
@@ -58,7 +60,9 @@ class ChatMessageRestoreAfterSafeDeleteView(LoginRequiredMixin, HXViewMixin, For
         self.object = self.get_object()
         self.object.recover_after_safe_delete()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
-        response = HttpResponseClientRedirect(reverse('forum:theorist_chat:chat-base-page'))
+        response = HttpResponseClientRedirect(
+            get_mailbox_url(target_room=self.object.room, some_member=self.request.theorist)
+        )
         return response
 
 

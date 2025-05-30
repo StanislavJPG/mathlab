@@ -114,6 +114,7 @@
                      hx-target="this">
                   <a type="button"
                      class="{% if not post.is_already_liked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                     data-toast-trigger
                      hx-swap="none"
                      hx-post="{% url 'forum:hx-post-rate' post.uuid %}?like=true">
                     <i style="font-size: 35px" class="ti ti-thumb-up"></i>
@@ -121,6 +122,7 @@
                   </a>
                   <a type="button"
                      class="{% if not post.is_already_disliked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                     data-toast-trigger
                      hx-swap="none"
                      hx-post="{% url 'forum:hx-post-rate' post.uuid %}">
                     <i style="font-size: 35px" class="ti ti-thumb-down"></i>
@@ -150,9 +152,9 @@
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=best"
-                     hx-target="#comment-list-js">{% translate 'Best' %}</a></li>
+                     hx-target="#comment-list-js" data-toast-trigger>{% translate 'Best' %}</a></li>
               <li><a class="dropdown-item" href="#" hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=newest"
-                     hx-target="#comment-list-js">{% translate 'Newest' %}</a></li>
+                     hx-target="#comment-list-js" data-toast-trigger>{% translate 'Newest' %}</a></li>
             </ul>
           </div>
           <div id="comment-list-js" class="mt-5" hx-get="{% url 'forum:comments-block' post.uuid %}?{{ request_get }}"

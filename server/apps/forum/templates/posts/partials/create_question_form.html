@@ -4,7 +4,7 @@
 <script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
 <script src="{% static 'js/eqneditor.js' %}"></script>
 
-<form hx-post="{{ request.path }}" class="row justify-content-center">
+<form {% render_form_spinner_attrs %} hx-post="{{ request.path }}" class="row justify-content-center">
   <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>
   <div class="col-md-8">
     <span>{% translate 'Question topic' %} *</span>
@@ -21,7 +21,8 @@
     {{ form.content }}
   </div>
   <div class="text-center mt-3 mb-3">
-    <button type="submit" class="btn btn-primary">{% translate 'Create question' %}</button>
+    {% translate 'Create question' as btn_label %}
+    {% render_submit_button btn_label with_icon="ti ti-copy-check" %}
   </div>
 </form>
 

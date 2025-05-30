@@ -29,7 +29,7 @@ if [ "$DJANGO_ENV" = "prod" ]; then
 
   if [ "$COLLECTSTATIC" = "True" ]; then
     echo "Collecting static..."
-    python manage.py collectstatic
+    python manage.py collectstatic --noinput
   fi
 
   # Starting daphne and celery

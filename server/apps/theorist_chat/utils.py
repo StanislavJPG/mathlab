@@ -1,4 +1,4 @@
-"""Utility functions related to the theorist app."""
+"""Utility functions related to the theorist_chat app."""
 
 from django.db.models import Q
 

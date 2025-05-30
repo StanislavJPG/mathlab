@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-xl modal-dialog-centered">
   <div class="modal-content">
-    <form hx-post="{{ request.get_full_path }}">
+    <form hx-post="{{ request.get_full_path }}" {% render_form_spinner_attrs %}>
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Add new draft' %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -63,7 +63,8 @@
 
       <div class="modal-footer">
         <button type="button" hx-on:click="window.location.reload()" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-        <button type="submit" onclick="saveDrawing()" class="btn btn-primary">{% translate 'Add' %}</button>
+        {% translate 'Add' as btn_label %}
+        {% render_submit_button btn_label onclick="saveDrawing()" %}
       </div>
     </form>
   </div>

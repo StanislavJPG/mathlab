@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:52+0300\n"
+"POT-Creation-Date: 2025-05-30 16:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1146,7 +1146,6 @@ msgid "Close"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 msgid "Create"
 msgstr ""
 
@@ -1699,6 +1698,10 @@ msgstr ""
 
 #: server/templates/common/pagination.html
 msgid "Next"
+msgstr ""
+
+#: server/templates/common/request_toast.html
+msgid "Wait while loading..."
 msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html

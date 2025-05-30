@@ -3,6 +3,7 @@
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content">
     <form hx-post="{{ request.get_full_path }}"
+          {% render_form_spinner_attrs %}
           hx-confirm="{% blocktranslate trimmed with i18n_obj_name=i18n_obj_name %}Share my {{ i18n_obj_name }}?{% endblocktranslate %}">
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Share' %} {{ i18n_obj_name }} {% translate 'with other theorists' %}</h5>
@@ -22,7 +23,8 @@
 
       <div class="modal-footer">
         <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-        <button type="submit" class="btn btn-primary">{% translate 'Create' %}</button>
+        {% translate 'Share' as btn_label %}
+        {% render_submit_button btn_label %}
       </div>
     </form>
   </div>

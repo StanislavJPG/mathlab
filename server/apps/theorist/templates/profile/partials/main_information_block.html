@@ -25,6 +25,7 @@
             <i class="ti ti-user-x ms-1 text-danger"
                hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid theorist.uuid %}?reload_next=true"
                hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to unblock {{ name }}?{% endblocktranslate %}"
+               data-toast-trigger
                data-bs-toggle="tooltip" data-bs-placement="top"
                title="{% translate 'This theorist is blocked by you. Unblock him?' %}"
                style="font-size: 35px; cursor: pointer;"></i>
@@ -37,6 +38,7 @@
             <i class="ti ti-user-plus ms-1"
                hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
                hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+               data-toast-trigger
                data-bs-toggle="tooltip" data-bs-placement="top"
                title="{% translate 'Make friendship request to this theorist.' %}"
                style="font-size: 35px; cursor: pointer"></i>
@@ -57,6 +59,7 @@
               <i class="ti ti-user-x ms-1 text-danger"
                  hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid theorist.uuid %}?reload_next=true"
                  hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to unblock {{ name }}?{% endblocktranslate %}"
+                 data-toast-trigger
                  data-bs-toggle="tooltip" data-bs-placement="top"
                  title="{% translate 'This theorist is blocked by you. Unblock him?' %}"
                  style="font-size: 35px; cursor: pointer;"></i>
@@ -86,6 +89,7 @@
               <button type="button"
                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-accept' theorist_request.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to accept friendship request from {{ name }}?{% endblocktranslate %}"
+                      data-toast-trigger
                       hx-swap="none"
                       hx-trigger="click"
                       class="btn btn-success ms-1 p-2">
@@ -94,6 +98,7 @@
               <button type="button"
                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-reject' theorist_request.uuid %}"
                       hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to reject friendship request from {{ name }}?{% endblocktranslate %}"
+                      data-toast-trigger
                       hx-swap="none"
                       hx-trigger="click"
                       class="btn btn-outline-danger ms-1 p-2">
@@ -105,6 +110,7 @@
                 <button type="button"
                         hx-post="{% url 'forum:theorist_chat:mailbox-create-from-profile' theorist.uuid %}"
                         hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to create chat with {{ name }}?{% endblocktranslate %}"
+                        data-toast-trigger
                         hx-swap="none"
                         hx-trigger="click"
                         class="btn btn-primary ms-1 p-2">
@@ -121,6 +127,7 @@
                     class="btn btn-danger ms-1"
                     hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid theorist.uuid %}"
                     hx-trigger="click"
+                    data-toast-trigger
                     hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to block {{ name }}?{% endblocktranslate %}"
             >
               <i class="ti ti-ban ms-1"></i> {% translate 'Block this theorist' %}

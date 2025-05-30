@@ -1,4 +1,4 @@
-{% load i18n static widget_tweaks %}
+{% load i18n static widget_tweaks widened_widget_tweaks %}
 {{ form.media }}
 <script src="{% static 'js/eqneditor.js' %}"></script>
 
@@ -6,11 +6,9 @@
       id="comment-block-create"
       class="text-center"
       hx-swap="none"
-      _="on submit toggle @hidden on #comment-wait-spinner until htmx:afterOnLoad"
+      {% render_form_spinner_attrs target_spinner_id="comment-wait-spinner" %}
       hx-on::after-request="this.reset()">
   {{ form.comment }}
-  <button type="submit" class="btn btn-primary mt-3">
-    <span id="comment-wait-spinner" class="spinner-grow spinner-grow-sm text-light mt-2" role="status" hidden></span>
-    {% translate 'Add comment' %}
-  </button>
+  {% translate 'Add comment' as btn_label %}
+  {% render_submit_button btn_label spinner_id="comment-wait-spinner" class="btn btn-primary mt-3" with_icon="ti ti-message-up" %}
 </form>

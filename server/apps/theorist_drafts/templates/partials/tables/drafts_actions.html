@@ -4,6 +4,7 @@
   <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer;" class="ti ti-dots-vertical"></i>
   <ul class="dropdown-menu">
     <li><span class="dropdown-item"
+              data-toast-trigger
               style="cursor: pointer"
               hx-get="{% url 'mathlab:drafts:drafts-edit' record.uuid %}?view=table"
               hx-trigger="click"
@@ -16,6 +17,7 @@
       <hr class="dropdown-divider">
     </li>
     <li><span class="dropdown-item"
+              data-toast-trigger
               style="cursor: pointer"
               hx-delete="{% url 'mathlab:drafts:drafts-delete' record.uuid %}?view={{ request.GET.view }}"
               hx-trigger="click"

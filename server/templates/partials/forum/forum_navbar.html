@@ -77,6 +77,7 @@
             </li>
             <li><a class="dropdown-item" href="{% url 'forum:theorist_profile:settings:theorist-profile-settings' %}"><i class="ti ti-settings"></i> {% translate 'Settings' %}</a></li>
             <li><a class="dropdown-item text-danger" href="javascript:(0);"
+                   data-toast-trigger
                    hx-post="{% url 'users:logout-view' %}"
                    hx-confirm="{% translate 'Do you want to log out from your account?' %}">
               <i class="ti ti-logout"></i> {% translate 'Log out' %}

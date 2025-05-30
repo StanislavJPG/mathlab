@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-28 19:52+0300\n"
+"POT-Creation-Date: 2025-05-30 16:10+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -820,6 +820,7 @@ msgid "You already sent friendship request to this theorist."
 msgstr "Ви вже відправляли запит на дружбу до цього теоретика раніше."
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
 msgid "Are you sure you want to accept friendship request from %(name)s?"
 msgstr "Ви впевнені, що хочете прийняти запит на дружбу від %(name)s?"
 
@@ -828,6 +829,7 @@ msgid "Accept friendship request"
 msgstr "Прийняти запит на дружбу"
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#, python-format
 msgid "Are you sure you want to reject friendship request from %(name)s?"
 msgstr "Ви впевнені, що хочете відхилити запит на дружбу від %(name)s?"
 
@@ -1162,7 +1164,6 @@ msgid "Close"
 msgstr "Закрити"
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 msgid "Create"
 msgstr "Створити"
 
@@ -1736,6 +1737,10 @@ msgstr "Попередня"
 #: server/templates/common/pagination.html
 msgid "Next"
 msgstr "Наступна"
+
+#: server/templates/common/request_toast.html
+msgid "Wait while loading..."
+msgstr "Завантаження, почекайте..."
 
 #: server/templates/partials/forum/forum_navbar.html
 #: server/templates/partials/mathlab/mathlab_navbar.html

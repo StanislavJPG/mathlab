@@ -9,7 +9,7 @@ from django_bleach.forms import BleachField
 from tinymce.widgets import TinyMCE
 
 from server.apps.theorist.models import Theorist
-from server.apps.theorist.utils import get_mailbox_url
+from server.apps.theorist_chat.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
@@ -96,6 +96,7 @@ class MailBoxCreateForm(forms.ModelForm):
             .filter_is_chats_available()
             .filter_is_able_to_get_messages()
             .filter_by_accepted_friendship_as_member(member=self.first_member)
+            .distinct()
         )
         self.fields['second_member'].label_from_instance = lambda obj: obj.full_name
         self.fields['second_member'].to_field_name = 'uuid'

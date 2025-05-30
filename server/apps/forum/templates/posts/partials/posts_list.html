@@ -12,10 +12,7 @@
       <div id="collapseFilter" class="accordion-collapse collapse hide" aria-labelledby="headingFilter"
            data-bs-parent="#accordionFilter">
         <div class="accordion-body">
-          <form hx-get="{{ request.path }}"
-                _="on submit toggle @hidden on #filter-block-wait-spinner until htmx:afterOnLoad"
-                hx-indicator="#filter-block-wait-spinner"
-                class="container">
+          <form hx-get="{{ request.path }}" {% render_form_spinner_attrs target_spinner_id="filter-block-wait-spinner" %} class="container">
             <div class="row mb-3 justify-content-center justify-content-md-start">
               <div class="col-12 col-md-3">
                 <label class="form-label" for="{{ filter.form.title.id_for_label }}">{{ filter.form.title.label }}</label>
@@ -28,7 +25,7 @@
               </div>
             </div>
             <div class="row my-4">
-              <div class="accordion col-12 col-md-3" id="accordionAdvancedFilter">
+              <div class="accordion col-12 col-md-6" id="accordionAdvancedFilter">
                 <div class="accordion-item">
                   <h2 class="accordion-header">
                     <button class="accordion-button p-2" type="button" data-bs-toggle="collapse"
@@ -48,9 +45,8 @@
               </div>
             </div>
             <div class="d-flex justify-content-center justify-content-md-end">
-              <button type="submit" class="btn btn-primary me-2"><i class="ti ti-filter"></i> {% translate 'Apply' %}
-                <div id="filter-block-wait-spinner" class="spinner-grow text-light spinner-grow-sm ms-2" role="status" hidden></div>
-              </button>
+              {% translate 'Apply' as btn_label %}
+              {% render_submit_button btn_label spinner_id="filter-block-wait-spinner" class="btn btn-primary me-2" with_icon="ti ti-filter" %}
               <button type="button" hx-get="{{ request.path }}" class="btn btn-outline-primary"><i
                 class="ti ti-backspace"></i> {% translate 'Clear' %}</button>
             </div>

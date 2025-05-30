@@ -24,6 +24,7 @@
 
   <link rel="icon" type="image/x-icon" href="{% static 'img/forum/forum_favicon_colored.png' %}">
 
+  {% include 'common/request_toast.html' %}
   {% include 'partials/toasts.html' %}
   {% include 'partials/forum/forum_navbar.html' %}
 
@@ -48,6 +49,7 @@
       {% endblock additional %}
     {% endblock body %}
 
+
     {% include 'partials/theme_switcher.html' %}
     {% include 'partials/footer.html' %}
 
@@ -59,6 +61,7 @@
   {% block extended_js %}
   {% endblock extended_js %}
 
+  <script src="{% static 'js/actions/request_toast.js' %}"></script>
   <script src="{% url 'javascript-catalog' %}"></script>
   <script src="{% static 'js/htmx_sweetalert.js' %}"></script>
 

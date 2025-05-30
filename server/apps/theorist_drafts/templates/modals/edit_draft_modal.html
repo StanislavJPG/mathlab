@@ -2,7 +2,7 @@
 
 <div class="modal-dialog modal-lg modal-dialog-centered">
   <div class="modal-content">
-    <form hx-post="{{ request.get_full_path }}">
+    <form hx-post="{{ request.get_full_path }}" {% render_form_spinner_attrs %}>
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Edit your draft' %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
@@ -26,7 +26,8 @@
 
       <div class="modal-footer">
         <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
-        <button type="submit" class="btn btn-primary">{% translate 'Save' %}</button>
+        {% translate 'Save' as btn_label %}
+        {% render_submit_button btn_label %}
       </div>
     </form>
   </div>

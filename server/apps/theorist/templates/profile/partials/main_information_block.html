@@ -37,6 +37,7 @@
             <i class="ti ti-user-plus ms-1"
                hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
                hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+               data-toast-trigger
                data-bs-toggle="tooltip" data-bs-placement="top"
                title="{% translate 'Make friendship request to this theorist.' %}"
                style="font-size: 35px; cursor: pointer"></i>

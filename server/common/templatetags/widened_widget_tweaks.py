@@ -29,8 +29,12 @@ def render_field_errors(field, class_='text-danger mb-2', small=False):
 
 
 @register.simple_tag(name='render_form_spinner_attrs')
-def render_form_attrs_with_spinner(target_spinner_id='wait-spinner'):
-    attrs_to_render = f'_="on submit toggle @hidden on #{target_spinner_id} until htmx:afterOnLoad"'
+def render_form_attrs_with_spinner(
+    target_spinner_id='wait-spinner',
+    with_request_toast=True,  # add 'Wait while loading...' toast while request is processing
+):
+    toast_trigger = 'data-toast-trigger' if with_request_toast else ''
+    attrs_to_render = f'_="on submit toggle @hidden on #{target_spinner_id} until htmx:afterOnLoad" {toast_trigger}'
     return format_html(attrs_to_render)
 
 
@@ -38,11 +42,14 @@ def render_form_attrs_with_spinner(target_spinner_id='wait-spinner'):
 def render_bootstrap_spinner_submit_button(
     label='',
     *,
+    # `id` and `class` attributes for the spinner to be inside button
     spinner_id='wait-spinner',
     spinner_class='spinner-grow text-light spinner-grow-sm',
-    with_icon=None,
+    ###
+    with_icon=None,  # add <i></i> icon to the button
     **kwargs,
 ):
+    """It's recommended to use it with `render_form_spinner_attrs` tag to add spinner while request is processing"""
     attrs = ' '.join([f'{k}="{v}"' for k, v in kwargs.items()])
     spinner = f'<div id="{spinner_id}" class="{spinner_class}" role="status" hidden></div>'
     icon = f'<i class="{with_icon}"></i>' if with_icon else ''

@@ -29,6 +29,7 @@
           <li class="nav-item">
             <a class="nav-link"
                title="{% translate 'Mark all notifications as read' %}"
+               data-toast-trigger
                data-bs-toggle="tooltip"
                aria-current="page"
                hx-post="{% url 'forum:theorist_notifications:mark-all-read' %}"
@@ -45,6 +46,7 @@
           <li class="nav-item">
             <a class="nav-link"
                title="{% translate 'Delete all notifications' %}"
+               data-toast-trigger
                data-bs-toggle="tooltip"
                aria-current="page"
                hx-post="{% url 'forum:theorist_notifications:mark-all-deleted' %}"

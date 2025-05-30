@@ -24,6 +24,7 @@
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@latest/tabler-icons.min.css">
   <script src="https://cdn.jsdelivr.net/npm/@tabler/icons@1.74.0/icons-react/dist/index.umd.min.js"></script>
 
+  {% include 'common/request_toast.html' %}
   {% include 'partials/toasts.html' %}
   {% include 'partials/mathlab/mathlab_navbar.html' %}
 
@@ -56,6 +57,7 @@
   {% block extended_js %}
   {% endblock extended_js %}
 
+  <script src="{% static 'js/actions/request_toast.js' %}"></script>
   <script src="{% url 'javascript-catalog' %}"></script>
   <script src="{% static 'js/htmx_sweetalert.js' %}"></script>
 

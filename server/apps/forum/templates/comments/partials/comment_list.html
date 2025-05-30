@@ -116,6 +116,7 @@
               >
                 <a type="button"
                    class="{% if not comment.is_comment_already_liked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                   data-toast-trigger
                    hx-swap="none"
                    hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}?like=true">
                   <i style="font-size: 35px" class="ti ti-thumb-up"></i>
@@ -123,6 +124,7 @@
                 </a>
                 <a type="button"
                    class="{% if not comment.is_comment_already_disliked %}text-secondary{% endif %} text-decoration-none d-flex flex-column align-items-center"
+                   data-toast-trigger
                    hx-swap="none"
                    hx-post="{% url 'forum:hx-comment-rate' comment.uuid %}">
                   <i style="font-size: 35px" class="ti ti-thumb-down"></i>

@@ -18,6 +18,7 @@
   <div class="card">
     <div class="card-body">
       <form hx-get="{{ request.path }}"
+            data-toast-trigger
             hx-target="#mailboxes-list-js"
             hx-select="#mailboxes-list-js"
             hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
@@ -49,6 +50,7 @@
                      _="on click remove .bg-secondary-subtle from .mailbox add .bg-secondary-subtle to #mailbox-{{ mailbox.uuid }}"
                      style="cursor: pointer"
                      class="d-flex flex-row justify-content-between text-decoration-none"
+                     data-toast-trigger
                 >
                   <div class="d-flex flex-row">
                     {% if mailbox.first_member.uuid == request.theorist.uuid %}

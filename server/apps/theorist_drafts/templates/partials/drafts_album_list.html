@@ -15,6 +15,7 @@
 {% if drafts %}
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
        id="gallery"
+       data-toast-trigger
        hx-get="{{ request.get_full_path }}"
        hx-trigger="draftDeleted from:body delay:0.6s"
   >
@@ -45,12 +46,14 @@
                           hx-get="{% url 'mathlab:drafts:drafts-edit' draft.uuid %}?view={{ request.GET.view }}"
                           hx-target="#drafts-management-modal"
                           hx-trigger="click"
+                          data-toast-trigger
                           data-bs-toggle="modal"
                           data-bs-target="#drafts-management-modal"
                           class="btn btn-sm btn-outline-secondary">
                     {% translate 'Edit' %}
                   </button>
                   <button type="button"
+                          data-toast-trigger
                           hx-delete="{% url 'mathlab:drafts:drafts-delete' draft.uuid %}?view={{ request.GET.view }}"
                           hx-swap="innerHTML swap:0.5s"
                           hx-target=".album-draft-base-{{ draft.uuid }}"

@@ -24,6 +24,7 @@
       <ul class="dropdown-menu">
         {% if is_request_theorist_blocked_recipient %}
           <li><a class="dropdown-item text-success"
+                 data-toast-trigger
                  href="javascript:(0);"
                  hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-unblock' request.theorist.blacklist.uuid receiver.uuid %}"
                  hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to remove {{ name }} from your blacklist?{% endblocktranslate %}"
@@ -34,6 +35,7 @@
           <li class="dropdown-divider"></li>
         {% else %}
           <li><a class="dropdown-item text-danger"
+                 data-toast-trigger
                  href="javascript:(0);"
                  hx-post="{% url 'forum:theorist_profile:friendship:theorist-blacklist-block' request.theorist.blacklist.uuid receiver.uuid %}"
                  hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to add {{ name }} to your blacklist?{% endblocktranslate %}"
@@ -44,6 +46,7 @@
         {% endif %}
         <li><a class="dropdown-item text-danger"
                href="javascript:(0);"
+               data-toast-trigger
                hx-delete="{% url 'forum:theorist_chat:mailbox-delete' room_uuid %}"
                hx-confirm="{% blocktranslate trimmed with name=receiver.full_name %}Are you sure you want to delete this chat with {{ name }}? This cannot be undone.{% endblocktranslate %}"
                hx-trigger="click"
@@ -64,6 +67,7 @@
           <li class="d-flex justify-content-between mb-4"
               id="scroll-anchor"
               {% if page_obj.number > 1 and forloop.first %}
+                data-toast-trigger
                 hx-trigger="intersect once"
                 hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
                 hx-target="#paginated-msg-list-js"
@@ -90,6 +94,7 @@
                           <li>
                             {% if message.is_safe_deleted %}
                               <button type="button"
+                                      data-toast-trigger
                                       class="dropdown-item text-success"
                                       hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
                                       hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
@@ -99,6 +104,7 @@
                               </button>
                             {% else %}
                               <button type="button"
+                                      data-toast-trigger
                                       class="dropdown-item text-danger"
                                       hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
                                       hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
@@ -146,6 +152,7 @@
                               </button>
                             {% else %}
                               <button type="button"
+                                      data-toast-trigger
                                       class="dropdown-item text-danger"
                                       hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
                                       hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
@@ -194,6 +201,7 @@
             {% translate 'This chat is unavailable because this theorist has blocked you.' %}😢{% endif %}</textarea>
           <label class="form-label text-muted" for="chat-message-input">{% translate 'Your message' %}</label>
           <button type="button"
+                  data-toast-trigger
                   hx-get="{% url 'forum:theorist_chat:invalid-chat-message-create' %}"
                   hx-trigger="click"
                   hx-swap="none"
@@ -207,6 +215,7 @@
           <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
           <button id="chat-message-submit"
                   type="button"
+                  data-toast-trigger
                   hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
                   hx-target="#mailboxes-list-js"
                   hx-trigger="click from:#chat-message-submit delay:0.5s"

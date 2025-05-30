@@ -29,6 +29,8 @@ services:
   daphne:
     build: .
     command: daphne server.settings.asgi:application -b 0.0.0.0 -p 8099
+    volumes:
+      - ./:/mathlab
     expose:
       - 8099
     ports:

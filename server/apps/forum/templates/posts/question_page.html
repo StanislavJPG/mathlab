@@ -152,9 +152,9 @@
             </button>
             <ul class="dropdown-menu">
               <li><a class="dropdown-item" href="#" hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=best"
-                     hx-target="#comment-list-js">{% translate 'Best' %}</a></li>
+                     hx-target="#comment-list-js" data-toast-trigger>{% translate 'Best' %}</a></li>
               <li><a class="dropdown-item" href="#" hx-get="{% url 'forum:comments-block' post.uuid %}?order_by=newest"
-                     hx-target="#comment-list-js">{% translate 'Newest' %}</a></li>
+                     hx-target="#comment-list-js" data-toast-trigger>{% translate 'Newest' %}</a></li>
             </ul>
           </div>
           <div id="comment-list-js" class="mt-5" hx-get="{% url 'forum:comments-block' post.uuid %}?{{ request_get }}"

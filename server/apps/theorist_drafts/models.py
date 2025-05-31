@@ -16,13 +16,14 @@ upload_to_pattern_draft = FilePattern(
 
 
 class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    label = models.CharField(max_length=95, null=True, blank=True)
     draft = models.ImageField(max_length=300, upload_to=upload_to_pattern_draft)
+
+    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='drafts')
+
+    label = models.CharField(max_length=95, null=True, blank=True)
     description = models.TextField(null=True, blank=True, max_length=255)
 
     is_public_available = models.BooleanField(default=False)
-
-    theorist = models.ForeignKey('theorist.Theorist', on_delete=models.CASCADE, related_name='drafts')
 
     class Meta:
         ordering = ('-created_at',)

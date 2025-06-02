@@ -7,6 +7,16 @@ import uuid
 from django.db import migrations, models
 
 
+def generate_unique_denormilized_theorist_names(apps, schema_editor):
+    CommentAnswer = apps.get_model('forum', 'CommentAnswer')
+
+    answers = CommentAnswer.objects.filter(theorist__isnull=False)
+
+    for answer_obj in answers:
+        answer_obj.theorist_full_name = answer_obj.theorist.full_name
+        answer_obj.save(update_fields=['theorist_full_name'])
+
+
 class Migration(migrations.Migration):
     dependencies = [
         ('forum', '0021_post_theorist_full_name'),
@@ -21,7 +31,17 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
                 ('modified_at', models.DateTimeField(auto_now=True, null=True)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('text_body', models.TextField(validators=[django.core.validators.MinLengthValidator(10)])),
+                (
+                    'text_body',
+                    models.TextField(
+                        max_length=400,
+                        validators=[
+                            django.core.validators.MinLengthValidator(10),
+                            django.core.validators.MaxLengthValidator(400),
+                        ],
+                    ),
+                ),
+                ('theorist_full_name', models.CharField(max_length=255, blank=True)),
                 (
                     'theorist',
                     models.ForeignKey(
@@ -43,4 +63,5 @@ class Migration(migrations.Migration):
             name='answers',
             field=models.ManyToManyField(blank=True, to='forum.commentanswer'),
         ),
+        migrations.RunPython(generate_unique_denormilized_theorist_names, reverse_code=migrations.RunPython.noop),
     ]

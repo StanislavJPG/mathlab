@@ -24,7 +24,7 @@
             <li class="list-inline-item small">
               <b>{% translate 'Author' %}:</b>
               <a href="{{ post.theorist.get_absolute_url }}" class="text-decoration-none">
-                {{ post.theorist_full_name }}</a>
+                {% get_instance_avatar post.theorist size=25 is_square=True %} {{ post.theorist_full_name }}</a>
               {% if post.theorist %}|{% endif %} <b>{{ post.theorist.get_rank_display }}</b>
             </li>
             <li class="list-inline-item small">
@@ -165,7 +165,6 @@
 
         {% if user.is_authenticated %}
           <div class="text-center">
-            <hr/>
             <h2 class="h5 mb-4">{% translate 'Your answer' %}</h2>
             <div id="comment-block-js" hx-get="{% url 'forum:comment-create' post.uuid %}"
                  hx-target="this" hx-trigger="load delay:0.5s">

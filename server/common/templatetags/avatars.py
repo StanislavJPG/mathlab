@@ -24,5 +24,5 @@ def get_instance_avatar(
         )
     return link_wrapper(
         f'<img src="{static("img/base/user.png")}" width="{size}" height="{size}" '
-        f'alt="avatar" class="{"rounded-circle" if not is_square else "squared"}">'
+        f'alt="avatar" class="{"rounded-circle" if not is_square else "squared rounded"}">'
     )

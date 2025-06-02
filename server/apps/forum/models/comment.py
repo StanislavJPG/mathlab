@@ -1,4 +1,4 @@
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -88,12 +88,15 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.post.save(update_fields=['comments_quantity'])
 
 
-class CommentAnswer(UUIDModelMixin, TimeStampedModelMixin):
-    text_body = models.TextField(validators=[MinLengthValidator(10)])
+class CommentAnswer(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    text_body = models.TextField(validators=[MinLengthValidator(10), MaxLengthValidator(400)], max_length=400)
 
     theorist = models.ForeignKey(
         'theorist.Theorist', on_delete=models.SET_NULL, null=True, related_name='comment_answers'
     )
+    theorist_full_name = models.CharField(
+        max_length=255, blank=True
+    )  # denormilized field because of `on_delete=models.SET_NULL` on the FK above
 
     class Meta:
         ordering = ('created_at',)
@@ -102,3 +105,7 @@ class CommentAnswer(UUIDModelMixin, TimeStampedModelMixin):
 
     def __str__(self):
         return f'{self.__class__.__name__} | id - {self.id}'
+
+    @hook(BEFORE_CREATE)
+    def before_create(self):
+        self.theorist_full_name = self.theorist.full_name

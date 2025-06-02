@@ -1,3 +1,28 @@
-{% for answer in answers %}
-  {{ answer }}
-{% endfor %}
+{% load i18n avatars %}
+
+<div id="answers-block-js">
+  {% for answer in answers %}
+    <hr class="ms-5 text-secondary">
+
+    <div class="container">
+      <div class="d-flex flex-md-row flex-column align-items-center justify-content-between" style="font-size: 13px;">
+        <div class="text-start ms-md-5 ms-0 w-75 text-break">
+          {{ answer.text_body|safe }}
+        </div>
+        <div class="text-secondary mt-2 mt-md-0">
+          – <a href="{{ answer.theorist.get_absolute_url }}" target="_blank" class="text-decoration-none">
+            {% get_instance_avatar answer.theorist size=25 is_square=True %} {{ answer.theorist_full_name }}
+          </a>, {{ answer.created_at }}
+        </div>
+      </div>
+    </div>
+
+    {% if forloop.last %}
+      <hr class="ms-5 text-secondary">
+    {% endif %}
+  {% endfor %}
+  <div class="d-flex ms-5 justify-content-start mb-4" style="font-size: 13px;">
+    <a class="text-decoration-none text-secondary" href="#"><i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}</a>
+  </div>
+  <hr class="mb-1">
+</div>

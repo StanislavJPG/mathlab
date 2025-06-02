@@ -1,6 +1,6 @@
 {% load i18n avatars %}
 
-<div id="answers-block-js">
+<div id="answers-block-js" hx-get="{{ request.path }}" hx-trigger="answerBlockChanged">
   {% for answer in answers %}
     <hr class="ms-5 text-secondary">
 
@@ -22,7 +22,14 @@
     {% endif %}
   {% endfor %}
   <div class="d-flex ms-5 justify-content-start mb-4" style="font-size: 13px;">
-    <a class="text-decoration-none text-secondary" href="#"><i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}</a>
+    <a class="text-decoration-none text-secondary"
+       href="javascript:(0);"
+       hx-get="{% url 'forum:comment-answer-create' object.uuid %}"
+       hx-target="closest div"
+       hx-swap="outerHTML"
+    >
+      <i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}
+    </a>
   </div>
   <hr class="mb-1">
 </div>

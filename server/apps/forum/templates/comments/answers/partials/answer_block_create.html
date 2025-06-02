@@ -1,0 +1,17 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+{{ form.media }}
+<script src="{% static 'js/eqneditor.js' %}"></script>
+
+<form hx-post="{{ request.path }}"
+      id="answer-block-create"
+      class="text-center ms-5 justify-content-start mb-4"
+      hx-swap="none"
+      {% render_form_spinner_attrs target_spinner_id="answer-wait-spinner" %}
+      hx-on::after-request="this.reset()">
+  {{ form.text_body }}
+  {% translate 'Add an answer' as btn_label %}
+  <div class="d-flex flex-column justify-content-center">
+    {% render_submit_button btn_label spinner_id="answer-wait-spinner" class="btn btn-primary btn-sm mt-3" with_icon="ti ti-message-reply" %}
+    <button type="button" onclick="htmx.trigger('#answers-block-js', 'answerBlockChanged');" class="btn btn-outline-danger btn-sm mt-2"><i class="ti ti-arrow-back-up"></i> {% translate 'Cancel' %}</button>
+  </div>
+</form>

@@ -1,5 +1,7 @@
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.urls import reverse
+from django.utils.translation import gettext_lazy as _
 from django_lifecycle import (
     LifecycleModel,
     hook,
@@ -18,6 +20,10 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     comment = models.TextField('comment', max_length=2000)
 
     post = models.ForeignKey('forum.Post', related_name='comments', on_delete=models.CASCADE)
+    answers = models.ManyToManyField(
+        'forum.CommentAnswer',
+        blank=True,
+    )
 
     theorist = models.ForeignKey(
         'theorist.Theorist',
@@ -80,3 +86,19 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def after_comments_created_or_deleted(self):
         self.post.comments_quantity = self.post.comments.count()
         self.post.save(update_fields=['comments_quantity'])
+
+
+class CommentAnswer(UUIDModelMixin, TimeStampedModelMixin):
+    text_body = models.TextField(validators=[MinLengthValidator(10)])
+
+    theorist = models.ForeignKey(
+        'theorist.Theorist', on_delete=models.SET_NULL, null=True, related_name='comment_answers'
+    )
+
+    class Meta:
+        ordering = ('created_at',)
+        verbose_name = _('Comment Answer')
+        verbose_name_plural = _('Comment Answers')
+
+    def __str__(self):
+        return f'{self.__class__.__name__} | id - {self.id}'

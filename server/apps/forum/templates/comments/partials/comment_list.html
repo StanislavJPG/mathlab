@@ -136,6 +136,10 @@
         </div>
       </div>
     </div>
+    <div hx-get="{% url 'forum:hx-comment-answers' comment.uuid %}"
+         hx-trigger="load"
+         hx-target="this">
+    </div>
   {% endfor %}
   {% include 'common/pagination.html' with htmx_target="#comment-list-body-js" %}
 </div>

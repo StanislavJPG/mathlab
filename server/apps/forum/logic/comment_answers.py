@@ -39,6 +39,7 @@ class HXCommentAnswerDetailView(HXViewMixin, MultipleObjectMixin, DetailView):
         _, _, qs, _ = self.paginate_queryset(original_qs, page_size=self.paginate_by)
         context['limit_to_show_all'] = (original_qs.count() > self.paginate_by) and (qs.count() < original_qs.count())
         context['more_objects'] = original_qs.count() - self.paginate_by if context['limit_to_show_all'] else 0
+        context['comment_able_to_get_answers'] = False
         return context
 
 

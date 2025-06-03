@@ -1,6 +1,7 @@
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.urls import reverse
+from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import (
     LifecycleModel,
@@ -10,7 +11,7 @@ from django_lifecycle import (
     BEFORE_CREATE,
 )
 
-from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
+from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY, COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
 from server.apps.forum.managers import CommentQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.paginator import page_resolver
@@ -86,6 +87,10 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def after_comments_created_or_deleted(self):
         self.post.comments_quantity = self.post.comments.count()
         self.post.save(update_fields=['comments_quantity'])
+
+    @property
+    def is_able_to_get_answers(self) -> bool:
+        return (timezone.now() - self.created_at).days <= COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
 
 
 class CommentAnswer(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):

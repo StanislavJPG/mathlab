@@ -29,19 +29,28 @@
          hx-get="{{ request.path }}?show=all"
          hx-target="#answers-block-js-{{ object.uuid }}"
       >
-        <i class="ti ti-arrow-move-down"></i> {% blocktranslate trimmed %}Show more {{ more_objects }} answers{% endblocktranslate %}
+        {% if more_objects|pluralize %}
+          {% translate 'answers' as pluralized %}
+        {% else %}
+          {% translate 'answer' as pluralized %}
+        {% endif %}
+        <i class="ti ti-arrow-move-down"></i> {% blocktranslate trimmed %}Show more {{ more_objects }} {{ pluralized }}{% endblocktranslate %}
       </a>
     {% else %}
-      <a class="text-decoration-none text-secondary"
-         href="javascript:(0);"
-         hx-get="{% url 'forum:comment-answer-create' object.uuid %}"
-         hx-target="closest div"
-         hx-swap="outerHTML"
-      >
-        <i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}
-      </a>
+      {% if object.is_able_to_get_answers %}
+        <a class="text-decoration-none text-secondary"
+           href="javascript:(0);"
+           hx-get="{% url 'forum:comment-answer-create' object.uuid %}"
+           hx-target="closest div"
+           hx-swap="outerHTML"
+        >
+          <i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}
+        </a>
+      {% endif %}
     {% endif %}
   </div>
 
-  <hr class="mb-1">
+  {% if object.is_able_to_get_answers %}
+    <hr class="mb-1">
+  {% endif %}
 </div>

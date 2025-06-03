@@ -1,3 +1,4 @@
+import collections
 import random
 import re
 
@@ -21,6 +22,10 @@ def is_valid_uuid(uuid_to_test):
     except ValueError:
         return False
     return True
+
+
+def is_iterable(x):
+    return isinstance(x, collections.abc.Iterable)
 
 
 def limit_nbsp_paragraphs(html: str, max_count: int = 3) -> str:

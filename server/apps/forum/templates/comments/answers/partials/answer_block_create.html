@@ -8,6 +8,17 @@
       hx-swap="none"
       {% render_form_spinner_attrs target_spinner_id="answer-wait-spinner" %}>
   {{ form.text_body }}
+
+  {% if comment.post.theorist.uuid != request.theorist.uuid %}
+    <div class="form-check text-start mt-2">
+      {% render_field form.send_to_post_owner class="form-check-input" %}
+      <label class="form-check-label text-lg-nowrap" for="{{ form.send_to_post_owner.id_for_label }}">
+        {% translate 'Also notify post author about this answer' %}
+      </label>
+      {% render_field_errors form.send_to_post_owner small=True %}
+    </div>
+  {% endif %}
+
   {% translate 'Add an answer' as btn_label %}
   <div class="d-flex flex-column justify-content-center">
     {% render_submit_button btn_label spinner_id="answer-wait-spinner" class="btn btn-primary btn-sm mt-3" with_icon="ti ti-message-reply" %}

@@ -18,12 +18,27 @@ class HXCommentAnswerDetailView(HXViewMixin, MultipleObjectMixin, DetailView):
     template_name = 'comments/answers/answer_list.html'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
-    paginate_by = 5
+    paginate_by = 3
+
+    def _show_all_objects(self):
+        return self.request.GET.get('show') == 'all'
+
+    def paginate_queryset(self, queryset, page_size):
+        paginated = super().paginate_queryset(queryset, page_size)
+        page_kwarg = self.page_kwarg
+        page = self.kwargs.get(page_kwarg) or self.request.GET.get(page_kwarg) or 1
+        if int(page) >= 1 and not self._show_all_objects():
+            return paginated
+
+        return None, None, queryset, False
 
     def get_context_data(self, **kwargs):
         self.object = self.get_object()
-        object_list = self.object.answers.all()
-        context = super().get_context_data(object_list=object_list, **kwargs)
+        original_qs = self.object.answers.all()
+        context = super().get_context_data(object_list=original_qs, **kwargs)
+        _, _, qs, _ = self.paginate_queryset(original_qs, page_size=self.paginate_by)
+        context['limit_to_show_all'] = (original_qs.count() > self.paginate_by) and (qs.count() < original_qs.count())
+        context['more_objects'] = original_qs.count() - self.paginate_by if context['limit_to_show_all'] else 0
         return context
 
 
@@ -52,5 +67,5 @@ class CommentAnswerCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         response = HttpResponse()
-        trigger_client_event(response, 'commentBlockChanged')
+        trigger_client_event(response, 'answerBlockChanged')
         return response

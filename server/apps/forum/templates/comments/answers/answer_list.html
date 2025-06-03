@@ -1,11 +1,12 @@
 {% load i18n avatars %}
 
-<div id="answers-block-js" hx-get="{{ request.path }}" hx-trigger="answerBlockChanged">
+<div id="answers-block-js-{{ object.uuid }}" hx-get="{{ request.path }}?show=all" hx-trigger="answerBlockChanged from:body">
   {% for answer in answers %}
     <hr class="ms-5 text-secondary">
 
     <div class="container">
       <div class="d-flex flex-md-row flex-column align-items-center justify-content-between" style="font-size: 13px;">
+        <span class="text-secondary">#{{ forloop.counter }}</span>
         <div class="text-start ms-md-5 ms-0 w-75 text-break">
           {{ answer.text_body|safe }}
         </div>
@@ -22,14 +23,25 @@
     {% endif %}
   {% endfor %}
   <div class="d-flex ms-5 justify-content-start mb-4" style="font-size: 13px;">
-    <a class="text-decoration-none text-secondary"
-       href="javascript:(0);"
-       hx-get="{% url 'forum:comment-answer-create' object.uuid %}"
-       hx-target="closest div"
-       hx-swap="outerHTML"
-    >
-      <i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}
-    </a>
+    {% if limit_to_show_all %}
+      <a class="text-decoration-none"
+         href="javascript:(0);"
+         hx-get="{{ request.path }}?show=all"
+         hx-target="#answers-block-js-{{ object.uuid }}"
+      >
+        <i class="ti ti-arrow-move-down"></i> {% blocktranslate trimmed %}Show more {{ more_objects }} answers{% endblocktranslate %}
+      </a>
+    {% else %}
+      <a class="text-decoration-none text-secondary"
+         href="javascript:(0);"
+         hx-get="{% url 'forum:comment-answer-create' object.uuid %}"
+         hx-target="closest div"
+         hx-swap="outerHTML"
+      >
+        <i class="ti ti-message-reply"></i> {% translate 'Add an answer' %}
+      </a>
+    {% endif %}
   </div>
+
   <hr class="mb-1">
 </div>

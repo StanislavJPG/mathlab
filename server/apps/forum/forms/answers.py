@@ -10,7 +10,14 @@ class CommentAnswerCreateForm(forms.ModelForm):
     class Meta:
         model = CommentAnswer
         fields = ('text_body',)
-        widgets = {'text_body': TinyMCE(attrs={'cols': 30, 'rows': 30, 'placeholder': _('Type your answer here')})}
+        widgets = {
+            'text_body': TinyMCE(
+                attrs={'cols': 30, 'rows': 30, 'placeholder': _('Type your answer here')},
+                mce_attrs={
+                    'toolbar': 'undo redo | formatselect | eqneditor',
+                },
+            )
+        }
 
     def __init__(self, *args, **kwargs):
         self.theorist = kwargs.pop('theorist')

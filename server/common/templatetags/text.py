@@ -3,7 +3,7 @@ from django.template.defaultfilters import register
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
-from server.common.utils.helpers import get_icon_for_contenttype_model
+from server.common.utils.defaults import get_icon_for_contenttype_model
 
 
 @register.filter()

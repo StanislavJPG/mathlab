@@ -17,7 +17,7 @@ from django_lifecycle import (
 from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY, COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
 from server.apps.forum.managers import CommentQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
-from server.common.utils.helpers import get_default_nonexistent_label
+from server.common.utils.defaults import get_default_nonexistent_label
 from server.common.utils.paginator import page_resolver
 
 

@@ -1,8 +1,8 @@
 from django.template.defaultfilters import register
-from django.templatetags.static import static
 from django.utils.safestring import mark_safe
 
 from server.common.third_party_apps.boringavatar import BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST
+from server.common.utils.defaults import get_default_user_pic
 
 
 @register.simple_tag
@@ -22,7 +22,8 @@ def get_instance_avatar(
                 square=is_square,
             )
         )
+    user_default_pic = get_default_user_pic(is_square=is_square)
     return link_wrapper(
-        f'<img src="{static("img/base/user.png")}" width="{size}" height="{size}" '
+        f'<img src="{user_default_pic}" width="{size}" height="{size}" '
         f'alt="avatar" class="{"rounded-circle" if not is_square else "squared rounded"}">'
     )

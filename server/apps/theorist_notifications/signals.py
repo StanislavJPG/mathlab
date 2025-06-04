@@ -48,6 +48,7 @@ class ExtendedNotificationSignal:
                 'verb': kwargs.get('verb', ''),
                 'action_url': kwargs.get('action_url', None),
                 'target_display_name': kwargs.get('target_display_name', None),
+                'public': kwargs.get('public', False),
             }
         )
         return kwargs

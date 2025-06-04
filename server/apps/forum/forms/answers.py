@@ -36,7 +36,7 @@ class CommentAnswerCreateForm(forms.ModelForm):
         return cleaned_data
 
     def _process_notifications(self, *, instance):
-        display_name_label = _('has answered to comment, which you are following')
+        display_name_label = _('has answered to the comment, which you are following')
         recipients = (
             instance.theorist.user
             if not self.cleaned_data.get('send_to_post_owner')
@@ -48,7 +48,6 @@ class CommentAnswerCreateForm(forms.ModelForm):
             actor_content_type=ContentType.objects.get_for_model(instance.theorist),
             target=instance,
             action_object=instance,
-            public=False,
             action_url=instance.get_absolute_url(),
             target_display_name=display_name_label,
         )

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-05-30 16:10+0300\n"
+"POT-Creation-Date: 2025-06-04 17:58+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -114,6 +114,18 @@ msgstr "Кількість коментарів"
 msgid "Posts views"
 msgstr "Перегляди посту"
 
+#: server/apps/forum/forms/answers.py
+msgid "Type your answer here"
+msgstr "Напишіть Вашу відповідь тут"
+
+#: server/apps/forum/forms/answers.py
+msgid "You are not able to add answer to this comment."
+msgstr "Ви не можете додати відповідь до цього коментаря."
+
+#: server/apps/forum/forms/answers.py
+msgid "has answered to the comment, which you are following"
+msgstr "відповів на коментар, за яким Ви слідкуєте"
+
 #: server/apps/forum/forms/comments.py
 msgid "has commented post, which you are following"
 msgstr "прокоментував пост, за яким Ви слідкуєте"
@@ -127,10 +139,11 @@ msgstr "Тема питання (не більше 85 символів)"
 msgid "You cannot choose more then %s categories."
 msgstr "Ви не можете вибрати більше %s категорій."
 
-#: server/apps/forum/logic/comment_management.py
-msgid "Your comment has been added."
-msgstr "Ваш коментар було додано."
+#: server/apps/forum/logic/comment_answers.py
+msgid "Your answer has been added."
+msgstr "Вашу відповідь було додано."
 
+#: server/apps/forum/logic/comment_answers.py
 #: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
 #: server/apps/theorist/logic/friendship/blacklist.py
@@ -140,6 +153,14 @@ msgstr "Ваш коментар було додано."
 #: server/apps/users/logic/auths_actions.py
 msgid "Error. Please, check your input and try again."
 msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
+
+#: server/apps/forum/logic/comment_answers.py
+msgid "Your answer has been deleted."
+msgstr "Вашу відповідь було видалено."
+
+#: server/apps/forum/logic/comment_management.py
+msgid "Your comment has been added."
+msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been updated."
@@ -192,6 +213,14 @@ msgstr "Ви вподобали цей пост."
 msgid "You disliked this post."
 msgstr "Ви дизлайкнули цей пост."
 
+#: server/apps/forum/models/comment.py
+msgid "Comment Answer"
+msgstr "Відповідь на коментар"
+
+#: server/apps/forum/models/comment.py
+msgid "Comment Answers"
+msgstr "Відповіді на коментарі"
+
 #: server/apps/forum/templates/base_articles.html
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/apps/theorist_chat/templates/chat.html
@@ -199,6 +228,37 @@ msgstr "Ви дизлайкнули цей пост."
 #: server/apps/theorist_notifications/templates/base_notifications.html
 msgid "Loading..."
 msgstr "Завантаження..."
+
+#: server/apps/forum/templates/comments/answers/answer_list.html
+msgid "Are you sure you want to delete this answer?"
+msgstr "Ви впевнені, що хочете видалити цю відповідь?"
+
+#: server/apps/forum/templates/comments/answers/answer_list.html
+msgid "answers"
+msgstr "відповіді"
+
+#: server/apps/forum/templates/comments/answers/answer_list.html
+msgid "answer"
+msgstr "відповідь"
+
+#: server/apps/forum/templates/comments/answers/answer_list.html
+#, python-format
+msgid "Show more %(more_objects)s %(pluralized)s"
+msgstr "Показати ще %(more_objects)s %(pluralized)s"
+
+#: server/apps/forum/templates/comments/answers/answer_list.html
+#: server/apps/forum/templates/comments/answers/partials/answer_block_create.html
+msgid "Add an answer"
+msgstr "Додати відповідь"
+
+#: server/apps/forum/templates/comments/answers/partials/answer_block_create.html
+msgid "Also notify post author about this answer"
+msgstr "Також повідомити автора поста про цю відповідь"
+
+#: server/apps/forum/templates/comments/answers/partials/answer_block_create.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "Cancel"
+msgstr "Відміна"
 
 #: server/apps/forum/templates/comments/partials/comment_block_create.html
 msgid "Add comment"
@@ -711,10 +771,6 @@ msgstr "Очікування..."
 #, python-format
 msgid "Are you sure you want to cancel your friendship request to %(name)s?"
 msgstr "Ви впевнені, що хочете відмінити запит на дружбу з %(name)s?"
-
-#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
-msgid "Cancel"
-msgstr "Відміна"
 
 #: server/apps/theorist/templates/friendship/partials/public_lists/rejected_list.html
 msgid "Rejected in friendship"
@@ -1693,6 +1749,15 @@ msgstr "Декілька хвилин назад"
 #: server/common/utils/helpers.py
 msgid "5 minutes ago"
 msgstr "5 хвилин назад"
+
+#: server/common/utils/helpers.py
+msgid "Unknown user"
+msgstr ""
+
+#: server/common/utils/helpers.py
+#, python-brace-format
+msgid "Unknown {obj}"
+msgstr ""
 
 #: server/templates/403.html
 msgid "Error"

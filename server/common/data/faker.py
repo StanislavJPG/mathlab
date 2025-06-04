@@ -1,4 +1,4 @@
-from server.apps.forum.factories import PostFactory, CommentFactory
+from server.apps.forum.factories import PostFactory, CommentFactory, CommentAnswerFactory
 from server.apps.theorist.factories import TheoristFactory, TheoristFriendshipFactory
 from server.apps.theorist_chat.factories import TheoristChatRoomFactory
 from server.apps.theorist_drafts.factories import TheoristDraftsFactory
@@ -49,6 +49,12 @@ class FakeDataGenerator(BaseFakeDataGenerator):
     @classmethod
     def generate_fake_comments(cls, iterations: int = 1, **kwargs):
         return cls._base_generator(factory_class=CommentFactory, iterations=iterations, label='comments', **kwargs)
+
+    @classmethod
+    def generate_fake_comment_answers(cls, iterations: int = 1, **kwargs):
+        return cls._base_generator(
+            factory_class=CommentAnswerFactory, iterations=iterations, label='comment answers', **kwargs
+        )
 
     @classmethod
     def generate_fake_chat_rooms(cls, iterations: int = 1, **kwargs):

@@ -23,7 +23,7 @@ class TheoristNotification(UUIDModelMixin, AbstractNotification):
         actor_display_name=None,
         target_display_name=None,
     ):
-        _props = self._important_props_create(request_theorist or self.recipient.theorist)
+        _props = self._important_props_assign(request_theorist or self.recipient.theorist)
         update_fields = [*_props]
         if action_url:
             self.action_url = action_url
@@ -37,8 +37,8 @@ class TheoristNotification(UUIDModelMixin, AbstractNotification):
 
         self.save(update_fields=update_fields)
 
-    def _important_props_create(self, theorist):
-        """create important props and return tuple of changed fields"""
+    def _important_props_assign(self, theorist):
+        """assign important props and return tuple of changed fields"""
         self.theorist = theorist
         return ('theorist',)
 

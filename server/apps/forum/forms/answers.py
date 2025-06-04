@@ -18,7 +18,7 @@ class CommentAnswerCreateForm(forms.ModelForm):
             'text_body': TinyMCE(
                 attrs={'cols': 30, 'rows': 30, 'placeholder': _('Type your answer here')},
                 mce_attrs={
-                    'toolbar': 'undo redo | formatselect | eqneditor',
+                    'toolbar': 'undo redo | formatselect | eqneditor | bold italic backcolor',
                 },
             )
         }
@@ -28,6 +28,7 @@ class CommentAnswerCreateForm(forms.ModelForm):
         self.comment = kwargs.pop('comment')
         super().__init__(*args, **kwargs)
         self.instance.theorist = self.theorist
+        self.instance.comment = self.comment
 
     def clean(self):
         cleaned_data = super().clean()
@@ -54,9 +55,6 @@ class CommentAnswerCreateForm(forms.ModelForm):
 
     @transaction.atomic
     def save(self, commit=True):
-        instance = super().save(commit=False)
-        if commit:
-            instance.save()
-            self.comment.answers.add(instance)
-            self._process_notifications(instance=self.comment)
+        instance = super().save(commit)
+        self._process_notifications(instance=instance.comment)
         return instance

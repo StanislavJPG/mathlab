@@ -37,3 +37,13 @@ class CommentFactory(factory.django.DjangoModelFactory):
 
     post = factory.Iterator(Post.objects.all())
     theorist = factory.SubFactory(TheoristFactory)
+
+
+class CommentAnswerFactory(factory.django.DjangoModelFactory):
+    class Meta:
+        model = 'forum.CommentAnswer'
+
+    text_body = factory.Faker('text', max_nb_chars=400)
+
+    comment = factory.SubFactory(CommentFactory)
+    theorist = factory.SubFactory(TheoristFactory)

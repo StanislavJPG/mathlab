@@ -62,7 +62,8 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
 
     @hook(BEFORE_CREATE)
     def before_create(self):
-        self.theorist_full_name = self.theorist.full_name
+        if hasattr(self.theorist, 'full_name'):
+            self.theorist_full_name = self.theorist.full_name
 
     @hook(AFTER_SAVE)
     def after_save(self):

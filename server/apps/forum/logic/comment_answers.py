@@ -1,13 +1,13 @@
 from braces.views import FormMessagesMixin
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
-from django.views.generic import DetailView, CreateView
+from django.views.generic import DetailView, CreateView, DeleteView
 from django.views.generic.list import MultipleObjectMixin
 from django.utils.translation import gettext_lazy as _
 from django_htmx.http import trigger_client_event
 
 from server.apps.forum.forms.answers import CommentAnswerCreateForm
-from server.apps.forum.models.comment import Comment
+from server.apps.forum.models.comment import Comment, CommentAnswer
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
@@ -48,7 +48,7 @@ class CommentAnswerCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin
     form_class = CommentAnswerCreateForm
     template_name = 'comments/answers/partials/answer_block_create.html'
     slug_field = 'uuid'
-    slug_url_kwarg = 'uuid'
+    slug_url_kwarg = 'comment_uuid'
     form_valid_message = _('Your answer has been added.')
     form_invalid_message = _('Error. Please, check your input and try again.')
 
@@ -67,6 +67,27 @@ class CommentAnswerCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin
     def form_valid(self, form):
         form.save()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
+        response = HttpResponse()
+        trigger_client_event(response, 'answerBlockChanged')
+        return response
+
+
+class CommentAnswerDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, DeleteView):
+    model = CommentAnswer
+    template_name = 'comments/answers/answer_list.html'
+    slug_field = 'uuid'
+    slug_url_kwarg = 'uuid'
+    form_valid_message = _('Your answer has been deleted.')
+    form_invalid_message = _('Error. Please, check your input and try again.')
+
+    def get_queryset(self):
+        return super().get_queryset().filter(theorist=self.request.theorist)
+
+    def get_success_url(self):
+        return None
+
+    def delete(self, *args, **kwargs):
+        super().delete(*args, **kwargs)
         response = HttpResponse()
         trigger_client_event(response, 'answerBlockChanged')
         return response

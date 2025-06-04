@@ -20,17 +20,13 @@ class HXCommentAnswerDetailView(HXViewMixin, MultipleObjectMixin, DetailView):
     slug_url_kwarg = 'uuid'
     paginate_by = 3
 
+    def paginate_queryset(self, queryset, page_size):
+        if self._show_all_objects():  # show all queryset when ?show=all param is passed
+            return None, None, queryset, False  # keep paginate_queryset() return's pattern
+        return super().paginate_queryset(queryset, page_size)
+
     def _show_all_objects(self):
         return self.request.GET.get('show') == 'all'
-
-    def paginate_queryset(self, queryset, page_size):
-        paginated = super().paginate_queryset(queryset, page_size)
-        page_kwarg = self.page_kwarg
-        page = self.kwargs.get(page_kwarg) or self.request.GET.get(page_kwarg) or 1
-        if int(page) >= 1 and not self._show_all_objects():
-            return paginated
-
-        return None, None, queryset, False
 
     def get_context_data(self, **kwargs):
         self.object = self.get_object()

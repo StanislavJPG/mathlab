@@ -10,6 +10,7 @@ from slugify import slugify
 
 from server.apps.forum.managers import PostQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
+from server.common.utils.defaults import get_default_nonexistent_label
 
 
 class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin):
@@ -64,6 +65,8 @@ class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin)
     def before_create(self):
         if hasattr(self.theorist, 'full_name'):
             self.theorist_full_name = self.theorist.full_name
+        else:
+            self.theorist_full_name = get_default_nonexistent_label()
 
     @hook(AFTER_SAVE)
     def after_save(self):

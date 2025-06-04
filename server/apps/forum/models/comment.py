@@ -14,7 +14,7 @@ from django_lifecycle import (
     BEFORE_CREATE,
 )
 
-from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY, COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
+from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
 from server.apps.forum.managers import CommentQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.defaults import get_default_nonexistent_label
@@ -23,6 +23,7 @@ from server.common.utils.paginator import page_resolver
 
 class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     MAX_ANSWERS_LIMIT: Final[int] = 30
+    COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT: Final[int] = 30
 
     comment = models.TextField('comment', max_length=2000)
 
@@ -78,6 +79,8 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def before_create(self):
         if hasattr(self.theorist, 'full_name'):
             self.theorist_full_name = self.theorist.full_name
+        else:
+            self.theorist_full_name = get_default_nonexistent_label()
 
     @hook(AFTER_CREATE)
     def comments_count_hook(self):
@@ -91,13 +94,13 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.post.save(update_fields=['comments_quantity'])
 
     @property
-    def check_answers_limitation(self):
+    def check_is_answers_limitation(self):
         return self.answers.count() <= self.MAX_ANSWERS_LIMIT
 
     @property
     def is_able_to_get_answers(self) -> bool:
-        time_limitations = (timezone.now() - self.created_at).days <= COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
-        objects_limitations = self.check_answers_limitation
+        time_limitations = (timezone.now() - self.created_at).days <= self.COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
+        objects_limitations = self.check_is_answers_limitation
         return time_limitations and objects_limitations
 
 

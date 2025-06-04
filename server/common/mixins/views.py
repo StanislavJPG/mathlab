@@ -8,6 +8,7 @@ from django.views.decorators.cache import cache_page
 from django.views.generic import DetailView
 from typing_extensions import assert_never
 
+from server.common.enums import bool_enum
 from server.common.http import AuthenticatedHttpRequest
 from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_COLORS,
@@ -66,6 +67,9 @@ class AvatarDetailViewMixin(DetailView):
         return self.avatar_colors
 
     def get_avatar_square(self):
+        request_square = self.request.GET.get('square', False)
+        if request_square == bool_enum.TRUE.value:
+            return True
         return self.avatar_square
 
     def get(self, request, *args, **kwargs):

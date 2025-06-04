@@ -118,7 +118,7 @@ class AvatarModelMixin(models.Model):
 
         return (
             f'<img src="{avatar_url}" width="{size[0]}" height="{size[1]}" '
-            f'alt="avatar" class="{"rounded-circle" if not square else "squared"}">'
+            f'alt="avatar" class="{"rounded-circle" if not square else "squared rounded"}">'
         )
 
     def drop_avatar_to_default(self):

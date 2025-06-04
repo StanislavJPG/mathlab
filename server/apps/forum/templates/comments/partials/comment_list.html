@@ -1,19 +1,19 @@
 {% load i18n static widget_tweaks urls %}
 
+<hr class="mb-5 text-secondary">
 <div id="comment-list-body-js"
      hx-get="{{ request.get_full_path }}"
      hx-trigger="commentBlockChanged from:body delay:0.6s"
 >
   {% for comment in comments %}
-    <hr/>
     <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url comment 'comment' %}">
       <div class="row">
         <div class="d-flex flex-column flex-md-row list-inline text-muted small text-start justify-content-between">
           <div>
             <div class="list-inline-item small"><b>{% translate 'Author' %}:</b>
-              <a class="text-decoration-none"
+              <a class="text-decoration-none ms-1 mb-1"
                  target="_blank"
-                 href="{{ comment.theorist.get_absolute_url }}"> {{ comment.theorist_full_name }} </a> {% if comment.theorist %}|{% endif %}
+                 href="{{ comment.theorist.get_absolute_url }}">{% get_instance_avatar comment.theorist size=25 is_square=True %} {{ comment.theorist_full_name }} </a> {% if comment.theorist %}|{% endif %}
               <b>{{ comment.theorist.get_rank_display }}</b></div>
             <div class="list-inline-item small"
                  class="span-base">
@@ -133,6 +133,10 @@
               </div>
             {% endblock comment_likes_and_dislikes %}
           </div>
+        </div>
+        <div hx-get="{% url 'forum:hx-comment-answers' comment.uuid %}"
+             hx-trigger="load"
+             hx-target="this">
         </div>
       </div>
     </div>

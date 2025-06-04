@@ -1,5 +1,17 @@
+from server.common.utils.helpers import is_iterable
+
+
 class ExtendedNotificationSignal:
     def send(self, sender, **kwargs):
+        recipients = kwargs.get('recipient')
+        if is_iterable(recipients):
+            for recipient in set(recipients):
+                kwargs['recipient'] = recipient
+                self._process_sending(sender, **kwargs)
+        else:  # keep logic for single recipient notification
+            self._process_sending(sender, **kwargs)
+
+    def _process_sending(self, sender, **kwargs):
         from notifications.signals import notify
 
         self.sender = sender
@@ -36,6 +48,7 @@ class ExtendedNotificationSignal:
                 'verb': kwargs.get('verb', ''),
                 'action_url': kwargs.get('action_url', None),
                 'target_display_name': kwargs.get('target_display_name', None),
+                'public': kwargs.get('public', False),
             }
         )
         return kwargs

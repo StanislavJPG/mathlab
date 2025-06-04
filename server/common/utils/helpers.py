@@ -1,9 +1,9 @@
+import collections
 import random
 import re
 
 import uuid
 
-from django.conf import settings
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 
@@ -21,6 +21,10 @@ def is_valid_uuid(uuid_to_test):
     except ValueError:
         return False
     return True
+
+
+def is_iterable(x):
+    return isinstance(x, collections.abc.Iterable)
 
 
 def limit_nbsp_paragraphs(html: str, max_count: int = 3) -> str:
@@ -51,19 +55,3 @@ def format_relative_time(diff_time):
         return timezone.localtime(diff_time).time()
     else:
         return diff_time
-
-
-def get_icon_for_contenttype_model(contenttype_obj, fail_silently=False):
-    to_return = None
-    try:
-        for instance in settings.MODELS_TO_ICONS:
-            if f'{contenttype_obj.app_label}.{contenttype_obj.model}' == instance[0].lower():
-                to_return = instance[1]
-    except AttributeError:
-        if fail_silently:
-            return None
-        raise TypeError('contenttype_obj must be an instance of ContentType')
-
-    if not to_return and not fail_silently:
-        raise NotImplementedError('Model "{}" not found in `settings.MODELS_TO_ICONS`.'.format(contenttype_obj.model))
-    return to_return

@@ -1631,7 +1631,7 @@ msgstr "Помилка. Будь ласка, перевірте наявніст
 
 #: server/apps/users/logic/auths_actions.py
 msgid "You successfully confirmed your email address."
-msgstr ""
+msgstr "Ви успішно підтвердили Ваш електронний адрес."
 
 #: server/apps/users/logic/auths_actions.py
 msgid "Password reset instruction has sent to your email address."
@@ -1752,12 +1752,12 @@ msgstr "5 хвилин назад"
 
 #: server/common/utils/helpers.py
 msgid "Unknown user"
-msgstr ""
+msgstr "Невідомий користувач"
 
 #: server/common/utils/helpers.py
 #, python-brace-format
 msgid "Unknown {obj}"
-msgstr ""
+msgstr "Невідомий {obj}"
 
 #: server/templates/403.html
 msgid "Error"

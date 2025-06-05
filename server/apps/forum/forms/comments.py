@@ -6,9 +6,10 @@ from tinymce.widgets import TinyMCE
 
 from server.apps.forum.models import Comment
 from server.apps.theorist_notifications.signals import notify
+from server.common.mixins.forms import TinyMCEMediaFormMixin
 
 
-class CommentCreateForm(forms.ModelForm):
+class CommentCreateForm(TinyMCEMediaFormMixin, forms.ModelForm):
     class Meta:
         model = Comment
         fields = ('comment',)
@@ -37,7 +38,7 @@ class CommentCreateForm(forms.ModelForm):
         return instance
 
 
-class CommentUpdateForm(forms.ModelForm):
+class CommentUpdateForm(TinyMCEMediaFormMixin, forms.ModelForm):
     predefined_comment = forms.CharField(widget=TinyMCE(attrs={'cols': 30, 'rows': 30}))
 
     class Meta:

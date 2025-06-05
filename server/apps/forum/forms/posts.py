@@ -3,9 +3,10 @@ from django.utils.translation import gettext_lazy as _
 from tinymce.widgets import TinyMCE
 
 from server.apps.forum.models import Post
+from server.common.mixins.forms import TinyMCEMediaFormMixin
 
 
-class PostCreateForm(forms.ModelForm):
+class PostCreateForm(TinyMCEMediaFormMixin, forms.ModelForm):
     class Meta:
         model = Post
         fields = (
@@ -35,7 +36,7 @@ class PostCreateForm(forms.ModelForm):
         return categories
 
 
-class PostUpdateForm(forms.ModelForm):
+class PostUpdateForm(TinyMCEMediaFormMixin, forms.ModelForm):
     class Meta:
         model = Post
         fields = ('content',)

@@ -6,9 +6,10 @@ from tinymce.widgets import TinyMCE
 
 from server.apps.forum.models.comment import CommentAnswer
 from server.apps.theorist_notifications.signals import notify
+from server.common.mixins.forms import TinyMCEMediaFormMixin
 
 
-class CommentAnswerCreateForm(forms.ModelForm):
+class CommentAnswerCreateForm(TinyMCEMediaFormMixin, forms.ModelForm):
     send_to_post_owner = forms.BooleanField(required=False)
 
     class Meta:

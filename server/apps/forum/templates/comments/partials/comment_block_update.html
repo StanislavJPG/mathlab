@@ -1,6 +1,6 @@
 {% load i18n static widget_tweaks widened_widget_tweaks %}
+
 {{ form.media }}
-<script src="{% static 'js/eqneditor.js' %}"></script>
 
 <form hx-post="{{ request.path }}"
       id="comment-block-update"

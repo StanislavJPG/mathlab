@@ -14,6 +14,7 @@ from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
+from server.common.mixins.forms import TinyMCEMediaFormMixin
 from server.common.utils.helpers import limit_nbsp_paragraphs
 
 
@@ -112,7 +113,7 @@ class MailBoxCreateForm(forms.ModelForm):
         return second_member
 
 
-class MessageMessageSingleForm(forms.Form):
+class MessageMessageSingleForm(TinyMCEMediaFormMixin, forms.Form):
     # this form exists because of this https://github.com/django-blog-zinnia/zinnia-wysiwyg-tinymce/issues/6
     message = forms.CharField(widget=TinyMCE(attrs={'cols': 30, 'rows': 30}), max_length=500, required=True)
 

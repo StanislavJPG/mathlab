@@ -1,8 +1,6 @@
 {% load i18n static widget_tweaks widened_widget_tweaks %}
 
-<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
-<script src="{% static 'django_tinymce/init_tinymce.js' %}"></script>
-<script src="{% static 'js/eqneditor.js' %}"></script>
+{{ form.media }}
 
 <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}" class="row justify-content-center">
   <h1 class="display-6 text-center mb-4">{% translate 'Create your question on forum' %}</h1>

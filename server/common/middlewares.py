@@ -1,4 +1,5 @@
 import json
+import logging
 
 from django.contrib.messages import get_messages
 from django.shortcuts import redirect
@@ -7,7 +8,16 @@ from django.utils.deprecation import MiddlewareMixin
 from django.utils.functional import SimpleLazyObject
 
 from server.apps.theorist.models import Theorist
+from server.common.utils import defaults
 from server.common.utils.urls import is_excluded_path
+
+logger = logging.getLogger(__name__)
+
+
+class RequestLoggingMiddleware(MiddlewareMixin):
+    def process_response(self, request, response):
+        logger.info(defaults.get_default_colored_log(request, response.status_code))
+        return response
 
 
 class HTMXToastMiddleware(MiddlewareMixin):

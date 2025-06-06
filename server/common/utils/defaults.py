@@ -1,5 +1,7 @@
 """Utils for returning default data for keeping similarity in the whole project."""
 
+import inspect
+
 from django.conf import settings
 from django.templatetags.static import static
 
@@ -42,3 +44,43 @@ def get_icon_for_contenttype_model(contenttype_obj, fail_silently=False):
     if not to_return and not fail_silently:
         raise NotImplementedError('Model "{}" not found in `settings.MODELS_TO_ICONS`.'.format(contenttype_obj.model))
     return to_return
+
+
+def get_default_colored_log(request, status_code) -> str:
+    def format_path(cls):
+        path = inspect.getfile(cls)
+        full_view_path = '.'.join(path.split('/')[:-1])[1:] + '.'
+        return full_view_path + cls.__name__
+
+    try:
+        view_class = request.resolver_match.func.view_class
+        view_path = format_path(view_class)
+    except AttributeError:
+        view_path = 'VIEW'
+
+    COLORS = {}
+    COLORS.update(
+        {
+            'GET': '\033[92m',  # Green
+            'POST': '\033[94m',  # Blue
+            'PUT': '\033[93m',  # Yellow
+            'DELETE': '\033[91m',  # Red
+            'PATCH': '\033[95m',  # Magenta
+        }
+    )
+
+    STATUS_COLORS = {
+        200: '\033[92m',  # Green
+        404: '\033[93m',  # Yellow
+        500: '\033[91m',  # Red
+    }
+
+    method = request.method
+    reset = '\033[0m'
+    request_color = COLORS.get(method, reset)
+    status_color = STATUS_COLORS.get(status_code, reset)
+
+    default_logs_pattern = (
+        f'{request_color}{request.method}{reset} | {view_path} - {request.path} - {status_color}{status_code}{reset}'
+    )
+    return default_logs_pattern

@@ -89,9 +89,10 @@ MIDDLEWARE = [
     'django.middleware.locale.LocaleMiddleware',
     # installed packages
     'allauth.account.middleware.AccountMiddleware',
-    'whitenoise.middleware.WhiteNoiseMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',  # todo: remove this
     'django_htmx.middleware.HtmxMiddleware',
     # custom middlewares
+    'server.common.middlewares.RequestLoggingMiddleware',
     'server.common.middlewares.HTMXToastMiddleware',
     'server.common.middlewares.UnifiedRequestMiddleware',
     'server.common.middlewares.OnboardingMiddleware',
@@ -321,11 +322,18 @@ CACHES = {
 
 LOGGING = {
     'version': 1,
-    'disable_existing_loggers': False,
+    'disable_existing_loggers': True,
     'handlers': {
         'console': {
             'class': 'logging.StreamHandler',
             'stream': sys.stdout,
+        },
+    },
+    'loggers': {
+        'server.common.middlewares.RequestLoggingMiddleware': {
+            'handlers': ['console'],
+            'level': 'INFO',
+            'propagate': False,
         },
     },
     'root': {'handlers': ['console'], 'level': 'INFO'},

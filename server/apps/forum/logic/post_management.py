@@ -1,4 +1,5 @@
-from braces.views import LoginRequiredMixin, FormMessagesMixin
+from braces.views import FormMessagesMixin
+from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -15,7 +16,7 @@ class PostCreateBaseView(LoginRequiredMixin, TemplateView):
     template_name = 'posts/create_question_page.html'
 
 
-class PostCreateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, CreateView):
+class PostCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
     model = Post
     template_name = 'posts/partials/create_question_form.html'
     form_class = PostCreateForm

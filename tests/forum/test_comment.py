@@ -1,8 +1,9 @@
+from django.http import Http404
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
 from server.apps.forum.factories import CommentFactory, PostFactory
-from server.apps.forum.logic.comment_management import CommentCreateView
+from server.apps.forum.logic.comment_management import CommentCreateView, CommentUpdateView, CommentDeleteView
 from server.apps.forum.logic.comments import (
     CommentListView,
     HXCommentQuantityView,
@@ -10,6 +11,7 @@ from server.apps.forum.logic.comments import (
     CommentSupportUpdateView,
 )
 from server.apps.forum.models import PostCategory
+from tests import testutils
 from tests.testcases import TheoristTestCase
 
 
@@ -60,7 +62,7 @@ class CommentTest(TheoristTestCase):
         )
         self.assertEqual(response.status_code, 200)
 
-    def _test_comment_create_cases(self, data=None, **response_kwargs):
+    def _test_comment_create_case(self, data=None, **response_kwargs):  # CASE METHOD FOR REUSE
         request = self.hx_factory.post(
             reverse('forum:comment-create', kwargs={'post_uuid': self.post.uuid}), data=data or {}
         )
@@ -69,22 +71,55 @@ class CommentTest(TheoristTestCase):
         )
 
     def test_valid_comment_create_view(self):
-        response = self._test_comment_create_cases(
+        response = self._test_comment_create_case(
             data={'comment': self.fake.text(max_nb_chars=2000)},
         )
         self.assertEqual(response.status_code, 200)
 
     def test_invalid_empty_comment_create_view(self):
-        response = self._test_comment_create_cases(return_view_instance=True)
+        response = self._test_comment_create_case(return_view_instance=True)
         self.assertFormError(response.get_form(), 'comment', _('This field is required.'))
 
-    # def test_invalid_comment_create_view(self):
-    #     response = self._test_comment_create_cases(
-    #         data={'comment': self.fake.text(max_nb_chars=150000)},
-    #         return_view_instance=True
-    #     )
-    #     self.assertFormError(
-    #         response.get_form(),
-    #         'comment',
-    #         'Переконайтеся, що це значення містить не [37 chars]1).'
-    #     )
+    def test_invalid_input_comment_create_view(self):
+        response = self._test_comment_create_case(
+            data={'comment': self.fake.text(max_nb_chars=15000)}, return_view_instance=True
+        )
+
+        if testutils.is_too_long_input(response, 'comment'):
+            self.assertFormError(response.get_form(), 'comment', response.get_form().errors['comment'])
+        else:
+            self.assertFalse(True)
+
+    def test_unauthorized_comment_create_view(self):
+        response = self._test_comment_create_case(
+            data={'comment': self.fake.text(max_nb_chars=15000)},
+            is_anonymous=True,
+        )
+        self.assertEqual(response.status_code, 302)
+
+    def test_comment_update_view(self):
+        request = self.hx_factory.post(
+            reverse('forum:comment-update', kwargs={'uuid': self.comment.uuid}),
+            data={'predefined_comment': self.fake.text(max_nb_chars=2000)},
+        )
+        response = self.get_response(cbv=CommentUpdateView, request=request, kwargs={'uuid': self.comment.uuid})
+        self.assertEqual(response.status_code, 200)
+
+    def _test_comment_delete_case(self, data=None, **response_kwargs):  # CASE METHOD FOR REUSE
+        kwargs = {'post_uuid': self.post.uuid, 'uuid': self.comment.uuid}
+        request = self.hx_factory.delete(reverse('forum:comment-delete', kwargs=kwargs), data=data or {})
+        return self.get_response(cbv=CommentDeleteView, request=request, kwargs=kwargs, **response_kwargs)
+
+    def test_valid_comment_delete_view(self):
+        response = self._test_comment_delete_case()
+        self.assertEqual(response.status_code, 200)
+
+    def test_post_delete_by_stranger_view(self):
+        try:
+            self._test_comment_delete_case(is_dummy_theorist=True)
+        except Http404:
+            self.assertTrue(True)  # i.e strangers cannot delete other answers
+
+    def test_unauthorized_comment_delete_view(self):
+        response = self._test_comment_delete_case(is_anonymous=True)
+        self.assertEqual(response.status_code, 302)

@@ -12,7 +12,7 @@ from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
-class HXCommentAnswerDetailView(HXViewMixin, MultipleObjectMixin, DetailView):
+class HXCommentAnswersView(HXViewMixin, MultipleObjectMixin, DetailView):
     model = Comment
     context_object_name = 'answers'
     template_name = 'comments/answers/answer_list.html'

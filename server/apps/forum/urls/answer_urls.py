@@ -1,7 +1,7 @@
 from django.urls import path
 
 from server.apps.forum.logic.comment_answers import (
-    HXCommentAnswerDetailView,
+    HXCommentAnswersView,
     CommentAnswerCreateView,
     CommentAnswerDeleteView,
 )
@@ -9,7 +9,7 @@ from server.apps.forum.logic.comment_answers import (
 urlpatterns = [
     path(
         'hx/answers/<uuid:uuid>/',
-        HXCommentAnswerDetailView.as_view(),
+        HXCommentAnswersView.as_view(),
         name='hx-comment-answers',
     ),
     path(

@@ -10,7 +10,7 @@ from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
-class CommentCreateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, CreateView):
+class CommentCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
     model = Comment
     template_name = 'comments/partials/comment_block_create.html'
     form_valid_message = _('Your comment has been added.')
@@ -41,7 +41,7 @@ class CommentCreateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, Crea
         return response
 
 
-class CommentUpdateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, UpdateView):
+class CommentUpdateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, UpdateView):
     model = Comment
     template_name = 'comments/partials/comment_block_update.html'
     slug_field = 'uuid'
@@ -62,7 +62,7 @@ class CommentUpdateView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, Upda
         return response
 
 
-class CommentDeleteView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, DeleteView):
+class CommentDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, DeleteView):
     model = Comment
     template_name = 'posts/question_page.html'
     form_valid_message = _('Your comment has been deleted.')

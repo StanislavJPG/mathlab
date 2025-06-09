@@ -1,6 +1,5 @@
 from django.core import exceptions
 from django.http import Http404
-from django.test import RequestFactory
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
 
@@ -34,7 +33,7 @@ class CommentAnswerTest(TheoristTestCase):
         self.assertEqual(response.status_code, 200)
 
     def test_non_htmx_hx_answers_view(self):
-        self.hx_factory = RequestFactory()  # simulate non-htmx request
+        self.hx_factory = self.factory  # simulate non-htmx request
         try:
             self._test_hx_answers_view_case()
         except exceptions.PermissionDenied:

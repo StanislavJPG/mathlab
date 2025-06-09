@@ -39,17 +39,7 @@ class TheoristTestCase(TestCase):
         return_view_instance=False,
         kwargs=None,
     ):
-        self._extend_request_by_attrs(request)
-        if is_anonymous and not is_dummy_user:
-            request.user = AnonymousUser()
-
-        if is_dummy_user:
-            dummy_user = CustomUserFactory.create()
-            request.user = dummy_user
-
-        if is_dummy_theorist:
-            dummy_theorist = TheoristFactory.create()
-            request.theorist = dummy_theorist
+        self._extend_request_by_attrs(request, is_anonymous, is_dummy_user, is_dummy_theorist)
 
         setattr(cbv, 'raise_exception', False)  # return only status codes, not Exceptions
         view = cbv.as_view()
@@ -60,7 +50,24 @@ class TheoristTestCase(TestCase):
 
         return view_instance if return_view_instance else view(request, **(kwargs or {}))
 
-    def _extend_request_by_attrs(self, request) -> None:
+    def _extend_request_by_attrs(
+        self,
+        request,
+        is_anonymous=False,  # for unauthorized testing purposes
+        is_dummy_user=False,  # when we need to use other user than self.user
+        is_dummy_theorist=False,  # when we need to use other theorist than self.theorist
+    ) -> None:
         request.user = self.user
         request.theorist = self.theorist
         request.htmx = HtmxDetails(request)  # because most of the views has HXViewMixin
+
+        if is_anonymous and not is_dummy_user:
+            request.user = AnonymousUser()
+
+        if is_dummy_user:
+            dummy_user = CustomUserFactory.create()
+            request.user = dummy_user
+
+        if is_dummy_theorist:
+            dummy_theorist = TheoristFactory.create()
+            request.theorist = dummy_theorist

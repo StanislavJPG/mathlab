@@ -121,12 +121,12 @@ class HXTheoristDetailsProfileView(HXViewMixin, DetailView):
 
     def get_template_names(self):
         section = self.request.GET.get('section')
-        if section == 'about-me':
-            return 'profile/partials/about_me.html'
-        elif section == 'statistics':
+        if section == 'statistics':
             return 'profile/partials/statistics.html'
         elif section == 'contact-info':
             return 'profile/partials/contact_info.html'
+        else:
+            return 'profile/partials/about_me.html'
 
 
 class TheoristLastActivitiesListView(ListView):

@@ -24,7 +24,7 @@ class TheoristDefaultProfileImageView(CacheMixin, AvatarDetailViewMixin):
     cache_timeout = 120
 
 
-class TheoristAvatarUploadView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, UpdateView):
+class TheoristAvatarUploadView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, UpdateView):
     model = Theorist
     template_name = 'profile/partials/main_information_block.html'
     slug_url_kwarg = 'uuid'
@@ -44,7 +44,7 @@ class TheoristAvatarUploadView(HXViewMixin, LoginRequiredMixin, FormMessagesMixi
         return response
 
 
-class TheoristAvatarDeleteView(HXViewMixin, LoginRequiredMixin, FormMessagesMixin, UpdateView):
+class TheoristAvatarDeleteView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, UpdateView):
     model = Theorist
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'

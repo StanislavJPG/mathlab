@@ -67,9 +67,6 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
         self.full_name_slug = slugify(self.full_name)
         self.save(update_fields=['full_name_slug'], skip_hooks=True)
 
-    def is_theorist_is_blocked(self, theorist):
-        return self.blacklist.blocked_theorists.filter(uuid=theorist.uuid).exists() if theorist else False
-
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly
         self.is_onboarded = True
@@ -78,6 +75,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def deactivate(self):
         self.user.is_active = False
         self.user.save(update_fields=['is_active'])
+
+    def is_theorist_is_blocked(self, theorist):
+        return self.blacklist.blocked_theorists.filter(uuid=theorist.uuid).exists() if theorist else False
 
     @property
     def convenient_last_activity(self):

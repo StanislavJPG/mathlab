@@ -15,6 +15,16 @@ from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
+__all__ = (
+    'TheoristProfileSettingsGeneralView',
+    'TheoristProfilePersonalInfoFormView',
+    'TheoristProfileEmailConfigurationsFormView',
+    'TheoristProfileConfigurationsFormView',
+    'TheoristProfilePasswordFormView',
+    'TheoristProfileDeactivateAccountView',
+)
+
+
 class TheoristProfileSettingsGeneralView(LoginRequiredMixin, TemplateView):
     template_name = 'profile/settings/settings.html'
 

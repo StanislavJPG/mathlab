@@ -1,3 +1,4 @@
+import factory
 from random import choice
 
 from django.contrib.auth.models import AnonymousUser
@@ -14,6 +15,7 @@ from server.apps.users.models import CustomUser
 
 
 class TheoristTestCase(TestCase):
+    django_factory = factory.django
     fake = Faker()
     factory = RequestFactory()
     hx_factory = RequestFactory(headers={'HX-Request': 'true'})

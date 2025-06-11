@@ -70,6 +70,6 @@ class InvalidChatMessageCreateView(LoginRequiredMixin, FormInvalidMessageMixin, 
     form_invalid_message = _('Error. Message was not created because some of participants blocked another.')
 
     def get(self, request, *args, **kwargs):
-        response = HttpResponse()
+        response = HttpResponse(status=405)
         self.messages.error(self.get_form_invalid_message(), fail_silently=True)
         return response

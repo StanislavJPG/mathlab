@@ -1,6 +1,8 @@
 {% load i18n static widget_tweaks %}
 
-{{ form.media }}
+<script src="{% static 'tinymce/tinymce.min.js' %}"></script>
+<script src="{% static 'js/init_tinymce.js' %}"></script>
+<script src="{% static 'js/eqneditor.js' %}"></script>
 
 <div class="d-flex flex-row align-items-center justify-content-between">
   <div class="d-flex flex-row align-items-center">

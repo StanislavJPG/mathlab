@@ -32,7 +32,7 @@ class TheoristFriendshipCreateView(
             if self.request.GET.get('reload_next'):
                 return HttpResponseClientRedirect(self.object.get_absolute_url())
 
-            response = HttpResponse()
+            response = HttpResponse(status=201)
             trigger_client_event(response, 'friendshipBlockChanged')
             return response
         except ValidationError as exc:
@@ -56,7 +56,7 @@ class TheoristAcceptFriendshipView(
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.accept_friendship_request()
-        response = HttpResponse(status=201)
+        response = HttpResponse()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         self.send_notify()
 
@@ -80,7 +80,7 @@ class TheoristRejectFriendshipView(
     def post(self, request, *args, **kwargs):
         self.object = self.get_object()
         self.object.reject_friendship_request()
-        response = HttpResponse(status=201)
+        response = HttpResponse()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         self.send_notify()
 
@@ -116,7 +116,7 @@ class TheoristBrokeUpFriendshipView(LoginRequiredMixin, FormMessagesMixin, HXVie
         self.object = self.get_object()
         self.messages.success(self.get_form_valid_message(), fail_silently=True)
         self.object.delete()
-        response = HttpResponse(status=201)
+        response = HttpResponse()
 
         trigger_client_event(response, 'friendshipBlockChanged')
         return response

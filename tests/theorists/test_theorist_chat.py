@@ -54,23 +54,17 @@ class TestTheoristChat(TheoristTestCase):
 
     def test_mailbox_list_view(self):
         self.client.force_login(self.user)
-        response = self.client.get(reverse('forum:theorist_chat:hx-mailbox-list'), headers={'HX-Request': 'true'})
+        response = self.client.hx_get(reverse('forum:theorist_chat:hx-mailbox-list'))
         self.assertEqual(response.status_code, 200)
 
     def test_chat_messages_list_view(self):
         self.client.force_login(self.user)
-        response = self.client.get(
-            reverse('forum:theorist_chat:hx-chat-list', kwargs={'room_uuid': self.room.uuid}),
-            headers={'HX-Request': 'true'},
-        )
+        response = self.client.hx_get(reverse('forum:theorist_chat:hx-chat-list', kwargs={'room_uuid': self.room.uuid}))
         self.assertEqual(response.status_code, 200)
 
     def test_hx_mailbox_view(self):
         self.client.force_login(self.user)
-        response = self.client.get(
-            reverse('forum:theorist_chat:hx-mailbox', kwargs={'room_uuid': self.room.uuid}),
-            headers={'HX-Request': 'true'},
-        )
+        response = self.client.hx_get(reverse('forum:theorist_chat:hx-mailbox', kwargs={'room_uuid': self.room.uuid}))
         self.assertEqual(response.status_code, 200)
 
     def _test_mailbox_create_view_case(self, data=None, **response_kwargs):  # CASE METHOD FOR REUSE
@@ -78,11 +72,13 @@ class TestTheoristChat(TheoristTestCase):
         return self.get_response(cbv=MailBoxCreateView, request=request, **response_kwargs)
 
     def test_valid_mailbox_create_view(self):
-        theorist = TheoristFactory.create()
+        dummy_theorist = TheoristFactory.create()
         TheoristFriendship.create_friendship_request(
-            from_=self.theorist, to=theorist, status=TheoristFriendshipStatusChoices.ACCEPTED
+            from_=dummy_theorist, to=self.theorist, status=TheoristFriendshipStatusChoices.ACCEPTED
         )
-        response = self._test_mailbox_create_view_case(data={'second_member': theorist.uuid}, return_view_instance=True)
+        response = self._test_mailbox_create_view_case(
+            data={'second_member': dummy_theorist.uuid}, return_view_instance=True
+        )
         self.assertFormError(response.get_form(), 'second_member', [])
 
     def test_empty_input_mailbox_create_view(self):
@@ -157,13 +153,12 @@ class TestTheoristChat(TheoristTestCase):
         self.client.force_login(self.user)
         TheoristDraftsFactory.create(theorist=self.theorist)
         honeypot_field = settings.HONEYPOT_FIELD_NAME
-        response = self.client.post(
+        response = self.client.hx_post(
             reverse(
                 'forum:theorist_chat:share-drafts-via-chat',
                 kwargs={'instance_uuid': self.theorist.drafts_configuration.uuid},
             ),
             data={'receiver': self.dummy_theorist, honeypot_field: ''},
-            headers={'HX-Request': 'true'},
         )
         self.assertEqual(response.status_code, 200)
 
@@ -171,19 +166,17 @@ class TestTheoristChat(TheoristTestCase):
         self.client.force_login(self.user)
         comment = CommentFactory.create(theorist=self.theorist, post=self.post)
         honeypot_field = settings.HONEYPOT_FIELD_NAME
-        response = self.client.post(
+        response = self.client.hx_post(
             reverse('forum:theorist_chat:share-comments-via-chat', kwargs={'instance_uuid': comment.uuid}),
             data={'receiver': self.dummy_theorist, honeypot_field: ''},
-            headers={'HX-Request': 'true'},
         )
         self.assertEqual(response.status_code, 200)
 
     def test_message_post_share_view(self):
         self.client.force_login(self.user)
         honeypot_field = settings.HONEYPOT_FIELD_NAME
-        response = self.client.post(
+        response = self.client.hx_post(
             reverse('forum:theorist_chat:share-posts-via-chat', kwargs={'instance_uuid': self.post.uuid}),
             data={'receiver': self.dummy_theorist, honeypot_field: ''},
-            headers={'HX-Request': 'true'},
         )
         self.assertEqual(response.status_code, 200)

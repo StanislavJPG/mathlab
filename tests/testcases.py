@@ -1,11 +1,14 @@
+import logging
+
 import factory
 from random import choice
 
 from django.contrib.auth.models import AnonymousUser
+from django.test.client import MULTIPART_CONTENT
 from django_countries import Countries
 from django_htmx.middleware import HtmxDetails
 
-from django.test import TestCase, RequestFactory
+from django.test import TestCase, RequestFactory, Client
 from faker import Faker
 
 from server.apps.theorist.factories import TheoristFactory
@@ -14,11 +17,208 @@ from server.apps.users.factories import CustomUserFactory
 from server.apps.users.models import CustomUser
 
 
+logger = logging.getLogger(__name__)
+
+
+class HTMXClient(Client):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.headers = {'HX-Request': 'true'}
+
+    def hx_get(
+        self,
+        path,
+        data=None,
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.get(
+            path,
+            data=None,
+            follow=False,
+            secure=False,
+            headers=self.headers,
+            query_params=None,
+            **extra,
+        )
+
+    def hx_post(
+        self,
+        path,
+        data=None,
+        content_type=MULTIPART_CONTENT,
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.post(
+            path,
+            data=data,
+            content_type=content_type,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_head(
+        self,
+        path,
+        data=None,
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.head(
+            path,
+            data=data,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_options(
+        self,
+        path,
+        data='',
+        content_type='application/octet-stream',
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.options(
+            path,
+            data=data,
+            content_type=content_type,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_put(
+        self,
+        path,
+        data='',
+        content_type='application/octet-stream',
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.put(
+            path,
+            data=data,
+            content_type=content_type,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_patch(
+        self,
+        path,
+        data='',
+        content_type='application/octet-stream',
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.patch(
+            path,
+            data=data,
+            content_type=content_type,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_delete(
+        self,
+        path,
+        data='',
+        content_type='application/octet-stream',
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.delete(
+            path,
+            data=data,
+            content_type=content_type,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+    def hx_trace(
+        self,
+        path,
+        data='',
+        follow=False,
+        secure=False,
+        *,
+        headers=None,
+        query_params=None,
+        **extra,
+    ):
+        if headers:
+            self.headers.update(headers)
+        return self.trace(
+            path,
+            data=data,
+            secure=secure,
+            headers=self.headers,
+            query_params=query_params,
+            **extra,
+        )
+
+
 class TheoristTestCase(TestCase):
     django_factory = factory.django
     fake = Faker()
     factory = RequestFactory()
     hx_factory = RequestFactory(headers={'HX-Request': 'true'})
+    client_class = HTMXClient
 
     def setUp(self):
         self.user = CustomUser.objects.create_user(
@@ -41,6 +241,10 @@ class TheoristTestCase(TestCase):
         return_view_instance=False,
         kwargs=None,
     ):
+        """
+        Actually, not recommended to use this method.
+        Use it only when we need to extend RequestFactory instance by custom attributes.
+        """
         self._extend_request_by_attrs(request, is_anonymous, is_dummy_user, is_dummy_theorist)
 
         setattr(cbv, 'raise_exception', False)  # return only status codes, not Exceptions
@@ -50,7 +254,13 @@ class TheoristTestCase(TestCase):
         view_instance.request = request
         view_instance.kwargs = kwargs or {}
 
-        return view_instance if return_view_instance else view(request, **(kwargs or {}))
+        view_to_return = view(request, **(kwargs or {}))
+        logger.warning(
+            f'{cbv.__name__} test is processing by using `self.factory`. '
+            f'If it is not necessary, use `self.client` instead. - \033[95m{view_to_return.status_code}\033[0m'
+        )
+
+        return view_instance if return_view_instance else view_to_return
 
     def _extend_request_by_attrs(
         self,

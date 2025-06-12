@@ -28,7 +28,7 @@ urlpatterns = [
         name='hx-theorist-friendship',
     ),
     path(
-        'hx/<uuid:uuid>/<str:status>/list/',
+        'hx/<uuid:theorist_uuid>/<str:status>/list/',
         HXTheoristFriendshipListView.as_view(),
         name='hx-theorist-friends-list',
     ),

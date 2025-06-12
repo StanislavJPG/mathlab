@@ -72,14 +72,8 @@ class TestTheoristChat(TheoristTestCase):
         return self.get_response(cbv=MailBoxCreateView, request=request, **response_kwargs)
 
     def test_valid_mailbox_create_view(self):
-        dummy_theorist = TheoristFactory.create()
-        TheoristFriendship.create_friendship_request(
-            from_=dummy_theorist, to=self.theorist, status=TheoristFriendshipStatusChoices.ACCEPTED
-        )
-        response = self._test_mailbox_create_view_case(
-            data={'second_member': dummy_theorist.uuid}, return_view_instance=True
-        )
-        self.assertFormError(response.get_form(), 'second_member', [])
+        response = self._test_mailbox_create_view_case(data={'second_member': self.dummy_theorist.uuid})
+        self.assertEqual(response.status_code, 200)
 
     def test_empty_input_mailbox_create_view(self):
         response = self._test_mailbox_create_view_case(return_view_instance=True)

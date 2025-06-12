@@ -34,20 +34,20 @@ class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
         search_draft = self.request.GET.get('search_draft')
         qs = super().get_queryset()
 
-        if is_valid_uuid(search_draft):
+        if search_draft and is_valid_uuid(search_draft):
             return qs.filter(
                 Q(theorist__drafts_configuration__uuid=search_draft)
                 & (Q(is_public_available=True) | Q(theorist=self.request.theorist))
             )
         return qs.filter(
-            Q(theorist__drafts_configuration__uuid=self.kwargs['uuid'])
+            Q(theorist__drafts_configuration__uuid=self.kwargs['drafts_configuration_uuid'])
             & (Q(is_public_available=True) | Q(theorist=self.request.theorist))
         )
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data()
         search_draft = self.request.GET.get('search_draft')
-        if is_valid_uuid(search_draft):
+        if search_draft and is_valid_uuid(search_draft):
             conf = TheoristDraftsConfiguration.objects.filter(uuid=search_draft).first()
             context['theorist'] = getattr(conf, 'theorist', None)
         else:
@@ -66,7 +66,7 @@ class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListVie
     def get_table_kwargs(self):
         kwargs = super().get_table_kwargs()
         search_draft = self.request.GET.get('search_draft')
-        if search_draft:
+        if search_draft and is_valid_uuid(search_draft):
             theorist = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first().theorist
         else:
             theorist = self.request.theorist

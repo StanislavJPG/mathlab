@@ -216,9 +216,10 @@ class HTMXClient(Client):
 class TheoristTestCase(TestCase):
     django_factory = factory.django
     fake = Faker()
-    factory = RequestFactory()
-    hx_factory = RequestFactory(headers={'HX-Request': 'true'})
     client_class = HTMXClient
+
+    _hx_factory = RequestFactory(headers={'HX-Request': 'true'})
+    _is_factory_used = False
 
     def setUp(self):
         self.user = CustomUser.objects.create_user(
@@ -229,6 +230,24 @@ class TheoristTestCase(TestCase):
         )
         self.theorist.apply_default_onboarding_data()
         self.theorist.save()
+
+    @property
+    def hx_factory(self):
+        self._is_factory_used = True
+        return self._hx_factory
+
+    @property
+    def factory(self):
+        self._is_factory_used = True
+        return RequestFactory()
+
+    @hx_factory.setter
+    def hx_factory(self, val):
+        if not isinstance(val, RequestFactory):
+            raise ValueError('value must be RequestFactory instance')
+
+        self._is_factory_used = True
+        self._hx_factory = val
 
     def get_response(
         self,
@@ -245,6 +264,9 @@ class TheoristTestCase(TestCase):
         Actually, not recommended to use this method.
         Use it only when we need to extend RequestFactory instance by custom attributes.
         """
+        if not self._is_factory_used:
+            raise ValueError('Use `self.factory` as request with `self.get_response()`.')
+
         self._extend_request_by_attrs(request, is_anonymous, is_dummy_user, is_dummy_theorist)
 
         setattr(cbv, 'raise_exception', False)  # return only status codes, not Exceptions
@@ -255,9 +277,11 @@ class TheoristTestCase(TestCase):
         view_instance.kwargs = kwargs or {}
 
         view_to_return = view(request, **(kwargs or {}))
+
         logger.warning(
-            f'{cbv.__name__} test is processing by using `self.factory`. '
-            f'If it is not necessary, use `self.client` instead. - \033[95m{view_to_return.status_code}\033[0m'
+            f'{cbv.__name__} - \033[95m{view_to_return.status_code}\033[0m  '
+            f'\033[93mWARNING: This test was processed by using `self.factory`. '
+            f'If it is not necessary, use `self.client` without extra `self.response()` instead.\033[0m '
         )
 
         return view_instance if return_view_instance else view_to_return

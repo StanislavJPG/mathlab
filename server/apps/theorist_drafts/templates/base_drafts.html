@@ -229,12 +229,11 @@
       const url = new URL(window.location);
       let input_search_value = document.getElementById('id_search_draft').value;
 
-      if (url.searchParams.get("search_draft")) {
-        url.searchParams.delete("search_draft");
-      }
-      url.searchParams.append("search_draft", input_search_value)
-      window.location = url;
+      url.searchParams.set("search_draft", input_search_value); // replaces if exists, adds if not
+
+      window.history.pushState({}, '', url);
     }
+
 
   </script>
 {% endblock page_js %}

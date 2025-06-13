@@ -3,7 +3,7 @@ import functools
 from typing import Callable, TYPE_CHECKING
 
 if TYPE_CHECKING:
-    from server.apps.solvexample.service import MathOperations
+    from server.apps.solvers.service import MathOperations
 
 
 class ToUserFriendlyAppearance:

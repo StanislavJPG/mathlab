@@ -1,6 +1,6 @@
 from django.views.generic import TemplateView
 
-from server.apps.solvexample.service import MathOperations
+from server.apps.solvers.service import MathOperations
 
 
 class PercentsTemplateView(TemplateView):

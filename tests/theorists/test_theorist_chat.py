@@ -67,16 +67,20 @@ class TestTheoristChat(TheoristTestCase):
         response = self.client.hx_get(reverse('forum:theorist_chat:hx-mailbox', kwargs={'room_uuid': self.room.uuid}))
         self.assertEqual(response.status_code, 200)
 
-    def _test_mailbox_create_view_case(self, data=None, **response_kwargs):  # CASE METHOD FOR REUSE
-        request = self.hx_factory.post(reverse('forum:theorist_chat:mailbox-create'), data=data or {})
-        return self.get_response(cbv=MailBoxCreateView, request=request, **response_kwargs)
-
     def test_valid_mailbox_create_view(self):
-        response = self._test_mailbox_create_view_case(data={'second_member': self.dummy_theorist.uuid})
+        self.client.force_login(self.user)
+        mailboxes_before_count = TheoristChatRoom.objects.all().count()
+        response = self.client.hx_post(
+            reverse('forum:theorist_chat:mailbox-create'), data={'second_member': self.dummy_theorist.uuid}
+        )
+        mailboxes_after_count = TheoristChatRoom.objects.all().count()
+        self.assertEqual(mailboxes_after_count - mailboxes_before_count, 1)
         self.assertEqual(response.status_code, 200)
 
     def test_empty_input_mailbox_create_view(self):
-        response = self._test_mailbox_create_view_case(return_view_instance=True)
+        request = self.hx_factory.post(reverse('forum:theorist_chat:mailbox-create'))
+        response = self.get_response(cbv=MailBoxCreateView, request=request, return_view_instance=True)
+
         self.assertFormError(response.get_form(), 'second_member', _('This field is required.'))
 
     def test_mailbox_create_from_profile_view(self):

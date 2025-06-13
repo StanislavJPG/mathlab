@@ -67,7 +67,7 @@ INSTALLED_APPS = [
     'server.apps.forum.apps.ForumConfig',
     'server.apps.graphbuilder.apps.GraphbuilderConfig',
     'server.apps.math_news.apps.MathNewsConfig',
-    'server.apps.solvexample.apps.SolvexampleConfig',
+    'server.apps.solvers.apps.SolversConfig',
     'server.apps.theorist.apps.TheoristConfig',
     'server.apps.theorist_notifications.apps.TheoristNotificationsConfig',
     'server.apps.users.apps.UsersConfig',

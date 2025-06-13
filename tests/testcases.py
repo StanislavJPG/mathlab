@@ -40,11 +40,11 @@ class HTMXClient(Client):
             self.headers.update(headers)
         return self.get(
             path,
-            data=None,
-            follow=False,
-            secure=False,
+            data=data,
+            follow=follow,
+            secure=secure,
             headers=self.headers,
-            query_params=None,
+            query_params=query_params,
             **extra,
         )
 
@@ -67,6 +67,7 @@ class HTMXClient(Client):
             data=data,
             content_type=content_type,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -89,6 +90,7 @@ class HTMXClient(Client):
             path,
             data=data,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -113,6 +115,7 @@ class HTMXClient(Client):
             data=data,
             content_type=content_type,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -137,6 +140,7 @@ class HTMXClient(Client):
             data=data,
             content_type=content_type,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -161,6 +165,7 @@ class HTMXClient(Client):
             data=data,
             content_type=content_type,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -185,6 +190,7 @@ class HTMXClient(Client):
             data=data,
             content_type=content_type,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -207,6 +213,7 @@ class HTMXClient(Client):
             path,
             data=data,
             secure=secure,
+            follow=follow,
             headers=self.headers,
             query_params=query_params,
             **extra,
@@ -265,7 +272,7 @@ class TheoristTestCase(TestCase):
         Use it only when we need to extend RequestFactory instance by custom attributes.
         """
         if not self._is_factory_used:
-            raise ValueError('Use `self.factory` as request with `self.get_response()`.')
+            raise ValueError('Use `self.factory` or `self.hx_factory` as request with `self.get_response()`.')
 
         self._extend_request_by_attrs(request, is_anonymous, is_dummy_user, is_dummy_theorist)
 
@@ -280,7 +287,7 @@ class TheoristTestCase(TestCase):
 
         logger.warning(
             f'{cbv.__name__} - \033[95m{view_to_return.status_code}\033[0m  '
-            f'\033[93mWARNING: This test was processed by using `self.factory`. '
+            f'\033[93mWARNING: This test was processed by using `self.factory` or `self.hx_factory`. '
             f'If it is not necessary, use `self.client` without extra `self.response()` instead.\033[0m '
         )
 

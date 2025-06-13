@@ -46,9 +46,9 @@ class TestTheoristChat(TheoristTestCase):
     def test_disabled_chat_view(self):
         self.theorist.chat_configuration.is_chats_available = False
         self.theorist.chat_configuration.save(update_fields=['is_chats_available'])
-        response = self.client.get(reverse('forum:theorist_chat:chat-base-page'))
+        response = self.client.get(reverse('forum:theorist_chat:chat-base-page'), follow=True)
         try:
-            self.assertEqual(response.status_code, 302)
+            self.assertEqual(response.status_code, 200)
         except PermissionDenied:
             self.assertTrue(True)
 

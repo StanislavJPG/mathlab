@@ -1,4 +1,3 @@
-from django.core.validators import MinLengthValidator
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -11,13 +10,14 @@ from slugify import slugify
 from server.apps.theorist.querysets import TheoristQuerySet
 from server.common.data.generate_initials import GenerateInitials
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin, RankSystemModelMixin, AvatarModelMixin
+from server.common.validators import username_validators
 
 
 class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystemModelMixin, AvatarModelMixin):
     """Model for business logic of web-site user. User model uses only for auth purposes."""
 
     # personal info
-    full_name = models.CharField(max_length=150, validators=[MinLengthValidator(limit_value=6)])
+    full_name = models.CharField(max_length=150, validators=username_validators)
     country = CountryField(blank_label=_('Country'), null=True)
     about_me = models.TextField(_('About me'), blank=True)
 

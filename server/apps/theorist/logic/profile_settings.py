@@ -15,6 +15,16 @@ from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
+__all__ = (
+    'TheoristProfileSettingsGeneralView',
+    'TheoristProfilePersonalInfoFormView',
+    'TheoristProfileEmailConfigurationsFormView',
+    'TheoristProfileConfigurationsFormView',
+    'TheoristProfilePasswordFormView',
+    'TheoristProfileDeactivateAccountView',
+)
+
+
 class TheoristProfileSettingsGeneralView(LoginRequiredMixin, TemplateView):
     template_name = 'profile/settings/settings.html'
 
@@ -65,7 +75,7 @@ class TheoristProfilePersonalInfoFormView(CaptchaViewMixin, AbstractProfileSetti
         return super().form_valid(form)
 
 
-class TheoristProfileEmailConfigurationsFormView(FormMessagesMixin, EmailView):
+class TheoristProfileEmailConfigurationsFormView(HXViewMixin, FormMessagesMixin, EmailView):
     template_name = 'profile/settings/partials/email_settings.html'
     success_url = reverse_lazy('forum:theorist_profile:settings:theorist-profile-settings')
 
@@ -84,8 +94,6 @@ class TheoristProfilePasswordFormView(
     LoginRequiredMixin, FormMessagesMixin, HXViewMixin, CaptchaViewMixin, PasswordChangeView
 ):
     template_name = 'profile/settings/partials/password.html'
-    slug_url_kwarg = 'uuid'
-    slug_field = 'uuid'
     form_class = CustomPasswordChangeForm
     form_valid_message = _('You successfully changed your password!')
     form_invalid_message = _('Error. Please, check your input and try again.')

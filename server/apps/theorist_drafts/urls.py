@@ -17,8 +17,16 @@ app_name = 'drafts'
 
 urlpatterns = [
     path('drafts/', TheoristDraftsBaseTemplateView.as_view(), name='base-drafts'),
-    path('drafts/album/<uuid:uuid>/', TheoristDraftsAlbumListView.as_view(), name='drafts-album-list'),
-    path('drafts/table/<uuid:uuid>/', TheoristDraftsTableListView.as_view(), name='drafts-table-list'),
+    path(
+        'drafts/album/<uuid:drafts_configuration_uuid>/',
+        TheoristDraftsAlbumListView.as_view(),
+        name='drafts-album-list',
+    ),
+    path(
+        'drafts/table/<uuid:drafts_configuration_uuid>/',
+        TheoristDraftsTableListView.as_view(),
+        name='drafts-table-list',
+    ),
     path('hx/drafts/search/', HXTheoristDraftsSearchView.as_view(), name='drafts-search'),
     path('drafts/create/', TheoristDraftCreateView.as_view(), name='drafts-create'),
     path('drafts/update/<uuid:uuid>/', TheoristDraftUpdateView.as_view(), name='drafts-edit'),

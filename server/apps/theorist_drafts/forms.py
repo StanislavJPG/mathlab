@@ -22,6 +22,7 @@ class TheoristDraftCreateForm(forms.ModelForm):
         self.theorist = kwargs.pop('theorist')
         super().__init__(*args, **kwargs)
         self.instance.theorist = self.theorist
+        self.fields['is_public_available'].initial = True
 
     def clean_draft(self):
         draft = self.cleaned_data.get('draft')

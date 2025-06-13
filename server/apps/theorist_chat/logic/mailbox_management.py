@@ -47,7 +47,7 @@ class MailBoxCreateView(LoginRequiredMixin, ChatConfigurationRequiredMixin, Form
         return response
 
 
-class MailBoxCreateFromProfile(
+class MailBoxCreateFromProfileView(
     LoginRequiredMixin, ChatConfigurationRequiredMixin, FormMessagesMixin, HXViewMixin, DetailView
 ):
     model = Theorist

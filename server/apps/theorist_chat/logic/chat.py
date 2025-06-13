@@ -134,7 +134,8 @@ class HXMailBoxView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMi
             (Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist))
         ).order_by_last_sms_sent_relevancy()
 
-        if strtobool(self.request.GET.get('show_blocked_chats')) is False:
+        show_blocked_chats_param = self.request.GET.get('show_blocked_chats')
+        if show_blocked_chats_param and strtobool(show_blocked_chats_param) is False:
             objs = objs.exclude(
                 Q(first_member__blacklist__blocked_theorists=F('second_member'))
                 | Q(second_member__blacklist__blocked_theorists=F('first_member'))

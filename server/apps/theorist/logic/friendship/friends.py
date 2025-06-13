@@ -41,14 +41,14 @@ class HXTheoristFriendshipListView(LoginRequiredMixin, HXViewMixin, FilterView):
     def dispatch(self, request, *args, **kwargs):
         if (
             request.user.is_authenticated
-            and request.theorist.uuid != kwargs['uuid']
+            and request.theorist.uuid != kwargs['theorist_uuid']
             and kwargs['status'] in [TheoristFriendshipStatusChoices.REJECTED, TheoristFriendshipStatusChoices.PENDING]
         ):
             return redirect(reverse_lazy('exception:hx-404'))
         return super().dispatch(request, *args, **kwargs)
 
     def get_queryset(self):
-        uuid = self.kwargs['uuid']
+        uuid = self.kwargs['theorist_uuid']
         status = self.get_friendship_status()
         if status == TheoristFriendshipStatusChoices.ACCEPTED:
             filter_query = Q(requester__uuid=uuid) | Q(receiver__uuid=uuid)

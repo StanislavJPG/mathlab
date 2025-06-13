@@ -4,7 +4,7 @@ from server.apps.theorist_chat.logic.chat import ChatView, MailBoxListView, Chat
 from server.apps.theorist_chat.logic.mailbox_management import (
     MailBoxDeleteView,
     MailBoxCreateView,
-    MailBoxCreateFromProfile,
+    MailBoxCreateFromProfileView,
 )
 from server.apps.theorist_chat.logic.message_management import (
     InvalidChatMessageCreateView,
@@ -25,7 +25,7 @@ urlpatterns = [
     path('mailbox/create/', MailBoxCreateView.as_view(), name='mailbox-create'),
     path(
         'mailbox/<uuid:theorist_uuid>/from-profile-create/',
-        MailBoxCreateFromProfile.as_view(),
+        MailBoxCreateFromProfileView.as_view(),
         name='mailbox-create-from-profile',
     ),
     path('mailbox/<uuid:uuid>/delete/', MailBoxDeleteView.as_view(), name='mailbox-delete'),

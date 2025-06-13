@@ -60,13 +60,10 @@ class TheoristFriendship(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.status_changed_at = timezone.now()
 
     @classmethod
-    def create_friendship_request(cls, from_: 'Theorist', to: 'Theorist'):
+    def create_friendship_request(cls, from_: 'Theorist', to: 'Theorist', **kwargs):
         if from_ in to.blacklist.blocked_theorists.all():
             raise ValidationError(_('Error. You have been blocked by %s!') % to.full_name)
-        return cls.objects.create(
-            requester=from_,
-            receiver=to,
-        )
+        return cls.objects.create(requester=from_, receiver=to, **kwargs)
 
     def accept_friendship_request(self):
         self.status = self.PredefinedFriendship.ACCEPTED

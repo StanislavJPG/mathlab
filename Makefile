@@ -1,3 +1,4 @@
+.PHONY: test
 
 # for docker
 up:
@@ -22,3 +23,6 @@ js-makemessages:
 compilemessages:
 	python manage.py compilemessages
 
+# for testing
+test:
+	python manage.py test ${tests}

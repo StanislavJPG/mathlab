@@ -34,7 +34,7 @@ urlpatterns = [
         name='hx-profile-email-configurations-form',
     ),
     path(
-        'password/<uuid:uuid>/',
+        'password/',
         TheoristProfilePasswordFormView.as_view(),
         name='hx-profile-password-form',
     ),

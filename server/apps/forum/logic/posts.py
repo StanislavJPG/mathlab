@@ -147,7 +147,7 @@ class HXPostLikesAndDislikesView(LoginRequiredMixin, RatedFormMessagesMixin, HXV
         return response
 
 
-class PostSupportUpdateView(LoginRequiredMixin, DetailView):
+class PostSupportUpdateView(LoginRequiredMixin, HXViewMixin, DetailView):
     model = Post
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'

@@ -3,6 +3,7 @@ from typing import Final
 from django.contrib.postgres.fields import ArrayField
 from django.db import models
 from django_lifecycle import hook, AFTER_CREATE, LifecycleModel
+from django.utils.translation import gettext_lazy as _
 
 from server.apps.carousel.querysets import CarouselQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
@@ -28,6 +29,11 @@ class Carousel(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     )
 
     objects = CarouselQuerySet.as_manager()
+
+    class Meta:
+        ordering = ('-pk',)
+        verbose_name = _('Carousel')
+        verbose_name_plural = _('Carousels')
 
     def __str__(self):
         return f'{self.title} | {self.__class__.__name__} | id - {self.id}'

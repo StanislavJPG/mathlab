@@ -36,7 +36,7 @@ git clone https://github.com/StanislavJPG/mathlab.git
 **Then run in console:**
 * ```./manage.py migrate``` - to apply all the migrations in DB.
 * ```./manage.py loaddata post_categories``` - to create the categories in database.
-* ```./manage.py load data mathlab_carousels``` - to create carousel info
+* ```./manage.py loaddata mathlab_carousels``` - to create carousel info
 * ```./manage.py createsuperuser``` - to create your own superuser (which is designed only for auth purposes).
 
 After superuser creation make sure that you have registered 

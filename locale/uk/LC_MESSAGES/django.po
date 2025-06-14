@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-14 11:56+0300\n"
+"POT-Creation-Date: 2025-06-14 12:43+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -19,6 +19,14 @@ msgstr ""
 "11 ? 0 : n % 1 == 0 && n % 10 >= 2 && n % 10 <= 4 && (n % 100 < 12 || n % "
 "100 > 14) ? 1 : n % 1 == 0 && (n % 10 ==0 || (n % 10 >=5 && n % 10 <=9) || "
 "(n % 100 >=11 && n % 100 <=14 )) ? 2: 3);\n"
+
+#: server/apps/carousel/models.py
+msgid "Carousel"
+msgstr "Карусель"
+
+#: server/apps/carousel/models.py
+msgid "Carousels"
+msgstr "Каруселі"
 
 #: server/apps/forum/choices.py
 msgid "Graph Functions"
@@ -1672,7 +1680,9 @@ msgstr "нікнейм"
 
 #: server/apps/users/models.py
 msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
-msgstr "Це поле є обов'язковим. 150 символів або менше. Літери, цифри, або @/./+/-/_ тільки."
+msgstr ""
+"Це поле є обов'язковим. 150 символів або менше. Літери, цифри, або @/./+/-/_ "
+"тільки."
 
 #: server/apps/users/models.py
 msgid "A user with that username already exists."

@@ -460,7 +460,7 @@ msgstr "Закрити"
 
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid "Equation solving example"
-msgstr ""
+msgstr "Приклад розв'язування рівнянь"
 
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid ""
@@ -469,10 +469,14 @@ msgid ""
 "target=\"_blank\">CortexJS!</a></em>\n"
 "        "
 msgstr ""
+"\n"
+"          <em>P.S. Вдячність до <a href=\"https://cortexjs.io/\" "
+"target=\"_blank\">CortexJS!</a></em>\n"
+"        "
 
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid "Got it!"
-msgstr ""
+msgstr "Зрозуміло!"
 
 #: server/apps/theorist/choices.py
 msgid "Junior mathematician"

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-04 17:58+0300\n"
+"POT-Creation-Date: 2025-06-14 11:56+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -444,6 +444,35 @@ msgstr "Останні новини зі світу Математики"
 #: server/apps/math_news/templates/partials/news_list.html
 msgid "Read from origin"
 msgstr "Читати з першоджерела"
+
+#: server/apps/solvers/templates/partials/equations_modals.html
+msgid "Equations solver"
+msgstr "Розв'язувач рівнянь"
+
+#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Close"
+msgstr "Закрити"
+
+#: server/apps/solvers/templates/partials/equations_modals.html
+msgid "Equation solving example"
+msgstr ""
+
+#: server/apps/solvers/templates/partials/equations_modals.html
+msgid ""
+"\n"
+"          <em>P.S. Thanks to <a href=\"https://cortexjs.io/\" "
+"target=\"_blank\">CortexJS!</a></em>\n"
+"        "
+msgstr ""
+
+#: server/apps/solvers/templates/partials/equations_modals.html
+msgid "Got it!"
+msgstr ""
 
 #: server/apps/theorist/choices.py
 msgid "Junior mathematician"
@@ -1212,14 +1241,6 @@ msgid "Create chat with..."
 msgstr "Створити чат з..."
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Close"
-msgstr "Закрити"
-
-#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create"
 msgstr "Створити"
 
@@ -1642,6 +1663,18 @@ msgid "You have changed your password successfully. Now your can log in."
 msgstr "Ви успішно змінили Ваш пароль. Тепер Ви можете увійти."
 
 #: server/apps/users/models.py
+msgid "username"
+msgstr "нікнейм"
+
+#: server/apps/users/models.py
+msgid "Required. 150 characters or fewer. Letters, digits and @/./+/-/_ only."
+msgstr "Це поле є обов'язковим. 150 символів або менше. Літери, цифри, або @/./+/-/_ тільки."
+
+#: server/apps/users/models.py
+msgid "A user with that username already exists."
+msgstr "Здається, користувач з таким нікнеймом вже існує."
+
+#: server/apps/users/models.py
 msgid "user"
 msgstr "користувач"
 
@@ -1738,6 +1771,15 @@ msgstr "Капча"
 msgid "Shared content..."
 msgstr "Поширений контент..."
 
+#: server/common/utils/defaults.py
+msgid "Unknown user"
+msgstr "Невідомий користувач"
+
+#: server/common/utils/defaults.py
+#, python-brace-format
+msgid "Unknown {obj}"
+msgstr "Невідомий {obj}"
+
 #: server/common/utils/helpers.py
 msgid "Just now"
 msgstr "Тільки що"
@@ -1749,15 +1791,6 @@ msgstr "Декілька хвилин назад"
 #: server/common/utils/helpers.py
 msgid "5 minutes ago"
 msgstr "5 хвилин назад"
-
-#: server/common/utils/helpers.py
-msgid "Unknown user"
-msgstr "Невідомий користувач"
-
-#: server/common/utils/helpers.py
-#, python-brace-format
-msgid "Unknown {obj}"
-msgstr "Невідомий {obj}"
 
 #: server/templates/403.html
 msgid "Error"
@@ -1807,6 +1840,18 @@ msgstr "Наступна"
 msgid "Wait while loading..."
 msgstr "Завантаження, почекайте..."
 
+#: server/templates/partials/badges/theme_switcher.html
+msgid "Light"
+msgstr "Світлий"
+
+#: server/templates/partials/badges/theme_switcher.html
+msgid "Dark"
+msgstr "Темний"
+
+#: server/templates/partials/badges/theme_switcher.html
+msgid "Auto"
+msgstr "Авто"
+
 #: server/templates/partials/forum/forum_navbar.html
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
@@ -1841,24 +1886,8 @@ msgid "This feature in development! Stay tuned with updates!"
 msgstr "Ця фіча ще в розробці! Слідкуй за останніми оновленнями!"
 
 #: server/templates/partials/mathlab/mathlab_navbar.html
-msgid "Solve equation"
-msgstr "Розв'яжи рівняння"
-
-#: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Build a graph"
 msgstr "Побудуй графік"
-
-#: server/templates/partials/theme_switcher.html
-msgid "Light"
-msgstr "Світлий"
-
-#: server/templates/partials/theme_switcher.html
-msgid "Dark"
-msgstr "Темний"
-
-#: server/templates/partials/theme_switcher.html
-msgid "Auto"
-msgstr "Авто"
 
 #: server/templates/tables/bootstrap_htmx.html
 msgid "previous"
@@ -1867,3 +1896,8 @@ msgstr "попередня"
 #: server/templates/tables/bootstrap_htmx.html
 msgid "next"
 msgstr "наступна"
+
+#: tests/forum/test_comment.py tests/forum/test_comment_answer.py
+#: tests/forum/test_post.py tests/theorists/test_theorist_chat.py
+msgid "This field is required."
+msgstr "Це поле є обов'язковим."

@@ -1,10 +1,10 @@
 {% load static i18n %}
 
-<div class="modal fade" data-bs-backdrop="static" id="solverModal">
+<div class="modal fade" id="solverModal">
   <div class="modal-dialog modal-lg modal-dialog-centered">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">{% translate 'Equation solving example' %}</h5>
+        <h5 class="modal-title"><i class="ti ti-calculator"></i> {% translate 'Equations solver' %}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
       </div>
       <div class="modal-body"
@@ -14,7 +14,7 @@
       >
       </div>
       <div class="modal-footer d-flex justify-content-center">
-        <button type="button" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Got it!' %}</button>
+        <button type="button" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Close' %}</button>
       </div>
     </div>
   </div>
@@ -25,7 +25,7 @@
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title">{% translate 'Equation solving example' %}</h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
+        <button type="button" _="on click send click to #solverBtn" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
       </div>
       <div class="modal-body">
         <p>
@@ -36,7 +36,7 @@
         {% endblocktranslate %}
       </div>
       <div class="modal-footer d-flex justify-content-center">
-        <button type="button" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Got it!' %}</button>
+        <button type="button" _="on click send click to #solverBtn" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Got it!' %}</button>
       </div>
     </div>
   </div>

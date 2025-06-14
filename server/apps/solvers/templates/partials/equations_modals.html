@@ -1,0 +1,43 @@
+{% load static i18n %}
+
+<div class="modal fade" id="solverModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-calculator"></i> {% translate 'Equations solver' %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
+      </div>
+      <div class="modal-body"
+           hx-get="{% url 'mathlab:equations' %}"
+           hx-target="this"
+           hx-trigger="load"
+      >
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="equationExampleModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% translate 'Equation solving example' %}</h5>
+        <button type="button" _="on click send click to #solverBtn" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <img src="{% static 'img/math/solver_example.gif' %}" height="100%" width="100%">
+        </p>
+        {% blocktranslate %}
+          <em>P.S. Thanks to <a href="https://cortexjs.io/" target="_blank">CortexJS!</a></em>
+        {% endblocktranslate %}
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" _="on click send click to #solverBtn" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Got it!' %}</button>
+      </div>
+    </div>
+  </div>
+</div>

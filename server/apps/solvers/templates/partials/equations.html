@@ -1,0 +1,37 @@
+{% load static i18n %}
+
+<style>
+  .no-left-radius {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .no-right-radius {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  body {
+    --keyboard-zindex: 3000;
+  }
+</style>
+
+<div class="d-flex justify-content-center flex-row-reverse my-3" style="min-width: 100%;">
+  <button type="button" class="btn btn-secondary no-left-radius" data-bs-toggle="modal" data-bs-target="#equationExampleModal">
+    ?
+  </button>
+  <div class="col-8">
+    <math-field class="form-control no-right-radius" placeholder="x^2 + 15x - 10 = 0"></math-field>
+  </div>
+</div>
+
+<script src="https://unpkg.com/mathlive"></script>
+<script type="module">
+  import {ComputeEngine} from 'https://unpkg.com/@cortex-js/compute-engine?module';
+
+  document.addEventListener("htmx:afterSettle", () => {
+    const engine = new ComputeEngine();
+    document.querySelectorAll("math-field").forEach(field => {
+      field.computeEngine = engine;
+    });
+  });
+</script>

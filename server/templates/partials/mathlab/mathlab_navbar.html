@@ -8,14 +8,6 @@
          aria-current="page">{% translate 'Main page' %}</a>
     </li>
     <li class="nav-item">
-      {# href="{% url 'mathlab:solve-tasks-base' %}" #}
-      <a class="nav-link text-secondary {% if 'solvexample' in request.path %}active{% endif %}"
-         data-bs-toggle="tooltip"
-         data-bs-placement="bottom"
-         title="{% translate 'This feature in development! Stay tuned with updates!' %}"
-      >{% translate 'Solve equation' %}</a>
-    </li>
-    <li class="nav-item">
       {# href="{% url 'mathlab:graphbuilder' %}" #}
       <a class="nav-link text-secondary {% if 'graphbuilder' in request.path %}active{% endif %}"
          data-bs-toggle="tooltip"

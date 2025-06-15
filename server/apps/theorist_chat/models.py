@@ -80,6 +80,7 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         'theorist.Theorist', null=True, blank=True, on_delete=models.SET_NULL, related_name='deleted_messages'
     )
     is_safe_deleted = models.BooleanField(default=False)
+    is_read = models.BooleanField(default=False)
 
     objects = TheoristMessageQueryset.as_manager()
 

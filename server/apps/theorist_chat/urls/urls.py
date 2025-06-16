@@ -10,6 +10,7 @@ from server.apps.theorist_chat.logic.message_management import (
     InvalidChatMessageCreateView,
     ChatMessageSafeDeleteView,
     ChatMessageRestoreAfterSafeDeleteView,
+    HXMarkAllMessagesAsRead,
 )
 from server.apps.theorist_chat.logic.sharing import MessageDraftShareView, MessageCommentShareView, MessagePostShareView
 
@@ -33,6 +34,11 @@ urlpatterns = [
     path('messages/<uuid:uuid>/safe-delete/', ChatMessageSafeDeleteView.as_view(), name='chat-message-safe-delete'),
     path('messages/<uuid:uuid>/restore/', ChatMessageRestoreAfterSafeDeleteView.as_view(), name='chat-message-restore'),
     path('messages/fail-create/', InvalidChatMessageCreateView.as_view(), name='invalid-chat-message-create'),
+    path(
+        'hx/messages/<uuid:room_uuid>/mark-all-read/',
+        HXMarkAllMessagesAsRead.as_view(),
+        name='hx-messages-mark-all-read',
+    ),
     # Share messages views
     path(
         'chat/drafts/<uuid:instance_uuid>/share/',

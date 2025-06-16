@@ -1,4 +1,4 @@
-{% load static i18n avatars widget_tweaks text urls %}
+{% load static i18n avatars widget_tweaks widened_notifications_tags text urls %}
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
   <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
@@ -21,7 +21,7 @@
             data-toast-trigger
             hx-target="#mailboxes-list-js"
             hx-select="#mailboxes-list-js"
-            hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
+            hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s, every 7s, messagesActionMade from:body">
         <div class="d-flex flex-row align-items-center justify-content-between">
           <div class="d-flex flex-column">
             <span class="small text-muted">{% translate 'Last chats' %}:</span>
@@ -60,7 +60,7 @@
                         <p class="fw-bold mb-0">{{ mailbox.second_member.full_name|truncatechars:15 }}</p>
                         <span class="small text-muted">
                           {% if mailbox.messages.last.is_safe_deleted %}
-                            {% translate 'Removed message' %}
+                            <em>{% translate 'Removed message' %}</em>
                           {% else %}
                             {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                           {% endif %}
@@ -73,7 +73,7 @@
                         <p class="fw-bold mb-0">{{ mailbox.first_member.full_name|truncatechars:15 }}</p>
                         <span class="small text-muted">
                           {% if mailbox.messages.last.is_safe_deleted %}
-                            {% translate 'Removed message' %}
+                            <em>{% translate 'Removed message' %}</em>
                           {% else %}
                             {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                           {% endif %}
@@ -93,7 +93,7 @@
                          title="{% translate 'Someone of chat members blocked another.' %}"
                       ></i>
                     {% endif %}
-                    {#                <span class="badge bg-danger float-end">1</span>#}
+                    {% unread_messages_counter mailbox as_html=True %}
                   </div>
                 </div>
               </li>

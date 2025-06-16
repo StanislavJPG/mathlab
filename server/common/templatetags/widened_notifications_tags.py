@@ -1,6 +1,9 @@
+from django.db.models import Q
 from django.template.defaultfilters import register
 from django.urls import reverse
 from django.utils.html import format_html
+
+from server.apps.theorist_chat.models import TheoristMessage
 
 
 # Requires vanilla-js framework - http://vanilla-js.com/
@@ -54,3 +57,13 @@ def widened_register_notify_callbacks(
         script += 'register_notifier(' + callback + ');'
     script += '</script>'
     return format_html(script)
+
+
+@register.simple_tag(name='unread_messages_counter', takes_context=True)
+def get_unread_message_notifications_count(context, mailbox, as_html=False):
+    theorist = context['request'].theorist
+    messages_count = TheoristMessage.objects.filter(~Q(sender=theorist), room=mailbox, is_read=False).count()
+    html_message_count = (
+        format_html(f'<span class="badge bg-danger float-end">{messages_count}</span>') if messages_count > 0 else ''
+    )
+    return html_message_count if as_html else messages_count

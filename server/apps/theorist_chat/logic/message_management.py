@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
-from django_htmx.http import HttpResponseClientRedirect
+from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
 
 from server.apps.theorist_chat.models import TheoristMessage
 from server.apps.theorist_chat.utils import get_mailbox_url
@@ -72,4 +72,14 @@ class InvalidChatMessageCreateView(LoginRequiredMixin, FormInvalidMessageMixin, 
     def get(self, request, *args, **kwargs):
         response = HttpResponse(status=405)
         self.messages.error(self.get_form_invalid_message(), fail_silently=True)
+        return response
+
+
+class HXMarkAllMessagesAsRead(LoginRequiredMixin, HXViewMixin, View):
+    def get(self, request, *args, **kwargs):
+        TheoristMessage.objects.filter(
+            ~Q(sender=self.request.theorist), room__uuid=self.kwargs['room_uuid']
+        ).filter_by_is_unread().mark_messages_as_read()
+        response = HttpResponse()
+        trigger_client_event(response, 'messagesActionMade')
         return response

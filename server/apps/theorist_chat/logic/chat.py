@@ -75,13 +75,20 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
             )
         )
 
-    def get(self, request, *args, **kwargs):
-        room = TheoristChatRoom.objects.filter(uuid=kwargs['room_uuid']).first()
+    def _prepare_on_click(self):
+        """Set default behaviour after mailbox clicking"""
+        room = TheoristChatRoom.objects.filter(uuid=self.kwargs['room_uuid']).first()
         message_ids = list(map(str, room.messages.values_list('id', flat=True)))
         TheoristNotification.objects.filter(
             target_object_id__in=message_ids,
             theorist=self.request.theorist,
         ).unread().mark_all_as_read()
+        TheoristMessage.objects.filter(
+            ~Q(sender=self.request.theorist), room__uuid=self.kwargs['room_uuid']
+        ).filter_by_is_unread().mark_messages_as_read()
+
+    def get(self, request, *args, **kwargs):
+        self._prepare_on_click()
         return super().get(request, *args, **kwargs)
 
     def paginate_queryset(self, queryset, page_size):

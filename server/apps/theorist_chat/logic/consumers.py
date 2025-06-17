@@ -68,6 +68,7 @@ class TheoristChatConsumer(WebsocketConsumer):
         response.update(
             {
                 'theorist_html_actions': self.get_message_actions_as_html_tags(message_obj.uuid),
+                'room_uuid': self.room_group_uuid,
             }
         )
 

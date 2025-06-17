@@ -56,12 +56,11 @@
     </div>
   </div>
 </div>
-<div hx-get="{% url 'forum:theorist_chat:hx-messages-mark-all-read' room_uuid %}" hx-trigger="every 7s" hx-swap="none" hidden></div>
 
 <hr class="mb-4">
 
 <div class="d-flex flex-column" style="height: 88% !important;">
-  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js">
+  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js-{{ mailbox.uuid }}">
     {% if messages.exists %}
       <div id="paginated-msg-list-js" data-skip-scroll>
         {% for message in messages %}
@@ -233,7 +232,7 @@
 
 <script>
   let previousScrollHeight = null;
-  let msgList = document.querySelector('#msg-list-js');
+  let msgList = document.querySelector('#msg-list-js-{{ mailbox.uuid }}');
 
   document.body.addEventListener('htmx:beforeSwap', function (event) {
     if (event.target.id === 'paginated-msg-list-js') {
@@ -257,7 +256,7 @@
     const target = event.detail.elt;
     if (!target.hasAttribute('data-skip-scroll')) {
       setTimeout(() => {
-        var nestedElement = document.getElementById('msg-list-js');
+        var nestedElement = document.getElementById('msg-list-js-{{ mailbox.uuid }}');
         nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
       }, 300)
     }
@@ -281,12 +280,16 @@
     chatSocket.onmessage = function (e) {
       const data = JSON.parse(e.data);
 
+      if (data.room_uuid !== roomUUID) {
+        return;
+      }
+
       const emptyLabel = document.getElementById('empty-label-js');
       if (emptyLabel) {
         emptyLabel.remove()
       }
 
-      const messagesList = document.getElementById('msg-list-js');
+      const messagesList = document.getElementById('msg-list-js-{{ mailbox.uuid }}');
 
       const newMessageItem = document.createElement('li');
       newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');

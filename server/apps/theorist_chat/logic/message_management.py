@@ -5,7 +5,7 @@ from django.http import HttpResponse
 from django.views import View
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import DetailView
-from django_htmx.http import HttpResponseClientRedirect, trigger_client_event
+from django_htmx.http import HttpResponseClientRedirect
 
 from server.apps.theorist_chat.models import TheoristMessage
 from server.apps.theorist_chat.utils import get_mailbox_url
@@ -80,6 +80,4 @@ class HXMarkAllMessagesAsRead(LoginRequiredMixin, HXViewMixin, View):
         TheoristMessage.objects.filter(
             ~Q(sender=self.request.theorist), room__uuid=self.kwargs['room_uuid']
         ).filter_by_is_unread().mark_messages_as_read()
-        response = HttpResponse()
-        trigger_client_event(response, 'messagesActionMade')
-        return response
+        return HttpResponse()

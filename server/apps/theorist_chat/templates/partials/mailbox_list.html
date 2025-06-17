@@ -1,19 +1,47 @@
 {% load static i18n avatars widget_tweaks widened_notifications_tags text urls %}
 
+<style>
+/* http://stackoverflow.com/questions/6410730/webkit-css-endless-rotation-animation-how */
+  @-webkit-keyframes rotating {
+    from{
+      -webkit-transform: rotate(0deg);
+    }
+    to{
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  .rotating {
+    -webkit-animation: rotating 2s linear infinite;
+  }
+</style>
+
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
   <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
     <h5 class="font-weight-bold"><i class="ti ti-mailbox"></i>
       {% translate 'Mailbox' %}
     </h5>
-    <button class="btn btn-primary"
-            hx-get="{% url 'forum:theorist_chat:mailbox-create' %}"
-            hx-trigger="click"
-            hx-target="#chat-create-modal"
-            data-bs-toggle="modal"
-            data-bs-target="#chat-create-modal"
-    >
-      <i class="ti ti-message-plus"></i>
-    </button>
+    <div class="d-flex">
+      <button class="btn btn-warning me-2"
+              hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}?show_blocked_chats=false&next_uuid={{ request.GET.next_uuid }}&page={{ page }}"
+              hx-trigger="click"
+              hx-targer="#hx-mailbox-list-js"
+              _="on click toggle .rotating .rounded-circle on me until htmx:afterOnLoad"
+              data-toast-trigger
+              title="{% translate 'Update mailbox list' %}"
+      >
+        <i class="ti ti-refresh text-white"></i>
+      </button>
+      <button class="btn btn-primary"
+              hx-get="{% url 'forum:theorist_chat:mailbox-create' %}"
+              hx-trigger="click"
+              hx-target="#chat-create-modal"
+              data-bs-toggle="modal"
+              data-bs-target="#chat-create-modal"
+      >
+        <i class="ti ti-message-plus"></i>
+      </button>
+    </div>
   </div>
   <div class="card">
     <div class="card-body">
@@ -21,7 +49,7 @@
             data-toast-trigger
             hx-target="#mailboxes-list-js"
             hx-select="#mailboxes-list-js"
-            hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s, every 7s, messagesActionMade from:body">
+            hx-trigger="click from:#{{ filter.form.show_blocked_chats.id_for_label }}, input changed from:#{{ filter.form.username.id_for_label }} delay:0.5s, reset delay:0.5s">
         <div class="d-flex flex-row align-items-center justify-content-between">
           <div class="d-flex flex-column">
             <span class="small text-muted">{% translate 'Last chats' %}:</span>

@@ -60,7 +60,7 @@
 <hr class="mb-4">
 
 <div class="d-flex flex-column" style="height: 88% !important;">
-  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js-{{ mailbox.uuid }}">
+  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js-{{ messages.first.room.uuid }}">
     {% if messages.exists %}
       <div id="paginated-msg-list-js" data-skip-scroll>
         {% for message in messages %}
@@ -92,6 +92,20 @@
                            style="cursor: pointer; font-size: 19px;"></i>
                         <ul class="dropdown-menu">
                           <li>
+                            <button type="button"
+                                    data-toast-trigger
+                                    class="dropdown-item"
+                                    hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                    hx-target="#message-reply-block"
+                                    hx-trigger="click"
+                                    style="cursor: pointer">
+                              <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
+                            </button>
+                          </li>
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
+                          <li>
                             {% if message.is_safe_deleted %}
                               <button type="button"
                                       data-toast-trigger
@@ -100,7 +114,7 @@
                                       hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
                                       hx-trigger="click"
                                       style="cursor: pointer">
-                                <i class="ti ti-restore"></i> {% translate 'Restore message' %}
+                                <i class="ti ti-restore"></i> {% translate 'Restore' %}
                               </button>
                             {% else %}
                               <button type="button"
@@ -110,7 +124,7 @@
                                       hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
                                       hx-trigger="click"
                                       style="cursor: pointer">
-                                <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
+                                <i class="ti ti-trash"></i> {% translate 'Delete' %}
                               </button>
                             {% endif %}
                           </li>
@@ -141,6 +155,21 @@
                            style="cursor: pointer; font-size: 19px;"></i>
                         <ul class="dropdown-menu">
                           <li>
+                            <button type="button"
+                                    data-toast-trigger
+                                    class="dropdown-item"
+                                    hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                    hx-target="#message-reply-block"
+                                    hx-trigger="click"
+                                    _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
+                                    style="cursor: pointer">
+                              <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
+                            </button>
+                          </li>
+                          <li>
+                            <hr class="dropdown-divider">
+                          </li>
+                          <li>
                             {% if message.is_safe_deleted %}
                               <button type="button"
                                       class="dropdown-item text-success"
@@ -148,7 +177,7 @@
                                       hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
                                       hx-trigger="click"
                                       style="cursor: pointer">
-                                <i class="ti ti-restore"></i> {% translate 'Restore message' %}
+                                <i class="ti ti-restore"></i> {% translate 'Restore' %}
                               </button>
                             {% else %}
                               <button type="button"
@@ -158,7 +187,7 @@
                                       hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
                                       hx-trigger="click"
                                       style="cursor: pointer">
-                                <i class="ti ti-trash"></i> {% translate 'Delete message for all members' %}
+                                <i class="ti ti-trash"></i> {% translate 'Delete' %}
                               </button>
                             {% endif %}
                           </li>
@@ -211,6 +240,9 @@
             {% translate 'Send' %}
           </button>
         {% else %}
+
+          <div id="message-reply-block" hx-target="this"></div>
+
           {% render_field message_as_form.message id="chat-message-input" %}
           <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
           <button id="chat-message-submit"
@@ -232,7 +264,7 @@
 
 <script>
   let previousScrollHeight = null;
-  let msgList = document.querySelector('#msg-list-js-{{ mailbox.uuid }}');
+  let msgList = document.querySelector('#msg-list-js-{{ messages.first.room.uuid }}');
 
   document.body.addEventListener('htmx:beforeSwap', function (event) {
     if (event.target.id === 'paginated-msg-list-js') {
@@ -256,7 +288,7 @@
     const target = event.detail.elt;
     if (!target.hasAttribute('data-skip-scroll')) {
       setTimeout(() => {
-        var nestedElement = document.getElementById('msg-list-js-{{ mailbox.uuid }}');
+        var nestedElement = document.getElementById('msg-list-js-{{ messages.first.room.uuid }}');
         nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
       }, 300)
     }
@@ -289,7 +321,7 @@
         emptyLabel.remove()
       }
 
-      const messagesList = document.getElementById('msg-list-js-{{ mailbox.uuid }}');
+      const messagesList = document.getElementById('msg-list-js-{{ messages.first.room.uuid }}');
 
       const newMessageItem = document.createElement('li');
       newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
@@ -342,8 +374,14 @@
     document.querySelector('#chat-message-submit').onclick = function (e) {
       const messageInputDom = document.querySelector('#chat-message-input');
       const message = messageInputDom.value;
+
+      const submitBtn = document.getElementById('chat-message-submit');
+      const dataReplyAttrUUID = submitBtn.getAttribute('data-reply-attr-uuid');
+      console.log(dataReplyAttrUUID);
+
       chatSocket.send(JSON.stringify({
-        'message': message
+        'message': message,
+        'reply_message_uuid': dataReplyAttrUUID
       }));
       messageInputDom.value = '';
     }

@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, F
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from django_filters.views import FilterView
 from render_block import render_block_to_string
 
@@ -165,3 +165,14 @@ class HXMailBoxView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMi
         )
         response = HttpResponse(content=rendered_block)
         return response
+
+
+class HXMessageReplyView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, DetailView):
+    model = TheoristMessage
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
+    context_object_name = 'message'
+    template_name = 'partials/message_reply_block.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(room__uuid=self.kwargs['room_uuid'])

@@ -22,13 +22,29 @@ class TheoristChatConsumer(WebsocketConsumer):
 
     @mark_safe
     def get_message_actions_as_html_tags(self, message_uuid):
-        delete_msg_label = _('Delete message for all members')
+        delete_msg_label = _('Delete')
         delete_confirmation_label = _(
             'Are you sure you want to delete this message? You can restore it in any time after doing that.'
         )
+        reply_label = _('Reply')
         html_to_return = f"""
         <li>
+          <button type="button"
+                  data-toast-trigger
+                  class="dropdown-item"
+                  hx-get="{reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])}"
+                  hx-target="#message-reply-block"
+                  hx-trigger="click"
+                  style="cursor: pointer">
+            <i class="ti ti-message-reply"></i> {reply_label}
+          </button>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
         <button class="dropdown-item text-danger"
+                  data-toast-trigger
                   type="button"
                   hx-post="{reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})}"
                   hx-trigger="click"
@@ -53,9 +69,10 @@ class TheoristChatConsumer(WebsocketConsumer):
 
     def save_data(self, **kwargs):
         msg = kwargs.get('message', '')
+        msg_uuid_to_reply = kwargs.get('reply_message_uuid', '')
         user = self.scope['user']
         kwargs.update({'room_uuid': self.room_group_uuid})
-        sanitized_form = TheoristMessageForm(data={'message': msg})
+        sanitized_form = TheoristMessageForm(msg_uuid_to_reply=msg_uuid_to_reply, data={'message': msg})
         if sanitized_form.is_valid():
             return sanitized_form.save(theorist=user.theorist, **kwargs)
 
@@ -64,10 +81,15 @@ class TheoristChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
         response = self._get_context()
         response['message'] = limit_nbsp_paragraphs(message)
+        response['reply_message_uuid'] = text_data_json['reply_message_uuid']
         message_obj = self.save_data(**response)
+
+        theorist_html_actions = (
+            self.get_message_actions_as_html_tags(message_obj.uuid) if hasattr(message_obj, 'uuid') else '<div></div>'
+        )
         response.update(
             {
-                'theorist_html_actions': self.get_message_actions_as_html_tags(message_obj.uuid),
+                'theorist_html_actions': theorist_html_actions,
                 'room_uuid': self.room_group_uuid,
             }
         )

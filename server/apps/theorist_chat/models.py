@@ -76,6 +76,8 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
 
+    replied_to = models.ForeignKey('self', related_name='replies', null=True, blank=True, on_delete=models.SET_NULL)
+
     was_safe_deleted_by = models.ForeignKey(
         'theorist.Theorist', null=True, blank=True, on_delete=models.SET_NULL, related_name='deleted_messages'
     )

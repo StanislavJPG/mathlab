@@ -154,7 +154,7 @@
                         <div class="card-header d-flex justify-content-between p-3">
                           <p class="fw-bold mb-0">{{ message.replied_to.sender.full_name }}</p>
                         </div>
-                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0 !important;">
                           {{ message.replied_to.message }}
                         </div>
                       </div>
@@ -230,6 +230,9 @@
                       {% endif %}
                     </p>
                   </div>
+                  <div class="d-flex justify-content-end p-2">
+                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"></i>
+                  </div>
                 </div>
               {% else %}
                 <div class="card w-100">
@@ -239,7 +242,7 @@
                         <div class="card-header d-flex justify-content-between p-3">
                           <p class="fw-bold mb-0">{{ message.replied_to.sender.full_name }}</p>
                         </div>
-                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0 !important;">
                           {{ message.replied_to.message }}
                         </div>
                       </div>
@@ -249,6 +252,9 @@
                         {{ message.message }}
                       </p>
                     </div>
+                  </div>
+                  <div class="d-flex justify-content-end p-2">
+                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"></i>
                   </div>
                 </div>
               {% endif %}
@@ -383,7 +389,7 @@
         <div class="card-header d-flex justify-content-between p-3">
         <p class="fw-bold mb-0 small">${data.replied_to.sender_full_name}</p>
         </div>
-        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0 !important;">
         ${data.replied_to.message}
         </div>
         </div>
@@ -410,6 +416,9 @@
         <p class="mb-0">${data.message}</p>
         </div>
         `}
+        <div class="d-flex justify-content-end p-2">
+          <i class="ti ti-check"></i>
+        </div>
         </div>
         ${isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>` : ''}
     `;

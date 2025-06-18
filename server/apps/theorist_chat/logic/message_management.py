@@ -73,3 +73,11 @@ class InvalidChatMessageCreateView(LoginRequiredMixin, FormInvalidMessageMixin, 
         response = HttpResponse(status=405)
         self.messages.error(self.get_form_invalid_message(), fail_silently=True)
         return response
+
+
+class HXMarkAllMessagesAsRead(LoginRequiredMixin, HXViewMixin, View):
+    def get(self, request, *args, **kwargs):
+        TheoristMessage.objects.filter(
+            ~Q(sender=self.request.theorist), room__uuid=self.kwargs['room_uuid']
+        ).filter_by_is_unread().mark_messages_as_read()
+        return HttpResponse()

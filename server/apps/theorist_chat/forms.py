@@ -15,11 +15,20 @@ from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.mixins.forms import TinyMCEMediaFormMixin
-from server.common.utils.helpers import limit_nbsp_paragraphs
+from server.common.utils.helpers import limit_nbsp_paragraphs, is_valid_uuid
 
 
 class TheoristMessageForm(forms.Form):
     message = BleachField(widget=forms.Textarea, max_length=500, min_length=1, required=True)
+
+    def __init__(self, *args, **kwargs):
+        self.msg_uuid_to_reply = kwargs.pop('msg_uuid_to_reply')
+        super().__init__(*args, **kwargs)
+        msg_uuid_to_reply = self.msg_uuid_to_reply
+        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply[1:-1]):
+            self.message_to_reply = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply[1:-1]).first()
+        else:
+            self.message_to_reply = None
 
     def clean_message(self):
         message = self.cleaned_data['message']
@@ -60,7 +69,9 @@ class TheoristMessageForm(forms.Form):
         message = self.cleaned_data['message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         if self.validate_room(room) is True:
-            instance = TheoristMessage.objects.create(sender=theorist, message=message, room=room)
+            instance = TheoristMessage.objects.create(
+                sender=theorist, message=message, room=room, replied_to=self.message_to_reply
+            )
             self._process_notifications(theorist=theorist, message=instance, room=room)
             return instance
 

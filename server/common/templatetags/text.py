@@ -9,7 +9,7 @@ from server.common.utils.defaults import get_icon_for_contenttype_model
 @register.filter()
 @mark_safe
 def truncate_by_rows(text, truncate_by):
-    def media_context_replacer(prettified_text):
+    def media_context_replacer(prettified_text):  # TODO: FIX BY ADDING FIELD IS_SYSTEM TO THEORIST_MESSAGE TABLE
         if '</div>' in prettified_text:
             label = _('Shared content...')
             return f'<em>🌟 {label}</em>'

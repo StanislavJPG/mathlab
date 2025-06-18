@@ -19,3 +19,12 @@ class TheoristChatRoomQuerySet(models.QuerySet):
 class TheoristMessageQueryset(models.QuerySet):
     def filter_by_is_safe_deleted(self):
         return self.filter(is_safe_deleted=True)
+
+    def filter_by_is_read(self):
+        return self.filter(is_read=True)
+
+    def filter_by_is_unread(self):
+        return self.filter(is_read=False)
+
+    def mark_messages_as_read(self):
+        return self.update(is_read=True)

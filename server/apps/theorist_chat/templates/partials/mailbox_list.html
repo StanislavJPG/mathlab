@@ -1,19 +1,47 @@
-{% load static i18n avatars widget_tweaks text urls %}
+{% load static i18n avatars widget_tweaks widened_notifications_tags text urls %}
+
+<style>
+/* http://stackoverflow.com/questions/6410730/webkit-css-endless-rotation-animation-how */
+  @-webkit-keyframes rotating {
+    from{
+      -webkit-transform: rotate(0deg);
+    }
+    to{
+      -webkit-transform: rotate(360deg);
+    }
+  }
+
+  .rotating {
+    -webkit-animation: rotating 2s linear infinite;
+  }
+</style>
 
 <div class="col-md-6 col-lg-5 col-xl-4 mb-4 mb-md-0">
   <div class="d-flex mb-3 text-center text-lg-start align-items-center justify-content-between">
     <h5 class="font-weight-bold"><i class="ti ti-mailbox"></i>
       {% translate 'Mailbox' %}
     </h5>
-    <button class="btn btn-primary"
-            hx-get="{% url 'forum:theorist_chat:mailbox-create' %}"
-            hx-trigger="click"
-            hx-target="#chat-create-modal"
-            data-bs-toggle="modal"
-            data-bs-target="#chat-create-modal"
-    >
-      <i class="ti ti-message-plus"></i>
-    </button>
+    <div class="d-flex">
+      <button class="btn btn-warning me-2"
+              hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}?show_blocked_chats=false&next_uuid={{ request.GET.next_uuid }}&page={{ page }}"
+              hx-trigger="click"
+              hx-targer="#hx-mailbox-list-js"
+              _="on click toggle .rotating .rounded-circle on me until htmx:afterOnLoad"
+              data-toast-trigger
+              title="{% translate 'Update mailbox list' %}"
+      >
+        <i class="ti ti-rotate-clockwise text-white"></i>
+      </button>
+      <button class="btn btn-primary"
+              hx-get="{% url 'forum:theorist_chat:mailbox-create' %}"
+              hx-trigger="click"
+              hx-target="#chat-create-modal"
+              data-bs-toggle="modal"
+              data-bs-target="#chat-create-modal"
+      >
+        <i class="ti ti-message-plus"></i>
+      </button>
+    </div>
   </div>
   <div class="card">
     <div class="card-body">
@@ -60,7 +88,7 @@
                         <p class="fw-bold mb-0">{{ mailbox.second_member.full_name|truncatechars:15 }}</p>
                         <span class="small text-muted">
                           {% if mailbox.messages.last.is_safe_deleted %}
-                            {% translate 'Removed message' %}
+                            <em>{% translate 'Removed message' %}</em>
                           {% else %}
                             {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                           {% endif %}
@@ -73,7 +101,7 @@
                         <p class="fw-bold mb-0">{{ mailbox.first_member.full_name|truncatechars:15 }}</p>
                         <span class="small text-muted">
                           {% if mailbox.messages.last.is_safe_deleted %}
-                            {% translate 'Removed message' %}
+                            <em>{% translate 'Removed message' %}</em>
                           {% else %}
                             {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                           {% endif %}
@@ -93,7 +121,7 @@
                          title="{% translate 'Someone of chat members blocked another.' %}"
                       ></i>
                     {% endif %}
-                    {#                <span class="badge bg-danger float-end">1</span>#}
+                    {% unread_messages_counter mailbox as_html=True %}
                   </div>
                 </div>
               </li>

@@ -5,7 +5,7 @@ from django.core.paginator import Paginator
 from django.db.models import Q, F
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import TemplateView, ListView
+from django.views.generic import TemplateView, ListView, DetailView
 from django_filters.views import FilterView
 from render_block import render_block_to_string
 
@@ -75,13 +75,20 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
             )
         )
 
-    def get(self, request, *args, **kwargs):
-        room = TheoristChatRoom.objects.filter(uuid=kwargs['room_uuid']).first()
+    def _prepare_on_click(self):
+        """Set default behaviour after mailbox clicking"""
+        room = TheoristChatRoom.objects.filter(uuid=self.kwargs['room_uuid']).first()
         message_ids = list(map(str, room.messages.values_list('id', flat=True)))
         TheoristNotification.objects.filter(
             target_object_id__in=message_ids,
             theorist=self.request.theorist,
         ).unread().mark_all_as_read()
+        TheoristMessage.objects.filter(
+            ~Q(sender=self.request.theorist), room__uuid=self.kwargs['room_uuid']
+        ).filter_by_is_unread().mark_messages_as_read()
+
+    def get(self, request, *args, **kwargs):
+        self._prepare_on_click()
         return super().get(request, *args, **kwargs)
 
     def paginate_queryset(self, queryset, page_size):
@@ -158,3 +165,14 @@ class HXMailBoxView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMi
         )
         response = HttpResponse(content=rendered_block)
         return response
+
+
+class HXMessageReplyView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, DetailView):
+    model = TheoristMessage
+    slug_url_kwarg = 'uuid'
+    slug_field = 'uuid'
+    context_object_name = 'message'
+    template_name = 'partials/message_reply_block.html'
+
+    def get_queryset(self):
+        return super().get_queryset().filter(room__uuid=self.kwargs['room_uuid'])

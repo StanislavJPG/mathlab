@@ -26,12 +26,8 @@
 
 <script src="https://unpkg.com/mathlive"></script>
 <script type="module">
-  import {ComputeEngine} from 'https://unpkg.com/@cortex-js/compute-engine?module';
+  import { ComputeEngine } from 'https://unpkg.com/@cortex-js/compute-engine?module';
 
-  document.addEventListener("htmx:afterSettle", () => {
-    const engine = new ComputeEngine();
-    document.querySelectorAll("math-field").forEach(field => {
-      field.computeEngine = engine;
-    });
-  });
+  const engine = new ComputeEngine();
+  MathfieldElement.computeEngine = engine;
 </script>

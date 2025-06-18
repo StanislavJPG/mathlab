@@ -26,4 +26,7 @@ class TheoristMessageAdmin(admin.ModelAdmin):
         'message',
         'sender',
     )
-    list_filter = ('uuid', 'created_at')
+    list_filter = (
+        'created_at',
+        'is_read',
+    )

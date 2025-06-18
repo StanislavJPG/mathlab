@@ -60,7 +60,8 @@
 <hr class="mb-4">
 
 <div class="d-flex flex-column" style="height: 88% !important;">
-  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;" id="msg-list-js-{{ messages.first.room.uuid }}">
+  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;"
+      id="msg-list-js-{{ messages.first.room.uuid }}">
     {% if messages.exists %}
       <div id="paginated-msg-list-js" data-skip-scroll>
         {% for message in messages %}
@@ -81,131 +82,176 @@
                      src="{{ message.sender.get_current_avatar_url }}"
                      class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
               </a>
-              <div class="card w-100">
-                <div class="card-header d-flex justify-content-between p-3">
-                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
-                  <div class="mb-0 d-flex flex-row">
-                    <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
-                    {% if not message.is_safe_deleted or message.was_safe_deleted_by.uuid == request.theorist.uuid or request.theorist.uuid == message.sender.uuid %}
-                      <div class="dropdown ms-1">
-                        <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
-                           style="cursor: pointer; font-size: 19px;"></i>
-                        <ul class="dropdown-menu">
-                          <li>
-                            <button type="button"
-                                    data-toast-trigger
-                                    class="dropdown-item"
-                                    hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
-                                    hx-target="#message-reply-block"
-                                    hx-trigger="click"
-                                    style="cursor: pointer">
-                              <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
-                            </button>
-                          </li>
-                          <li>
-                            <hr class="dropdown-divider">
-                          </li>
-                          <li>
-                            {% if message.is_safe_deleted %}
+              {% if not message.replied_to %}
+                <div class="card w-100">
+                  <div class="card-header d-flex justify-content-between p-3">
+                    <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                    <div class="mb-0 d-flex flex-row">
+                      <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
+                      {% if not message.is_safe_deleted or message.was_safe_deleted_by.uuid == request.theorist.uuid or request.theorist.uuid == message.sender.uuid %}
+                        <div class="dropdown ms-1">
+                          <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
+                             style="cursor: pointer; font-size: 19px;"></i>
+                          <ul class="dropdown-menu">
+                            <li>
                               <button type="button"
                                       data-toast-trigger
-                                      class="dropdown-item text-success"
-                                      hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
-                                      hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                                      class="dropdown-item"
+                                      hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                      hx-target="#message-reply-block"
                                       hx-trigger="click"
+                                      _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
                                       style="cursor: pointer">
-                                <i class="ti ti-restore"></i> {% translate 'Restore' %}
+                                <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
                               </button>
-                            {% else %}
-                              <button type="button"
-                                      data-toast-trigger
-                                      class="dropdown-item text-danger"
-                                      hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
-                                      hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
-                                      hx-trigger="click"
-                                      style="cursor: pointer">
-                                <i class="ti ti-trash"></i> {% translate 'Delete' %}
-                              </button>
-                            {% endif %}
-                          </li>
-                        </ul>
-                      </div>
-                    {% endif %}
+                            </li>
+                            <li>
+                              <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                              {% if message.is_safe_deleted %}
+                                <button type="button"
+                                        data-toast-trigger
+                                        class="dropdown-item text-success"
+                                        hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                                        hx-trigger="click"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-restore"></i> {% translate 'Restore' %}
+                                </button>
+                              {% else %}
+                                <button type="button"
+                                        data-toast-trigger
+                                        class="dropdown-item text-danger"
+                                        hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                                        hx-trigger="click"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-trash"></i> {% translate 'Delete' %}
+                                </button>
+                              {% endif %}
+                            </li>
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                    <p class="mb-0">
+                      {% if not message.is_safe_deleted %}
+                        {{ message.message }}
+                      {% else %}
+                        <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
+                      {% endif %}
+                    </p>
                   </div>
                 </div>
-                <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
-                  <p class="mb-0">
-                    {% if not message.is_safe_deleted %}
-                      {{ message.message }}
-                    {% else %}
-                      <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
-                    {% endif %}
-                  </p>
+              {% else %}
+                <div class="card w-100">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                      <div class="card w-100 border-end-0 border-top-0 border-bottom-0" style="border: 0.5rem solid;">
+                        <div class="card-header d-flex justify-content-between p-3">
+                          <p class="fw-bold mb-0">{{ message.replied_to.sender.full_name }}</p>
+                        </div>
+                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+                          {{ message.replied_to.message }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <p class="mb-0">
+                        {{ message.message }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              {% endif %}
             {% else %}
-              <div class="card w-100">
-                <div class="card-header d-flex justify-content-between p-3">
-                  <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
-                  <div class="mb-0 d-flex flex-row">
-                    <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
-                    {% if not message.is_safe_deleted or message.was_safe_deleted_by.uuid == request.theorist.uuid or request.theorist.uuid == message.sender.uuid %}
-                      <div class="dropdown ms-1">
-                        <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
-                           style="cursor: pointer; font-size: 19px;"></i>
-                        <ul class="dropdown-menu">
-                          <li>
-                            <button type="button"
-                                    data-toast-trigger
-                                    class="dropdown-item"
-                                    hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
-                                    hx-target="#message-reply-block"
-                                    hx-trigger="click"
-                                    _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
-                                    style="cursor: pointer">
-                              <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
-                            </button>
-                          </li>
-                          <li>
-                            <hr class="dropdown-divider">
-                          </li>
-                          <li>
-                            {% if message.is_safe_deleted %}
-                              <button type="button"
-                                      class="dropdown-item text-success"
-                                      hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
-                                      hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
-                                      hx-trigger="click"
-                                      style="cursor: pointer">
-                                <i class="ti ti-restore"></i> {% translate 'Restore' %}
-                              </button>
-                            {% else %}
+              {% if not message.replied_to %}
+                <div class="card w-100">
+                  <div class="card-header d-flex justify-content-between p-3">
+                    <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
+                    <div class="mb-0 d-flex flex-row">
+                      <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
+                      {% if not message.is_safe_deleted or message.was_safe_deleted_by.uuid == request.theorist.uuid or request.theorist.uuid == message.sender.uuid %}
+                        <div class="dropdown ms-1">
+                          <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
+                             style="cursor: pointer; font-size: 19px;"></i>
+                          <ul class="dropdown-menu">
+                            <li>
                               <button type="button"
                                       data-toast-trigger
-                                      class="dropdown-item text-danger"
-                                      hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
-                                      hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                                      class="dropdown-item"
+                                      hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                      hx-target="#message-reply-block"
                                       hx-trigger="click"
+                                      _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
                                       style="cursor: pointer">
-                                <i class="ti ti-trash"></i> {% translate 'Delete' %}
+                                <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
                               </button>
-                            {% endif %}
-                          </li>
-                        </ul>
-                      </div>
-                    {% endif %}
+                            </li>
+                            <li>
+                              <hr class="dropdown-divider">
+                            </li>
+                            <li>
+                              {% if message.is_safe_deleted %}
+                                <button type="button"
+                                        class="dropdown-item text-success"
+                                        hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                                        hx-trigger="click"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-restore"></i> {% translate 'Restore' %}
+                                </button>
+                              {% else %}
+                                <button type="button"
+                                        data-toast-trigger
+                                        class="dropdown-item text-danger"
+                                        hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
+                                        hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                                        hx-trigger="click"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-trash"></i> {% translate 'Delete' %}
+                                </button>
+                              {% endif %}
+                            </li>
+                          </ul>
+                        </div>
+                      {% endif %}
+                    </div>
+                  </div>
+                  <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                    <p class="mb-0">
+                      {% if not message.is_safe_deleted %}
+                        {{ message.message }}
+                      {% else %}
+                        <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
+                      {% endif %}
+                    </p>
                   </div>
                 </div>
-                <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
-                  <p class="mb-0">
-                    {% if not message.is_safe_deleted %}
-                      {{ message.message }}
-                    {% else %}
-                      <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
-                    {% endif %}
-                  </p>
+              {% else %}
+                <div class="card w-100">
+                  <div class="card-body d-flex flex-column">
+                    <div class="d-flex align-items-center">
+                      <div class="card w-100 border-end-0 border-top-0 border-bottom-0" style="border: 0.5rem solid;">
+                        <div class="card-header d-flex justify-content-between p-3">
+                          <p class="fw-bold mb-0">{{ message.replied_to.sender.full_name }}</p>
+                        </div>
+                        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+                          {{ message.replied_to.message }}
+                        </div>
+                      </div>
+                    </div>
+                    <div class="card-body">
+                      <p class="mb-0">
+                        {{ message.message }}
+                      </p>
+                    </div>
+                  </div>
                 </div>
-              </div>
+              {% endif %}
               <a href="{{ message.sender.get_absolute_url }}" target="_blank">
                 <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
                      src="{{ message.sender.get_current_avatar_url }}"
@@ -330,26 +376,45 @@
         return `
         ${!isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60"></a>` : ''}
         <div class="card w-100">
-            <div class="card-header d-flex justify-content-between p-3">
-              <p class="fw-bold mb-0">${data.theorist_full_name}</p>
-              <div class="mb-0 d-flex flex-row">
-                <span class="text-muted small"><i class="far fa-clock"></i> ${data.current_time}</span>
-                <div class="dropdown ms-1">
-                  <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
-                     style="cursor: pointer; font-size: 19px;"></i>
-                  <ul class="dropdown-menu">
-                    ${data.theorist_html_actions}
-                  </ul>
-                </div>
-              </div>
-            </div>
-            <div class="card-body">
-                <p class="mb-0">${data.message}</p>
-            </div>
+            ${data.replied_to ? `
+        <div class="card-body d-flex flex-column">
+        <div class="d-flex align-items-center">
+        <div class="card w-100 border-end-0 border-top-0 border-bottom-0" style="border: 0.5rem solid;">
+        <div class="card-header d-flex justify-content-between p-3">
+        <p class="fw-bold mb-0 small">${data.replied_to.sender_full_name}</p>
+        </div>
+        <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0px !important;">
+        ${data.replied_to.message}
+        </div>
+        </div>
+        </div>
+        <div class="card-body p-2">
+        <p class="mb-0">${data.message}</p>
+        </div>
+        </div>
+        ` : `
+        <div class="card-header d-flex justify-content-between p-3">
+        <p class="fw-bold mb-0">${data.theorist_full_name}</p>
+        <div class="mb-0 d-flex flex-row">
+        <span class="text-muted small"><i class="far fa-clock"></i> ${data.current_time}</span>
+        <div class="dropdown ms-1">
+        <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
+        style="cursor: pointer; font-size: 19px;"></i>
+        <ul class="dropdown-menu">
+        ${data.theorist_html_actions}
+        </ul>
+        </div>
+        </div>
+        </div>
+        <div class="card-body">
+        <p class="mb-0">${data.message}</p>
+        </div>
+        `}
         </div>
         ${isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>` : ''}
     `;
       };
+
 
       newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
 
@@ -374,16 +439,16 @@
     document.querySelector('#chat-message-submit').onclick = function (e) {
       const messageInputDom = document.querySelector('#chat-message-input');
       const message = messageInputDom.value;
-
       const submitBtn = document.getElementById('chat-message-submit');
       const dataReplyAttrUUID = submitBtn.getAttribute('data-reply-attr-uuid');
-      console.log(dataReplyAttrUUID);
 
       chatSocket.send(JSON.stringify({
         'message': message,
         'reply_message_uuid': dataReplyAttrUUID
       }));
       messageInputDom.value = '';
+      submitBtn.removeAttribute('data-reply-attr-uuid');
+      document.getElementById('message-reply-block-js').classList.add('d-none');
     }
   }
 </script>

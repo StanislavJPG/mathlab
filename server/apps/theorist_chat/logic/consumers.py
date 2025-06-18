@@ -8,7 +8,8 @@ from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from server.apps.theorist_chat.forms import TheoristMessageForm
-from server.common.utils.helpers import limit_nbsp_paragraphs
+from server.apps.theorist_chat.models import TheoristMessage
+from server.common.utils.helpers import limit_nbsp_paragraphs, is_valid_uuid
 
 
 class TheoristChatConsumer(WebsocketConsumer):
@@ -81,7 +82,14 @@ class TheoristChatConsumer(WebsocketConsumer):
         message = text_data_json['message']
         response = self._get_context()
         response['message'] = limit_nbsp_paragraphs(message)
+
+        # Prepare message as reply message if it is
         response['reply_message_uuid'] = text_data_json['reply_message_uuid']
+        msg_uuid_to_reply = text_data_json['reply_message_uuid']
+        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply[1:-1]):
+            reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply[1:-1]).first()
+            response['replied_to'] = {'sender_full_name': reply_msg.sender.full_name, 'message': reply_msg.message}
+
         message_obj = self.save_data(**response)
 
         theorist_html_actions = (

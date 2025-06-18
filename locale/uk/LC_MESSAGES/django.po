@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-14 12:43+0300\n"
+"POT-Creation-Date: 2025-06-18 23:59+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1158,8 +1158,9 @@ msgstr "поділився з Вами"
 
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Delete message for all members"
-msgstr "Видалити повідомлення для всіх учасників"
+#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
+msgid "Delete"
+msgstr "Видалити"
 
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
@@ -1169,6 +1170,11 @@ msgid ""
 msgstr ""
 "Ви впевнені, що хочете видалити це повідомлення? Після цього Ви зможете "
 "відновити його в будь-який час."
+
+#: server/apps/theorist_chat/logic/consumers.py
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Reply"
+msgstr "Відповісти"
 
 #: server/apps/theorist_chat/logic/mailbox_management.py
 msgid "You successfully created mailbox!"
@@ -1318,8 +1324,8 @@ msgid "Are you sure you want to restore this message?"
 msgstr "Ви впевнені, що хочете віновити це повідомлення?"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Restore message"
-msgstr "Відновити повідомлення"
+msgid "Restore"
+msgstr "Відновити"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "This message was removed."
@@ -1342,6 +1348,10 @@ msgid "Send"
 msgstr "Відправити"
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
+msgid "Update mailbox list"
+msgstr "Оновити список скриньок"
+
+#: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Last chats"
 msgstr "Останні чати"
 
@@ -1360,6 +1370,10 @@ msgstr "Хтось з учасників чату заблокував іншо�
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Not found any mailboxes"
 msgstr "Не знайдено жодної скриньки"
+
+#: server/apps/theorist_chat/templates/partials/message_reply_block.html
+msgid "Reply to"
+msgstr "Відповісти для"
 
 #: server/apps/theorist_drafts/forms.py
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
@@ -1561,10 +1575,6 @@ msgstr "Це креслення не є публічно доступним."
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "Edit"
 msgstr "Редагувати"
-
-#: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
-msgid "Delete"
-msgstr "Видалити"
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 #: server/apps/theorist_drafts/templates/partials/drafts_table.html

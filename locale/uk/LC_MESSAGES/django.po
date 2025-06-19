@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-18 23:59+0300\n"
+"POT-Creation-Date: 2025-06-19 14:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1153,6 +1153,10 @@ msgstr ""
 "натиснувши кнопку нижче:"
 
 #: server/apps/theorist_chat/forms.py
+msgid "Check it out"
+msgstr "Переглянути вміст"
+
+#: server/apps/theorist_chat/forms.py
 msgid "has shared with you with"
 msgstr "поділився з Вами"
 
@@ -1362,6 +1366,10 @@ msgstr "Показати заблоковані чати"
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Removed message"
 msgstr "Видалене повідомлення"
+
+#: server/apps/theorist_chat/templates/partials/mailbox_list.html
+msgid "Shared content..."
+msgstr "Поширений контент..."
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Someone of chat members blocked another."
@@ -1790,10 +1798,6 @@ msgstr "Зареєструватись"
 #: server/common/forms.py
 msgid "Captcha"
 msgstr "Капча"
-
-#: server/common/templatetags/text.py
-msgid "Shared content..."
-msgstr "Поширений контент..."
 
 #: server/common/utils/defaults.py
 msgid "Unknown user"

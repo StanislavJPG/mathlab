@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-18 23:59+0300\n"
+"POT-Creation-Date: 2025-06-19 14:41+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1137,6 +1137,10 @@ msgid ""
 msgstr ""
 
 #: server/apps/theorist_chat/forms.py
+msgid "Check it out"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
 msgid "has shared with you with"
 msgstr ""
 
@@ -1337,6 +1341,10 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
 msgid "Removed message"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/mailbox_list.html
+msgid "Shared content..."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/mailbox_list.html
@@ -1745,10 +1753,6 @@ msgstr ""
 
 #: server/common/forms.py
 msgid "Captcha"
-msgstr ""
-
-#: server/common/templatetags/text.py
-msgid "Shared content..."
 msgstr ""
 
 #: server/common/utils/defaults.py

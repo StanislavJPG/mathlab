@@ -1,7 +1,6 @@
 from bs4 import BeautifulSoup
 from django.template.defaultfilters import register
 from django.utils.safestring import mark_safe
-from django.utils.translation import gettext_lazy as _
 
 from server.common.utils.defaults import get_icon_for_contenttype_model
 
@@ -9,18 +8,11 @@ from server.common.utils.defaults import get_icon_for_contenttype_model
 @register.filter()
 @mark_safe
 def truncate_by_rows(text, truncate_by):
-    def media_context_replacer(prettified_text):  # TODO: FIX BY ADDING FIELD IS_SYSTEM TO THEORIST_MESSAGE TABLE
-        if '</div>' in prettified_text:
-            label = _('Shared content...')
-            return f'<em>🌟 {label}</em>'
-
-        return prettified_text
-
     lines = text.split('\n')
     truncated = '\n'.join(lines[: truncate_by + 1])
 
     soup = BeautifulSoup(truncated, 'html.parser')
-    return media_context_replacer(soup.prettify())
+    return soup.prettify()
 
 
 @register.simple_tag

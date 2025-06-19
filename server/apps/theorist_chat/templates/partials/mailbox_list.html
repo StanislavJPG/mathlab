@@ -90,7 +90,11 @@
                           {% if mailbox.messages.last.is_safe_deleted %}
                             <em>{% translate 'Removed message' %}</em>
                           {% else %}
-                            {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
+                            {% if mailbox.messages.last.is_system %}
+                              <em>🌟 {% translate 'Shared content...' %}</em>
+                            {% else %}
+                              {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
+                            {% endif %}
                           {% endif %}
                         </span>
                       </div>
@@ -103,7 +107,11 @@
                           {% if mailbox.messages.last.is_safe_deleted %}
                             <em>{% translate 'Removed message' %}</em>
                           {% else %}
-                            {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
+                            {% if mailbox.messages.last.is_system %}
+                              <em>🌟 {% translate 'Shared content...' %}</em>
+                            {% else %}
+                              {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
+                            {% endif %}
                           {% endif %}
                         </span>
                       </div>

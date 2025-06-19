@@ -162,7 +162,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         self.fields['receiver'].to_field_name = 'uuid'
 
     @mark_safe
-    def _get_default_share_message(self, main_text_label=None, text_label=None):
+    def _get_default_share_message(self, main_text_label=None, text_label=None, button_label=None):
         main_text_label = _("I'm sharing with you!") if not main_text_label else main_text_label
         text_label = (
             _("Hi! I'm sending <strong>%s</strong> to you. You can check it out by the link below:")
@@ -170,13 +170,14 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             if not text_label
             else text_label
         )
+        button_label = button_label if button_label else _('Check it out')
 
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="card shadow-lg rounded-4 p-4 text-center">
             <h2 class="mb-3">🌟 {main_text_label}</h2>
             <p class="lead">{text_label}</p>
-            <a href="{self.url_to_share}" class="btn btn-primary mt-3">Check it out</a>
+            <a href="{self.url_to_share}" class="btn btn-primary mt-3">{button_label}</a>
           </div>
         </div>
         """
@@ -193,7 +194,9 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             if not room:
                 room = TheoristChatRoom.objects.create(first_member=self.theorist, second_member=instance)
 
-            msg_obj = TheoristMessage(sender=self.theorist, room=room, message=self._get_default_share_message())
+            msg_obj = TheoristMessage(
+                sender=self.theorist, room=room, message=self._get_default_share_message(), is_system=True
+            )
             to_create.append(msg_obj)
 
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:

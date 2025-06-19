@@ -84,6 +84,8 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     is_safe_deleted = models.BooleanField(default=False)
     is_read = models.BooleanField(default=False)
 
+    is_system = models.BooleanField(default=False)
+
     objects = TheoristMessageQueryset.as_manager()
 
     class Meta:

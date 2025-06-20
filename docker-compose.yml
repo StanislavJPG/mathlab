@@ -26,15 +26,15 @@ services:
     volumes:
       - pgdata:/var/lib/postgresql/data
 
-  uvicorn:
+  daphne:
     build: .
-    command: uvicorn server.settings.asgi:application --host 0.0.0.0 --port 8098 --reload
+    command: daphne server.settings.asgi:application -b 0.0.0.0 -p 8099
     volumes:
       - ./:/mathlab
     expose:
-      - 8098
+      - 8099
     ports:
-      - "8098:8098"
+      - "8099:8099"
     depends_on:
       - redis
       - web

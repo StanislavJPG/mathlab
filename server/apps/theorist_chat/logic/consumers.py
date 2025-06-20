@@ -34,7 +34,7 @@ class TheoristChatConsumer(WebsocketConsumer):
                   data-toast-trigger
                   class="dropdown-item"
                   hx-get="{reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])}"
-                  onclick="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
+                  hx-on:click="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
                   hx-target="#message-reply-block"
                   hx-trigger="click"
                   style="cursor: pointer">
@@ -87,8 +87,8 @@ class TheoristChatConsumer(WebsocketConsumer):
         # Prepare message as reply message if it is
         response['reply_message_uuid'] = text_data_json['reply_message_uuid']
         msg_uuid_to_reply = text_data_json['reply_message_uuid']
-        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply[1:-1]):
-            reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply[1:-1]).first()
+        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply):
+            reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply).first()
             response['replied_to'] = {'sender_full_name': reply_msg.sender.full_name, 'message': reply_msg.message}
 
         message_obj = self.save_data(**response)

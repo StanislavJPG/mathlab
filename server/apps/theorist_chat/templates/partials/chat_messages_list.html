@@ -61,7 +61,7 @@
 
 <div class="d-flex flex-column" style="height: 88% !important;">
   <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;"
-      id="msg-list-js-{{ messages.first.room.uuid }}">
+      id="msg-list-js-{{ messages.first.room.uuid }}" data-room-uuid="{{ messages.first.room.uuid }}">
     {% if messages.exists %}
       <div id="paginated-msg-list-js" data-skip-scroll>
         {% for message in messages %}
@@ -101,7 +101,7 @@
                                         hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
                                         hx-target="#message-reply-block"
                                         hx-trigger="click"
-                                        _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
+                                        _="on click add [@data-reply-attr-uuid={{ message.uuid }}] to #chat-message-submit"
                                         style="cursor: pointer">
                                   <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
                                 </button>
@@ -189,7 +189,7 @@
                                         hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
                                         hx-target="#message-reply-block"
                                         hx-trigger="click"
-                                        _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
+                                        _="on click add [@data-reply-attr-uuid={{ message.uuid }}] to #chat-message-submit"
                                         style="cursor: pointer">
                                   <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
                                 </button>
@@ -323,37 +323,47 @@
 </div>
 
 <script>
-  let previousScrollHeight = null;
-  let msgList = document.querySelector('#msg-list-js-{{ messages.first.room.uuid }}');
+  window.previousScrollHeight = null;
 
   document.body.addEventListener('htmx:beforeSwap', function (event) {
     if (event.target.id === 'paginated-msg-list-js') {
-      previousScrollHeight = msgList.scrollHeight;
+      const roomUUID = event.target.getAttribute('data-room-uuid');
+      const msgList = document.getElementById('msg-list-js-' + roomUUID);
+      if (msgList) {
+        window.previousScrollHeight = msgList.scrollHeight;
+      }
     }
   });
 
   document.body.addEventListener('htmx:afterSwap', function (event) {
-    if (event.target.id === 'paginated-msg-list-js' && previousScrollHeight !== null) {
-      const newScrollHeight = msgList.scrollHeight;
-      const scrollDiff = newScrollHeight - previousScrollHeight;
-      msgList.scrollTop += scrollDiff;
-      previousScrollHeight = null;
+    if (event.target.id === 'paginated-msg-list-js' && window.previousScrollHeight !== null) {
+      const roomUUID = event.target.getAttribute('data-room-uuid');
+      const msgList = document.getElementById('msg-list-js-' + roomUUID);
+      if (msgList) {
+        const newScrollHeight = msgList.scrollHeight;
+        const scrollDiff = newScrollHeight - window.previousScrollHeight;
+        msgList.scrollTop += scrollDiff;
+        window.previousScrollHeight = null;
+      }
     }
   });
 </script>
 
 
 <script>
-  document.addEventListener('htmx:afterSettle', function () {
+  document.addEventListener('htmx:afterSettle', function (event) {
     const target = event.detail.elt;
     if (!target.hasAttribute('data-skip-scroll')) {
       setTimeout(() => {
-        var nestedElement = document.getElementById('msg-list-js-{{ messages.first.room.uuid }}');
-        nestedElement.scrollTo({top: nestedElement.scrollHeight, behavior: 'smooth'});
-      }, 300)
+        const msgList = target.querySelector('[id^="msg-list-js-"]');
+        if (msgList) {
+          msgList.scrollTo({ top: msgList.scrollHeight, behavior: 'smooth' });
+        }
+      }, 300);
     }
   });
 </script>
+
 
 <script>
   var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
@@ -363,7 +373,7 @@
     const chatSocket = new WebSocket(
       protocol
       + window.location.hostname
-      + (isDevelopment ? ':8098' : '')
+      + (isDevelopment ? ':8099' : '')
       + '/ws/chat/'
       + roomUUID
       + '/'

@@ -25,9 +25,9 @@ class TheoristMessageForm(forms.Form):
         self.msg_uuid_to_reply = kwargs.pop('msg_uuid_to_reply')
         super().__init__(*args, **kwargs)
         msg_uuid_to_reply = self.msg_uuid_to_reply
-        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply[1:-1]):
+        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply):
             self.message_to_reply = (
-                TheoristMessage.objects.filter(uuid=msg_uuid_to_reply[1:-1]).filter_by_is_not_safe_deleted().first()
+                TheoristMessage.objects.filter(uuid=msg_uuid_to_reply).filter_by_is_not_safe_deleted().first()
             )
         else:
             self.message_to_reply = None

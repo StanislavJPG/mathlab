@@ -93,21 +93,23 @@
                           <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
                              style="cursor: pointer; font-size: 19px;"></i>
                           <ul class="dropdown-menu">
-                            <li>
-                              <button type="button"
-                                      data-toast-trigger
-                                      class="dropdown-item"
-                                      hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
-                                      hx-target="#message-reply-block"
-                                      hx-trigger="click"
-                                      _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
-                                      style="cursor: pointer">
-                                <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
-                              </button>
-                            </li>
-                            <li>
-                              <hr class="dropdown-divider">
-                            </li>
+                            {% if not message.is_safe_deleted %}
+                              <li>
+                                <button type="button"
+                                        data-toast-trigger
+                                        class="dropdown-item"
+                                        hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                        hx-target="#message-reply-block"
+                                        hx-trigger="click"
+                                        _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
+                                </button>
+                              </li>
+                              <li>
+                                <hr class="dropdown-divider">
+                              </li>
+                            {% endif %}
                             <li>
                               {% if message.is_safe_deleted %}
                                 <button type="button"
@@ -179,21 +181,23 @@
                           <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
                              style="cursor: pointer; font-size: 19px;"></i>
                           <ul class="dropdown-menu">
-                            <li>
-                              <button type="button"
-                                      data-toast-trigger
-                                      class="dropdown-item"
-                                      hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
-                                      hx-target="#message-reply-block"
-                                      hx-trigger="click"
-                                      _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
-                                      style="cursor: pointer">
-                                <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
-                              </button>
-                            </li>
-                            <li>
-                              <hr class="dropdown-divider">
-                            </li>
+                            {% if not message.is_safe_deleted %}
+                              <li>
+                                <button type="button"
+                                        data-toast-trigger
+                                        class="dropdown-item"
+                                        hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                                        hx-target="#message-reply-block"
+                                        hx-trigger="click"
+                                        _="on click add [@data-reply-attr-uuid='{{ message.uuid }}'] to #chat-message-submit"
+                                        style="cursor: pointer">
+                                  <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
+                                </button>
+                              </li>
+                              <li>
+                                <hr class="dropdown-divider">
+                              </li>
+                            {% endif %}
                             <li>
                               {% if message.is_safe_deleted %}
                                 <button type="button"
@@ -230,8 +234,10 @@
                       {% endif %}
                     </p>
                   </div>
-                  <div class="d-flex justify-content-end p-2">
-                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"></i>
+                  <div class="d-flex justify-content-end p-2 pt-0 {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"
+                       title="{% if message.is_read %}{% translate 'Seen' %}{% else %}{% translate 'Sent' %}{% endif %}"
+                    ></i>
                   </div>
                 </div>
               {% else %}
@@ -253,8 +259,10 @@
                       </p>
                     </div>
                   </div>
-                  <div class="d-flex justify-content-end p-2">
-                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"></i>
+                  <div class="d-flex justify-content-end p-2 pt-0 {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"
+                       title="{% if message.is_read %}{% translate 'Seen' %}{% else %}{% translate 'Sent' %}{% endif %}"
+                    ></i>
                   </div>
                 </div>
               {% endif %}
@@ -355,7 +363,7 @@
     const chatSocket = new WebSocket(
       protocol
       + window.location.hostname
-      + (isDevelopment ? ':8099' : '')
+      + (isDevelopment ? ':8098' : '')
       + '/ws/chat/'
       + roomUUID
       + '/'

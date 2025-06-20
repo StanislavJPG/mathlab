@@ -34,6 +34,7 @@ class TheoristChatConsumer(WebsocketConsumer):
                   data-toast-trigger
                   class="dropdown-item"
                   hx-get="{reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])}"
+                  onclick="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
                   hx-target="#message-reply-block"
                   hx-trigger="click"
                   style="cursor: pointer">

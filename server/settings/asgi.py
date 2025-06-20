@@ -9,6 +9,7 @@ https://docs.djangoproject.com/en/5.0/howto/deployment/asgi/
 
 import os
 
+import django
 from channels.auth import AuthMiddlewareStack
 from channels.routing import ProtocolTypeRouter, URLRouter
 from channels.security.websocket import AllowedHostsOriginValidator
@@ -20,9 +21,11 @@ os.environ.setdefault(
     os.getenv('DJANGO_SETTINGS_MODULE', 'server.settings.environments.development'),
 )
 
+django.setup()
 django_asgi_app = get_asgi_application()
 
 from server.apps.theorist_chat.urls.routing import websocket_urlpatterns  # noqa: E402
+
 
 application = ProtocolTypeRouter(
     {

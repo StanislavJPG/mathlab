@@ -20,6 +20,9 @@ class TheoristMessageQueryset(models.QuerySet):
     def filter_by_is_safe_deleted(self):
         return self.filter(is_safe_deleted=True)
 
+    def filter_by_is_not_safe_deleted(self):
+        return self.filter(is_safe_deleted=False)
+
     def filter_by_is_read(self):
         return self.filter(is_read=True)
 

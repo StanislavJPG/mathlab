@@ -60,20 +60,27 @@
 <hr class="mb-4">
 
 <div class="d-flex flex-column" style="height: 88% !important;">
-  <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;"
+  <ul class="list-unstyled overflow-auto flex-grow-1 d-flex flex-column-reverse" style="max-height: 600px;"
       id="msg-list-js-{{ view.kwargs.room_uuid }}" data-room-uuid="{{ view.kwargs.room_uuid }}">
     {% if messages.exists %}
-      <div id="paginated-msg-list-js" data-skip-scroll>
+      <div id="paginated-msg-list-js">
+        {% if page_obj.has_previous %}
+          <div _="on htmx:afterOnLoad from body add .d-none"
+               class="text-center d-flex align-items-center flex-column mb-3">
+            <div style="width: 2rem; height: 2rem;" class="spinner-grow text-primary mt-2"
+                 role="status"></div>
+            <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
+          </div>
+        {% endif %}
         {% for message in messages %}
           <li class="d-flex justify-content-between mb-4"
-              id="scroll-anchor"
               {% if page_obj.number > 1 and forloop.first %}
                 data-toast-trigger
-                hx-trigger="intersect once"
+                hx-trigger="intersect once from:closest ul"
                 hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
                 hx-target="#paginated-msg-list-js"
                 hx-select="#paginated-msg-list-js"
-                hx-swap="beforebegin"
+                hx-swap="afterbegin"
               {% endif %}
           >
             {% if message.sender.uuid != request.theorist.uuid %}
@@ -323,45 +330,6 @@
 </div>
 
 <script>
-  window.previousScrollHeight = null;
-
-  document.body.addEventListener('htmx:beforeSwap', function (event) {
-    if (event.target.id === 'paginated-msg-list-js') {
-      const roomUUID = event.target.getAttribute('data-room-uuid');
-      const msgList = document.getElementById('msg-list-js-' + roomUUID);
-      if (msgList) {
-        window.previousScrollHeight = msgList.scrollHeight;
-      }
-    }
-  });
-
-  document.body.addEventListener('htmx:afterSwap', function (event) {
-    if (event.target.id === 'paginated-msg-list-js' && window.previousScrollHeight !== null) {
-      const roomUUID = event.target.getAttribute('data-room-uuid');
-      const msgList = document.getElementById('msg-list-js-' + roomUUID);
-      if (msgList) {
-        const newScrollHeight = msgList.scrollHeight;
-        const scrollDiff = newScrollHeight - window.previousScrollHeight;
-        msgList.scrollTop += scrollDiff;
-        window.previousScrollHeight = null;
-      }
-    }
-  });
-
-  document.addEventListener('htmx:afterSettle', function (event) {
-    const target = event.detail.elt;
-    if (!target.hasAttribute('data-skip-scroll')) {
-      setTimeout(() => {
-        const msgList = target.querySelector('[id^="msg-list-js-"]');
-        if (msgList) {
-          msgList.scrollTo({ top: msgList.scrollHeight, behavior: 'smooth' });
-        }
-      }, 300);
-    }
-  });
-</script>
-
-<script>
   var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
 
   window.chatSockets = window.chatSockets || {};
@@ -436,7 +404,7 @@
 
       var requestTheorist = document.getElementById('chat-section-js').getAttribute('data-request-theorist')
       newMessageItem.innerHTML = messageTemplate(data, requestTheorist === data.theorist_uuid);
-      messagesList.appendChild(newMessageItem);
+      messagesList.prepend(newMessageItem);
       htmx.process(newMessageItem);
       messagesList.scrollTop = messagesList.scrollHeight;
     };

@@ -61,7 +61,7 @@
 
 <div class="d-flex flex-column" style="height: 88% !important;">
   <ul class="list-unstyled overflow-auto flex-grow-1" style="max-height: 600px;"
-      id="msg-list-js-{{ messages.first.room.uuid }}" data-room-uuid="{{ messages.first.room.uuid }}">
+      id="msg-list-js-{{ view.kwargs.room_uuid }}" data-room-uuid="{{ view.kwargs.room_uuid }}">
     {% if messages.exists %}
       <div id="paginated-msg-list-js" data-skip-scroll>
         {% for message in messages %}
@@ -347,10 +347,7 @@
       }
     }
   });
-</script>
 
-
-<script>
   document.addEventListener('htmx:afterSettle', function (event) {
     const target = event.detail.elt;
     if (!target.hasAttribute('data-skip-scroll')) {
@@ -364,35 +361,30 @@
   });
 </script>
 
-
 <script>
   var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
-  if (typeof roomUUID !== 'undefined') {
-    const isDevelopment = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1' || window.location.hostname === '192.168.0.110';
+
+  window.chatSockets = window.chatSockets || {};
+
+  if (roomUUID && !window.chatSockets[roomUUID]) {
+    const isDevelopment = ['localhost', '127.0.0.1', '192.168.0.110'].includes(window.location.hostname);
     const protocol = isDevelopment ? 'ws://' : 'wss://';
+
     const chatSocket = new WebSocket(
-      protocol
-      + window.location.hostname
-      + (isDevelopment ? ':8099' : '')
-      + '/ws/chat/'
-      + roomUUID
-      + '/'
+      protocol + window.location.hostname + (isDevelopment ? ':8099' : '') + '/ws/chat/' + roomUUID + '/'
     );
+
+    window.chatSockets[roomUUID] = chatSocket;
 
     chatSocket.onmessage = function (e) {
       const data = JSON.parse(e.data);
 
-      if (data.room_uuid !== roomUUID) {
-        return;
-      }
+      if (data.room_uuid !== roomUUID) return;
 
       const emptyLabel = document.getElementById('empty-label-js');
-      if (emptyLabel) {
-        emptyLabel.remove()
-      }
+      if (emptyLabel) emptyLabel.remove();
 
-      const messagesList = document.getElementById('msg-list-js-{{ messages.first.room.uuid }}');
-
+      const messagesList = document.getElementById('msg-list-js-' + roomUUID);
       const newMessageItem = document.createElement('li');
       newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
 
@@ -439,44 +431,54 @@
         </div>
         </div>
         ${isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60"></a>` : ''}
-    `;
+        `;
       };
 
-
-      newMessageItem.innerHTML = messageTemplate(data, '{{ request.theorist.uuid }}' === data.theorist_uuid);
-
+      var requestTheorist = document.getElementById('chat-section-js').getAttribute('data-request-theorist')
+      newMessageItem.innerHTML = messageTemplate(data, requestTheorist === data.theorist_uuid);
       messagesList.appendChild(newMessageItem);
-
-      htmx.process(newMessageItem);  // hook all htmx behaviour for new ws element
-
+      htmx.process(newMessageItem);
       messagesList.scrollTop = messagesList.scrollHeight;
     };
 
-    chatSocket.onclose = function (e) {
+    chatSocket.onclose = function () {
       console.error('Chat socket closed unexpectedly');
     };
 
-    document.querySelector('#chat-message-input').focus();
-    document.querySelector('#chat-message-input').onkeyup = function (e) {
-      if (e.key === 'Enter') {  // enter, return
-        document.querySelector('#chat-message-submit').click();
-      }
+    const messageInput = document.querySelector('#chat-message-input');
+    const submitButton = document.querySelector('#chat-message-submit');
+
+    messageInput.focus();
+    messageInput.onkeyup = function (e) {
+      if (e.key === 'Enter') submitButton.click();
     };
 
-    document.querySelector('#chat-message-submit').onclick = function (e) {
-      const messageInputDom = document.querySelector('#chat-message-input');
-      const message = messageInputDom.value;
-      const submitBtn = document.getElementById('chat-message-submit');
-      const dataReplyAttrUUID = submitBtn.getAttribute('data-reply-attr-uuid');
+    document.body.addEventListener('htmx:afterSwap', function (event) {
+      const input = document.querySelector('#chat-message-input');
+      const submit = document.querySelector('#chat-message-submit');
 
-      chatSocket.send(JSON.stringify({
-        'message': message,
-        'reply_message_uuid': dataReplyAttrUUID
-      }));
-      messageInputDom.value = '';
-      submitBtn.removeAttribute('data-reply-attr-uuid');
-      document.getElementById('message-reply-block-js').classList.add('d-none');
-    }
+      if (input && submit) {
+        input.onkeyup = function (e) {
+          if (e.key === 'Enter') submit.click();
+        };
+
+        submit.onclick = function () {
+          const message = input.value;
+          const replyUUID = submit.getAttribute('data-reply-attr-uuid');
+          window.chatSockets[roomUUID].send(JSON.stringify({
+            message: message,
+            reply_message_uuid: replyUUID,
+          }));
+          input.value = '';
+          submit.removeAttribute('data-reply-attr-uuid');
+          if (document.getElementById('message-reply-block-js')) {
+            document.getElementById('message-reply-block-js').classList.add('d-none');
+          }
+        };
+      }
+    });
+
   }
 </script>
+
 

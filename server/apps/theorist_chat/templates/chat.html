@@ -6,7 +6,7 @@
 {% endblock page_head %}
 
 {% block body %}
-  <section>
+  <section id="chat-section-js" data-request-theorist="{{ request.theorist.uuid }}">
     <div class="container py-5">
       <div class="row" id="hx-mailbox-list-js" hx-get="{% url 'forum:theorist_chat:hx-mailbox-list' %}?show_blocked_chats=false&next_uuid={{ request.GET.next_uuid }}&page={{ page }}" hx-target="this" hx-trigger="load, friendshipBlockChanged from:body">
         <div class="text-center d-flex align-items-center flex-column">

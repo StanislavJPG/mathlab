@@ -1,0 +1,50 @@
+{% load i18n %}
+
+{% if not message.is_safe_deleted or message.was_safe_deleted_by.uuid == request.theorist.uuid or request.theorist.uuid == message.sender.uuid %}
+  <div class="dropdown ms-1">
+    <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical text-muted"
+       style="cursor: pointer; font-size: 19px;"></i>
+    <ul class="dropdown-menu">
+      {% if not message.is_safe_deleted %}
+        <li>
+          <button type="button"
+                  data-toast-trigger
+                  class="dropdown-item"
+                  hx-get="{% url 'forum:theorist_chat:hx-messages-reply' message.room.uuid message.uuid %}"
+                  hx-target="#message-reply-block"
+                  hx-trigger="click"
+                  _="on click add [@data-reply-attr-uuid={{ message.uuid }}] to #chat-message-submit"
+                  style="cursor: pointer">
+            <i class="ti ti-message-reply"></i> {% translate 'Reply' %}
+          </button>
+        </li>
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+      {% endif %}
+      <li>
+        {% if message.is_safe_deleted %}
+          <button type="button"
+                  data-toast-trigger
+                  class="dropdown-item text-success"
+                  hx-post="{% url 'forum:theorist_chat:chat-message-restore' message.uuid %}"
+                  hx-confirm="{% translate 'Are you sure you want to restore this message?' %}"
+                  hx-trigger="click"
+                  style="cursor: pointer">
+            <i class="ti ti-restore"></i> {% translate 'Restore' %}
+          </button>
+        {% else %}
+          <button type="button"
+                  data-toast-trigger
+                  class="dropdown-item text-danger"
+                  hx-post="{% url 'forum:theorist_chat:chat-message-safe-delete' message.uuid %}"
+                  hx-confirm="{% translate 'Are you sure you want to delete this message? You can restore it in any time after doing that.' %}"
+                  hx-trigger="click"
+                  style="cursor: pointer">
+            <i class="ti ti-trash"></i> {% translate 'Delete' %}
+          </button>
+        {% endif %}
+      </li>
+    </ul>
+  </div>
+{% endif %}

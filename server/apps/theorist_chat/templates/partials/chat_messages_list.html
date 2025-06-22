@@ -142,6 +142,7 @@
                       <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
                       <div class="mb-0 d-flex flex-row">
                         <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
+                        {% include 'partials/partials/message_action_block.html' %}
                       </div>
                     </div>
                     <div class="card-body bg-warning-subtle">
@@ -212,6 +213,7 @@
                       <p class="fw-bold mb-0">{{ message.sender.full_name }}</p>
                       <div class="mb-0 d-flex flex-row">
                         <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
+                        {% include 'partials/partials/message_action_block.html' %}
                       </div>
                     </div>
                     <div class="card-body bg-warning-subtle">

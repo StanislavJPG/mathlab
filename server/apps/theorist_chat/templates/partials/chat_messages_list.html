@@ -60,6 +60,9 @@
 <hr class="mb-4">
 
 <div class="d-flex flex-column" style="height: 88% !important;">
+
+  <button id="scroll-bottom-btn" class="btn btn-outline-info btn-sm mb-3 d-none" onclick="scrollBottom()"><i class="ti ti-arrow-down"></i></button>
+
   <ul class="list-unstyled overflow-auto flex-grow-1 d-flex flex-column-reverse" style="max-height: 600px;"
       id="msg-list-js-{{ view.kwargs.room_uuid }}" data-room-uuid="{{ view.kwargs.room_uuid }}">
     {% if messages.exists %}
@@ -73,10 +76,24 @@
           </div>
         {% endif %}
         {% for message in messages %}
+          {% if forloop.first %}
+            <div _="on intersection(intersecting) having threshold 0.5
+                    if intersecting
+                    remove .d-none from #scroll-bottom-btn
+                   "
+            ></div>
+          {% endif %}
+          {% if forloop.last and not page_obj.has_next %}
+            <div _="on intersection(intersecting) having threshold 0.5
+                    if intersecting
+                    add .d-none to #scroll-bottom-btn
+                   "
+            ></div>
+          {% endif %}
           <li class="d-flex justify-content-between mb-4"
               {% if page_obj.number > 1 and forloop.first %}
                 data-toast-trigger
-                hx-trigger="intersect once from:closest ul"
+                hx-trigger="intersect once"
                 hx-get="{{ request.path }}?page={{ page_obj.number|add:-1 }}"
                 hx-target="#paginated-msg-list-js"
                 hx-select="#paginated-msg-list-js"
@@ -286,6 +303,13 @@
     </div>
   </div>
 </div>
+
+<script>
+  function scrollBottom() {
+    const ul = document.querySelector('[id^="msg-list-js-"]');
+    ul.scrollTo(0, ul.scrollHeight);
+  }
+</script>
 
 <script>
   var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);

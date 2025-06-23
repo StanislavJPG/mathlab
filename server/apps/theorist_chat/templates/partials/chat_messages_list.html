@@ -307,7 +307,7 @@
 <script>
   function scrollBottom() {
     const ul = document.querySelector('[id^="msg-list-js-"]');
-    ul.scrollTo(0, ul.scrollHeight);
+    ul.scrollTo({'top': ul.scrollHeight, 'behavior': 'smooth'});
   }
 </script>
 

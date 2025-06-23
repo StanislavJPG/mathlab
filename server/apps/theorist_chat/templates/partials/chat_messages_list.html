@@ -76,7 +76,7 @@
           </div>
         {% endif %}
         {% for message in messages %}
-          {% if forloop.first %}
+          {% if forloop.first and page_obj.number > 1 %}
             <div _="on intersection(intersecting) having threshold 0.5
                     if intersecting
                     remove .d-none from #scroll-bottom-btn

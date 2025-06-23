@@ -189,12 +189,6 @@
                       {% endif %}
                     </p>
                   </div>
-                  <div
-                    class="d-flex justify-content-end p-2 pt-0 {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
-                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"
-                       title="{% if message.is_read %}{% translate 'Seen' %}{% else %}{% translate 'Sent' %}{% endif %}"
-                    ></i>
-                  </div>
                 </div>
               {% else %}
                 <div class="card w-100">

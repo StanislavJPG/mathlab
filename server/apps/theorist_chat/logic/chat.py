@@ -172,7 +172,7 @@ class HXMessageReplyView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXV
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
     context_object_name = 'message'
-    template_name = 'partials/message_reply_block.html'
+    template_name = 'partials/partials/message_reply_block.html'
 
     def get_queryset(self):
         return super().get_queryset().filter(room__uuid=self.kwargs['room_uuid'])

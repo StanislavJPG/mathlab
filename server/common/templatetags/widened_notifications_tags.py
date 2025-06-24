@@ -22,7 +22,7 @@ def widened_register_notify_callbacks(
     refresh_period = int(refresh_period) * 1000
 
     if api_name == 'list':
-        api_url = reverse('notifications:live_unread_notification_list')
+        api_url = reverse('forum:theorist_notifications:live_unread_notification_list')
     elif api_name == 'count':
         api_url = reverse('notifications:live_unread_notification_count')
     else:

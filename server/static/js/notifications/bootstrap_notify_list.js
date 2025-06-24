@@ -25,7 +25,14 @@ function bs_fill_notification_list(data) {
                     var formattedDate = gettext("Send at") + " " + intlDate;
                     message += "<br/>" + "<small class='text-muted'>- " + formattedDate + "</small>"
                 }
-                return `<li><hr class="dropdown-divider"></li><li><a class="${notify_menu_el_class}" href="${item.action_url}" style="font-size: 14px;">${message}</a></li>`;
+                return `<li><hr class="dropdown-divider"></li><li>
+                            <a class="${notify_menu_el_class}" 
+                            hx-post="/forum/theorist/notifications/${item.uuid}/mark-read/"
+                            hx-swap="none"
+                            hx-on::after-request="window.location = this.href"
+                            href="${item.action_url}" 
+                            style="font-size: 14px;">${message}</a>
+                        </li>`;
             }).join('')
             var clear_all_btn = `
                 <a href="javascript:(0);"

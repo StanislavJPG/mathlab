@@ -1,0 +1,512 @@
+[
+  {
+    "model": "math_news.mathnews",
+    "pk": 100,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.039Z",
+      "modified_at": "2025-03-17T18:25:42.048Z",
+      "uuid": "f9e49da4-bc0e-493d-8347-b86f1bf62d34",
+      "title": "В Україні відкрили перший інтерактивний Музей математики «Кубоїд»",
+      "short_content": "Президент України Володимир Зеленський і перша леді Олена Зеленська взяли участь у відкритті Музею математики «Кубоїд» та поспілкувалися з...",
+      "origin_url": "https://www.president.gov.ua/news/v-ukrayini-vidkrili-pershij-interaktivnij-muzej-matematiki-k-96669",
+      "improvised_published_at": "2 години тому",
+      "is_visible": true,
+      "background_colors": "[\"#462E32\", \"#5B2A9B\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 101,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.041Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "7ea5665f-585d-47f1-9465-dcb705d17664",
+      "title": "Зеленський та перша леді взяли участь у відкритті музею математики у Києві",
+      "short_content": "Участь у відкритті музею взяли Президент України Володимир Зеленський та перша леді Олена Зеленська, міністр освіти та науки Оксен Лісовий,...",
+      "origin_url": "https://www.ukrinform.ua/rubric-society/3971586-zelenskij-ta-persa-ledi-vzali-ucast-u-vidkritti-muzeu-matematiki-u-kievi.html",
+      "improvised_published_at": "2 години тому",
+      "is_visible": true,
+      "background_colors": "[\"#BC45F0\", \"#D00125\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 102,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.042Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "97bfabe2-ea38-43f6-9680-b067b4c156a8",
+      "title": "Президент України та перша леді відвідали відкриття музею математики: деталі",
+      "short_content": "Президент України Володимир Зеленський та перша леді Олена Зеленська відвідали відкриття музею математики “Кубоїд” та зустрілися з призерами...",
+      "origin_url": "https://weukraine.tv/novyny/prezident-ukrajini-ta-persha-ledi-vidvidali-vidkrittja-muzeju-matematiki-detali/",
+      "improvised_published_at": "2 години тому",
+      "is_visible": true,
+      "background_colors": "[\"#2B914A\", \"#BA134F\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 103,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.043Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "c617bf52-9a95-48c0-8155-5380cf1c98e3",
+      "title": "Перший в Україні та п'ятий у світі: у Києві відкрили музей математики \"Кубоїд\"",
+      "short_content": "У Києві 17 березня розпочав роботу перший в Україні музей математики Кубоїд. На відкритті були присутні Володимир та Олена Зеленські.",
+      "origin_url": "https://espreso.tv/nauka-pershiy-v-ukraini-ta-pyatiy-u-sviti-u-kievi-vidkrili-muzey-matematiki-kuboid",
+      "improvised_published_at": "2 години тому",
+      "is_visible": true,
+      "background_colors": "[\"#B81730\", \"#A58111\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 104,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.044Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "63e2185e-0906-4b99-afc1-6d68d9279d10",
+      "title": "Зеленские посетили открытие первого в Украине музея математики",
+      "short_content": "Президент Украины Владимир Зеленский поздравил открытие первого в Украине музея математики \"Кубоид\". Он стал стал стал пятым в мире.",
+      "origin_url": "https://news.novyny.live/ru/zelenski-vidvidali-vidkrittia-pershogo-v-ukrayini-muzeiu-matematiki-240920.html",
+      "improvised_published_at": "55 хвилин тому",
+      "is_visible": true,
+      "background_colors": "[\"#6C1C64\", \"#E48ECD\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 105,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.045Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "5b5f24ed-18d6-4a83-a58e-ad1f73ce7668",
+      "title": "Таблиця переведення балів НМТ 2025 у шкалу 100-200 балів",
+      "short_content": "Оцінка за шкалою 100–200 балів є рейтинговою та розраховується на основі таблиць переведення тестових балів.",
+      "origin_url": "https://osvita.ua/consultations/bachelor/86490/",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#5DB8F3\", \"#21095B\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 106,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.046Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "2a330ed3-b472-4fa7-a1c3-25f09d1a8de9",
+      "title": "Усе про НМТ-2025: обов'язкові предмети, прохідний бал та особливості підготовки",
+      "short_content": "Як проходитиме НМТ-2025: календар НМТ, предмети НМТ-2025, середній бал за результатами тесту. Де взяти демонстраційний варіант НМТ.",
+      "origin_url": "https://life.liga.net/poyasnennya/article/use-pro-nmt-2025-oboviazkovi-predmety-prokhidnyy-bal-ta-osoblyvosti-pidhotovky",
+      "improvised_published_at": "1 тиждень тому",
+      "is_visible": true,
+      "background_colors": "[\"#8515F4\", \"#8CAF5E\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 107,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.046Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "a25e19cc-e49e-4f08-9d1e-37604375367b",
+      "title": "МОН призвали проверить институты повышения квалификации: учителя математики в Харьковской области – одни из самых плохих в Украине",
+      "short_content": "Несмотря на то, что в Украине существует проблема с математикой в школе, этот предмет должны обязательно сдавать выпускники на Национальном...",
+      "origin_url": "https://shkola.obozrevatel.com/news/mon-prizvali-proverit-institutyi-povyisheniya-kvalifikatsii-uchitelya-matematiki-v-harkovskoj-oblasti-odni-iz-samyih-plohih-v-ukraine.htm",
+      "improvised_published_at": "1 тиждень тому",
+      "is_visible": true,
+      "background_colors": "[\"#E8033D\", \"#76265F\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 108,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.047Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "8efdf8af-86ce-400a-9726-67ee26b05172",
+      "title": "Чому погане знання математики несе серйозні загрози для України і її майбутнього, — розбір",
+      "short_content": "Математична неграмотність — це прямий маркер функціональної неграмотності, про яку також свідчать результати PISA. Значна частина школярів...",
+      "origin_url": "https://texty.org.ua/fragments/113891/chomu-pohane-znannya-matematyky-nese-serjozni-zahrozy-dlya-ukrayiny-i-yiyi-majbutnoho-rozbir/",
+      "improvised_published_at": "20 лист. 2024 р.",
+      "is_visible": true,
+      "background_colors": "[\"#61C8BB\", \"#F4B6D2\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 109,
+    "fields": {
+      "created_at": "2025-03-17T18:25:42.048Z",
+      "modified_at": "2025-03-17T18:25:42.049Z",
+      "uuid": "267211bb-9a1a-4ae5-b58e-12b981535289",
+      "title": "Методики і практики для вчителів-предметників, які варто взяти із собою у 2025 рік",
+      "short_content": "Пропонуємо безліч цікавих завдань для уроків української мови, історії України, математики та біології.",
+      "origin_url": "https://osvitoria.media/experience/najkrashhi-metodyky-shho-vchytelyam-predmetnykam-dopomozhe-u-2025-rotsi/",
+      "improvised_published_at": "8 січ. 2025 р.",
+      "is_visible": true,
+      "background_colors": "[\"#55114F\", \"#7FA3AC\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 119,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.705Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "24242f0a-3afa-41aa-b90c-1c40f039c470",
+      "title": "Математика як пригода: в Україні відкрили перший інтеракт?...",
+      "short_content": "У Києві з'явився перший в Україні інтерактивний Музей математики \"Кубоїд\" — освітній простір, який змінює традиційний .",
+      "origin_url": "https://rubryka.com/2025/03/19/muzej-kuboyid/",
+      "improvised_published_at": "3 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#0FCEA9\", \"#F1D254\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 120,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.707Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "bfef07df-600f-4818-b12a-05cf4668199e",
+      "title": "Математика как приключение: в Украине открыли первый интерактивный музей “Кубоид”",
+      "short_content": "В Киеве появился первый в Украине интерактивный Музей математики «Кубоид» – образовательное пространство, которое меняет традиционный подход...",
+      "origin_url": "https://www.ukr.net/ru/news/details/science/110238981.html",
+      "improvised_published_at": "3 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#B6B771\", \"#3765C2\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 121,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.708Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "45ce0526-c01d-4530-8240-07f4ef6eabed",
+      "title": "Перший в Україні і п'ятий в світі: у Києві відкрили Музей математики - новини освіти | «Освіторія»",
+      "short_content": "Перший в Україні і п'ятий в світі: у Києві відкрили Музей математики - новини освіти для школярів і студентів на «Освіторія»!",
+      "origin_url": "https://osvitoria.media/news/pershyj-v-ukrayini-i-p-yatyj-v-sviti-u-kyyevi-vidkryly-muzej-matematyky/",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#1ECA33\", \"#F18E91\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 122,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.709Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "3a098520-8bd1-437c-bde0-9342454424e2",
+      "title": "Міносвіти повідомило про створення першого в Україні інтерактивного Музею математики «Кубоїд»",
+      "short_content": "Створено перший в Україні інтерактивний Музей математики «Кубоїд». Це стратегічний освітній проєкт, покликаний зробити математику захопливою...",
+      "origin_url": "https://lb.ua/society/2025/03/18/666233_minosviti_povidomilo_pro_stvorennya.html",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#CA3CF2\", \"#A7C81D\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 123,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.710Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "3130cf92-5775-46d6-b57f-5b8932435fee",
+      "title": "П’ятий у світі. Володимир та Олена Зеленські відвідали відкриття Музею математики у Києві",
+      "short_content": "У Києві відкрився Музей математики Кубоїд, який став першим в Україні та п'ятим у світі. На події були присутні президент України Володимир...",
+      "origin_url": "https://nv.ua/ukr/socium/muzey-matematiki-kubojid-vidkrivsya-v-kiyevi-zelenski-vidvidali-podiyu-foto-50498758.html",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#E58A7A\", \"#F1B30B\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 124,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.711Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "26f451d4-25ac-4ff7-90e7-33ba648695ab",
+      "title": "В Україні відкрили перший інтерактивний Музей математики “Кубоїд” для подолання освітніх втрат",
+      "short_content": "В Україні відкрився перший інтерактивний Музей математики “Кубоїд”. Про це повідомили в Міністерстві освіти і науки України.",
+      "origin_url": "https://nus.org.ua/2025/03/18/v-ukrayini-vidkryly-pershyj-interaktyvnyj-muzej-matematyky-kuboyid-dlya-podolannya-osvitnih-vtrat/",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#29C609\", \"#673CCD\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 125,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.712Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "ff0c34f2-be81-4a3a-b8d8-abfeda9dfb65",
+      "title": "В Украине открыли первый Музей математики «Кубоид»",
+      "short_content": "Музей предлагает уникальный подход к изучению математики. Президент Украины Владимир Зеленский вместе с первой леди Еленой Зеленской принял...",
+      "origin_url": "https://zn.ua/CULTURE/v-ukraine-otkryli-pervyj-muzej-matematiki-kuboid.html",
+      "improvised_published_at": "5 днів тому",
+      "is_visible": true,
+      "background_colors": "[\"#329563\", \"#744CD7\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 126,
+    "fields": {
+      "created_at": "2025-03-22T20:49:49.712Z",
+      "modified_at": "2025-03-22T20:49:49.713Z",
+      "uuid": "6df8efac-e5ba-4e9c-bb98-5d48379036ae",
+      "title": "В Україні відкрили перший інтерактивний Музей математики «Кубоїд»",
+      "short_content": "В Україні відкрили перший інтерактивний Музей математики «Кубоїд» Про це розповіли у Малій академії наук України. «Кубоїд» стане у пригоді не лише учням,...",
+      "origin_url": "https://bigkyiv.com.ua/v-ukrayini-vidkryly-pershyj-interaktyvnyj-muzej-matematyky-kuboyid/",
+      "improvised_published_at": "4 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#D2DFE3\", \"#43766E\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 127,
+    "fields": {
+      "created_at": "2025-03-23T16:25:45.748Z",
+      "modified_at": "2025-03-23T16:25:45.758Z",
+      "uuid": "dda6db50-e97c-4ab8-bdcd-8573628d4244",
+      "title": "\"Математика як пригода\": в Києві відкрили інтерактивний музей для школярів і педагогів \"Кубоїд\"",
+      "short_content": "У Києві відкрили перший в Україні інтерактивний музей математики \"Кубоїд\". Таких музеїв – п'ять на цілий світ. У ньому сотні експонатів,...",
+      "origin_url": "https://life.pravda.com.ua/society/v-ukrajini-vidkrili-p-yatiy-u-sviti-interaktivniy-matematichniy-muzey-foto-307029/",
+      "improvised_published_at": "5 днів тому",
+      "is_visible": true,
+      "background_colors": "[\"#D95865\", \"#7AC1C0\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 128,
+    "fields": {
+      "created_at": "2025-03-27T15:43:33.621Z",
+      "modified_at": "2025-03-27T15:43:33.630Z",
+      "uuid": "69696a2d-7cb0-4e35-a603-27c6a497bece",
+      "title": "В УЦОКО объяснили, почему математика является обязательным предметом на НМТ",
+      "short_content": "Математика в 2025 году является обязательным для сдачи предметом на национальном мультипредметном тесте. В УЦОКО рассказали, почему...",
+      "origin_url": "https://24tv.ua/education/ru/nmt-2025-pochemu-matematika-javljaetsja-objazatelnym-predmetom-na-multiteste-osvita_n2778307",
+      "improvised_published_at": "3 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#C20AC9\", \"#019D92\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 129,
+    "fields": {
+      "created_at": "2025-03-27T15:43:33.624Z",
+      "modified_at": "2025-03-27T15:43:33.630Z",
+      "uuid": "984ed933-b3d3-487d-bf32-435ffeba1e33",
+      "title": "Математик Михайло Кравчук, загинув на Колимі 79 років тому",
+      "short_content": "Минає 79 років від загибелі українського математика світового рівня родом із Волині – Михайла Кравчука.",
+      "origin_url": "https://history.rayon.in.ua/news/355264-matematik-mihailo-kravchuk-zaginuv-na-kolimi-79-rokiv-tomu",
+      "improvised_published_at": "3 дні тому",
+      "is_visible": true,
+      "background_colors": "[\"#C860C9\", \"#8C9C7E\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 130,
+    "fields": {
+      "created_at": "2025-03-27T15:43:33.625Z",
+      "modified_at": "2025-03-27T15:43:33.630Z",
+      "uuid": "a5e35dae-9e3b-42bd-80c3-c1506a56e304",
+      "title": "Математика как приключение: в Украине открыли первый инте?...",
+      "short_content": "В Киеве появился первый в Украине интерактивный Музей математики «Кубоид» – образовательное пространство, которое меняет традиционный подход...",
+      "origin_url": "https://rubryka.com/ru/2025/03/19/muzej-kuboyid/",
+      "improvised_published_at": "1 тиждень тому",
+      "is_visible": true,
+      "background_colors": "[\"#87C3FE\", \"#FB2F8F\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 161,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.587Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "351f771e-6b65-4465-9a18-578a36e1ce4a",
+      "title": "В Україні запрацював перший Музей математики «Кубоїд»",
+      "short_content": "У Києві розпочав роботу Музей математики «Кубоїд»! Майже 120 інтерактивних експонатів доводять: математика — всюди!",
+      "origin_url": "https://mon.gov.ua/news/v-ukraini-zapratsiuvav-pershyi-muzei-matematyky-kuboid",
+      "improvised_published_at": "2 тижні тому",
+      "is_visible": true,
+      "background_colors": "[\"#65BA1F\", \"#F23A60\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 162,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.588Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "ae4950fe-77e4-4709-bebc-313882ce4956",
+      "title": "Global Teacher Prize Ukraine та SoftServe відзначать найкращого вчителя математики",
+      "short_content": "Мій шлях в ІТ почався зі школи – зі шкільної математики. Я з шостого класу брав участь в олімпіадах і мав щастя, що першим моїм вчителем був мій батько,...",
+      "origin_url": "https://itukraine.org.ua/global-teacher-prize-ukraine-ta-softserve-vidznachat-najkrashhogo-vchitelya-matematiki/",
+      "improvised_published_at": "2 тижні тому",
+      "is_visible": true,
+      "background_colors": "[\"#137875\", \"#958AC0\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 163,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.589Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "b002f78a-77f5-4948-a6af-7d9a69566586",
+      "title": "У Києві запрацював перший в Україні Музей математики \"Кубоїд\"",
+      "short_content": "Музей створено, щоб допомогти школярам подолати освітні втрати, популяризувати STEM і зробити математику доступною для кожного.",
+      "origin_url": "https://imi.org.ua/news/u-kyyevi-zapratsyuvav-pershyj-v-ukrayini-muzej-matematyky-kuboyid-i68013",
+      "improvised_published_at": "2 тижні тому",
+      "is_visible": true,
+      "background_colors": "[\"#CEB42C\", \"#B660E3\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 164,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.590Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "c1c97440-1d26-4d0c-aaba-8621f88bf3f4",
+      "title": "В Україні відкрили перший інтерактивний музей математики «Кубоїд»: його особливості",
+      "short_content": "Музей математики «Кубоїд» – перший такого рівня в Україні та п'ятий у світі. Мета цього інтерактивного простору – зробити математику цікавою та...",
+      "origin_url": "https://shotam.info/v-ukraini-vidkryly-pershyy-interaktyvnyy-muzey-matematyky-kuboid-yoho-osoblyvosti/",
+      "improvised_published_at": "18 бер. 2025 р.",
+      "is_visible": true,
+      "background_colors": "[\"#878575\", \"#389668\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 165,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.590Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "97e93dec-51d8-4194-8e98-4f4aace650e3",
+      "title": "Математика війни – це не лише про кількість… або Чому надважливо провести уніфікацію БПАК",
+      "short_content": "Валерій Чуркін, заступник міністра оборони України. Масове застосування нових інструментів війни, зокрема безпілотників різного призначення...",
+      "origin_url": "https://interfax.com.ua/news/blog/1067126.html",
+      "improvised_published_at": "2 тижні тому",
+      "is_visible": true,
+      "background_colors": "[\"#55B161\", \"#BC44A0\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 166,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.591Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "556b78c4-c8d5-480a-8855-666457cf182d",
+      "title": "Мы теряем поколение инженеров и программистов. Как математика влияет на будущее Украины",
+      "short_content": "Такая испорченная репутация школьного предмета несет серьезные угрозы для воюющей страны. Как следствие, растет финансовая неграмотность,...",
+      "origin_url": "https://www.liga.net/society/articles/my-teryaem-pokolenie-inzhenerov-i-programmistov-kak-matematika-vliyaet-na-budushtee-ukrainy",
+      "improvised_published_at": "20 лист. 2024 р.",
+      "is_visible": true,
+      "background_colors": "[\"#E476F0\", \"#07A58E\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 167,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.592Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "00d3a5d5-e45a-41c6-816c-bb82dfb4a453",
+      "title": "Приз – полмиллиона: в Украине отметят лучшего учителя математики",
+      "short_content": "Премия Global Teacher Prize Ukraine представляет номинацию для учителей математики, алгебры и геометрии. Сколько получит победитель и кто...",
+      "origin_url": "https://24tv.ua/education/ru/luchshij-uchitel-ukrainy-2025-v-jetom-godu-otmetjat-luchshego-uchitelja-matematiki-obrazovanie_n2814434",
+      "improvised_published_at": "1 тиждень тому",
+      "is_visible": true,
+      "background_colors": "[\"#0BD29D\", \"#0FBAB3\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 168,
+    "fields": {
+      "created_at": "2025-05-15T14:54:00.593Z",
+      "modified_at": "2025-05-15T14:54:00.593Z",
+      "uuid": "dfbca30d-3a54-4b46-91b1-c33d419a76e2",
+      "title": "«Чиста математика». Україна може випускати зброю вдвічі дешевше, ніж у Європі - єврокомісар",
+      "short_content": "Європейський Союз може надавати більш масштабну і стратегічну підтримку Україні, зокрема через розумне використання заморожених російських активів.",
+      "origin_url": "https://www.ukr.net/news/details/politics/111188700.html",
+      "improvised_published_at": "1 тиждень тому",
+      "is_visible": true,
+      "background_colors": "[\"#4A6CD5\", \"#D4EC49\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 169,
+    "fields": {
+      "created_at": "2025-05-23T10:14:11.077Z",
+      "modified_at": "2025-05-23T10:14:11.097Z",
+      "uuid": "d993e468-2af4-4ac9-921f-d3d806d6fd3c",
+      "title": "Кредо її життя – «Україна. Жінка. Математика»",
+      "short_content": "У травні 95 років відзначила відома українка Ніна Вірченко – докторка фізико-математичних наук, членкиня Австралійського, Американського,...",
+      "origin_url": "https://history.rayon.in.ua/topics/806301-kredo-ii-zhittya-ukraina-zhinka-matematika",
+      "improvised_published_at": "1 день тому",
+      "is_visible": true,
+      "background_colors": "[\"#E842E3\", \"#E69A0D\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 170,
+    "fields": {
+      "created_at": "2025-05-23T10:14:11.079Z",
+      "modified_at": "2025-05-23T10:14:11.097Z",
+      "uuid": "94289e37-597a-4747-945f-24764c4c9e61",
+      "title": "Математика может управлять поведением человека точнее, чем психология",
+      "short_content": "Ученые из Еврейского университета Иерусалима разработали математическую модель, управляющую поведением человека в условиях неопределенности.",
+      "origin_url": "https://www.ukr.net/ru/news/details/science/111432128.html",
+      "improvised_published_at": "1 день тому",
+      "is_visible": true,
+      "background_colors": "[\"#83B26A\", \"#FB0BAB\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 171,
+    "fields": {
+      "created_at": "2025-05-23T10:14:11.081Z",
+      "modified_at": "2025-05-23T10:14:11.097Z",
+      "uuid": "45dd96be-f4c5-4b97-8d93-d2f7152a305b",
+      "title": "Бюджетная математика: Украина потратила на зарплаты военным на 150 млрд больше чем на пенсии",
+      "short_content": "За первые четыре месяца 2025 года расходы общего фонда госбюджета выросли на 25,3% по сравнению с прошлым годом.",
+      "origin_url": "https://dengi.ua/finance/9754059-byudzhetnaya-matematika-ukraina-potratila-na-zarplaty-voennym-na-150-mlrd-bolshe-chem-na-pensii",
+      "improvised_published_at": "6 днів тому",
+      "is_visible": true,
+      "background_colors": "[\"#EC1E73\", \"#503397\"]"
+    }
+  },
+  {
+    "model": "math_news.mathnews",
+    "pk": 172,
+    "fields": {
+      "created_at": "2025-05-23T10:14:11.083Z",
+      "modified_at": "2025-05-23T10:14:11.097Z",
+      "uuid": "120d8318-ebdd-4266-b055-0d1e7fd01d47",
+      "title": "Global Teacher Prize Ukraine та SoftServe відзначать найкращого вчителя математики",
+      "short_content": "Global Teacher Prize Ukraine та SoftServe відзначать найкращого вчителя математики ... Підтримка вчителів математики має ключове значення, адже...",
+      "origin_url": "https://osvitoria.media/news/global-teacher-prize-ukraine-ta-softserve-vidznachat-najkrashhogo-vchytelya-matematyky/",
+      "improvised_published_at": "3 тижні тому",
+      "is_visible": true,
+      "background_colors": "[\"#B95497\", \"#398F96\"]"
+    }
+  }
+]

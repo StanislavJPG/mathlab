@@ -23,6 +23,11 @@
             <i class="ti ti-users"></i> {% translate 'Forum' %}
           </a>
         </li>
+        <li>
+          <a href="{% url 'forum:theorist_community:all' %}" class="nav-link px-2 link-secondary">
+            <i class="ti ti-currency-ripple"></i> {% translate 'Community' %}
+          </a>
+        </li>
         {% if user.is_authenticated %}
           <li>
             <a href="{% url 'forum:post-create' %}" class="nav-link px-2 link-secondary">
@@ -32,7 +37,7 @@
         {% else %}
           <li>
             <a href="{% url 'users:base-auth' %}?signup=true" class="nav-link px-2 link-secondary">
-              <i class="ti ti-help-hexagon"></i>{% translate 'New discussion' %}
+              <i class="ti ti-help-hexagon"></i> {% translate 'New discussion' %}
             </a>
           </li>
         {% endif %}

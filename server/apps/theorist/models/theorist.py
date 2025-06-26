@@ -1,3 +1,5 @@
+from typing import Literal
+
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -69,19 +71,31 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
         self.full_name_slug = slugify(self.full_name)
         self.save(update_fields=['full_name_slug'], skip_hooks=True)
 
-    def get_friends(self):
-        sent = TheoristFriendship.objects.filter(
-            requester=self, status=TheoristFriendshipStatusChoices.ACCEPTED
-        ).values_list('receiver', flat=True)
+    def _get_friendship_qs(
+        self,
+        status: Literal[
+            TheoristFriendshipStatusChoices.PENDING,
+            TheoristFriendshipStatusChoices.ACCEPTED,
+            TheoristFriendshipStatusChoices.REJECTED,
+        ],
+    ):
+        sent = TheoristFriendship.objects.filter(requester=self, status=status).values_list('receiver', flat=True)
 
-        received = TheoristFriendship.objects.filter(
-            receiver=self, status=TheoristFriendshipStatusChoices.ACCEPTED
-        ).values_list('requester', flat=True)
+        received = TheoristFriendship.objects.filter(receiver=self, status=status).values_list('requester', flat=True)
 
         # Squash two lists
         friend_ids = list(sent) + list(received)
 
         return Theorist.objects.filter(pk__in=friend_ids)
+
+    def get_friends(self):
+        return self._get_friendship_qs(status=TheoristFriendshipStatusChoices.ACCEPTED)
+
+    def get_pending_friends(self):
+        return self._get_friendship_qs(status=TheoristFriendshipStatusChoices.PENDING)
+
+    def get_rejected_friends(self):
+        return self._get_friendship_qs(status=TheoristFriendshipStatusChoices.REJECTED)
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly

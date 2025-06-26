@@ -1,54 +1,73 @@
-{% load i18n avatars %}
+{% load i18n avatars widget_tweaks %}
 
 <div class="container">
   <div class="row">
     <div class="col-md-12">
+      <div class="d-flex justify-content-center flex-column align-items-center">
+        <label for="{{ filter.form.full_name.id_for_label }}" class="text-muted small mb-1">{% translate 'Search by nickname' %}</label>
+        <form class="position-relative w-50"
+              hx-get="{{ request.get_full_path }}"
+              hx-trigger="input changed from:#{{ filter.form.full_name.id_for_label }} delay:0.5s"
+              hx-swap="outerHTML"
+              hx-target="#community-list-js"
+              hx-select="#community-list-js"
+        >
+          {% render_field filter.form.full_name class="form-control py-2 ps-5" %}
+          <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
+        </form>
+      </div>
       <div class="people-nearby" id="community-list-js">
-        {% for theorist in theorists %}
-          <hr>
-          <div class="row">
-            <div class="col-md-2 col-sm-2">
-              {% get_instance_avatar theorist size=120 as_href=True %}
+        {% if theorists.exists %}
+          {% for theorist in theorists %}
+            <hr>
+            <div class="row">
+              <div class="col-md-2 col-sm-2">
+                {% get_instance_avatar theorist size=120 as_href=True %}
+              </div>
+              <div class="col-md-7 col-sm-7">
+                <h5><a href="{{ theorist.get_absolute_url }}" class="profile-link text-decoration-none">{{ theorist.full_name }}</a></h5>
+                <p>{{ theorist.get_rank_display }}</p>
+                <p class="text-muted">500m away</p>
+              </div>
+              <div class="col-md-3 col-sm-3 d-flex align-items-center justify-content-center"
+                   id="friendship-block-js-{{ theorist.uuid }}"
+                   hx-get="{% url 'forum:theorist_community:hx-friendship-block' theorist.uuid %}"
+                   hx-target="#friendship-block-js-{{ theorist.uuid }}"
+                   hx-trigger="friendshipBlockChanged from:body"
+              >
+                {% block friendship_block %}
+                  {% if request.theorist in theorist.get_friends %}
+                    <i class="ti ti-user-check ms-1 text-success"
+                       title="{% translate 'This is already your friend!' %}"
+                       style="font-size: 35px;"></i>
+                  {% elif request.theorist in theorist.get_pending_friends %}
+                    <i class="ti ti-clock-2 ms-1 text-warning"
+                       title="{% translate 'Already sent friendship request.' %}"
+                       style="font-size: 35px;"></i>
+                  {% elif request.theorist in theorist.get_rejected_friends %}
+                    <i class="ti ti-user-x ms-1 text-danger"
+                       title="{% translate 'Someone already rejected friendship request.' %}"
+                       style="font-size: 35px;"></i>
+                  {% elif request.theorist not in theorist.get_friends %}
+                    <i class="ti ti-user-plus ms-1"
+                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
+                       hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+                       data-toast-trigger
+                       title="{% translate 'Make friendship request to this theorist.' %}"
+                       style="font-size: 35px; cursor: pointer"></i>
+                  {% endif %}
+                {% endblock friendship_block %}
+              </div>
             </div>
-            <div class="col-md-7 col-sm-7">
-              <h5><a href="{{ theorist.get_absolute_url }}" class="profile-link text-decoration-none">{{ theorist.full_name }}</a></h5>
-              <p>{{ theorist.get_rank_display }}</p>
-              <p class="text-muted">500m away</p>
-            </div>
-            <div class="col-md-3 col-sm-3 d-flex align-items-center justify-content-center"
-                 id="friendship-block-js-{{ theorist.uuid }}"
-                 hx-get="{% url 'forum:theorist_community:hx-friendship-block' theorist.uuid %}"
-                 hx-target="#friendship-block-js-{{ theorist.uuid }}"
-                 hx-trigger="friendshipBlockChanged from:body"
-            >
-              {% block friendship_block %}
-                {% if request.theorist in theorist.get_friends %}
-                  <i class="ti ti-user-check ms-1 text-success"
-                     title="{% translate 'This is already your friend!' %}"
-                     style="font-size: 35px;"></i>
-                {% elif request.theorist in theorist.get_pending_friends %}
-                  <i class="ti ti-clock-2 ms-1 text-warning"
-                     title="{% translate 'Already sent friendship request.' %}"
-                     style="font-size: 35px;"></i>
-                {% elif request.theorist in theorist.get_rejected_friends %}
-                  <i class="ti ti-user-x ms-1 text-danger"
-                     title="{% translate 'Someone already rejected friendship request.' %}"
-                     style="font-size: 35px;"></i>
-                {% elif request.theorist not in theorist.get_friends %}
-                  <i class="ti ti-user-plus ms-1"
-                     hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
-                     hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
-                     data-toast-trigger
-                     title="{% translate 'Make friendship request to this theorist.' %}"
-                     style="font-size: 35px; cursor: pointer"></i>
-                {% endif %}
-              {% endblock friendship_block %}
-            </div>
+          {% endfor %}
+          <div class="mt-5">
+            {% include 'common/pagination.html' with htmx_target='#community-list-js' %}
           </div>
-        {% endfor %}
-        <div class="mt-5">
-          {% include 'common/pagination.html' with htmx_target='#community-list-js' %}
-        </div>
+        {% else %}
+          <div class="mt-5">
+            {% include 'alerts/not_found_alert.html' %}
+          </div>
+        {% endif %}
       </div>
     </div>
   </div>

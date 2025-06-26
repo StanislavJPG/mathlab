@@ -5,6 +5,7 @@ from django_filters.views import FilterView
 from render_block import render_block_to_string
 
 from server.apps.theorist.models import Theorist
+from server.apps.theorist_community.filters import TheoristCommunityFilter
 from server.common.mixins.views import HXViewMixin
 
 
@@ -14,7 +15,7 @@ class TheoristCommunityBaseTemplateView(TemplateView):
 
 class HXTheoristCommunityBaseListView(HXViewMixin, FilterView):
     model = Theorist
-    filterset_fields = ('full_name',)
+    filterset_class = TheoristCommunityFilter
     template_name = 'partials/theorist_community_base_list.html'
     context_object_name = 'theorists'
     paginate_by = 20

@@ -1,0 +1,52 @@
+{% load i18n avatars %}
+
+<style>
+  .people-nearby .google-maps {
+    background: #f8f8f8;
+    border-radius: 4px;
+    border: 1px solid #f1f2f2;
+    padding: 20px;
+    margin-bottom: 20px;
+  }
+
+  .people-nearby .google-maps .map {
+    height: 300px;
+    width: 100%;
+    border: none;
+  }
+
+  .people-nearby .nearby-user {
+    padding: 20px 0;
+    border-top: 1px solid #f1f2f2;
+    border-bottom: 1px solid #f1f2f2;
+    margin-bottom: 20px;
+  }
+</style>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-12">
+      <div class="people-nearby">
+        {% for theorist in theorists %}
+          <div class="nearby-user">
+            <div class="row">
+              <div class="col-md-2 col-sm-2">
+                {% get_instance_avatar theorist size=120 as_href=True %}
+              </div>
+              <div class="col-md-7 col-sm-7">
+                <h5><a href="#" class="profile-link">{{ theorist.full_name }}</a></h5>
+                <p>{{ theorist.get_rank_display }}</p>
+                <p class="text-muted">500m away</p>
+              </div>
+              {% if request.theorist not in theorist.get_friends %}
+                <div class="col-md-3 col-sm-3">
+                  <button class="btn btn-primary pull-right">Add Friend</button>
+                </div>
+              {% endif %}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+</div>

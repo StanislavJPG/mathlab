@@ -2,7 +2,7 @@
 {% load static i18n %}
 
 {% block page_head %}
-  <title>Mathlab | {% translate 'My community' %}</title>
+  <title>Mathlab | {% translate 'Mathlab community' %}</title>
 {% endblock page_head %}
 
 {% block page_css %}
@@ -23,97 +23,14 @@
 
     <div class="container">
       <div class="my-3 p-3 rounded box-shadow">
-        <ul class="nav nav-tabs justify-content-end"
-            hx-get=""
-            hx-target="this"
-            hx-on::after-request="if (event.detail.elt === this) document.getElementById('friends').click()"
-            hx-trigger="friendshipBlockChanged from:body"
-            role="tablist">
-          <li class="nav-item" role="presentation">
-            <a class="nav-link active"
-               id="friends"
-               data-bs-toggle="tab"
-               data-bs-target="#friends-tab"
-               type="button"
-               role="tab"
-               aria-controls="friends-tab-el"
-               aria-selected="true"
-               href="javascript:(0);"><i class="ti ti-friends"></i>
-              {% translate 'Friends' %} <span class="badge bg-success">{{ accepted_status_counter }}</span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link"
-               id="pending"
-               data-bs-toggle="tab"
-               data-bs-target="#pending-tab"
-               type="button"
-               role="tab"
-               aria-controls="pending-tab-el"
-               aria-selected="false"
-               href="javascript:(0);"><i class="ti ti-clock-24"></i>
-              {% translate 'Pending' %} <span class="badge bg-warning">{{ pending_status_counter }}</span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link"
-               id="rejected"
-               data-bs-toggle="tab"
-               data-bs-target="#rejected-tab"
-               type="button"
-               role="tab"
-               aria-controls="rejected-tab-el"
-               aria-selected="false"
-               href="javascript:(0);"><i class="ti ti-friends-off"></i>
-              {% translate 'Rejected' %} <span class="badge bg-secondary">{{ rejected_counter_counter }}</span>
-            </a>
-          </li>
-          <li class="nav-item" role="presentation">
-            <a class="nav-link text-danger"
-               id="blacklist"
-               data-bs-toggle="tab"
-               data-bs-target="#blacklist-tab"
-               hx-get=""
-               hx-trigger="click once, friendshipBlockChanged from:body"
-               hx-target="#blacklist-tab"
-               type="button"
-               role="tab"
-               aria-controls="blacklist-tab-el"
-               aria-selected="false"
-               href="javascript:(0);"><i class="ti ti-playlist-x"></i>
-              {% translate 'Blacklist' %} <span class="badge bg-danger">{{ blacklist_counter }}</span>
-            </a>
-          </li>
-        </ul>
-        <div class="tab-content">
-          <div class="tab-pane fade show active" id="friends-tab" role="tabpanel" aria-labelledby="friends-tab-el">
-            <div class="text-center d-flex align-items-center flex-column">
-              <div id="friends-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
-                   class="spinner-grow text-primary mt-2" role="status"></div>
-              <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="pending-tab" role="tabpanel" aria-labelledby="pending-tab-el">
-            <div class="text-center d-flex align-items-center flex-column">
-              <div id="pending-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
-                   class="spinner-grow text-primary mt-2" role="status"></div>
-              <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="rejected-tab" role="tabpanel" aria-labelledby="rejected-tab-el">
-            <div class="text-center d-flex align-items-center flex-column">
-              <div id="rejected-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
-                   class="spinner-grow text-primary mt-2" role="status"></div>
-              <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
-            </div>
-          </div>
-          <div class="tab-pane fade" id="blacklist-tab" role="tabpanel" aria-labelledby="blacklist-tab-el">
-            <div class="text-center d-flex align-items-center flex-column">
-              <div id="blacklist-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
-                   class="spinner-grow text-primary mt-2" role="status"></div>
-              <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
-            </div>
-          </div>
+        <div class="text-center d-flex align-items-center flex-column"
+             hx-get="{% url 'forum:theorist_community:hx-base-list' %}"
+             hx-trigger="load once"
+             hx-target="this"
+        >
+          <div id="pending-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
+               class="spinner-grow text-primary mt-2" role="status"></div>
+          <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>
         </div>
       </div>
     </div>

@@ -21,6 +21,7 @@ if [ "$DJANGO_ENV" = "prod" ]; then
   echo "Automatically preparing production data..."
   python manage.py loaddata post_categories
   python manage.py loaddata mathlab_carousels
+  python manage.py loaddata math_news
 
   if [ "$SUPERUSER_CREATE" = "True" ]; then
     echo "Superuser creation..."

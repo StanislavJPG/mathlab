@@ -7,6 +7,8 @@ from django_countries.fields import CountryField
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from slugify import slugify
 
+from server.apps.theorist.choices import TheoristFriendshipStatusChoices
+from server.apps.theorist.models import TheoristFriendship
 from server.apps.theorist.querysets import TheoristQuerySet
 from server.common.data.generate_initials import GenerateInitials
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin, RankSystemModelMixin, AvatarModelMixin
@@ -66,6 +68,20 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     def after_save(self):
         self.full_name_slug = slugify(self.full_name)
         self.save(update_fields=['full_name_slug'], skip_hooks=True)
+
+    def get_friends(self):
+        sent = TheoristFriendship.objects.filter(
+            requester=self, status=TheoristFriendshipStatusChoices.ACCEPTED
+        ).values_list('receiver', flat=True)
+
+        received = TheoristFriendship.objects.filter(
+            receiver=self, status=TheoristFriendshipStatusChoices.ACCEPTED
+        ).values_list('requester', flat=True)
+
+        # Squash two lists
+        friend_ids = list(sent) + list(received)
+
+        return Theorist.objects.filter(pk__in=friend_ids)
 
     def apply_default_onboarding_data(self):
         # use .save() outside explicitly

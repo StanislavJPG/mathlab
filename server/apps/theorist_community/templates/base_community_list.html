@@ -13,7 +13,11 @@
   <main role="main" class="container d-block d-sm-flex">
     <div class="container w-50">
       <div class="my-3 p-3 rounded box-shadow">
-        <div class="text-center d-flex align-items-center flex-column">
+        <div class="text-center d-flex align-items-center flex-column"
+             hx-get="{% url 'forum:theorist_community:hx-friends-last-activities' %}"
+             hx-target="this"
+             hx-trigger="load"
+        >
           <div id="pending-list-block-wait-spinner" style="width: 2rem; height: 2rem;"
                class="spinner-grow text-primary mt-2" role="status"></div>
           <small class="text-muted" style="font-size: 13px">{% translate 'Loading...' %}</small>

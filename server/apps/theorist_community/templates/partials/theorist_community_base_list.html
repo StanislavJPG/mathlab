@@ -21,7 +21,7 @@
                 <div class="row mb-3">
                   <div class="col-12 col-md-12">
                     <label for="{{ filter.form.full_name.id_for_label }}"
-                           class="form-label small text-secondary d-flex align-items-start flex-column">{% translate 'Search by nickname' %}</label>
+                           class="form-label small text-secondary d-flex align-items-start flex-column">{{ filter.form.full_name.label }}</label>
                     <div class="position-relative">
                       {% render_field filter.form.full_name class="form-control py-2 ps-5" %}
                       <i class="ti ti-search position-absolute top-50 start-0 translate-middle-y ms-3"></i>
@@ -71,35 +71,37 @@
                   {% endif %}
                 </div>
               </div>
-              <div class="col-md-3 col-sm-3 d-flex align-items-center justify-content-center"
-                   id="friendship-block-js-{{ theorist.uuid }}"
-                   hx-get="{% url 'forum:theorist_community:hx-friendship-block' theorist.uuid %}"
-                   hx-target="#friendship-block-js-{{ theorist.uuid }}"
-                   hx-trigger="friendshipBlockChanged from:body"
-              >
-                {% block friendship_block %}
-                  {% if request.theorist in theorist.get_friends %}
-                    <i class="ti ti-user-check ms-1 text-success"
-                       title="{% translate 'This is already your friend!' %}"
-                       style="font-size: 35px;"></i>
-                  {% elif request.theorist in theorist.get_pending_friends %}
-                    <i class="ti ti-clock-2 ms-1 text-warning"
-                       title="{% translate 'Already sent friendship request.' %}"
-                       style="font-size: 35px;"></i>
-                  {% elif request.theorist in theorist.get_rejected_friends %}
-                    <i class="ti ti-user-x ms-1 text-danger"
-                       title="{% translate 'Someone already rejected friendship request.' %}"
-                       style="font-size: 35px;"></i>
-                  {% elif request.theorist not in theorist.get_friends %}
-                    <i class="ti ti-user-plus ms-1"
-                       hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
-                       hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
-                       data-toast-trigger
-                       title="{% translate 'Make friendship request to this theorist.' %}"
-                       style="font-size: 35px; cursor: pointer"></i>
-                  {% endif %}
-                {% endblock friendship_block %}
-              </div>
+              {% if request.user.is_authenticated %}
+                <div class="col-md-3 col-sm-3 d-flex align-items-center justify-content-center"
+                     id="friendship-block-js-{{ theorist.uuid }}"
+                     hx-get="{% url 'forum:theorist_community:hx-friendship-block' theorist.uuid %}"
+                     hx-target="#friendship-block-js-{{ theorist.uuid }}"
+                     hx-trigger="friendshipBlockChanged from:body"
+                >
+                  {% block friendship_block %}
+                    {% if request.theorist in theorist.get_friends %}
+                      <i class="ti ti-user-check ms-1 text-success"
+                         title="{% translate 'This is already your friend!' %}"
+                         style="font-size: 35px;"></i>
+                    {% elif request.theorist in theorist.get_pending_friends %}
+                      <i class="ti ti-clock-2 ms-1 text-warning"
+                         title="{% translate 'Already sent friendship request.' %}"
+                         style="font-size: 35px;"></i>
+                    {% elif request.theorist in theorist.get_rejected_friends %}
+                      <i class="ti ti-user-x ms-1 text-danger"
+                         title="{% translate 'Someone already rejected friendship request.' %}"
+                         style="font-size: 35px;"></i>
+                    {% elif request.theorist not in theorist.get_friends %}
+                      <i class="ti ti-user-plus ms-1"
+                         hx-post="{% url 'forum:theorist_profile:friendship:theorist-friendship-request' theorist.uuid %}"
+                         hx-confirm="{% blocktranslate trimmed with name=theorist.full_name %}Are you sure you want to send friendship request to {{ name }}?{% endblocktranslate %}"
+                         data-toast-trigger
+                         title="{% translate 'Make friendship request to this theorist.' %}"
+                         style="font-size: 35px; cursor: pointer"></i>
+                    {% endif %}
+                  {% endblock friendship_block %}
+                </div>
+              {% endif %}
             </div>
           {% endfor %}
           <div class="mt-5">

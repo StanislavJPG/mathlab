@@ -23,7 +23,7 @@
       <div class="col-sm-6 col-lg-4">
         <div class="card hover-img">
           <div class="card-body p-4 text-center border-bottom">
-            {% if friend.requester.uuid == view.kwargs.uuid %}
+            {% if friend.requester.uuid == view.kwargs.theorist_uuid %}
               {% get_instance_avatar friend.receiver size=120 as_href=True %}
               <h5 class="fw-semibold mt-2">{{ friend.receiver.full_name }}</h5>
               <span class="fs-4 mt-2">{{ friend.receiver.get_rank_display }}</span>
@@ -34,14 +34,14 @@
             {% endif %}
           </div>
           <ul class="px-2 py-2 bg-body-secondary list-unstyled d-flex align-items-center justify-content-center mb-0 d-flex flex-column">
-            {% if view.kwargs.uuid == request.theorist.uuid %}
-              {% if friend.requester.uuid == view.kwargs.uuid %}
+            {% if view.kwargs.theorist_uuid == request.theorist.uuid %}
+              {% if friend.requester.uuid == view.kwargs.theorist_uuid %}
                 <button class="btn btn-outline-danger"
                         hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
                         hx-confirm="{% blocktranslate trimmed with name=friend.receiver.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}">
                   {% translate 'Break up' %}
                 </button>
-              {% elif friend.receiver.uuid == view.kwargs.uuid %}
+              {% elif friend.receiver.uuid == view.kwargs.theorist_uuid %}
                 <button class="btn btn-outline-danger"
                         hx-delete="{% url 'forum:theorist_profile:friendship:theorist-friendship-broke-up' friend.uuid %}"
                         hx-confirm="{% blocktranslate trimmed with name=friend.requester.full_name %}Are you sure you want to break friendship with {{ name }}? You should make friendship request again if you change your mind after that.{% endblocktranslate %}">
@@ -49,7 +49,7 @@
                 </button>
               {% endif %}
             {% endif %}
-            {% if friend.requester.uuid == view.kwargs.uuid %}
+            {% if friend.requester.uuid == view.kwargs.theorist_uuid %}
               <div class="d-flex flex-row">
                 {% if friend.receiver.social_media_url %}
                   <li class="position-relative mt-2">
@@ -68,7 +68,7 @@
                   </li>
                 {% endif %}
               </div>
-            {% elif friend.receiver.uuid == view.kwargs.uuid %}
+            {% elif friend.receiver.uuid == view.kwargs.theorist_uuid %}
               <div class="d-flex flex-row">
                 {% if friend.requester.social_media_url %}
                   <li class="position-relative mt-2">

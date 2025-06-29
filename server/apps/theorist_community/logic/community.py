@@ -74,9 +74,14 @@ class TheoristFriendsLastActivitiesListView(HXViewMixin, ListView):
     model = Theorist
     template_name = 'partials/last_actions_block.html'
     paginate_by = 8
+    last_hours_actions = 24
     context_object_name = 'activities_list'
     slug_field = 'uuid'
     slug_url_kwarg = 'uuid'
+
+    def get_timestamp_for_cond(self):
+        expr = timezone.now() - timedelta(hours=self.last_hours_actions)
+        return Q(created_at__gte=expr)
 
     def get_queryset(self):
         if self.request.user.is_authenticated:
@@ -85,8 +90,7 @@ class TheoristFriendsLastActivitiesListView(HXViewMixin, ListView):
             qs = friends.prefetch_related('comments', 'posts', 'comment_likes_relations', 'post_likes_relations')
             activity = []
 
-            three_days_ago = timezone.now() - timedelta(days=3)
-            created_at_expr = Q(created_at__gte=three_days_ago)
+            created_at_expr = self.get_timestamp_for_cond()
             for obj in qs:
                 posts = obj.posts.filter(created_at_expr).annotate(model_name=Value('post', output_field=CharField()))
                 post_likes = obj.post_likes_relations.filter(created_at_expr).annotate(

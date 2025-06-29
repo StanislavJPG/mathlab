@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-19 14:41+0300\n"
+"POT-Creation-Date: 2025-06-29 23:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -232,6 +232,8 @@ msgstr "Відповіді на коментарі"
 #: server/apps/forum/templates/base_articles.html
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/apps/theorist_chat/templates/chat.html
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_community/templates/base_community_list.html
 #: server/apps/theorist_drafts/templates/base_drafts.html
 #: server/apps/theorist_notifications/templates/base_notifications.html
 msgid "Loading..."
@@ -365,6 +367,7 @@ msgid "Create question"
 msgstr "Створити запитання"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Filter"
 msgstr "Фільтр"
 
@@ -373,10 +376,12 @@ msgid "Advanced filter"
 msgstr "Розширений фільтр"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Apply"
 msgstr "Застосувати"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 msgid "Clear"
 msgstr "Очистити"
@@ -835,10 +840,12 @@ msgid "Finish registration"
 msgstr "Завершити реєстрацію"
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist_community/filters.py
 msgid "Nickname"
 msgstr "Нікнейм"
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist_community/filters.py
 msgid "Rank"
 msgstr "Ранг"
 
@@ -855,22 +862,27 @@ msgid "Last actions"
 msgstr "Останні дії"
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Wrote comment"
 msgstr "Написав коментар"
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "for the post"
 msgstr "до поста"
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Created post"
 msgstr "Створив пост"
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Liked a post"
 msgstr "Лайкнув пост"
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Liked a comment in post"
 msgstr "Лайкнув коментар у пості"
 
@@ -879,10 +891,12 @@ msgid "This profile is available only for authorized users."
 msgstr "Цей профіль доступний лише для авторизованих користувачів."
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "This is already your friend!"
 msgstr "Цей теоретик вже є вашим другом!"
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Someone already rejected friendship request."
 msgstr "Хтось вже відмовив на запит на дружбу раніше."
 
@@ -900,11 +914,13 @@ msgid "You have been blocked by this theorist"
 msgstr "Ви були заблоковані цим теоретиком."
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 #, python-format
 msgid "Are you sure you want to send friendship request to %(name)s?"
 msgstr "Ви впевнені, що хочете відправити запит на дружбу з %(name)s?"
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Make friendship request to this theorist."
 msgstr "Створити запит на дружбу для цього теоретика."
 
@@ -1161,13 +1177,13 @@ msgid "has shared with you with"
 msgstr "поділився з Вами"
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "Delete"
 msgstr "Видалити"
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 msgid ""
 "Are you sure you want to delete this message? You can restore it in any time "
 "after doing that."
@@ -1176,7 +1192,7 @@ msgstr ""
 "відновити його в будь-який час."
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 msgid "Reply"
 msgstr "Відповісти"
 
@@ -1324,16 +1340,16 @@ msgid "Delete chat"
 msgstr "Видалити чат"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Are you sure you want to restore this message?"
-msgstr "Ви впевнені, що хочете віновити це повідомлення?"
-
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Restore"
-msgstr "Відновити"
-
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "This message was removed."
 msgstr "Це повідомлення було видалено."
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Seen"
+msgstr "Переглянуто"
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Sent"
+msgstr "Відправлено"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "This chat is unavailable because you have blocked this theorist."
@@ -1379,9 +1395,29 @@ msgstr "Хтось з учасників чату заблокував іншо�
 msgid "Not found any mailboxes"
 msgstr "Не знайдено жодної скриньки"
 
-#: server/apps/theorist_chat/templates/partials/message_reply_block.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
+msgid "Are you sure you want to restore this message?"
+msgstr "Ви впевнені, що хочете віновити це повідомлення?"
+
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
+msgid "Restore"
+msgstr "Відновити"
+
+#: server/apps/theorist_chat/templates/partials/partials/message_reply_block.html
 msgid "Reply to"
 msgstr "Відповісти для"
+
+#: server/apps/theorist_community/templates/base_community_list.html
+msgid "Mathlab community"
+msgstr "Mathlab спільнота"
+
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
+msgid "Last actions friends of yours"
+msgstr "Останні події друзів"
+
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
+msgid "Already sent friendship request."
+msgstr "Запит на дружбу вже відправлений"
 
 #: server/apps/theorist_drafts/forms.py
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
@@ -1884,6 +1920,10 @@ msgstr "Авто"
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
 msgstr "Форум"
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Community"
+msgstr "Спільнота"
 
 #: server/templates/partials/forum/forum_navbar.html
 msgid "New discussion"

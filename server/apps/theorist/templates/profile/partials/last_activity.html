@@ -8,7 +8,7 @@
         {% translate 'Wrote comment' %}
         <a class="mt-4 mb-1" href=""
            style="font-size: 19px;">{{ action.title }}</a>
-        {% translate 'for the post' %} <a href="{{ action.post.get_absolute_url }}">{{ action.post.title }}</a>
+        {% translate 'for the post' %} <a href="{{ action.get_absolute_url }}">{{ action.post.title }}</a>
       {% elif action.model_name == 'post' %}
         {% translate 'Created post' %}:
         <a class="mt-4 mb-1"
@@ -22,7 +22,7 @@
       {% elif action.model_name == 'comment_like' %}
         {% translate 'Liked a comment in post' %}:
         <a class="mt-4 mb-1"
-           href="{{ action.comment.post.get_absolute_url }}"
+           href="{{ action.comment.get_absolute_url }}"
            style="font-size: 19px;">{{ action.comment.post.title }}</a>
       {% endif %}
       <br>

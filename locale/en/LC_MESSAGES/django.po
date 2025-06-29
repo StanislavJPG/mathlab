@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-19 14:41+0300\n"
+"POT-Creation-Date: 2025-06-29 23:39+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -228,6 +228,8 @@ msgstr ""
 #: server/apps/forum/templates/base_articles.html
 #: server/apps/theorist/templates/friendship/community_list.html
 #: server/apps/theorist_chat/templates/chat.html
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_community/templates/base_community_list.html
 #: server/apps/theorist_drafts/templates/base_drafts.html
 #: server/apps/theorist_notifications/templates/base_notifications.html
 msgid "Loading..."
@@ -359,6 +361,7 @@ msgid "Create question"
 msgstr ""
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Filter"
 msgstr ""
 
@@ -367,10 +370,12 @@ msgid "Advanced filter"
 msgstr ""
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Apply"
 msgstr ""
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 msgid "Clear"
 msgstr ""
@@ -823,10 +828,12 @@ msgid "Finish registration"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist_community/filters.py
 msgid "Nickname"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/about_me.html
+#: server/apps/theorist_community/filters.py
 msgid "Rank"
 msgstr ""
 
@@ -843,22 +850,27 @@ msgid "Last actions"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Wrote comment"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "for the post"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Created post"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Liked a post"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/last_activity.html
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Liked a comment in post"
 msgstr ""
 
@@ -867,10 +879,12 @@ msgid "This profile is available only for authorized users."
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "This is already your friend!"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Someone already rejected friendship request."
 msgstr ""
 
@@ -888,11 +902,13 @@ msgid "You have been blocked by this theorist"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 #, python-format
 msgid "Are you sure you want to send friendship request to %(name)s?"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/partials/main_information_block.html
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Make friendship request to this theorist."
 msgstr ""
 
@@ -1145,20 +1161,20 @@ msgid "has shared with you with"
 msgstr ""
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "Delete"
 msgstr ""
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 msgid ""
 "Are you sure you want to delete this message? You can restore it in any time "
 "after doing that."
 msgstr ""
 
 #: server/apps/theorist_chat/logic/consumers.py
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 msgid "Reply"
 msgstr ""
 
@@ -1300,15 +1316,15 @@ msgid "Delete chat"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Are you sure you want to restore this message?"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
-msgid "Restore"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "This message was removed."
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Seen"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Sent"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
@@ -1355,8 +1371,28 @@ msgstr ""
 msgid "Not found any mailboxes"
 msgstr ""
 
-#: server/apps/theorist_chat/templates/partials/message_reply_block.html
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
+msgid "Are you sure you want to restore this message?"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
+msgid "Restore"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/partials/partials/message_reply_block.html
 msgid "Reply to"
+msgstr ""
+
+#: server/apps/theorist_community/templates/base_community_list.html
+msgid "Mathlab community"
+msgstr ""
+
+#: server/apps/theorist_community/templates/partials/last_actions_block.html
+msgid "Last actions friends of yours"
+msgstr ""
+
+#: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
+msgid "Already sent friendship request."
 msgstr ""
 
 #: server/apps/theorist_drafts/forms.py
@@ -1839,6 +1875,10 @@ msgstr ""
 #: server/templates/partials/forum/forum_navbar.html
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
+msgstr ""
+
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Community"
 msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html

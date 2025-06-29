@@ -1,30 +1,28 @@
 {% load static i18n %}
 
+<div class="card-header">
+  <span><i class="ti ti-directions"></i> {% translate 'Last actions friends of yours' %}</span>
+</div>
 <div class="card-body">
-  <p class="text-center"><b>{% translate 'Last actions friends of yours' %}</b></p>
   {% if request.user.is_authenticated %}
     <div style="text-align: center; font-size: 14px;" id="last-activity-js">
       {% for action in activities_list %}
         {% if action.model_name == 'comment' %}
           <strong>{{ action.theorist.full_name }}</strong> {% translate 'Wrote comment' %}
-          <a class="mt-4 mb-1" href=""
-             style="font-size: 19px;">{{ action.title }}</a>
+          <a class="mt-4 mb-1" href="">{{ action.title }}</a>
           {% translate 'for the post' %} <a href="{{ action.get_absolute_url }}">{{ action.post.title }}</a>
         {% elif action.model_name == 'post' %}
           <strong>{{ action.theorist.full_name }}</strong> {% translate 'Created post' %}:
           <a class="mt-4 mb-1"
-             href="{{ action.get_absolute_url }}"
-             style="font-size: 19px;">{{ action.title }}</a>
+             href="{{ action.get_absolute_url }}">{{ action.title }}</a>
         {% elif action.model_name == 'post_like' %}
           <strong>{{ action.theorist.full_name }}</strong> {% translate 'Liked a post' %}:
           <a class="mt-4 mb-1"
-             href="{{ action.post.get_absolute_url }}"
-             style="font-size: 19px;">{{ action.post.title }}</a>
+             href="{{ action.post.get_absolute_url }}">{{ action.post.title }}</a>
         {% elif action.model_name == 'comment_like' %}
           <strong>{{ action.theorist.full_name }}</strong> {% translate 'Liked a comment in post' %}:
           <a class="mt-4 mb-1"
-             href="{{ action.comment.get_absolute_url }}"
-             style="font-size: 19px;">{{ action.comment.post.title }}</a>
+             href="{{ action.comment.get_absolute_url }}">{{ action.comment.post.title }}</a>
         {% endif %}
         <br>
         <small class="text-muted">- {{ action.created_at }}</small>

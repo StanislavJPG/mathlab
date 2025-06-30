@@ -48,13 +48,14 @@
             processStats();
         });
     });
+    const mainLabel = "{% translate '📃 Profile visiting statistics' %}"
 
     function processStats() {
         var themeVar = document.documentElement.getAttribute('data-bs-theme');
 
         var options = {
             series: [{
-                name: 'Statistics',
+                name: '{% translate 'Views' %}',
                 data: {{ analytics_data }}
             }],
             chart: {
@@ -91,7 +92,7 @@
                 },
             },
             title: {
-                text: gettext('📃 Profile visiting statistics'),
+                text: mainLabel,
                 align: 'left',
                 style: {
                     fontSize: '16px',

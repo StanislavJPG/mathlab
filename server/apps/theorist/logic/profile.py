@@ -1,10 +1,15 @@
 from itertools import chain
 
 from django.contrib.auth.mixins import AccessMixin
-from django.db.models import Value, CharField, Q
+from django.contrib.contenttypes.models import ContentType
+from django.db.models import Value, CharField, Q, Count
+from django.utils.translation import gettext_lazy as _
 from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
+from django.utils import timezone
 from django.views.generic import DetailView, ListView
+from hitcount.models import HitCount
+from hitcount.views import HitCountDetailView
 
 from server.apps.theorist.models import Theorist, TheoristFriendship, TheoristFriendshipBlackList
 from server.apps.theorist_chat.models import TheoristChatRoom
@@ -23,21 +28,47 @@ class ProfileStatisticsData:
     def __init__(self, theorist):
         self.theorist = theorist
 
+    def _aggregate_by_months(self):
+        return {
+            month.lower(): Count('id', filter=Q(modified__month=num))
+            for num, month in enumerate(self.get_analytics_categories(), start=1)
+        }
+
     def get_analytics_data(self):
-        return [10, 41, 35, 51, 49, 62, 69, 91, 171]
+        ctype = ContentType.objects.get_for_model(Theorist)
+
+        stats = HitCount.objects.filter(content_type=ctype, object_pk=self.theorist.pk).aggregate(
+            **self._aggregate_by_months()
+        )
+        return [stat for stat in stats.values()]
 
     def get_analytics_categories(self):
-        return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+        month_num = timezone.now().month
+        return [
+            _('Jan'),
+            _('Feb'),
+            _('Mar'),
+            _('Apr'),
+            _('May'),
+            _('Jun'),
+            _('Jul'),
+            _('Aug'),
+            _('Sep'),
+            _('Oct'),
+            _('Nov'),
+            _('Dec'),
+        ][:month_num]
 
 
 ### VIEWS ###
 
 
-class TheoristProfileDetailView(AccessMixin, DetailView):
+class TheoristProfileDetailView(AccessMixin, HitCountDetailView):
     model = Theorist
     template_name = 'profile/profile.html'
     context_object_name = 'theorist'
     raise_exception = True
+    count_hit = True
 
     def get_queryset(self):
         return super().get_queryset().filter_by_is_onboarded()

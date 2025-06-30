@@ -1,31 +1,154 @@
 {% load static i18n %}
 
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-scoreboard"></i>
-    <span class="mb-0">{% translate 'Score' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.score }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-scoreboard"></i>
+        <span class="mb-0">{% translate 'Score' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.score }}</p>
+    </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-inbox"></i>
-    <span class="mb-0">{% translate 'Posts quantity' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.total_posts }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-inbox"></i>
+        <span class="mb-0">{% translate 'Posts quantity' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.total_posts }}</p>
+    </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-message"></i>
-    <span class="mb-0">{% translate 'Comments quantity' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-message"></i>
+        <span class="mb-0">{% translate 'Comments quantity' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
+    </div>
 </div>
+<hr>
+<div class="row">
+    <div id="chart" class="d-flex justify-content-center"></div>
+</div>
+
+<script>
+    document.addEventListener('htmx:afterSettle', processStats);
+    const themeButtons = document.querySelectorAll("[data-bs-theme-value]");
+    themeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const chartEl = document.querySelector("#chart");
+
+            if (chartEl.chart) {
+                chartEl.chart.destroy();
+            }
+
+            processStats();
+        });
+    });
+
+    function processStats() {
+        var themeVar = document.documentElement.getAttribute('data-bs-theme');
+
+        var options = {
+            series: [{
+                name: 'Statistics',
+                data: [2.3, 3.1, 4.0, 10.1, 4.0, 3.6, 3.2, 2.3, 1.4, 0.8, 0.5, 0.2]
+            }],
+            chart: {
+                height: 360,
+                width: '80%',
+                type: 'bar',
+            },
+            plotOptions: {
+                bar: {
+                    borderRadius: 10,
+                    dataLabels: {
+                        position: 'top', // top, center, bottom
+                    },
+                }
+            },
+            dataLabels: {
+                enabled: true,
+                formatter: function (val) {
+                    return val + "%";
+                },
+                offsetY: -20,
+                style: {
+                    fontSize: '12px',
+                    colors: ["#304758"]
+                }
+            },
+
+            xaxis: {
+                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"],
+                position: 'top',
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false
+                },
+                crosshairs: {
+                    fill: {
+                        type: 'gradient',
+                        gradient: {
+                            colorFrom: '#D8E3F0',
+                            colorTo: '#BED1E6',
+                            stops: [0, 100],
+                            opacityFrom: 0.4,
+                            opacityTo: 0.5,
+                        }
+                    }
+                },
+                tooltip: {
+                    enabled: true,
+                }
+            },
+            yaxis: {
+                axisBorder: {
+                    show: false
+                },
+                axisTicks: {
+                    show: false,
+                },
+                labels: {
+                    show: false,
+                    formatter: function (val) {
+                        return val + "%";
+                    }
+                }
+
+            },
+            theme: {
+                mode: themeVar,
+                palette: 'palette1',
+                monochrome: {
+                    enabled: true,
+                    color: '#008FFB',
+                    shadeTo: themeVar,
+                    shadeIntensity: 0.65
+                },
+            },
+            title: {
+                text: gettext('📃 Profile visiting statistics'),
+                floating: false,
+                offsetY: 335,
+                align: 'center',
+                style: {
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                    color: '#212529'
+                }
+            }
+        };
+
+        const chartEl = document.querySelector("#chart")
+        var chart = new ApexCharts(chartEl, options);
+        chart.render();
+        chartEl.chart = chart;
+    }
+</script>

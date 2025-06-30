@@ -19,6 +19,20 @@ __all__ = (
 )
 
 
+class ProfileStatisticsData:
+    def __init__(self, theorist):
+        self.theorist = theorist
+
+    def get_analytics_data(self):
+        return [10, 41, 35, 51, 49, 62, 69, 91, 171]
+
+    def get_analytics_categories(self):
+        return ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec']
+
+
+### VIEWS ###
+
+
 class TheoristProfileDetailView(AccessMixin, DetailView):
     model = Theorist
     template_name = 'profile/profile.html'
@@ -127,6 +141,15 @@ class HXTheoristDetailsProfileView(HXViewMixin, DetailView):
             return 'profile/partials/contact_info.html'
         else:
             return 'profile/partials/about_me.html'
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        section = self.request.GET.get('section')
+        if section == 'statistics':
+            stats = ProfileStatisticsData(theorist=self.get_object())
+            context['analytics_data'] = stats.get_analytics_data()
+            context['analytics_categories'] = stats.get_analytics_categories()
+        return context
 
 
 class TheoristLastActivitiesListView(ListView):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 14:16+0300\n"
+"POT-Creation-Date: 2025-07-01 15:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1066,6 +1066,10 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show last activities"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit everyone to see my profile visiting statistics"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html

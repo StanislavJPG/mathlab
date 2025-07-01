@@ -2,11 +2,6 @@
 
 <form hx-post="{{ request.path }}" hx-trigger="change delay:0.1s">
   <div class="form-check form-switch">
-    {% render_field form.is_profile_only_for_authenticated class="form-check-input" %}
-    <label class="form-check-label text-lg-nowrap" for="{{ form.is_profile_only_for_authenticated.id_for_label }}">{% translate 'Is profile only for authorized' %}</label>
-    {% render_field_errors form.is_profile_only_for_authenticated small=True %}
-  </div>
-  <div class="form-check form-switch">
     {% render_field form.is_show_about_me class="form-check-input" %}
     <label class="form-check-label text-lg-nowrap" for="{{ form.is_show_about_me.id_for_label }}">{% translate 'Is show about me' %}</label>
     {% render_field_errors form.is_show_about_me small=True %}
@@ -15,6 +10,16 @@
     {% render_field form.is_show_last_activities class="form-check-input" %}
     <label class="form-check-label text-lg-nowrap" for="{{ form.is_show_last_activities.id_for_label }}">{% translate 'Is show last activities' %}</label>
     {% render_field_errors form.is_show_last_activities small=True %}
+  </div>
+  <div class="form-check form-switch">
+    {% render_field form.is_profile_only_for_authenticated class="form-check-input" %}
+    <label class="form-check-label text-lg-nowrap" for="{{ form.is_profile_only_for_authenticated.id_for_label }}">{% translate 'Is profile only for authorized' %}</label>
+    {% render_field_errors form.is_profile_only_for_authenticated small=True %}
+  </div>
+  <div class="form-check form-switch">
+    {% render_field form.permit_everyone_to_see_visit_statistics class="form-check-input" %}
+    <label class="form-check-label text-lg-nowrap" for="{{ form.permit_everyone_to_see_visit_statistics.id_for_label }}">{% translate 'Permit everyone to see my profile visiting statistics' %}</label>
+    {% render_field_errors form.permit_everyone_to_see_visit_statistics small=True %}
   </div>
   <div class="form-check form-switch">
     {% render_field form.is_able_to_get_messages class="form-check-input" %}

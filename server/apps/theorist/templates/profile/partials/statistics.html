@@ -29,10 +29,13 @@
         <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
     </div>
 </div>
-<hr>
-<div class="row">
-    <div id="chart" class="d-flex justify-content-center mt-2"></div>
-</div>
+
+{% if theorist.settings.permit_everyone_to_see_visit_statistics or theorist.uuid == request.theorist.uuid %}
+    <hr>
+    <div class="row">
+        <div id="chart" class="d-flex justify-content-center mt-2"></div>
+    </div>
+{% endif %}
 
 <script>
     document.addEventListener('htmx:afterSettle', processStats);

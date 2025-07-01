@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-30 18:06+0300\n"
+"POT-Creation-Date: 2025-07-01 14:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1026,6 +1026,22 @@ msgstr "📃 Статистика візиту профілю"
 #: server/apps/theorist/templates/profile/partials/statistics.html
 msgid "Views"
 msgstr "Переглядів"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download SVG"
+msgstr "Завантажити SVG"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download PNG"
+msgstr "Завантажити PNG"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download CSV"
+msgstr "Завантажити CSV"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Menu"
+msgstr "Меню"
 
 #: server/apps/theorist/templates/profile/profile.html
 msgid "My profile"

@@ -59,6 +59,18 @@
                 data: {{ analytics_data }}
             }],
             chart: {
+                locales: [{
+                    "name": "i18n",
+                    "options": {
+                        "toolbar": {
+                            "exportToSVG": '{% translate 'Download SVG' %}',
+                            "exportToPNG": '{% translate 'Download PNG' %}',
+                            "exportToCSV": '{% translate 'Download CSV' %}',
+                            "menu": '{% translate 'Menu' %}',
+                        }
+                    }
+                }],
+                defaultLocale: "i18n",
                 height: 360,
                 width: '80%',
                 type: 'line',
@@ -75,6 +87,13 @@
             xaxis: {
                 categories: {{ analytics_categories|safe }},
             },
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return Math.floor(val);
+                    }
+                }
+            },
             theme: {
                 mode: themeVar,
                 palette: 'palette1',
@@ -87,7 +106,7 @@
             },
             grid: {
                 row: {
-                    colors: [themeVar === 'light' ? '#f3f3f3' : '#ababab', 'transparent'], // takes an array which will be repeated on columns
+                    colors: [themeVar === 'light' ? '#f3f3f3' : '#45485b', 'transparent'], // takes an array which will be repeated on columns
                     opacity: 0.5
                 },
             },

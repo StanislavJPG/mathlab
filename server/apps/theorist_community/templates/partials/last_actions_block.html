@@ -4,7 +4,7 @@
   <span><i class="ti ti-directions"></i> {% translate 'Last actions friends of yours' %}</span>
 </div>
 <div class="card-body">
-  {% if request.user.is_authenticated %}
+  {% if request.user.is_authenticated and activities_list.exists %}
     <div style="text-align: center; font-size: 14px;" id="last-activity-js">
       {% for action in activities_list %}
         {% if action.model_name == 'comment' %}
@@ -31,6 +31,10 @@
       {% include 'common/pagination.html' with htmx_target='#last-activity-js' %}
     </div>
   {% else %}
-    {% include 'alerts/not_auth_register_alert.html' %}
+    {% if not request.user.is_authenticated %}
+      {% include 'alerts/not_auth_register_alert.html' %}
+    {% else %}
+      {% include 'alerts/empty_alert.html' %}
+    {% endif %}
   {% endif %}
 </div>

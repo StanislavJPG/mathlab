@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 23:39+0300\n"
+"POT-Creation-Date: 2025-07-01 15:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -621,6 +621,54 @@ msgstr ""
 msgid "You successfully registered!"
 msgstr ""
 
+#: server/apps/theorist/logic/profile.py
+msgid "Jan"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Feb"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Mar"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Apr"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "May"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Jun"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Jul"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Aug"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Sep"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Oct"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Nov"
+msgstr ""
+
+#: server/apps/theorist/logic/profile.py
+msgid "Dec"
+msgstr ""
+
 #: server/apps/theorist/logic/profile_settings.py
 msgid "You successfully changed your profile data!"
 msgstr ""
@@ -959,6 +1007,30 @@ msgstr ""
 msgid "Posts quantity"
 msgstr ""
 
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "📃 Profile visiting statistics"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Views"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download SVG"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download PNG"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download CSV"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Menu"
+msgstr ""
+
 #: server/apps/theorist/templates/profile/profile.html
 msgid "My profile"
 msgstr ""
@@ -994,6 +1066,10 @@ msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show last activities"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit everyone to see my profile visiting statistics"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
@@ -1384,7 +1460,8 @@ msgid "Reply to"
 msgstr ""
 
 #: server/apps/theorist_community/templates/base_community_list.html
-msgid "Mathlab community"
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Community"
 msgstr ""
 
 #: server/apps/theorist_community/templates/partials/last_actions_block.html
@@ -1875,10 +1952,6 @@ msgstr ""
 #: server/templates/partials/forum/forum_navbar.html
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
-msgstr ""
-
-#: server/templates/partials/forum/forum_navbar.html
-msgid "Community"
 msgstr ""
 
 #: server/templates/partials/forum/forum_navbar.html

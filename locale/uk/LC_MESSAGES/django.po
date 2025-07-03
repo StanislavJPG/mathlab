@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-06-29 23:39+0300\n"
+"POT-Creation-Date: 2025-07-01 15:01+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -631,6 +631,54 @@ msgstr "Ви успішно відмінили Ваш запит на дружб
 msgid "You successfully registered!"
 msgstr "Ви успішно зареєструвались!"
 
+#: server/apps/theorist/logic/profile.py
+msgid "Jan"
+msgstr "Січ"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Feb"
+msgstr "Лют"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Mar"
+msgstr "Бер"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Apr"
+msgstr "Кві"
+
+#: server/apps/theorist/logic/profile.py
+msgid "May"
+msgstr "Тра"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Jun"
+msgstr "Чер"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Jul"
+msgstr "Лип"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Aug"
+msgstr "Сер"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Sep"
+msgstr "Вер"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Oct"
+msgstr "Жов"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Nov"
+msgstr "Лис"
+
+#: server/apps/theorist/logic/profile.py
+msgid "Dec"
+msgstr "Гру"
+
 #: server/apps/theorist/logic/profile_settings.py
 msgid "You successfully changed your profile data!"
 msgstr "Ви успішно змінили дані профілю."
@@ -971,6 +1019,30 @@ msgstr "Рейтинг"
 msgid "Posts quantity"
 msgstr "Кількість постів"
 
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "📃 Profile visiting statistics"
+msgstr "📃 Статистика візиту профілю"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Views"
+msgstr "Переглядів"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download SVG"
+msgstr "Завантажити SVG"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download PNG"
+msgstr "Завантажити PNG"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Download CSV"
+msgstr "Завантажити CSV"
+
+#: server/apps/theorist/templates/profile/partials/statistics.html
+msgid "Menu"
+msgstr "Меню"
+
 #: server/apps/theorist/templates/profile/profile.html
 msgid "My profile"
 msgstr "Мій профіль"
@@ -1007,6 +1079,10 @@ msgstr "Показувати інформацію про себе"
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show last activities"
 msgstr "Показувати останню активність"
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Permit everyone to see my profile visiting statistics"
+msgstr "Дозволяти будь-кому переглядати статистику відвідування мого профілю"
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Permit everybody to send me a private messages"
@@ -1408,8 +1484,9 @@ msgid "Reply to"
 msgstr "Відповісти для"
 
 #: server/apps/theorist_community/templates/base_community_list.html
-msgid "Mathlab community"
-msgstr "Mathlab спільнота"
+#: server/templates/partials/forum/forum_navbar.html
+msgid "Community"
+msgstr "Спільнота"
 
 #: server/apps/theorist_community/templates/partials/last_actions_block.html
 msgid "Last actions friends of yours"
@@ -1920,10 +1997,6 @@ msgstr "Авто"
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Forum"
 msgstr "Форум"
-
-#: server/templates/partials/forum/forum_navbar.html
-msgid "Community"
-msgstr "Спільнота"
 
 #: server/templates/partials/forum/forum_navbar.html
 msgid "New discussion"

@@ -5,6 +5,10 @@
   <title>MathLab | {% if theorist.uuid == request.theorist.uuid %}{% translate 'My profile' %}{% else %}{% translate "Theorist's profile" %} {{ theorist.full_name }}{% endif %}</title>
 {% endblock page_head %}
 
+{% block page_js %}
+  <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+{% endblock page_js %}
+
 {% block body %}
   <body>
     <div class="block-body">

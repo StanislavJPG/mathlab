@@ -1,5 +1,6 @@
 from typing import Literal
 
+from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django.utils import timezone
@@ -7,6 +8,7 @@ from django.utils.timesince import timesince
 from django.utils.translation import gettext_lazy as _
 from django_countries.fields import CountryField
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
+from hitcount.models import HitCountMixin
 from slugify import slugify
 
 from server.apps.theorist.choices import TheoristFriendshipStatusChoices
@@ -17,7 +19,9 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin, R
 from server.common.validators import username_validators
 
 
-class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystemModelMixin, AvatarModelMixin):
+class Theorist(
+    UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystemModelMixin, AvatarModelMixin, HitCountMixin
+):
     """Model for business logic of web-site user. User model uses only for auth purposes."""
 
     # personal info
@@ -35,6 +39,9 @@ class Theorist(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, RankSystem
     # forum statistics data
     total_posts = models.PositiveSmallIntegerField(default=0)
     total_comments = models.PositiveIntegerField(default=0)
+    hit_count_generic = GenericRelation(
+        'hitcount.HitCount', object_id_field='object_pk', related_query_name='hit_count_generic_relation'
+    )
 
     is_onboarded = models.BooleanField(default=False)
     onboarding_date = models.DateTimeField(null=True)
@@ -124,6 +131,8 @@ class TheoristProfileSettings(UUIDModelMixin, TimeStampedModelMixin, LifecycleMo
     is_show_last_activities = models.BooleanField(default=True)
     is_able_to_get_messages = models.BooleanField(default=True)
     is_able_to_receive_notifications = models.BooleanField(default=True)
+
+    permit_everyone_to_see_visit_statistics = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = 'theorist profile setting'

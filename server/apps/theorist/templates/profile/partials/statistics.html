@@ -1,31 +1,133 @@
 {% load static i18n %}
 
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-scoreboard"></i>
-    <span class="mb-0">{% translate 'Score' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.score }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-scoreboard"></i>
+        <span class="mb-0">{% translate 'Score' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.score }}</p>
+    </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-inbox"></i>
-    <span class="mb-0">{% translate 'Posts quantity' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.total_posts }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-inbox"></i>
+        <span class="mb-0">{% translate 'Posts quantity' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.total_posts }}</p>
+    </div>
 </div>
 <hr>
 <div class="row">
-  <div class="col-sm-5">
-    <i class="ti ti-message"></i>
-    <span class="mb-0">{% translate 'Comments quantity' %}</span>
-  </div>
-  <div class="col-sm-7">
-    <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
-  </div>
+    <div class="col-sm-5">
+        <i class="ti ti-message"></i>
+        <span class="mb-0">{% translate 'Comments quantity' %}</span>
+    </div>
+    <div class="col-sm-7">
+        <p class="text-muted mb-0">{{ theorist.total_comments }}</p>
+    </div>
 </div>
+
+{% if theorist.settings.permit_everyone_to_see_visit_statistics or theorist.uuid == request.theorist.uuid %}
+    <hr>
+    <div class="row">
+        <div id="chart" class="d-flex justify-content-center mt-2"></div>
+    </div>
+{% endif %}
+
+<script>
+    document.addEventListener('htmx:afterSettle', processStats);
+    const themeButtons = document.querySelectorAll("[data-bs-theme-value]");
+    themeButtons.forEach(button => {
+        button.addEventListener("click", () => {
+            const chartEl = document.querySelector("#chart");
+
+            if (chartEl.chart) {
+                chartEl.chart.destroy();
+            }
+
+            processStats();
+        });
+    });
+    const mainLabel = "{% translate '📃 Profile visiting statistics' %}"
+
+    function processStats() {
+        var themeVar = document.documentElement.getAttribute('data-bs-theme');
+
+        var options = {
+            series: [{
+                name: '{% translate 'Views' %}',
+                data: {{ analytics_data }}
+            }],
+            chart: {
+                locales: [{
+                    "name": "i18n",
+                    "options": {
+                        "toolbar": {
+                            "exportToSVG": '{% translate 'Download SVG' %}',
+                            "exportToPNG": '{% translate 'Download PNG' %}',
+                            "exportToCSV": '{% translate 'Download CSV' %}',
+                            "menu": '{% translate 'Menu' %}',
+                        }
+                    }
+                }],
+                defaultLocale: "i18n",
+                height: 360,
+                width: '80%',
+                type: 'line',
+                zoom: {
+                    enabled: false
+                }
+            },
+            dataLabels: {
+                enabled: false,
+            },
+            stroke: {
+                curve: 'straight'
+            },
+            xaxis: {
+                categories: {{ analytics_categories|safe }},
+            },
+            yaxis: {
+                labels: {
+                    formatter: function (val) {
+                        return Math.floor(val);
+                    }
+                }
+            },
+            theme: {
+                mode: themeVar,
+                palette: 'palette1',
+                monochrome: {
+                    enabled: true,
+                    color: '#008FFB',
+                    shadeTo: themeVar,
+                    shadeIntensity: 0.65
+                },
+            },
+            grid: {
+                row: {
+                    colors: [themeVar === 'light' ? '#f3f3f3' : '#45485b', 'transparent'], // takes an array which will be repeated on columns
+                    opacity: 0.5
+                },
+            },
+            title: {
+                text: mainLabel,
+                align: 'left',
+                style: {
+                    fontSize: '16px',
+                    fontWeight: 400,
+                    fontFamily: 'system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", "Noto Sans", "Liberation Sans", Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',
+                    color: themeVar === 'light' ? '#212529' : '#d7d8d9'
+                }
+            }
+        };
+
+        const chartEl = document.querySelector("#chart")
+        var chart = new ApexCharts(chartEl, options);
+        chart.render();
+        chartEl.chart = chart;
+    }
+</script>

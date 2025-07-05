@@ -11,6 +11,7 @@ from tinymce.widgets import TinyMCE
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_drafts.models import TheoristDrafts
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
@@ -220,3 +221,46 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs
+
+
+class DraftsShareViaMessageForm(ShareViaMessageForm):
+    def __init__(self, *args, **kwargs):
+        self.drafts_to_share: list = [uuid for uuid in kwargs.pop('drafts_to_share', []) if is_valid_uuid(uuid)]
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.drafts_to_share or len(self.drafts_to_share) > 10:
+            self.add_error(None, _('You are not able to choose so many drafts to share.'))
+        return cleaned_data
+
+    @mark_safe
+    def _get_default_share_message(self):
+        pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)
+
+        return f"""
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="card shadow-lg rounded-4 p-4 text-center" style="max-width: 700px; width: 100%;">
+            <div class="mb-3 row row-cols-1 g-3 row-cols-lg-3 justify-content-center" id="gallery">
+              {
+            ''.join(
+                f'''
+                <div class="col d-flex justify-content-center">
+                    <a href="{pic.get_draft_url()}"
+                       data-pswp-width="1105"
+                       data-pswp-height="880"
+                       target="_blank">
+                      <img src="{pic.get_draft_url()}" 
+                           class="img-thumbnail rounded border border-2 shadow-sm" 
+                           style="max-width: 120px; max-height: 120px;" 
+                           alt="preview">
+                    </a>
+                </div>
+              '''
+                for pic in pics
+            )
+        }
+            </div>
+          </div>
+        </div>
+        """

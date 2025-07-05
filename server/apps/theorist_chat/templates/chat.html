@@ -5,6 +5,15 @@
   <title>Mathlab | {% translate 'Mailbox' %}</title>
 {% endblock page_head %}
 
+{% block page_css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+  <style>
+    .img-bg {
+      --pswp-bg: #ffffff;
+    }
+  </style>
+{% endblock page_css %}
+
 {% block body %}
   <section id="chat-section-js" data-request-theorist="{{ request.theorist.uuid }}">
     <div class="container py-5">
@@ -26,3 +35,21 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="document"></div>
   </div>
 {% endblock body %}
+
+{% block page_js %}
+  <script type="module">
+    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+
+    document.body.addEventListener("htmx:afterSettle", function () {
+      const lightbox = new PhotoSwipeLightbox({
+        gallery: '#gallery',
+        mainClass: 'img-bg',
+        children: 'a',
+        wheelToZoom: true,
+        pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
+      });
+      lightbox.init();
+    });
+  </script>
+{% endblock page_js %}
+

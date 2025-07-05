@@ -81,7 +81,17 @@
     <div class="album py-5 bg-body-tertiary">
       <div class="container">
         {% if request.user.is_authenticated %}
-          <div class="text-end mb-3">
+          <div class="text-end mb-3 d-flex justify-content-between">
+            <button id="share-btn" class="btn btn-primary btn-lg disabled"
+                    hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
+                    hx-target="#drafts-sharing-modal"
+                    hx-trigger="click"
+                    data-bs-toggle="modal"
+                    data-bs-target="#drafts-sharing-modal"
+            >
+              <i class="ti ti-send"></i>
+              {% translate 'Send' %}
+            </button>
             <div class="btn-group" role="group">
               <button type="button"
                       hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
@@ -106,11 +116,12 @@
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
-                            hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
-                            hx-target="#drafts-sharing-modal"
-                            hx-trigger="click"
-                            data-bs-toggle="modal"
-                            data-bs-target="#drafts-sharing-modal"
+                            _="on click toggle .d-none on .checks then add .text-bg-info .bg-opacity-25 to .card then toggle .disabled on #share-btn"
+{#                            hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"#}
+{#                            hx-target="#drafts-sharing-modal"#}
+{#                            hx-trigger="click"#}
+{#                            data-bs-toggle="modal"#}
+{#                            data-bs-target="#drafts-sharing-modal"#}
                     ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
                   </li>
                   <li>

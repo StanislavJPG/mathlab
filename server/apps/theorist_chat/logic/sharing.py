@@ -66,6 +66,7 @@ class AbstractMessageInstanceShareView(
 
 class MessageDraftShareView(AbstractMessageInstanceShareView):
     success_url = reverse_lazy('mathlab:drafts:base-drafts')
+    template_name = 'modals/drafts_messages_share.html'
     form_class = DraftsShareViaMessageForm
 
     def get_instance_to_share(self):
@@ -77,6 +78,8 @@ class MessageDraftShareView(AbstractMessageInstanceShareView):
         self.request: AuthenticatedHttpRequest
         kwargs = super().get_form_kwargs()
         kwargs['url_to_share'] = self.get_instance_to_share().get_share_url()
+        if self.request.POST:
+            kwargs['drafts_to_share'] = self.request.POST.getlist('draftToShare')
         return kwargs
 
     def get_qs_to_filter(self):

@@ -224,9 +224,13 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
 
 class DraftsShareViaMessageForm(ShareViaMessageForm):
+    def __init__(self, *args, **kwargs):
+        self.drafts_to_share: list = kwargs.pop('drafts_to_share', [])
+        super().__init__(*args, **kwargs)
+
     def _get_default_share_message(self, main_text_label=None, text_label=None, button_label=None):
         button_label = button_label if button_label else _('Check it out')
-        pics = TheoristDrafts.objects.all()[:10]
+        pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)[:10]
 
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">

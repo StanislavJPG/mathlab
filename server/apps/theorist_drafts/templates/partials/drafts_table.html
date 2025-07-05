@@ -2,14 +2,19 @@
 {% load render_table from django_tables2 %}
 
 {% if theorist %}
-  <div class="text-end mt-3 mb-3">
-    <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
-    <small>
-      <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
-        {% get_instance_avatar theorist size=30 %}
-        {{ theorist.full_name }}
-      </a>
-    </small>
+  <div class="d-flex flex-row-reverse justify-content-between align-items-center">
+    <div class="text-end mt-3 mb-3">
+      <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
+      <small>
+        <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
+          {% get_instance_avatar theorist size=30 %}
+          {{ theorist.full_name }}
+        </a>
+      </small>
+    </div>
+    <div>
+      Select all
+    </div>
   </div>
 {% endif %}
 

@@ -1,14 +1,23 @@
 {% load i18n static %}
 
 {% if theorist %}
-  <div class="text-end mt-3 mb-3">
-    <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
-    <small>
-      <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
-        {% get_instance_avatar theorist size=30 %}
-        {{ theorist.full_name }}
-      </a>
-    </small>
+  <div class="d-flex flex-row-reverse justify-content-between align-items-center">
+    <div class="text-end mt-3 mb-3">
+      <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
+      <small>
+        <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
+          {% get_instance_avatar theorist size=30 %}
+          {{ theorist.full_name }}
+        </a>
+      </small>
+    </div>
+    <div class="d-none text-danger checks">
+      <button type="button"
+              class="btn btn-outline-danger btn-sm"
+              _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then toggle .disabled on #share-btn">
+        <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
+      </button>
+    </div>
   </div>
 {% endif %}
 
@@ -20,8 +29,11 @@
        hx-trigger="draftDeleted from:body delay:0.6s"
   >
     {% for draft in drafts %}
-      <div class="col album-draft-base-{{ draft.uuid }}">
+      <form id="draftForm-{{ draft.uuid }}" class="col album-draft-base-{{ draft.uuid }}">
         <div class="card shadow-sm">
+          <div class="d-none checks d-flex justify-content-center">
+            <input style="font-size: 25px;" _="on click toggle .text-bg-info .bg-opacity-25 on closest .card" class="form-check-input" type="checkbox" name="draftToShare" value="{{ draft.uuid }}" checked>
+          </div>
           <a href="{{ draft.get_draft_url }}"
              data-pswp-width="1105"
              data-pswp-height="880"
@@ -67,7 +79,7 @@
             {% endif %}
           </div>
         </div>
-      </div>
+      </form>
     {% endfor %}
   </div>
 {% else %}

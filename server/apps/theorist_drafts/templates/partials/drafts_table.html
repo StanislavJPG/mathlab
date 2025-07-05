@@ -12,8 +12,12 @@
         </a>
       </small>
     </div>
-    <div>
-      Select all
+    <div class="d-none text-danger checks">
+      <button type="button"
+              class="btn btn-outline-danger btn-sm"
+              _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then add .disabled to #share-btn">
+        <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
+      </button>
     </div>
   </div>
 {% endif %}

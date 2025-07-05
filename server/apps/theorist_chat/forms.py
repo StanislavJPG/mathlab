@@ -228,9 +228,15 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
         self.drafts_to_share: list = kwargs.pop('drafts_to_share', [])
         super().__init__(*args, **kwargs)
 
-    def _get_default_share_message(self, main_text_label=None, text_label=None, button_label=None):
-        button_label = button_label if button_label else _('Check it out')
-        pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)[:10]
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.drafts_to_share or len(self.drafts_to_share) > 10:
+            self.add_error(None, _('You are not able to choose so many drafts to share.'))
+        return cleaned_data
+
+    @mark_safe
+    def _get_default_share_message(self):
+        pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)
 
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">
@@ -255,9 +261,6 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
             )
         }
             </div>
-            <a href="{self.url_to_share}" class="btn btn-primary btn-lg mt-3 px-4">
-              {button_label}
-            </a>
           </div>
         </div>
         """

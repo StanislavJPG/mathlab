@@ -14,7 +14,7 @@
     <div class="d-none text-danger checks">
       <button type="button"
               class="btn btn-outline-danger btn-sm"
-              _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then toggle .disabled on #share-btn">
+              _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then add .disabled to #share-btn">
         <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
       </button>
     </div>
@@ -32,7 +32,11 @@
       <form id="draftForm-{{ draft.uuid }}" class="col album-draft-base-{{ draft.uuid }}">
         <div class="card shadow-sm">
           <div class="d-none checks d-flex justify-content-center">
-            <input style="font-size: 25px;" _="on click toggle .text-bg-info .bg-opacity-25 on closest .card" class="form-check-input" type="checkbox" name="draftToShare" value="{{ draft.uuid }}" checked>
+            <input style="font-size: 25px;" _="on click toggle .text-bg-info .bg-opacity-25 on closest .card"
+                   class="form-check-input checker"
+                   type="checkbox"
+                   name="draftToShare"
+                   value="{{ draft.uuid }}">
           </div>
           <a href="{{ draft.get_draft_url }}"
              data-pswp-width="1105"
@@ -94,3 +98,11 @@
     {% include 'alerts/not_found_alert.html' %}
   {% endif %}
 {% endif %}
+
+<script type="text/hyperscript">
+  on change from .checker
+  if (document.querySelectorAll(".checker:checked").length <= 0)
+    add .disabled to #share-btn
+  else
+    remove .disabled from #share-btn
+</script>

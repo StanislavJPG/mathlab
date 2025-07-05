@@ -116,12 +116,7 @@
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
-                            _="on click toggle .d-none on .checks then add .text-bg-info .bg-opacity-25 to .card then toggle .disabled on #share-btn"
-{#                            hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"#}
-{#                            hx-target="#drafts-sharing-modal"#}
-{#                            hx-trigger="click"#}
-{#                            data-bs-toggle="modal"#}
-{#                            data-bs-target="#drafts-sharing-modal"#}
+                            _="on click toggle .d-none on .checks then add .text-bg-info .bg-opacity-25 to .card then set .checker.checked to true then remove .disabled from #share-btn"
                     ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
                   </li>
                   <li>

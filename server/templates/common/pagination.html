@@ -23,16 +23,20 @@
       {% endif %}
 
       {% for page in page_obj.paginator.page_range %}
-        <li class="page-item {% if page == page_obj.number %}active{% endif %}">
-          <a href="javascript:void(0);"
-             class="page-link"
-             hx-get="{{ request.get_full_path }}{% if request.GET %}&{% else %}?{% endif %}page={{ page }}"
-             hx-target="{% if is_id_target %}#{% endif %}{{ htmx_target }}"
-             hx-select="{% if is_id_target %}#{% endif %}{{ htmx_target }}"
-             hx-swap="outerHTML">
-            {{ page }}
-          </a>
-        </li>
+        {% if page == 1 or page == page_obj.paginator.num_pages or page >= page_obj.number|add:"-2" and page <= page_obj.number|add:"2" %}
+          <li class="page-item {% if page == page_obj.number %}active{% endif %}">
+            <a href="javascript:void(0);"
+               class="page-link"
+               hx-get="{{ request.get_full_path }}{% if request.GET %}&{% else %}?{% endif %}page={{ page }}"
+               hx-target="{% if is_id_target %}#{% endif %}{{ htmx_target }}"
+               hx-select="{% if is_id_target %}#{% endif %}{{ htmx_target }}"
+               hx-swap="outerHTML">
+              {{ page }}
+            </a>
+          </li>
+        {% elif page == page_obj.number|add:"-3" or page == page_obj.number|add:"3" %}
+          <li class="page-item disabled"><span class="page-link">…</span></li>
+        {% endif %}
       {% endfor %}
 
       {% if page_obj.has_next %}

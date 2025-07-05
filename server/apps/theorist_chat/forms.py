@@ -11,6 +11,7 @@ from tinymce.widgets import TinyMCE
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_drafts.models import TheoristDrafts
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
@@ -220,3 +221,39 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs
+
+
+class DraftsShareViaMessageForm(ShareViaMessageForm):
+    def _get_default_share_message(self, main_text_label=None, text_label=None, button_label=None):
+        button_label = button_label if button_label else _('Check it out')
+        pics = TheoristDrafts.objects.all()[:10]
+
+        return f"""
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="card shadow-lg rounded-4 p-4 text-center" style="max-width: 700px; width: 100%;">
+            <div class="mb-3 row row-cols-1 g-3 row-cols-lg-3 justify-content-center" id="gallery">
+              {
+            ''.join(
+                f'''
+                <div class="col d-flex justify-content-center">
+                    <a href="{pic.get_draft_url()}"
+                       data-pswp-width="1105"
+                       data-pswp-height="880"
+                       target="_blank">
+                      <img src="{pic.get_draft_url()}" 
+                           class="img-thumbnail rounded border border-2 shadow-sm" 
+                           style="max-width: 120px; max-height: 120px;" 
+                           alt="preview">
+                    </a>
+                </div>
+              '''
+                for pic in pics
+            )
+        }
+            </div>
+            <a href="{self.url_to_share}" class="btn btn-primary btn-lg mt-3 px-4">
+              {button_label}
+            </a>
+          </div>
+        </div>
+        """

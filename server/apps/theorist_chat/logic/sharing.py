@@ -9,7 +9,7 @@ from django.views.generic import CreateView
 from honeypot.decorators import check_honeypot
 
 from server.apps.forum.models import Comment, Post
-from server.apps.theorist_chat.forms import ShareViaMessageForm
+from server.apps.theorist_chat.forms import ShareViaMessageForm, DraftsShareViaMessageForm
 from server.apps.theorist_drafts.models import TheoristDraftsConfiguration
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
@@ -66,6 +66,7 @@ class AbstractMessageInstanceShareView(
 
 class MessageDraftShareView(AbstractMessageInstanceShareView):
     success_url = reverse_lazy('mathlab:drafts:base-drafts')
+    form_class = DraftsShareViaMessageForm
 
     def get_instance_to_share(self):
         return TheoristDraftsConfiguration.objects.filter_by_is_public_available().get(

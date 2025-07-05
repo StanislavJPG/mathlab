@@ -143,6 +143,26 @@
             {% with view=request.GET.view %}
               {% block drafts %}
                 {% if configuration %}
+                  {% if theorist %}
+                    <div class="d-flex flex-row-reverse justify-content-between align-items-center">
+                      <div class="text-end mt-3 mb-3">
+                        <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
+                        <small>
+                          <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
+                            {% get_instance_avatar theorist size=30 %}
+                            {{ theorist.full_name }}
+                          </a>
+                        </small>
+                      </div>
+                      <div class="d-none text-danger checks">
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm"
+                                _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then add .disabled to #share-btn then set .table-checker.checked to false">
+                          <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
+                        </button>
+                      </div>
+                    </div>
+                  {% endif %}
                   <div {% if view == 'table' %}
                          class="row row-cols-1"
                          hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"

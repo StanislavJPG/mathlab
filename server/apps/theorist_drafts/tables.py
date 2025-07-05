@@ -7,7 +7,16 @@ import server.common.tables.attrs as table_attrs
 from server.common.tables.mixins import CreatedAtTableMixin
 
 
+class CustomCheckBoxColumn(tables.CheckBoxColumn):
+    @property
+    def header(self):
+        return mark_safe('<input class="d-none" />')
+
+
 class DraftsTable(CreatedAtTableMixin, tables.Table):
+    check = CustomCheckBoxColumn(
+        accessor='uuid', attrs={'input': {'class': 'form-check-input table-checker checker', 'name': 'draftToShare'}}
+    )
     label = tables.Column(verbose_name=_('Label'))
     draft = tables.Column(verbose_name=_('Draft'), attrs={'td': {'class': 'w-25'}})
     description = tables.Column(verbose_name=_('Description'), attrs={'td': {'class': 'w-25'}})
@@ -26,7 +35,7 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
     class Meta:
         model = TheoristDrafts
         template_name = 'tables/bootstrap_htmx.html'
-        fields = ('label', 'draft', 'description', 'created_at')
+        fields = ('check', 'label', 'draft', 'description', 'created_at')
         attrs = {**table_attrs.get_default_table_attrs()}
 
     def before_render(self, request):

@@ -225,7 +225,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
 class DraftsShareViaMessageForm(ShareViaMessageForm):
     def __init__(self, *args, **kwargs):
-        self.drafts_to_share: list = kwargs.pop('drafts_to_share', [])
+        self.drafts_to_share: list = [uuid for uuid in kwargs.pop('drafts_to_share', []) if is_valid_uuid(uuid)]
         super().__init__(*args, **kwargs)
 
     def clean(self):

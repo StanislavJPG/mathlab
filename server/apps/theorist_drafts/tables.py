@@ -8,21 +8,33 @@ from server.common.tables.mixins import CreatedAtTableMixin
 
 
 class CheckBoxColumnWithoutHeader(tables.CheckBoxColumn):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        attrs = kwargs.get('attrs', {})
+        attrs.update(
+            {
+                'th': {'class': 'text-center', 'hx-disable': ''},
+                'td': {'class': 'text-center'},
+            }
+        )
+
     @property
     def header(self):
-        return mark_safe('<div class="d-none"></div>')
+        return mark_safe(
+            '<input type="checkbox" '
+            '_="on click for checkbox in .checker set checkbox.checked to not checkbox.checked"'
+            'name="general-check" '
+            'class="form-check-input general-checker"/>'
+        )
 
 
 class DraftsTable(CreatedAtTableMixin, tables.Table):
     check = CheckBoxColumnWithoutHeader(
         accessor='uuid',
         attrs={
-            'td': {'class': 'text-center'},
             'input': {
                 'class': 'form-check-input table-checker checker',
                 'name': 'draftToShare',
-                '_': 'on click toggle .text-bg-info .bg-opacity-25 on closest <tr/> '
-                'then toggle [@style=--bs-table-bg: none;] on closest <tr/>',
             },
         },
     )

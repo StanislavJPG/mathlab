@@ -25,3 +25,11 @@
   else
     remove .disabled from #share-btn
 </script>
+
+<script type="text/hyperscript">
+  on click from .general-checker
+  if (document.querySelectorAll(".checker:checked").length <= 0)
+    add .disabled to #share-btn
+  else
+    remove .disabled from #share-btn
+</script>

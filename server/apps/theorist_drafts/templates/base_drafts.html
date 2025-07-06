@@ -117,9 +117,8 @@
                     <button type="button"
                             class="dropdown-item"
                             _="on click remove .d-none from .checks then add .text-bg-info .bg-opacity-25 to .card
-                               then set .checker.checked to true then remove .disabled from #share-btn
-                               then toggle .text-bg-info .bg-opacity-25 on <tr/>
-                               then toggle [@style=--bs-table-bg: none;] on <tr/>"
+                               then set .general-checker.checked to true
+                               then set .checker.checked to true then remove .disabled from #share-btn"
                     ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
                   </li>
                   <li>
@@ -160,7 +159,11 @@
                       <div class="d-none text-danger checks">
                         <button type="button"
                                 class="btn btn-outline-danger btn-sm"
-                                _="on click toggle .d-none on .checks then remove .text-bg-info .bg-opacity-25 from .card then add .disabled to #share-btn then set .table-checker.checked to false">
+                                _="on click toggle .d-none on .checks
+                                   then remove .text-bg-info .bg-opacity-25 from .card
+                                   then add .disabled to #share-btn
+                                   then set .general-checker.checked to false
+                                   then set .table-checker.checked to false">
                           <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
                         </button>
                       </div>

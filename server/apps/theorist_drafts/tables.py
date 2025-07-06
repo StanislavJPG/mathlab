@@ -7,15 +7,24 @@ import server.common.tables.attrs as table_attrs
 from server.common.tables.mixins import CreatedAtTableMixin
 
 
-class CustomCheckBoxColumn(tables.CheckBoxColumn):
+class CheckBoxColumnWithoutHeader(tables.CheckBoxColumn):
     @property
     def header(self):
-        return mark_safe('<input class="d-none" />')
+        return mark_safe('<div class="d-none"></div>')
 
 
 class DraftsTable(CreatedAtTableMixin, tables.Table):
-    check = CustomCheckBoxColumn(
-        accessor='uuid', attrs={'input': {'class': 'form-check-input table-checker checker', 'name': 'draftToShare'}}
+    check = CheckBoxColumnWithoutHeader(
+        accessor='uuid',
+        attrs={
+            'td': {'class': 'text-center'},
+            'input': {
+                'class': 'form-check-input table-checker checker',
+                'name': 'draftToShare',
+                '_': 'on click toggle .text-bg-info .bg-opacity-25 on closest <tr/> '
+                'then toggle [@style=--bs-table-bg: none;] on closest <tr/>',
+            },
+        },
     )
     label = tables.Column(verbose_name=_('Label'))
     draft = tables.Column(verbose_name=_('Draft'), attrs={'td': {'class': 'w-25'}})

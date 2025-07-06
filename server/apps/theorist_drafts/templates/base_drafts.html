@@ -82,7 +82,7 @@
       <div class="container">
         {% if request.user.is_authenticated %}
           <div class="text-end mb-3 d-flex justify-content-between">
-            <button id="share-btn" class="btn btn-primary btn-lg disabled"
+            <button id="share-btn" class="btn btn-primary btn-lg disabled me-2"
                     hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
                     hx-target="#drafts-sharing-modal"
                     hx-trigger="click"
@@ -116,7 +116,10 @@
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
-                            _="on click toggle .d-none on .checks then add .text-bg-info .bg-opacity-25 to .card then set .checker.checked to true then remove .disabled from #share-btn"
+                            _="on click remove .d-none from .checks then add .text-bg-info .bg-opacity-25 to .card
+                               then set .checker.checked to true then remove .disabled from #share-btn
+                               then toggle .text-bg-info .bg-opacity-25 on <tr/>
+                               then toggle [@style=--bs-table-bg: none;] on <tr/>"
                     ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
                   </li>
                   <li>

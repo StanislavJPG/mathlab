@@ -313,6 +313,7 @@ BLEACH_ALLOWED_STYLES = [
     'background-color',
     'max-width',
     'max-height',
+    'width',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

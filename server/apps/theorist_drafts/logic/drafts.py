@@ -17,10 +17,18 @@ from server.common.utils.helpers import is_valid_uuid
 class TheoristDraftsBaseTemplateView(TemplateView):
     template_name = 'base_drafts.html'
 
+    def _get_theorist_from_params(self):
+        self.request: AuthenticatedHttpRequest
+        draft_conf_uuid = self.request.GET.get('search_draft', None)
+        if draft_conf_uuid and is_valid_uuid(draft_conf_uuid):
+            draft_conf = TheoristDraftsConfiguration.objects.filter(uuid=draft_conf_uuid).first()
+            return getattr(draft_conf, 'theorist')
+        return self.request.theorist
+
     def get_context_data(self, **kwargs):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
-        context['theorist'] = self.request.theorist
+        context['theorist'] = self._get_theorist_from_params()
         if self.request.theorist:
             context['configuration'] = self.request.theorist.drafts_configuration
         return context

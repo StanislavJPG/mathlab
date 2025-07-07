@@ -3,7 +3,7 @@
 <div class="form-check mb-3 d-none general-form-album-checker" style="font-size: 25px;">
   <input type="checkbox"
          id="general-checker"
-         _="on click for checkbox in .checker set checkbox.checked to not checkbox.checked"
+         _="on click for checkbox in .checker set checkbox.checked to me.checked"
          name="general-check"
          class="form-check-input general-checker mt-2"/>
   <label class="form-check-label" for="general-checker" style="font-size: 22px;">
@@ -22,7 +22,7 @@
       <form id="draftForm-{{ draft.uuid }}" class="col album-draft-base-{{ draft.uuid }}">
         <div class="card shadow-sm">
           <div class="d-none checks d-flex justify-content-center">
-            <input style="font-size: 25px;" _="on click toggle .text-bg-info .bg-opacity-25 on closest .card"
+            <input style="font-size: 25px;"
                    class="form-check-input checker m-2"
                    type="checkbox"
                    name="draftToShare"
@@ -89,18 +89,4 @@
   {% endif %}
 {% endif %}
 
-<script type="text/hyperscript">
-  on change from .checker
-  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
-    add .disabled to #share-btn
-  else
-    remove .disabled from #share-btn
-</script>
-
-<script type="text/hyperscript">
-  on click from .general-checker
-  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
-    add .disabled to #share-btn
-  else
-    remove .disabled from #share-btn
-</script>
+{% include 'partials/_hs_checkers.html' %}

@@ -22,7 +22,8 @@ class CheckBoxColumnWithoutHeader(tables.CheckBoxColumn):
     def header(self):
         return mark_safe(
             '<input type="checkbox" '
-            '_="on click for checkbox in .checker set checkbox.checked to not checkbox.checked"'
+            '_="on click for checkbox in .checker set checkbox.checked to me.checked"'
+            'id="general-checker"'
             'name="general-check" '
             'class="form-check-input general-checker"/>'
         )

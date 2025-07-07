@@ -180,7 +180,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
           <div class="card shadow-lg rounded-4 p-4 text-center">
             <h2 class="mb-3">🌟 {main_text_label}</h2>
             <p class="lead">{text_label}</p>
-            <a href="{self.url_to_share}" class="btn btn-primary mt-3">{button_label}</a>
+            <a href="{self.url_to_share}" class="btn btn-primary mt-3"><i class="ti ti-corner-up-right"></i> {button_label}</a>
           </div>
         </div>
         """
@@ -246,8 +246,11 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
         pics_owner = getattr(pics.first(), 'theorist')
         if pics_owner.uuid == self.theorist.uuid:
             main_text_label = _('I share my drafts with you!')
+            url_to_share = self.url_to_share
         else:
             main_text_label = _("I share %s's drafts with you!") % pics_owner.full_name
+            url_to_share = pics_owner.drafts_configuration.get_share_url()
+        btn_label = _('See all available drafts')
 
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">
@@ -257,22 +260,26 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
               {
             ''.join(
                 f'''
-                <div class="col d-flex justify-content-center me-2">
-                    <a href="{pic.get_draft_url()}"
-                       data-pswp-width="1105"
-                       data-pswp-height="880"
-                       target="_blank">
-                      <img src="{pic.get_draft_url()}" 
-                           class="img-thumbnail rounded border border-2 shadow-sm" 
-                           style="{img_style}" 
-                           alt="preview">
-                    </a>
-                </div>
-              '''
+                    <div class="col d-flex flex-column align-items-center me-2">
+                        <a href="{pic.get_draft().url}"
+                           data-pswp-width="{pic.get_draft().width}"
+                           data-pswp-height="{pic.get_draft().height}"
+                           target="_blank">
+                          <img src="{pic.get_draft().url}" 
+                               class="img-thumbnail rounded border border-2 shadow-sm mb-1" 
+                               style="{img_style}" 
+                               alt="preview">
+                        </a>
+                        <span class="small text-muted text-center" style="max-width: 200px; word-break: break-word;">
+                            {pic.label}
+                        </span>
+                    </div>
+                    '''
                 for pic in pics
             )
         }
             </div>
+            <a href="{url_to_share}" class="btn btn-primary mt-3"><i class="ti ti-corner-up-right"></i> {btn_label}</a>
           </div>
         </div>
         """

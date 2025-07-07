@@ -29,11 +29,11 @@
                      name="draftToShare"
                      value="{{ draft.uuid }}">
             </div>
-            <a href="{{ draft.get_draft_url }}"
-               data-pswp-width="1105"
-               data-pswp-height="880"
+            <a href="{{ draft.get_draft.url }}"
+               data-pswp-width="{{ draft.get_draft.width }}"
+               data-pswp-height="{{ draft.get_draft.height }}"
                target="_blank">
-              <img class="bd-placeholder-img card-img-top" style="max-width: 430px; max-height: 330px;" src="{{ draft.get_draft_url }}">
+              <img class="bd-placeholder-img card-img-top" style="max-width: 430px; max-height: 330px;" src="{{ draft.get_draft.url }}">
             </a>
             <div class="card-body">
               <div class="mb-3 card-text d-flex align-items-center justify-content-between">

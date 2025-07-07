@@ -66,11 +66,12 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
 
     @mark_safe
     def render_draft(self, record, value):
+        draft = record.get_draft()
         return f"""
-        <a href="{record.get_draft_url()}"
-           data-pswp-width="1105"
-           data-pswp-height="880"
+        <a href="{draft.url}"
+           data-pswp-width="{draft.width}"
+           data-pswp-height="{draft.height}"
            target="_blank">
-          <img class="bd-placeholder-img" style="max-width: 230px; max-height: 180px;" src="{record.get_draft_url()}">
+          <img class="bd-placeholder-img" style="max-width: 230px; max-height: 180px;" src="{draft.url}">
         </a>
         """

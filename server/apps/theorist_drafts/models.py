@@ -1,3 +1,4 @@
+from PIL import Image
 from django.db import models
 from django.urls import reverse
 from django.utils.translation import gettext_lazy as _
@@ -8,7 +9,7 @@ from easy_thumbnails.files import get_thumbnailer
 
 from server.apps.theorist_drafts.querysets import TheoristDraftsConfigurationQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
-
+from server.common.utils.helpers import _ConvenientImage
 
 upload_to_pattern_draft = FilePattern(
     filename_pattern='{app_label:.25}/{instance.theorist.full_name_slug}/drafts/{uuid:s}{ext}'
@@ -36,16 +37,22 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def get_absolute_url(self):
         return reverse('mathlab:drafts:base-drafts')
 
-    def get_draft_url(self, size: list = None):
+    def get_draft(self, size: list = None):
+        if not size:
+            with Image.open(self.draft) as img:
+                width, height = img.size
+        else:
+            width, height = size
         thumbnailer = get_thumbnailer(self.draft)
         thumb = thumbnailer.get_thumbnail(
             {
-                'size': (2105, 2000) if not size else size,
-                'crop': 'smart',
+                'size': (width, height),
+                'crop': False,
+                'upscale': False,
             }
         )
         draft_url = thumb.url
-        return draft_url
+        return _ConvenientImage(draft_url, width, height)
 
     @hook(AFTER_CREATE)
     def after_create(self):

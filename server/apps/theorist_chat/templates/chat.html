@@ -11,6 +11,26 @@
     .img-bg {
       --pswp-bg: #ffffff;
     }
+    .pswp__bullets-indicator {
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      position: absolute;
+      bottom: 30px;
+      left: 50%;
+      transform: translate(-50%, 0);
+    }
+    .pswp__bullet {
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      background: #777676;
+      margin: 0 5px;
+    }
+    .pswp__bullet--active {
+      background: #494d60;
+    }
   </style>
 {% endblock page_css %}
 
@@ -47,6 +67,36 @@
         children: 'a',
         wheelToZoom: true,
         pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
+      });
+      lightbox.on('uiRegister', function() {
+        lightbox.pswp.ui.registerElement({
+          name: 'bulletsIndicator',
+          className: 'pswp__bullets-indicator',
+          appendTo: 'wrapper',
+          onInit: (el, pswp) => {
+            const bullets = [];
+            let bullet;
+            let prevIndex = -1;
+
+            for (let i = 0; i < pswp.getNumItems(); i++) {
+              bullet = document.createElement('div');
+              bullet.className = 'pswp__bullet';
+              bullet.onclick = (e) => {
+                pswp.goTo(bullets.indexOf(e.target));
+              };
+              el.appendChild(bullet);
+              bullets.push(bullet);
+            }
+
+            pswp.on('change', (a,) => {
+              if (prevIndex >= 0) {
+                bullets[prevIndex].classList.remove('pswp__bullet--active');
+              }
+              bullets[pswp.currIndex].classList.add('pswp__bullet--active');
+              prevIndex = pswp.currIndex;
+            });
+          }
+        });
       });
       lightbox.init();
     });

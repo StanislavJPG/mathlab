@@ -285,6 +285,7 @@ BLEACH_ALLOWED_TAGS = [
     'div',
     'h2',
     'h5',
+    'i',
     *sanitizer.ALLOWED_TAGS,
 ]
 
@@ -316,6 +317,7 @@ BLEACH_ALLOWED_STYLES = [
     'min-width',
     'max-height',
     'width',
+    'word-break',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

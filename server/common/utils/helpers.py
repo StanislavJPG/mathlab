@@ -55,3 +55,24 @@ def format_relative_time(diff_time):
         return timezone.localtime(diff_time).time()
     else:
         return diff_time
+
+
+class _ConvenientImage:
+    """Transform tuple into object to conveniently get image properties like `obj.get_draft().width`"""
+
+    def __init__(self, _url, _width, _height):
+        self._url = _url
+        self._width = _width
+        self._height = _height
+
+    @property
+    def url(self):
+        return self._url
+
+    @property
+    def width(self):
+        return self._width
+
+    @property
+    def height(self):
+        return self._height

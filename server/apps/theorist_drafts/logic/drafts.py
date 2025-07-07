@@ -37,6 +37,7 @@ class TheoristDraftsBaseTemplateView(TemplateView):
 class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristDrafts
     context_object_name = 'drafts'
+    paginate_by = 20
 
     def get_queryset(self):
         search_draft = self.request.GET.get('search_draft')

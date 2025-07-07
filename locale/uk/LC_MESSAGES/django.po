@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 15:01+0300\n"
+"POT-Creation-Date: 2025-07-07 16:47+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -463,6 +463,7 @@ msgid "Equations solver"
 msgstr "Розв'язувач рівнянь"
 
 #: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 #: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
@@ -1069,16 +1070,16 @@ msgid "Friends list"
 msgstr "Список друзів"
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
-msgid "Is profile only for authorized"
-msgstr "Дозволяти доступ до профілю тільки для авторизованих користувачів"
-
-#: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show about me"
 msgstr "Показувати інформацію про себе"
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show last activities"
 msgstr "Показувати останню активність"
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Is profile only for authorized"
+msgstr "Дозволяти доступ до профілю тільки для авторизованих користувачів"
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Permit everyone to see my profile visiting statistics"
@@ -1252,6 +1253,18 @@ msgstr "Переглянути вміст"
 msgid "has shared with you with"
 msgstr "поділився з Вами"
 
+#: server/apps/theorist_chat/forms.py
+msgid "You are not able to choose so many drafts to share."
+msgstr "Ви не можете вибрати стільки чернеток для поширення."
+
+#: server/apps/theorist_chat/forms.py
+msgid "I share my drafts with you!"
+msgstr "Я ділюсь своїми чернетками з тобою!"
+
+#: server/apps/theorist_chat/forms.py
+msgid "I share %s's drafts with you!"
+msgstr "Я ділюсь чернетками %s з тобою!"
+
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
@@ -1346,6 +1359,27 @@ msgstr "постом"
 msgid "Mailbox"
 msgstr "Скринька"
 
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid "Share my %(i18n_obj_name)s?"
+msgstr "Поділитись даним(ою) %(i18n_obj_name)s?"
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share"
+msgstr "Поділитись"
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "with other theorists"
+msgstr "з іншими теоретиками"
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share with..."
+msgstr "Поділитись з..."
+
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create new mailbox"
 msgstr "Створити нову скриньку"
@@ -1357,23 +1391,6 @@ msgstr "Створити чат з..."
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create"
 msgstr "Створити"
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-#, python-format
-msgid "Share my %(i18n_obj_name)s?"
-msgstr "Поділитись даним(ою) %(i18n_obj_name)s?"
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "Share"
-msgstr "Поділитись"
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "with other theorists"
-msgstr "з іншими теоретиками"
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "Share with..."
-msgstr "Поділитись з..."
 
 #: server/apps/theorist_chat/templates/partials/alerts/empty_chat_alert.html
 msgid "Chat"
@@ -1440,6 +1457,7 @@ msgid "Your message"
 msgstr "Ваше повідомлення"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Send"
 msgstr "Відправити"
 
@@ -1622,6 +1640,14 @@ msgid "Upload my own draft"
 msgstr "Завантажити мою власну чернетку"
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Author of drafts"
+msgstr "Автор чернеток"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Cancel sharing"
+msgstr "Відмінити дію"
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Please check UUID that you pasted and try again!"
 msgstr "Будь ласка, перевірте введений UUID та спробуйте ще раз."
 
@@ -1685,9 +1711,8 @@ msgid "Upload"
 msgstr "Завантажити"
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
-#: server/apps/theorist_drafts/templates/partials/drafts_table.html
-msgid "Author of drafts"
-msgstr "Автор чернеток"
+msgid "Select all"
+msgstr "Вибрати все"
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "This draft is not public available."

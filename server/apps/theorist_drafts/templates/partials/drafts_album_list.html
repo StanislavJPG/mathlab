@@ -80,6 +80,7 @@
     <div class="mt-5">
       {% include 'common/pagination.html' with htmx_target="#album-view-drafts-js"  %}
     </div>
+    {% include 'partials/_hs_checkers.html' %}
   </div>
 
 {% else %}
@@ -94,5 +95,3 @@
     {% include 'alerts/not_found_alert.html' %}
   {% endif %}
 {% endif %}
-
-{% include 'partials/_hs_checkers.html' %}

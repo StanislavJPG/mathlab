@@ -284,6 +284,7 @@ BLEACH_ALLOWED_TAGS = [
     'img',
     'div',
     'h2',
+    'h5',
     *sanitizer.ALLOWED_TAGS,
 ]
 
@@ -312,6 +313,7 @@ BLEACH_ALLOWED_STYLES = [
     'text-align',
     'background-color',
     'max-width',
+    'min-width',
     'max-height',
     'width',
 ]

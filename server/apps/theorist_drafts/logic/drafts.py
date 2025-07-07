@@ -22,7 +22,7 @@ class TheoristDraftsBaseTemplateView(TemplateView):
         draft_conf_uuid = self.request.GET.get('search_draft', None)
         if draft_conf_uuid and is_valid_uuid(draft_conf_uuid):
             draft_conf = TheoristDraftsConfiguration.objects.filter(uuid=draft_conf_uuid).first()
-            return getattr(draft_conf, 'theorist')
+            return getattr(draft_conf, 'theorist', '')
         return self.request.theorist
 
     def get_context_data(self, **kwargs):
@@ -75,7 +75,8 @@ class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListVie
         kwargs = super().get_table_kwargs()
         search_draft = self.request.GET.get('search_draft')
         if search_draft and is_valid_uuid(search_draft):
-            theorist = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first().theorist
+            draft = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first()
+            theorist = getattr(draft, 'theorist', '')
         else:
             theorist = self.request.theorist
         kwargs['theorist_from_url'] = theorist

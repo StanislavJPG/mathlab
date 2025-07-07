@@ -238,21 +238,33 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
     def _get_default_share_message(self):
         pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)
 
+        if pics.count() <= 2:
+            img_style = 'min-width: 220px;'
+        else:
+            img_style = 'min-width: 200px;'
+
+        pics_owner = getattr(pics.first(), 'theorist')
+        if pics_owner.uuid == self.theorist.uuid:
+            main_text_label = _('I share my drafts with you!')
+        else:
+            main_text_label = _("I share %s's drafts with you!") % pics_owner.full_name
+
         return f"""
         <div class="d-flex justify-content-center align-items-center h-100">
           <div class="card shadow-lg rounded-4 p-4 text-center" style="max-width: 700px; width: 100%;">
-            <div class="mb-3 row row-cols-1 g-3 row-cols-lg-3 justify-content-center" id="gallery">
+            <h5 class="mb-3">📝 {main_text_label}</h5>
+            <div class="mb-3 row row-cols-1 g-3 row-cols-lg-3 justify-content-center d-flex align-items-center" id="gallery">
               {
             ''.join(
                 f'''
-                <div class="col d-flex justify-content-center">
+                <div class="col d-flex justify-content-center me-2">
                     <a href="{pic.get_draft_url()}"
                        data-pswp-width="1105"
                        data-pswp-height="880"
                        target="_blank">
                       <img src="{pic.get_draft_url()}" 
                            class="img-thumbnail rounded border border-2 shadow-sm" 
-                           style="max-width: 120px; max-height: 120px;" 
+                           style="{img_style}" 
                            alt="preview">
                     </a>
                 </div>

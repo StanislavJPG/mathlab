@@ -20,7 +20,7 @@
 
 <script type="text/hyperscript">
   on change from .checker
-  if (document.querySelectorAll(".checker:checked").length <= 0)
+  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
     add .disabled to #share-btn
   else
     remove .disabled from #share-btn
@@ -28,7 +28,7 @@
 
 <script type="text/hyperscript">
   on click from .general-checker
-  if (document.querySelectorAll(".checker:checked").length <= 0)
+  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
     add .disabled to #share-btn
   else
     remove .disabled from #share-btn

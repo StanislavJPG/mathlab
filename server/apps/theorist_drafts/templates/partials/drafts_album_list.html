@@ -1,5 +1,16 @@
 {% load i18n static %}
 
+<div class="form-check mb-3 d-none general-form-album-checker" style="font-size: 25px;">
+  <input type="checkbox"
+         id="general-checker"
+         _="on click for checkbox in .checker set checkbox.checked to not checkbox.checked"
+         name="general-check"
+         class="form-check-input general-checker mt-2"/>
+  <label class="form-check-label" for="general-checker" style="font-size: 22px;">
+    {% translate 'Select all' %}
+  </label>
+</div>
+
 {% if drafts %}
   <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
        id="gallery"
@@ -80,7 +91,15 @@
 
 <script type="text/hyperscript">
   on change from .checker
-  if (document.querySelectorAll(".checker:checked").length <= 0)
+  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
+    add .disabled to #share-btn
+  else
+    remove .disabled from #share-btn
+</script>
+
+<script type="text/hyperscript">
+  on click from .general-checker
+  if (document.querySelectorAll(".checker:checked").length <= 0 or document.querySelectorAll(".checker:checked").length > 10)
     add .disabled to #share-btn
   else
     remove .disabled from #share-btn

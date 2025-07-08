@@ -185,15 +185,26 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         </div>
         """
 
+    def _process_notifications(self, instance, ver_label=None):
+        verb_label = _('has shared with you with') if not ver_label else ver_label
+        return notify.send(
+            sender=self.theorist,
+            recipient=instance.user,
+            actor_content_type=ContentType.objects.get_for_model(instance),
+            target=self.sharing_instance,
+            action_object=self.sharing_instance,
+            public=False,
+            verb=verb_label,
+            action_url=self.url_to_share,
+            target_display_name=self.i18n_obj_name,
+        )
+
     @transaction.atomic
     def save(self):
         instances = self.cleaned_data['receiver']
         to_create = []
         for instance in instances:
-            room = TheoristChatRoom.objects.filter(
-                (Q(first_member=self.theorist) & Q(second_member=instance))
-                | (Q(first_member=instance) & Q(second_member=self.theorist))
-            ).first()
+            room = TheoristChatRoom.get_room(self.theorist, instance)
             if not room:
                 room = TheoristChatRoom.objects.create(first_member=self.theorist, second_member=instance)
 
@@ -205,19 +216,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
-
-            verb_label = _('has shared with you with')
-            notify.send(
-                sender=self.theorist,
-                recipient=instance.user,
-                actor_content_type=ContentType.objects.get_for_model(instance),
-                target=self.sharing_instance,
-                action_object=self.sharing_instance,
-                public=False,
-                verb=verb_label,
-                action_url=self.url_to_share,
-                target_display_name=self.i18n_obj_name,
-            )
+            self._process_notifications(instance)
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs
@@ -233,6 +232,21 @@ class DraftsShareViaMessageForm(ShareViaMessageForm):
         if not self.drafts_to_share or len(self.drafts_to_share) > 10:
             self.add_error(None, _('You are not able to choose so many drafts to share.'))
         return cleaned_data
+
+    def _process_notifications(self, instance, ver_label=None):
+        verb_label = _('has shared with you with') if not ver_label else ver_label
+        room = TheoristChatRoom.get_room(self.theorist, instance)
+        return notify.send(
+            sender=self.theorist,
+            recipient=instance.user,
+            actor_content_type=ContentType.objects.get_for_model(instance),
+            target=self.sharing_instance,
+            action_object=self.sharing_instance,
+            public=False,
+            verb=verb_label,
+            action_url=get_mailbox_url(target_room=room, some_member=instance),
+            target_display_name=self.i18n_obj_name,
+        )
 
     @mark_safe
     def _get_default_share_message(self):

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-07 16:47+0300\n"
+"POT-Creation-Date: 2025-07-08 16:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1250,6 +1250,10 @@ msgstr ""
 msgid "I share %s's drafts with you!"
 msgstr ""
 
+#: server/apps/theorist_chat/forms.py
+msgid "See all available drafts"
+msgstr ""
+
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
@@ -1952,10 +1956,12 @@ msgid "Please, create your account before read this block."
 msgstr ""
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Previous"
 msgstr ""
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Next"
 msgstr ""
 
@@ -2010,14 +2016,6 @@ msgstr ""
 
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Build a graph"
-msgstr ""
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "previous"
-msgstr ""
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "next"
 msgstr ""
 
 #: tests/forum/test_comment.py tests/forum/test_comment_answer.py

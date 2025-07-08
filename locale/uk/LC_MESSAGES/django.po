@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-07 16:47+0300\n"
+"POT-Creation-Date: 2025-07-08 16:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -1262,8 +1262,13 @@ msgid "I share my drafts with you!"
 msgstr "Я ділюсь своїми чернетками з тобою!"
 
 #: server/apps/theorist_chat/forms.py
+#, python-format
 msgid "I share %s's drafts with you!"
 msgstr "Я ділюсь чернетками %s з тобою!"
+
+#: server/apps/theorist_chat/forms.py
+msgid "See all available drafts"
+msgstr "Дивитись усі доступні чернетки"
 
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
@@ -1995,10 +2000,12 @@ msgid "Please, create your account before read this block."
 msgstr "Будь ласка, створіть акаунт, перш ніж читати цей блок."
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Previous"
 msgstr "Попередня"
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Next"
 msgstr "Наступна"
 
@@ -2054,14 +2061,6 @@ msgstr "Ця фіча ще в розробці! Слідкуй за останн
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Build a graph"
 msgstr "Побудуй графік"
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "previous"
-msgstr "попередня"
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "next"
-msgstr "наступна"
 
 #: tests/forum/test_comment.py tests/forum/test_comment_answer.py
 #: tests/forum/test_post.py tests/theorists/test_theorist_chat.py

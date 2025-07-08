@@ -7,7 +7,7 @@ import server.common.tables.attrs as table_attrs
 from server.common.tables.mixins import CreatedAtTableMixin
 
 
-class CheckBoxColumnWithoutHeader(tables.CheckBoxColumn):
+class CustomCheckBoxColumn(tables.CheckBoxColumn):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         attrs = kwargs.get('attrs', {})
@@ -30,7 +30,7 @@ class CheckBoxColumnWithoutHeader(tables.CheckBoxColumn):
 
 
 class DraftsTable(CreatedAtTableMixin, tables.Table):
-    check = CheckBoxColumnWithoutHeader(
+    check = CustomCheckBoxColumn(
         accessor='uuid',
         attrs={
             'input': {

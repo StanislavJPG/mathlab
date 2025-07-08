@@ -17,10 +17,18 @@ from server.common.utils.helpers import is_valid_uuid
 class TheoristDraftsBaseTemplateView(TemplateView):
     template_name = 'base_drafts.html'
 
+    def _get_theorist_from_params(self):
+        self.request: AuthenticatedHttpRequest
+        draft_conf_uuid = self.request.GET.get('search_draft', None)
+        if draft_conf_uuid and is_valid_uuid(draft_conf_uuid):
+            draft_conf = TheoristDraftsConfiguration.objects.filter(uuid=draft_conf_uuid).first()
+            return getattr(draft_conf, 'theorist', '')
+        return self.request.theorist
+
     def get_context_data(self, **kwargs):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
-        context['theorist'] = self.request.theorist
+        context['theorist'] = self._get_theorist_from_params()
         if self.request.theorist:
             context['configuration'] = self.request.theorist.drafts_configuration
         return context
@@ -29,6 +37,7 @@ class TheoristDraftsBaseTemplateView(TemplateView):
 class AbstractTheoristDraftsListView(LoginRequiredMixin, HXViewMixin, ListView):
     model = TheoristDrafts
     context_object_name = 'drafts'
+    paginate_by = 20
 
     def get_queryset(self):
         search_draft = self.request.GET.get('search_draft')
@@ -67,7 +76,8 @@ class TheoristDraftsTableListView(SingleTableView, AbstractTheoristDraftsListVie
         kwargs = super().get_table_kwargs()
         search_draft = self.request.GET.get('search_draft')
         if search_draft and is_valid_uuid(search_draft):
-            theorist = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first().theorist
+            draft = self.model.objects.filter(theorist__drafts_configuration__uuid=search_draft).first()
+            theorist = getattr(draft, 'theorist', '')
         else:
             theorist = self.request.theorist
         kwargs['theorist_from_url'] = theorist

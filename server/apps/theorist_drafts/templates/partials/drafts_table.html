@@ -1,18 +1,6 @@
 {% load i18n static %}
 {% load render_table from django_tables2 %}
 
-{% if theorist %}
-  <div class="text-end mt-3 mb-3">
-    <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
-    <small>
-      <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
-        {% get_instance_avatar theorist size=30 %}
-        {{ theorist.full_name }}
-      </a>
-    </small>
-  </div>
-{% endif %}
-
 {% if drafts %}
   <div id="gallery" hx-get="{{ request.get_full_path }}" hx-trigger="draftDeleted from:body">
     {% render_table table %}
@@ -30,4 +18,4 @@
   {% endif %}
 {% endif %}
 
-
+{% include 'partials/_hs_checkers.html' %}

@@ -3,9 +3,12 @@ import random
 import re
 
 import uuid
+from typing import Union
 
+from PIL import Image
 from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
+from easy_thumbnails.files import get_thumbnailer
 
 
 def generate_randon_hex_colors(number_of_colors: int) -> list:
@@ -55,3 +58,30 @@ def format_relative_time(diff_time):
         return timezone.localtime(diff_time).time()
     else:
         return diff_time
+
+
+class ConvenientImage:
+    """
+    Transform image field into `ConvenientImage` object
+    to conveniently get processed image attributes
+    """
+
+    def __init__(self, img_field, size: Union[list, tuple] = None, **kwargs):
+        self.kwargs = kwargs
+
+        if not size:
+            with Image.open(img_field) as img:
+                width, height = img.size
+        else:
+            width, height = size
+        thumbnailer = get_thumbnailer(img_field)
+        thumb = thumbnailer.get_thumbnail({'size': (width, height), **self._get_kwargs()})
+        self.url: str = thumb.url
+        self.width: int = width
+        self.height: int = height
+
+    def _get_kwargs(self):
+        return self.kwargs or {
+            'crop': False,
+            'upscale': False,
+        }

@@ -11,6 +11,7 @@ from tinymce.widgets import TinyMCE
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.utils import get_mailbox_url
 from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
+from server.apps.theorist_drafts.models import TheoristDrafts
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
@@ -179,20 +180,31 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
           <div class="card shadow-lg rounded-4 p-4 text-center">
             <h2 class="mb-3">🌟 {main_text_label}</h2>
             <p class="lead">{text_label}</p>
-            <a href="{self.url_to_share}" class="btn btn-primary mt-3">{button_label}</a>
+            <a href="{self.url_to_share}" class="btn btn-primary mt-3"><i class="ti ti-corner-up-right"></i> {button_label}</a>
           </div>
         </div>
         """
+
+    def _process_notifications(self, instance, ver_label=None):
+        verb_label = _('has shared with you with') if not ver_label else ver_label
+        return notify.send(
+            sender=self.theorist,
+            recipient=instance.user,
+            actor_content_type=ContentType.objects.get_for_model(instance),
+            target=self.sharing_instance,
+            action_object=self.sharing_instance,
+            public=False,
+            verb=verb_label,
+            action_url=self.url_to_share,
+            target_display_name=self.i18n_obj_name,
+        )
 
     @transaction.atomic
     def save(self):
         instances = self.cleaned_data['receiver']
         to_create = []
         for instance in instances:
-            room = TheoristChatRoom.objects.filter(
-                (Q(first_member=self.theorist) & Q(second_member=instance))
-                | (Q(first_member=instance) & Q(second_member=self.theorist))
-            ).first()
+            room = TheoristChatRoom.get_room(self.theorist, instance)
             if not room:
                 room = TheoristChatRoom.objects.create(first_member=self.theorist, second_member=instance)
 
@@ -204,19 +216,84 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
             # The model’s save() method will not be called, and the pre_save and post_save signals will not be sent:
             # https://docs.djangoproject.com/en/5.1/ref/models/querysets/#bulk-create
             msg_obj.before_create()
-
-            verb_label = _('has shared with you with')
-            notify.send(
-                sender=self.theorist,
-                recipient=instance.user,
-                actor_content_type=ContentType.objects.get_for_model(instance),
-                target=self.sharing_instance,
-                action_object=self.sharing_instance,
-                public=False,
-                verb=verb_label,
-                action_url=self.url_to_share,
-                target_display_name=self.i18n_obj_name,
-            )
+            self._process_notifications(instance)
 
         objs = TheoristMessage.objects.bulk_create(to_create)
         return objs
+
+
+class DraftsShareViaMessageForm(ShareViaMessageForm):
+    def __init__(self, *args, **kwargs):
+        self.drafts_to_share: list = [uuid for uuid in kwargs.pop('drafts_to_share', []) if is_valid_uuid(uuid)]
+        super().__init__(*args, **kwargs)
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if not self.drafts_to_share or len(self.drafts_to_share) > 10:
+            self.add_error(None, _('You are not able to choose so many drafts to share.'))
+        return cleaned_data
+
+    def _process_notifications(self, instance, ver_label=None):
+        verb_label = _('has shared with you with') if not ver_label else ver_label
+        room = TheoristChatRoom.get_room(self.theorist, instance)
+        return notify.send(
+            sender=self.theorist,
+            recipient=instance.user,
+            actor_content_type=ContentType.objects.get_for_model(instance),
+            target=self.sharing_instance,
+            action_object=self.sharing_instance,
+            public=False,
+            verb=verb_label,
+            action_url=get_mailbox_url(target_room=room, some_member=instance),
+            target_display_name=self.i18n_obj_name,
+        )
+
+    @mark_safe
+    def _get_default_share_message(self):
+        pics = TheoristDrafts.objects.filter(uuid__in=self.drafts_to_share)
+
+        if pics.count() <= 2:
+            img_style = 'min-width: 220px;'
+        else:
+            img_style = 'min-width: 200px;'
+
+        pics_owner = getattr(pics.first(), 'theorist')
+        if pics_owner.uuid == self.theorist.uuid:
+            main_text_label = _('I share my drafts with you!')
+            url_to_share = self.url_to_share
+        else:
+            main_text_label = _("I share %s's drafts with you!") % pics_owner.full_name
+            url_to_share = pics_owner.drafts_configuration.get_share_url()
+        btn_label = _('See all available drafts')
+
+        return f"""
+        <div class="d-flex justify-content-center align-items-center h-100">
+          <div class="card shadow-lg rounded-4 p-4 text-center" style="max-width: 700px; width: 100%;">
+            <h5 class="mb-3">📝 {main_text_label}</h5>
+            <div class="mb-3 row row-cols-1 g-3 row-cols-lg-3 justify-content-center d-flex align-items-center" id="gallery">
+              {
+            ''.join(
+                f'''
+                    <div class="col d-flex flex-column align-items-center me-2">
+                        <a href="{pic.get_draft().url}"
+                           data-pswp-width="{pic.get_draft().width}"
+                           data-pswp-height="{pic.get_draft().height}"
+                           target="_blank">
+                          <img src="{pic.get_draft().url}" 
+                               class="img-thumbnail rounded border border-2 shadow-sm mb-1" 
+                               style="{img_style}" 
+                               alt="preview">
+                        </a>
+                        <span class="small text-muted text-center" style="max-width: 200px; word-break: break-word;">
+                            {pic.label}
+                        </span>
+                    </div>
+                    '''
+                for pic in pics
+            )
+        }
+            </div>
+            <a href="{url_to_share}" class="btn btn-primary mt-3"><i class="ti ti-corner-up-right"></i> {btn_label}</a>
+          </div>
+        </div>
+        """

@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-01 15:01+0300\n"
+"POT-Creation-Date: 2025-07-08 16:26+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -457,6 +457,7 @@ msgid "Equations solver"
 msgstr ""
 
 #: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 #: server/apps/theorist_chat/templates/modals/messages_share_instance.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
@@ -1057,15 +1058,15 @@ msgid "Friends list"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
-msgid "Is profile only for authorized"
-msgstr ""
-
-#: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show about me"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
 msgid "Is show last activities"
+msgstr ""
+
+#: server/apps/theorist/templates/profile/settings/partials/configurations.html
+msgid "Is profile only for authorized"
 msgstr ""
 
 #: server/apps/theorist/templates/profile/settings/partials/configurations.html
@@ -1236,6 +1237,23 @@ msgstr ""
 msgid "has shared with you with"
 msgstr ""
 
+#: server/apps/theorist_chat/forms.py
+msgid "You are not able to choose so many drafts to share."
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+msgid "I share my drafts with you!"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+#, python-format
+msgid "I share %s's drafts with you!"
+msgstr ""
+
+#: server/apps/theorist_chat/forms.py
+msgid "See all available drafts"
+msgstr ""
+
 #: server/apps/theorist_chat/logic/consumers.py
 #: server/apps/theorist_chat/templates/partials/partials/message_action_block.html
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
@@ -1324,6 +1342,27 @@ msgstr ""
 msgid "Mailbox"
 msgstr ""
 
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#, python-format
+msgid "Share my %(i18n_obj_name)s?"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "with other theorists"
+msgstr ""
+
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+msgid "Share with..."
+msgstr ""
+
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create new mailbox"
 msgstr ""
@@ -1334,23 +1373,6 @@ msgstr ""
 
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 msgid "Create"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-#, python-format
-msgid "Share my %(i18n_obj_name)s?"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "Share"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "with other theorists"
-msgstr ""
-
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-msgid "Share with..."
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/alerts/empty_chat_alert.html
@@ -1416,6 +1438,7 @@ msgid "Your message"
 msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+#: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Send"
 msgstr ""
 
@@ -1588,6 +1611,14 @@ msgid "Upload my own draft"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Author of drafts"
+msgstr ""
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
+msgid "Cancel sharing"
+msgstr ""
+
+#: server/apps/theorist_drafts/templates/base_drafts.html
 msgid "Please check UUID that you pasted and try again!"
 msgstr ""
 
@@ -1651,8 +1682,7 @@ msgid "Upload"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
-#: server/apps/theorist_drafts/templates/partials/drafts_table.html
-msgid "Author of drafts"
+msgid "Select all"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
@@ -1926,10 +1956,12 @@ msgid "Please, create your account before read this block."
 msgstr ""
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Previous"
 msgstr ""
 
 #: server/templates/common/pagination.html
+#: server/templates/tables/bootstrap_htmx.html
 msgid "Next"
 msgstr ""
 
@@ -1984,14 +2016,6 @@ msgstr ""
 
 #: server/templates/partials/mathlab/mathlab_navbar.html
 msgid "Build a graph"
-msgstr ""
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "previous"
-msgstr ""
-
-#: server/templates/tables/bootstrap_htmx.html
-msgid "next"
 msgstr ""
 
 #: tests/forum/test_comment.py tests/forum/test_comment_answer.py

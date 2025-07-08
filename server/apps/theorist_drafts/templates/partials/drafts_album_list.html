@@ -1,75 +1,88 @@
 {% load i18n static %}
 
-{% if theorist %}
-  <div class="text-end mt-3 mb-3">
-    <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
-    <small>
-      <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
-        {% get_instance_avatar theorist size=30 %}
-        {{ theorist.full_name }}
-      </a>
-    </small>
-  </div>
-{% endif %}
+<div class="form-check mb-3 d-none general-form-album-checker" style="font-size: 25px;">
+  <input type="checkbox"
+         id="general-checker"
+         _="on click for checkbox in .checker set checkbox.checked to me.checked"
+         name="general-check"
+         class="form-check-input general-checker mt-2"/>
+  <label class="form-check-label" for="general-checker" style="font-size: 22px;">
+    {% translate 'Select all' %}
+  </label>
+</div>
 
 {% if drafts %}
-  <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
-       id="gallery"
-       data-toast-trigger
-       hx-get="{{ request.get_full_path }}"
-       hx-trigger="draftDeleted from:body delay:0.6s"
-  >
-    {% for draft in drafts %}
-      <div class="col album-draft-base-{{ draft.uuid }}">
-        <div class="card shadow-sm">
-          <a href="{{ draft.get_draft_url }}"
-             data-pswp-width="1105"
-             data-pswp-height="880"
-             target="_blank">
-            <img class="bd-placeholder-img card-img-top" style="max-width: 430px; max-height: 330px;" src="{{ draft.get_draft_url }}">
-          </a>
-          <div class="card-body">
-            <div class="mb-3 card-text d-flex align-items-center justify-content-between">
-              <strong>{{ draft.label }}</strong>
-              {% if not draft.is_public_available %}
-                <i class="ti ti-lock text-warning"
-                   style="font-size: 23px"
-                   data-bs-toggle="tooltip" data-bs-placement="top"
-                   title="{% translate 'This draft is not public available.' %}"></i>
+  <div id="album-view-drafts-js">
+    <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 g-3"
+         id="gallery"
+         data-toast-trigger
+         hx-get="{{ request.get_full_path }}"
+         hx-trigger="draftDeleted from:body delay:0.6s"
+    >
+      {% for draft in drafts %}
+        <form id="draftForm-{{ draft.uuid }}" class="col album-draft-base-{{ draft.uuid }}">
+          <div class="card shadow-sm">
+            <div class="d-none checks d-flex justify-content-center">
+              <input style="font-size: 25px;"
+                     class="form-check-input checker m-2"
+                     type="checkbox"
+                     name="draftToShare"
+                     value="{{ draft.uuid }}">
+            </div>
+            <a href="{{ draft.get_draft.url }}"
+               data-pswp-width="{{ draft.get_draft.width }}"
+               data-pswp-height="{{ draft.get_draft.height }}"
+               target="_blank">
+              <img class="bd-placeholder-img card-img-top" style="max-width: 430px; max-height: 330px;" src="{{ draft.get_draft.url }}">
+            </a>
+            <div class="card-body">
+              <div class="mb-3 card-text d-flex align-items-center justify-content-between">
+                <strong>{{ draft.label }}</strong>
+                {% if not draft.is_public_available %}
+                  <i class="ti ti-lock text-warning"
+                     style="font-size: 23px"
+                     data-bs-toggle="tooltip" data-bs-placement="top"
+                     title="{% translate 'This draft is not public available.' %}"></i>
+                {% endif %}
+              </div>
+              <p class="card-text">{{ draft.description|default:'' }}</p>
+              {% if request.theorist == draft.theorist %}
+                <div class="d-flex justify-content-between align-items-center flex-md-row flex-column">
+                  <div class="btn-group">
+                    <button type="button"
+                            hx-get="{% url 'mathlab:drafts:drafts-edit' draft.uuid %}?view={{ request.GET.view }}"
+                            hx-target="#drafts-management-modal"
+                            hx-trigger="click"
+                            data-toast-trigger
+                            data-bs-toggle="modal"
+                            data-bs-target="#drafts-management-modal"
+                            class="btn btn-sm btn-outline-secondary">
+                      {% translate 'Edit' %}
+                    </button>
+                    <button type="button"
+                            data-toast-trigger
+                            hx-delete="{% url 'mathlab:drafts:drafts-delete' draft.uuid %}?view={{ request.GET.view }}"
+                            hx-swap="innerHTML swap:0.5s"
+                            hx-target=".album-draft-base-{{ draft.uuid }}"
+                            hx-confirm="{% translate 'Are you sure?' %}"
+                            class="btn btn-sm btn-outline-danger">
+                      {% translate 'Delete' %}
+                    </button>
+                  </div>
+                  <small class="text-body-secondary small text-muted">{{ draft.created_at }}</small>
+                </div>
               {% endif %}
             </div>
-            <p class="card-text">{{ draft.description|default:'' }}</p>
-            {% if request.theorist == draft.theorist %}
-              <div class="d-flex justify-content-between align-items-center flex-md-row flex-column">
-                <div class="btn-group">
-                  <button type="button"
-                          hx-get="{% url 'mathlab:drafts:drafts-edit' draft.uuid %}?view={{ request.GET.view }}"
-                          hx-target="#drafts-management-modal"
-                          hx-trigger="click"
-                          data-toast-trigger
-                          data-bs-toggle="modal"
-                          data-bs-target="#drafts-management-modal"
-                          class="btn btn-sm btn-outline-secondary">
-                    {% translate 'Edit' %}
-                  </button>
-                  <button type="button"
-                          data-toast-trigger
-                          hx-delete="{% url 'mathlab:drafts:drafts-delete' draft.uuid %}?view={{ request.GET.view }}"
-                          hx-swap="innerHTML swap:0.5s"
-                          hx-target=".album-draft-base-{{ draft.uuid }}"
-                          hx-confirm="{% translate 'Are you sure?' %}"
-                          class="btn btn-sm btn-outline-danger">
-                    {% translate 'Delete' %}
-                  </button>
-                </div>
-                <small class="text-body-secondary small text-muted">{{ draft.created_at }}</small>
-              </div>
-            {% endif %}
           </div>
-        </div>
-      </div>
-    {% endfor %}
+        </form>
+      {% endfor %}
+    </div>
+    <div class="mt-5">
+      {% include 'common/pagination.html' with htmx_target="#album-view-drafts-js"  %}
+    </div>
+    {% include 'partials/_hs_checkers.html' %}
   </div>
+
 {% else %}
   {% if theorist %}
     {% if theorist == request.theorist %}

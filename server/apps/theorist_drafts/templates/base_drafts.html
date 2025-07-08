@@ -81,7 +81,17 @@
     <div class="album py-5 bg-body-tertiary">
       <div class="container">
         {% if request.user.is_authenticated %}
-          <div class="text-end mb-3">
+          <div class="text-end mb-3 d-flex justify-content-between">
+            <button id="share-btn" class="btn btn-primary btn-lg disabled me-2"
+                    hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
+                    hx-target="#drafts-sharing-modal"
+                    hx-trigger="click"
+                    data-bs-toggle="modal"
+                    data-bs-target="#drafts-sharing-modal"
+            >
+              <i class="ti ti-send"></i>
+              {% translate 'Send' %}
+            </button>
             <div class="btn-group" role="group">
               <button type="button"
                       hx-get="{% url 'mathlab:drafts:drafts-create' %}?view={{ request.GET.view }}"
@@ -106,11 +116,12 @@
                   <li class="mt-2">
                     <button type="button"
                             class="dropdown-item"
-                            hx-get="{% url 'forum:theorist_chat:share-drafts-via-chat' configuration.uuid %}"
-                            hx-target="#drafts-sharing-modal"
-                            hx-trigger="click"
-                            data-bs-toggle="modal"
-                            data-bs-target="#drafts-sharing-modal"
+                            id="pre-share-btn"
+                            _="on click remove .d-none from .checks
+                               then remove .d-none from .general-form-album-checker
+                               then set .general-checker.checked to true
+                               then set .checker.checked to true
+                               then remove .disabled from #share-btn"
                     ><i class="ti ti-share"></i> {% translate 'Share my drafts with other theorists' %}</button>
                   </li>
                   <li>
@@ -137,6 +148,30 @@
             {% with view=request.GET.view %}
               {% block drafts %}
                 {% if configuration %}
+                  {% if theorist %}
+                    <div class="d-flex flex-row-reverse justify-content-between align-items-center">
+                      <div class="text-end mt-3 mb-3">
+                        <small class="text-muted me-1">{% translate 'Author of drafts' %}:</small>
+                        <small>
+                          <a href="{{ theorist.get_absolute_url }}" class="text-decoration-none" target="_blank">
+                            {% get_instance_avatar theorist size=30 %}
+                            {{ theorist.full_name }}
+                          </a>
+                        </small>
+                      </div>
+                      <div class="d-none text-danger checks">
+                        <button type="button"
+                                class="btn btn-outline-danger btn-sm"
+                                _="on click toggle .d-none on .checks
+                                   then add .disabled to #share-btn
+                                   then add .d-none to .general-form-album-checker
+                                   then set .general-checker.checked to false
+                                   then set .table-checker.checked to false">
+                          <i class="ti ti-x"></i> {% translate 'Cancel sharing' %}
+                        </button>
+                      </div>
+                    </div>
+                  {% endif %}
                   <div {% if view == 'table' %}
                          class="row row-cols-1"
                          hx-get="{% url 'mathlab:drafts:drafts-table-list' configuration.uuid %}?view=table&search_draft={{ request.GET.search_draft }}"

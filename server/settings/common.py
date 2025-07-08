@@ -284,12 +284,25 @@ BLEACH_ALLOWED_TAGS = [
     'img',
     'div',
     'h2',
+    'h5',
+    'i',
     *sanitizer.ALLOWED_TAGS,
 ]
 
 
 #: Map of allowed attributes by tag
-BLEACH_ALLOWED_ATTRIBUTES = ['href', 'title', 'src', 'alt', 'style', 'class']
+BLEACH_ALLOWED_ATTRIBUTES = [
+    'href',
+    'title',
+    'src',
+    'alt',
+    'style',
+    'id',
+    'class',
+    'data-pswp-width',
+    'data-pswp-height',
+    'target',
+]
 
 BLEACH_ALLOWED_PROTOCOLS = ['ws', 'wss', *sanitizer.ALLOWED_PROTOCOLS]
 
@@ -300,6 +313,11 @@ BLEACH_ALLOWED_STYLES = [
     'font-variant',
     'text-align',
     'background-color',
+    'max-width',
+    'min-width',
+    'max-height',
+    'width',
+    'word-break',
 ]
 
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'

@@ -55,6 +55,19 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         # next_uuid is room uuid to be opened after url opening
         return reverse('forum:theorist_chat:chat-base-page') + f'?next_uuid={next_uuid}&page={mailbox_page}'
 
+    @classmethod
+    def get_room(cls, *members):  # Members order is not important
+        if len(members) == 2:
+            first_list = TheoristChatRoom.objects.filter(first_member=members[0], second_member=members[1]).values_list(
+                'id', flat=True
+            )
+            second_list = TheoristChatRoom.objects.filter(
+                first_member=members[1], second_member=members[0]
+            ).values_list('id', flat=True)
+
+            ids = [*first_list, *second_list]
+            return TheoristChatRoom.objects.filter(id__in=ids).first()
+
     @property
     def is_any_of_members_blocked_another(self):
         blocked_by_first = (

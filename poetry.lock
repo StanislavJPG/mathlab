@@ -877,6 +877,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-shortcuts"
+version = "3.0.1"
+description = "Add simple and pretty shortcuts to the django admin homepage."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-admin-shortcuts-3.0.1.tar.gz", hash = "sha256:0e33671e312298372f7d9e98dd4f660ea73c8afb214588bb08307726157d989e"},
+]
+
+[package.dependencies]
+Django = ">=4.0"
+
+[[package]]
 name = "django-allauth"
 version = "65.9.0"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
@@ -4194,4 +4208,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "005729744b4170768b7f6399044aeb9ca4469c271dcad389da1fa80921f5afc3"
+content-hash = "3544959b953842eb1c6294c434e498640f06689480416aa808bb29db56b336c2"

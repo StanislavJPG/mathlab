@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-08 16:26+0300\n"
+"POT-Creation-Date: 2025-07-10 01:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -24,6 +24,30 @@ msgstr ""
 
 #: server/apps/carousel/models.py
 msgid "Carousels"
+msgstr ""
+
+#: server/apps/complaints/admin.py
+msgid "🤬 URL of complained object"
+msgstr ""
+
+#: server/apps/complaints/models.py
+msgid "complaint text"
+msgstr ""
+
+#: server/apps/complaints/models.py
+msgid "complaint counter"
+msgstr ""
+
+#: server/apps/complaints/models.py
+msgid "processed"
+msgstr ""
+
+#: server/apps/complaints/models.py
+msgid "Complaint"
+msgstr ""
+
+#: server/apps/complaints/models.py server/settings/common/third_party.py
+msgid "Complaints"
 msgstr ""
 
 #: server/apps/forum/choices.py
@@ -1917,6 +1941,10 @@ msgstr ""
 
 #: server/common/utils/helpers.py
 msgid "5 minutes ago"
+msgstr ""
+
+#: server/settings/common/third_party.py
+msgid "Hotbar"
 msgstr ""
 
 #: server/templates/403.html

@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-08 16:26+0300\n"
+"POT-Creation-Date: 2025-07-10 01:38+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -27,6 +27,30 @@ msgstr "Карусель"
 #: server/apps/carousel/models.py
 msgid "Carousels"
 msgstr "Каруселі"
+
+#: server/apps/complaints/admin.py
+msgid "🤬 URL of complained object"
+msgstr "🤬 URL оскарженого об'єкту"
+
+#: server/apps/complaints/models.py
+msgid "complaint text"
+msgstr "текст скарги"
+
+#: server/apps/complaints/models.py
+msgid "complaint counter"
+msgstr "лічильник скарг"
+
+#: server/apps/complaints/models.py
+msgid "processed"
+msgstr "опрацьовано"
+
+#: server/apps/complaints/models.py
+msgid "Complaint"
+msgstr "Скарга"
+
+#: server/apps/complaints/models.py server/settings/common/third_party.py
+msgid "Complaints"
+msgstr "Скарги"
 
 #: server/apps/forum/choices.py
 msgid "Graph Functions"
@@ -1962,6 +1986,10 @@ msgstr "Декілька хвилин назад"
 #: server/common/utils/helpers.py
 msgid "5 minutes ago"
 msgstr "5 хвилин назад"
+
+#: server/settings/common/third_party.py
+msgid "Hotbar"
+msgstr "Панель швидкого доступу"
 
 #: server/templates/403.html
 msgid "Error"

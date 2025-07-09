@@ -2,6 +2,7 @@ import os
 
 from bleach import sanitizer
 from django.urls import reverse_lazy
+from django.utils.translation import gettext_lazy as _
 
 # ALLAUTH
 
@@ -127,13 +128,14 @@ BLEACH_ALLOWED_STYLES = [
 
 ADMIN_SHORTCUTS = [
     {
-        'title': 'Shop',
+        'title': _('Hotbar'),
         'shortcuts': [
             {
-                'url_name': 'admin:shop_order_changelist',
-                'title': 'Products',
-                'count_new': 'project.utils.count_new_orders',
-                'has_perms': 'project.utils.has_perms_to_orders',
+                'url_name': 'admin:complaints_complaint_changelist',
+                'title': _('Complaints'),
+                'icon': '🤬',
+                'count_new': 'server.apps.complaints.utils.count_active_complaints',
+                'url_extra': '?processed__exact=0',
             },
         ],
     },

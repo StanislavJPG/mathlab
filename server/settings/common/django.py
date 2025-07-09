@@ -55,6 +55,7 @@ INSTALLED_APPS = [
     'server.common',
     # apps
     'server.apps.carousel.apps.CarouselConfig',
+    'server.apps.complaints.apps.ComplaintsConfig',
     'server.apps.theorist_chat.apps.ChatConfig',
     'server.apps.theorist_community.apps.TheoristCommunityConfig',
     'server.apps.theorist_drafts.apps.DraftsConfig',

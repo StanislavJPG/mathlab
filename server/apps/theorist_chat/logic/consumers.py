@@ -61,7 +61,7 @@ class TheoristChatConsumer(WebsocketConsumer):
     def _get_context(self):
         user = self.scope['user']
         response = {
-            'theorist_avatar_url': user.theorist.get_current_avatar_url(),
+            'theorist_avatar_url': user.theorist.get_current_avatar(),
             'theorist_uuid': str(user.theorist.uuid),
             'theorist_full_name': user.theorist.full_name,
             'theorist_profile_url': user.theorist.get_absolute_url(),

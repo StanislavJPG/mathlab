@@ -73,8 +73,18 @@
         {% endif %}
       {% endif %}
     </div>
-    <div class="mb-3 mt-1">
-      {% get_instance_avatar theorist %}
+    <div class="mb-3 mt-1" id="gallery">
+      {% if theorist.custom_avatar %}
+        <a href="{{ theorist.get_custom_avatar.orig_url }}"
+           data-cropped="true"
+           data-pswp-width="460"
+           data-pswp-height="460"
+           target="_blank">
+          {% get_instance_avatar theorist %}
+        </a>
+      {% else %}
+        {% get_instance_avatar theorist %}
+      {% endif %}
     </div>
     <h5>
       <img alt="country_flag" src="{{ theorist.country.flag }}">

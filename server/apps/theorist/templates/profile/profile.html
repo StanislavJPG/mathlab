@@ -5,8 +5,48 @@
   <title>MathLab | {% if theorist.uuid == request.theorist.uuid %}{% translate 'My profile' %}{% else %}{% translate "Theorist's profile" %} {{ theorist.full_name }}{% endif %}</title>
 {% endblock page_head %}
 
+{% block page_css %}
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
+  <style>
+    .img-bg {
+      --pswp-bg: #ffffff;
+    }
+    .pswp__img {
+      border-radius: 25% !important;
+      object-fit: cover;
+    }
+    .pswp__img--placeholder {
+      {# hardcoded size values #}
+      width: 460px !important;
+      height: 460px !important;
+      {# /// #}
+      transform-origin: center !important;
+      transform: none !important;
+      will-change: unset !important;
+      opacity: 1 !important;
+    }
+
+
+  </style>
+{% endblock page_css %}
+
 {% block page_js %}
   <script src="https://cdn.jsdelivr.net/npm/apexcharts"></script>
+  <script type="module">
+    import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
+
+    document.body.addEventListener("htmx:afterSettle", function () {
+      const lightbox = new PhotoSwipeLightbox({
+        gallery: '#gallery',
+        mainClass: 'img-bg',
+        children: 'a',
+        wheelToZoom: true,
+        pswpModule: () => import('{% static 'js/photoswipe/photoswipe.esm.js' %}'),
+      });
+
+      lightbox.init();
+    });
+  </script>
 {% endblock page_js %}
 
 {% block body %}

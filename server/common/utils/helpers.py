@@ -66,19 +66,28 @@ class ConvenientImage:
     to conveniently get processed image attributes
     """
 
-    def __init__(self, img_field, size: Union[list, tuple] = None, **kwargs):
+    def __init__(self, img_field, size: Union[list, tuple] = None, with_orig_attrs=True, **kwargs):
         self.kwargs = kwargs
+        with Image.open(img_field) as img:
+            orig_width, orig_height = img.size
 
         if not size:
-            with Image.open(img_field) as img:
-                width, height = img.size
+            width, height = orig_width, orig_height
         else:
             width, height = size
+
+        # https://easy-thumbnails.readthedocs.io/en/latest/usage/?highlight=thumbnailer%20get_thumbnail#get-thumbnailer
         thumbnailer = get_thumbnailer(img_field)
         thumb = thumbnailer.get_thumbnail({'size': (width, height), **self._get_kwargs()})
         self.url: str = thumb.url
         self.width: int = width
         self.height: int = height
+
+        if with_orig_attrs:
+            orig_thumb = thumbnailer.get_thumbnail({'size': (orig_width, orig_height), **self._get_kwargs()})
+            self.orig_url: str = orig_thumb.url
+            self.orig_width: int = orig_width
+            self.orig_height: int = orig_height
 
     def _get_kwargs(self):
         return self.kwargs or {

@@ -5,7 +5,6 @@ from django.db import models
 from django.utils import timezone
 from django_lifecycle import hook, AFTER_SAVE
 from dynamic_filenames import FilePattern
-from easy_thumbnails.files import get_thumbnailer
 
 from server.apps.forum.constants import MIN_SCORE, MAX_SCORE
 from server.apps.theorist.choices import TheoristRankChoices
@@ -13,6 +12,7 @@ from server.common.third_party_apps.boringavatar import (
     BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
     BORINGAVATARS_DEFAULT_CROP,
 )
+from server.common.utils.helpers import ConvenientImage
 
 
 class TimeStampedModelMixin(models.Model):
@@ -77,7 +77,7 @@ upload_to_pattern_avatar = FilePattern(
 
 
 class AvatarModelMixin(models.Model):
-    AVATAR_DEFAULT_SIZE: Final[tuple] = (30, 30)
+    AVATAR_DEFAULT_SMALL_SIZE: Final[tuple] = (30, 30)
     AVATAR_DEFAULT_SQUARE: Final[bool] = False
 
     # custom avatar that was set by user
@@ -92,20 +92,20 @@ class AvatarModelMixin(models.Model):
             f'You need to specify a `get_boringavatars_url` method in your {self.__class__.__name__} model'
         )
 
-    def get_current_avatar_url(self, size: tuple[int, int] = None, square: bool = None):
-        size = size or self.AVATAR_DEFAULT_SIZE
+    def get_custom_avatar(self):
+        if self.custom_avatar:
+            return ConvenientImage(
+                img_field=self.custom_avatar,
+                size=BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
+                crop=BORINGAVATARS_DEFAULT_CROP,
+            )
+
+    def get_current_avatar(self, size: tuple[int, int] = None, square: bool = None):
+        size = size or self.AVATAR_DEFAULT_SMALL_SIZE
         square = square or self.AVATAR_DEFAULT_SQUARE
 
         if self.custom_avatar:
-            # https://easy-thumbnails.readthedocs.io/en/latest/usage/?highlight=thumbnailer%20get_thumbnail#get-thumbnailer
-            thumbnailer = get_thumbnailer(self.custom_avatar)
-            thumb = thumbnailer.get_thumbnail(
-                {
-                    'size': BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
-                    'crop': BORINGAVATARS_DEFAULT_CROP,
-                }
-            )
-            avatar_url = thumb.url
+            avatar_url = self.get_custom_avatar().orig_url
         else:
             avatar_url = self.get_boringavatars_url() + f'?size={size[0]}&square={"true" if square else "false"}'
         return avatar_url
@@ -114,10 +114,17 @@ class AvatarModelMixin(models.Model):
         """
         Generate HTML <img> tag for the avatar.
         """
-        avatar_url = self.get_current_avatar_url(size, square)
+        if not size:
+            if self.custom_avatar:
+                avatar = self.get_custom_avatar()
+                size = [avatar.width, avatar.height]
+            else:
+                size = BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST
+
+        avatar_url = self.get_current_avatar(size, square)
 
         return (
-            f'<img src="{avatar_url}" width="{size[0]}" height="{size[1]}" '
+            f'<img src="{avatar_url}" style="object-fit: cover;" width="{size[0]}" height="{size[1]}" '
             f'alt="avatar" class="{"rounded-circle" if not square else "squared rounded"}">'
         )
 

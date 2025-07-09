@@ -36,7 +36,7 @@ class TheoristDrafts(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return reverse('mathlab:drafts:base-drafts')
 
     def get_draft(self, size: list = None):
-        return ConvenientImage(img_field=self.draft, size=size)
+        return ConvenientImage(img_field=self.draft, size=size, with_orig_attrs=False)
 
     @hook(AFTER_CREATE)
     def after_create(self):

@@ -7,8 +7,9 @@
 <div class="d-flex flex-row align-items-center justify-content-between">
   <div class="d-flex flex-row align-items-center">
     <a class="text-decoration-none" href="{{ receiver.get_absolute_url }}" target="_blank">
-      <img src="{{ receiver.get_current_avatar_url }}" alt="avatar"
-           class="rounded-circle d-flex align-self-center me-2 shadow-1-strong" width="60">
+      <img src="{{ receiver.get_current_avatar }}" alt="avatar"
+           style="object-fit: cover;"
+           class="rounded-circle d-flex align-self-center me-2 shadow-1-strong" height="60" width="60">
     </a>
     <div>
       <a class="text-decoration-none" href="{{ receiver.get_absolute_url }}" target="_blank">
@@ -103,8 +104,9 @@
             {% if message.sender.uuid != request.theorist.uuid %}
               <a href="{{ message.sender.get_absolute_url }}" target="_blank">
                 <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                     src="{{ message.sender.get_current_avatar_url }}"
-                     class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60">
+                     src="{{ message.sender.get_current_avatar }}"
+                     style="object-fit: cover;"
+                     class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" height="60" width="60">
               </a>
               {% if not message.replied_to %}
                 <div class="card w-100">
@@ -243,8 +245,9 @@
               {% endif %}
               <a href="{{ message.sender.get_absolute_url }}" target="_blank">
                 <img alt="avatar" id="msg-avatar-{{ message.sender.uuid }}"
-                     src="{{ message.sender.get_current_avatar_url }}"
-                     class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" width="60">
+                     src="{{ message.sender.get_current_avatar }}"
+                     style="object-fit: cover;"
+                     class="rounded-circle d-flex align-self-start ms-3 shadow-1-strong" height="60" width="60">
               </a>
             {% endif %}
           </li>

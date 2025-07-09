@@ -2,7 +2,9 @@
 
 <script src="{% static 'notifications/notify.js' %}" type="text/javascript"></script>
 <script src="{% static 'js/notifications/bootstrap_notify_list.js' %}" type="text/javascript"></script>  {# custom widened js script #}
-{% widened_register_notify_callbacks menu_el_class="dropdown-item" menu_class="notification dropdown-menu" badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" callbacks='bs_fill_notification_list,fill_notification_badge' %}
+{% if request.user.is_authenticated and request.theorist.settings.is_able_to_receive_notifications %}
+  {% widened_register_notify_callbacks menu_el_class="dropdown-item" menu_class="notification dropdown-menu" badge_class="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger mark-padding" callbacks='bs_fill_notification_list,fill_notification_badge' %}
+{% endif %}
 
 <header class="p-3 mb-3 border-bottom">
   <div class="container">
@@ -42,7 +44,7 @@
           </li>
         {% endif %}
       </ul>
-      {% if request.user.is_authenticated %}
+      {% if request.user.is_authenticated and request.theorist.settings.is_able_to_receive_notifications %}
         <div class="dropdown" id="dropdown-noti">
           <a href="javascript:(0);"
              type="button"

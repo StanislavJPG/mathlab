@@ -1,7 +1,6 @@
 from django.template.defaultfilters import register
 from django.utils.safestring import mark_safe
 
-from server.common.third_party_apps.boringavatar import BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST
 from server.common.utils.defaults import get_default_user_pic
 
 
@@ -18,7 +17,7 @@ def get_instance_avatar(
     if hasattr(instance, 'custom_avatar'):
         return link_wrapper(
             instance.html_tag_avatar(
-                size=[size, size] if size else BORINGAVATARS_DEFAULT_SIZE_QUALITY_LIST,
+                size=[size, size] if size else None,
                 square=is_square,
             )
         )

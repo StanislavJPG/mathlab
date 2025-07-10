@@ -51,7 +51,6 @@ class Migration(migrations.Migration):
                             ('impersonation', 'Impersonation'),
                             ('other', 'Other'),
                         ],
-                        null=True,
                         verbose_name='category',
                     ),
                 ),

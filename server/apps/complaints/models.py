@@ -12,7 +12,7 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 class Complaint(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     complaint_text = models.TextField(_('complaint text'), validators=[MinLengthValidator(35)])
-    category = models.CharField(_('category'), choices=ComplaintCategoryChoices.choices, null=True)
+    category = models.CharField(_('category'), choices=ComplaintCategoryChoices.choices)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)
     object_id = models.PositiveIntegerField()

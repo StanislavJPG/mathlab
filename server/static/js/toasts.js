@@ -15,6 +15,7 @@ function createToast(message) {
 
     const toast = new bootstrap.Toast(elem, {delay: 2000});
     toast.show();
+    elem.addEventListener('click', () => toast.hide());
 }
 
 document.addEventListener("htmx:afterRequest", function (event) {

@@ -1,7 +1,10 @@
 from braces.views import FormMessagesMixin
 from django.http import HttpResponse
+from django.utils.decorators import method_decorator
 from django.views.generic import CreateView
 from django.utils.translation import gettext_lazy as _, pgettext_lazy
+from django_ratelimit.decorators import ratelimit
+from django_ratelimit.core import is_ratelimited
 
 from server.apps.complaints.forms import ComplaintCreateForm
 from server.apps.complaints.models import Complaint
@@ -13,6 +16,7 @@ from server.apps.theorist_drafts.models import TheoristDrafts
 from server.common.mixins.views import HXViewMixin
 
 
+@method_decorator(ratelimit(key='ip', rate='5/m', group='complaint', method='POST', block=False), name='post')
 class ComplaintCreateView(HXViewMixin, FormMessagesMixin, CreateView):
     model = Complaint
     template_name = 'modals/complaint_create_modal_form.html'
@@ -56,6 +60,9 @@ class ComplaintCreateView(HXViewMixin, FormMessagesMixin, CreateView):
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
+        kwargs['is_rate_limited'] = is_ratelimited(
+            self.request, rate='5/m', key='ip', method='POST', fn='complaint', group='complaint'
+        )
         kwargs['object_for_co'] = self.get_object_from_kwargs()
         return kwargs
 

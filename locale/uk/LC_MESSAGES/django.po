@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-10 18:36+0300\n"
+"POT-Creation-Date: 2025-07-10 19:17+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -95,6 +95,10 @@ msgstr "Самозванство"
 #: server/apps/complaints/choices.py server/apps/forum/choices.py
 msgid "Other"
 msgstr "Інше"
+
+#: server/apps/complaints/forms.py
+msgid "🏁 Slow down! Too many requests! Wait a while..."
+msgstr "🏁 Повільніше! Занадто багато запитів! Почекайте хвильку..."
 
 #: server/apps/complaints/logic/complaint_management.py
 msgid "Your complaint was successfully sent. Thank you!"

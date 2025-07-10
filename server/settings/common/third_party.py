@@ -132,10 +132,10 @@ ADMIN_SHORTCUTS = [
         'shortcuts': [
             {
                 'url_name': 'admin:complaints_complaint_changelist',
+                'url_extra': '?processed__exact=0',
                 'title': _('Complaints'),
                 'icon': '🤬',
                 'count_new': 'server.apps.complaints.utils.count_active_complaints',
-                'url_extra': '?processed__exact=0',
             },
         ],
     },

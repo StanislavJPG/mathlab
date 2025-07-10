@@ -8,14 +8,14 @@ from server.apps.complaints.models import Complaint
 
 @admin.register(Complaint)
 class ComplaintAdmin(admin.ModelAdmin):
-    list_display = ('id', 'uuid', 'content_object', 'content_type')
+    list_display = ('id', 'uuid', 'category', 'content_object', 'content_type')
     search_fields = (
         'id',
         'uuid',
         'content_object',
     )
-    list_filter = ('processed',)
-    readonly_fields = ('complained_object_url',)
+    list_filter = ('processed', 'counter', 'category')
+    readonly_fields = ('counter', 'complained_object_url')
 
     @admin.display(description=_('🤬 URL of complained object'))
     def complained_object_url(self, instance):

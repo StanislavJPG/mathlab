@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-10 01:38+0300\n"
+"POT-Creation-Date: 2025-07-10 14:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -30,8 +30,93 @@ msgstr ""
 msgid "🤬 URL of complained object"
 msgstr ""
 
+#: server/apps/complaints/choices.py
+msgid "Inappropriate content"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Spam or advertisement"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Fraud"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Offensive or hateful content"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Copyright infringement"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Misleading information"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Scam or phishing"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Violent or threatening content"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Harassment or bullying"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Duplicate or reposted content"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Fake or counterfeit item"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Wrong category"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Price manipulation"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Fake profile"
+msgstr ""
+
+#: server/apps/complaints/choices.py
+msgid "Impersonation"
+msgstr ""
+
+#: server/apps/complaints/choices.py server/apps/forum/choices.py
+msgid "Other"
+msgstr ""
+
+#: server/apps/complaints/logic/complaint_management.py
+#: server/apps/forum/logic/comment_management.py
+msgid "Your comment has been added."
+msgstr ""
+
+#: server/apps/complaints/logic/complaint_management.py
+#: server/apps/forum/logic/comment_answers.py
+#: server/apps/forum/logic/comment_management.py
+#: server/apps/forum/logic/post_management.py
+#: server/apps/theorist/logic/friendship/blacklist.py
+#: server/apps/theorist/logic/friendship/friends_management.py
+#: server/apps/theorist/logic/onboarding.py
+#: server/apps/theorist/logic/profile_settings.py
+#: server/apps/users/logic/auths_actions.py
+msgid "Error. Please, check your input and try again."
+msgstr ""
+
 #: server/apps/complaints/models.py
 msgid "complaint text"
+msgstr ""
+
+#: server/apps/complaints/models.py
+msgid "category"
 msgstr ""
 
 #: server/apps/complaints/models.py
@@ -48,6 +133,27 @@ msgstr ""
 
 #: server/apps/complaints/models.py server/settings/common/third_party.py
 msgid "Complaints"
+msgstr ""
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload draft"
+msgstr ""
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Close"
+msgstr ""
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload"
 msgstr ""
 
 #: server/apps/forum/choices.py
@@ -114,10 +220,6 @@ msgstr ""
 msgid "Algebra"
 msgstr ""
 
-#: server/apps/forum/choices.py
-msgid "Other"
-msgstr ""
-
 #: server/apps/forum/filters.py
 msgid "Title"
 msgstr ""
@@ -174,22 +276,7 @@ msgid "Your answer has been added."
 msgstr ""
 
 #: server/apps/forum/logic/comment_answers.py
-#: server/apps/forum/logic/comment_management.py
-#: server/apps/forum/logic/post_management.py
-#: server/apps/theorist/logic/friendship/blacklist.py
-#: server/apps/theorist/logic/friendship/friends_management.py
-#: server/apps/theorist/logic/onboarding.py
-#: server/apps/theorist/logic/profile_settings.py
-#: server/apps/users/logic/auths_actions.py
-msgid "Error. Please, check your input and try again."
-msgstr ""
-
-#: server/apps/forum/logic/comment_answers.py
 msgid "Your answer has been deleted."
-msgstr ""
-
-#: server/apps/forum/logic/comment_management.py
-msgid "Your comment has been added."
 msgstr ""
 
 #: server/apps/forum/logic/comment_management.py
@@ -343,6 +430,10 @@ msgid "Delete comment"
 msgstr ""
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Complain"
+msgstr ""
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Sorry! You have to verify your email to interact."
 msgstr ""
 
@@ -478,16 +569,6 @@ msgstr ""
 
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid "Equations solver"
-msgstr ""
-
-#: server/apps/solvers/templates/partials/equations_modals.html
-#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
-#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Close"
 msgstr ""
 
 #: server/apps/solvers/templates/partials/equations_modals.html
@@ -1695,14 +1776,6 @@ msgstr ""
 
 #: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
 msgid "Save"
-msgstr ""
-
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Upload draft"
-msgstr ""
-
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Upload"
 msgstr ""
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html

@@ -1,0 +1,38 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+<div class="modal-dialog modal-lg modal-dialog-centered">
+  <div class="modal-content">
+    <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
+      <div class="modal-header">
+        <h5 class="modal-title text-danger"><i class="ti ti-pencil-exclamation"></i> {% translate 'Complaint' %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+
+      <div class="modal-body">
+        <label for="{{ form.complaint_text.id_for_label }}" class="form-label">{% translate 'Describe your complaint below' %} *</label>
+        {% render_field form.complaint_text class="form-control" %}
+        {% render_field_errors form.complaint_text %}
+
+        <label for="{{ form.category.id_for_label }}" class="form-label">{% translate 'Choose the category of violation' %} *</label>
+        {% render_field form.category class="form-control" %}
+        {% render_field_errors form.category %}
+      </div>
+
+      <div class="modal-footer">
+        <button type="button" id="btn-close" class="btn btn-secondary" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+        {% translate 'Send complaint' as btn_label %}
+        {% render_submit_button btn_label class="btn btn-danger" %}
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  document.addEventListener('htmx:afterRequest', function (event) {
+    if (event.detail.xhr.status === 201) {
+      $('.modal-backdrop').remove();
+      $('.modal.fade').modal('hide');
+      $('body').css('overflow', 'auto');
+    }
+  });
+</script>

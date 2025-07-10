@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-10 01:38+0300\n"
+"POT-Creation-Date: 2025-07-10 14:12+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -32,9 +32,94 @@ msgstr "Каруселі"
 msgid "🤬 URL of complained object"
 msgstr "🤬 URL оскарженого об'єкту"
 
+#: server/apps/complaints/choices.py
+msgid "Inappropriate content"
+msgstr "Неприпустимий вміст"
+
+#: server/apps/complaints/choices.py
+msgid "Spam or advertisement"
+msgstr "Спам або реклама"
+
+#: server/apps/complaints/choices.py
+msgid "Fraud"
+msgstr "Шахрайство"
+
+#: server/apps/complaints/choices.py
+msgid "Offensive or hateful content"
+msgstr "Образливий або ворожий вміст"
+
+#: server/apps/complaints/choices.py
+msgid "Copyright infringement"
+msgstr "Порушення авторських прав"
+
+#: server/apps/complaints/choices.py
+msgid "Misleading information"
+msgstr "Оманлива інформація"
+
+#: server/apps/complaints/choices.py
+msgid "Scam or phishing"
+msgstr "Фішинг або шахрайство"
+
+#: server/apps/complaints/choices.py
+msgid "Violent or threatening content"
+msgstr "Насильницький або загрозливий вміст"
+
+#: server/apps/complaints/choices.py
+msgid "Harassment or bullying"
+msgstr "Домагання або цькування"
+
+#: server/apps/complaints/choices.py
+msgid "Duplicate or reposted content"
+msgstr "Дублікат або повторне розміщення"
+
+#: server/apps/complaints/choices.py
+msgid "Fake or counterfeit item"
+msgstr "Фальшивий або підроблений товар"
+
+#: server/apps/complaints/choices.py
+msgid "Wrong category"
+msgstr "Невідповідна категорія"
+
+#: server/apps/complaints/choices.py
+msgid "Price manipulation"
+msgstr "Маніпуляції з ціною"
+
+#: server/apps/complaints/choices.py
+msgid "Fake profile"
+msgstr "Фейковий профіль"
+
+#: server/apps/complaints/choices.py
+msgid "Impersonation"
+msgstr "Самозванство"
+
+#: server/apps/complaints/choices.py server/apps/forum/choices.py
+msgid "Other"
+msgstr "Інше"
+
+#: server/apps/complaints/logic/complaint_management.py
+#: server/apps/forum/logic/comment_management.py
+msgid "Your comment has been added."
+msgstr "Ваш коментар було додано."
+
+#: server/apps/complaints/logic/complaint_management.py
+#: server/apps/forum/logic/comment_answers.py
+#: server/apps/forum/logic/comment_management.py
+#: server/apps/forum/logic/post_management.py
+#: server/apps/theorist/logic/friendship/blacklist.py
+#: server/apps/theorist/logic/friendship/friends_management.py
+#: server/apps/theorist/logic/onboarding.py
+#: server/apps/theorist/logic/profile_settings.py
+#: server/apps/users/logic/auths_actions.py
+msgid "Error. Please, check your input and try again."
+msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
+
 #: server/apps/complaints/models.py
 msgid "complaint text"
 msgstr "текст скарги"
+
+#: server/apps/complaints/models.py
+msgid "category"
+msgstr "категорія"
 
 #: server/apps/complaints/models.py
 msgid "complaint counter"
@@ -51,6 +136,27 @@ msgstr "Скарга"
 #: server/apps/complaints/models.py server/settings/common/third_party.py
 msgid "Complaints"
 msgstr "Скарги"
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload draft"
+msgstr "Завантажити чернетку"
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
+#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
+#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
+#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Close"
+msgstr "Закрити"
+
+#: server/apps/complaints/templates/modals/complaint_create_modal_details.html
+#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
+msgid "Upload"
+msgstr "Завантажити"
 
 #: server/apps/forum/choices.py
 msgid "Graph Functions"
@@ -116,10 +222,6 @@ msgstr "Алгоритми"
 msgid "Algebra"
 msgstr "Алгебра"
 
-#: server/apps/forum/choices.py
-msgid "Other"
-msgstr "Інше"
-
 #: server/apps/forum/filters.py
 msgid "Title"
 msgstr "Назва"
@@ -176,23 +278,8 @@ msgid "Your answer has been added."
 msgstr "Вашу відповідь було додано."
 
 #: server/apps/forum/logic/comment_answers.py
-#: server/apps/forum/logic/comment_management.py
-#: server/apps/forum/logic/post_management.py
-#: server/apps/theorist/logic/friendship/blacklist.py
-#: server/apps/theorist/logic/friendship/friends_management.py
-#: server/apps/theorist/logic/onboarding.py
-#: server/apps/theorist/logic/profile_settings.py
-#: server/apps/users/logic/auths_actions.py
-msgid "Error. Please, check your input and try again."
-msgstr "Помилка. Будь ласка, перевірте введені дані та спробуйте ще раз."
-
-#: server/apps/forum/logic/comment_answers.py
 msgid "Your answer has been deleted."
 msgstr "Вашу відповідь було видалено."
-
-#: server/apps/forum/logic/comment_management.py
-msgid "Your comment has been added."
-msgstr "Ваш коментар було додано."
 
 #: server/apps/forum/logic/comment_management.py
 msgid "Your comment has been updated."
@@ -347,6 +434,10 @@ msgid "Delete comment"
 msgstr "Видалити коментар"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
+msgid "Complain"
+msgstr "Поскаржитись"
+
+#: server/apps/forum/templates/comments/partials/comment_list.html
 msgid "Sorry! You have to verify your email to interact."
 msgstr "Вибачте! Ви маєте підтвердити електронну пошту, щоб взаємодіяти."
 
@@ -485,16 +576,6 @@ msgstr "Читати з першоджерела"
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid "Equations solver"
 msgstr "Розв'язувач рівнянь"
-
-#: server/apps/solvers/templates/partials/equations_modals.html
-#: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
-#: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
-#: server/apps/theorist_chat/templates/modals/messages_share_instance.html
-#: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Close"
-msgstr "Закрити"
 
 #: server/apps/solvers/templates/partials/equations_modals.html
 msgid "Equation solving example"
@@ -1730,14 +1811,6 @@ msgstr "Редагувати Вашу чернетку"
 #: server/apps/theorist_drafts/templates/modals/edit_draft_modal.html
 msgid "Save"
 msgstr "Зберегти"
-
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Upload draft"
-msgstr "Завантажити чернетку"
-
-#: server/apps/theorist_drafts/templates/modals/upload_draft_modal.html
-msgid "Upload"
-msgstr "Завантажити"
 
 #: server/apps/theorist_drafts/templates/partials/drafts_album_list.html
 msgid "Select all"

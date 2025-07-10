@@ -23,6 +23,7 @@ urlpatterns = [
     path('theorist/onboarding/', include('server.apps.theorist.urls.onboarding_urls')),  # theorist onboarding urls
     path('', include('server.apps.users.urls')),  # for auth purposes
     path('exception/', include('server.urls.exception_urls')),  # convenient way to get exception in ajax
+    path('complaints/', include('server.apps.complaints.urls')),  # complaints for the objects in the whole project
 ]
 
 if settings.DEBUG:

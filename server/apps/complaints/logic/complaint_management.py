@@ -35,19 +35,19 @@ class ComplaintCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, Cr
             'profile': Theorist,
         }
 
-    def get_object_from_kwargs(self, object_label, object_uuid):
+    def get_object_from_kwargs(self):
+        object_label = self.kwargs.get('object_label')
+        object_uuid = self.kwargs.get('object_uuid')
+
         _map = self._map_of_accessed_models()
         model = _map.get(object_label, None)
-
         if model is not None:
             obj = model.objects.get(uuid=object_uuid)
             return obj
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
-        object_label = self.kwargs.get('object_label')
-        object_uuid = self.kwargs.get('object_uuid')
-        kwargs['object_for_ct'] = self.get_object_from_kwargs(object_label, object_uuid)
+        kwargs['object_for_co'] = self.get_object_from_kwargs()
         return kwargs
 
     def form_valid(self, form):

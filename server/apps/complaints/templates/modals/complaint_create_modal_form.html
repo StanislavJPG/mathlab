@@ -4,7 +4,7 @@
   <div class="modal-content">
     <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
       <div class="modal-header">
-        <h5 class="modal-title text-danger"><i class="ti ti-pencil-exclamation"></i> {% translate 'Complaint' %}</h5>
+        <h5 class="modal-title text-danger"><i class="ti ti-pencil-exclamation"></i> {% translate 'Complaint on' %} {{ object_label }}</h5>
         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
       </div>
 

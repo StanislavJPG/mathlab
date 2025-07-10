@@ -22,41 +22,65 @@ class TheoristChatConsumer(WebsocketConsumer):
         async_to_sync(self.channel_layer.group_discard)(self.room_group_uuid, self.channel_name)
 
     @mark_safe
-    def get_message_actions_as_html_tags(self, message_uuid):
+    def get_message_actions_as_html_tags(self, message_uuid, as_receiver=False):
+        reply_url = reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])
+        delete_url = reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})
+        complain_url = reverse('complaints:complaint-create', args=('message', message_uuid))
+
         delete_msg_label = _('Delete')
         delete_confirmation_label = _(
             'Are you sure you want to delete this message? You can restore it in any time after doing that.'
         )
         reply_label = _('Reply')
-        html_to_return = f"""
-        <li>
-          <button type="button"
-                  data-toast-trigger
-                  class="dropdown-item"
-                  hx-get="{reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])}"
-                  hx-on:click="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
-                  hx-target="#message-reply-block"
-                  hx-trigger="click"
-                  style="cursor: pointer">
-            <i class="ti ti-message-reply"></i> {reply_label}
-          </button>
-        </li>
-        <li>
-          <hr class="dropdown-divider">
-        </li>
-        <li>
-        <button class="dropdown-item text-danger"
-                  data-toast-trigger
-                  type="button"
-                  hx-post="{reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})}"
-                  hx-trigger="click"
-                  hx-confirm="{delete_confirmation_label}"
-                  style="cursor: pointer">
-            <i class="ti ti-trash"></i> {delete_msg_label}
-        </button>
-        </li>
+        complain_label = _('Complain')
+
+        reply_button = f"""
+            <li>
+                <button type="button"
+                        data-toast-trigger
+                        class="dropdown-item"
+                        hx-get="{reply_url}"
+                        hx-on:click="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
+                        hx-target="#message-reply-block"
+                        hx-trigger="click"
+                        style="cursor: pointer">
+                    <i class="ti ti-message-reply"></i> {reply_label}
+                </button>
+            </li>
         """
-        return html_to_return
+
+        delete_button = f"""
+            <li><hr class="dropdown-divider"></li>
+            <li>
+                <button class="dropdown-item text-danger"
+                        data-toast-trigger
+                        type="button"
+                        hx-post="{delete_url}"
+                        hx-trigger="click"
+                        hx-confirm="{delete_confirmation_label}"
+                        style="cursor: pointer">
+                    <i class="ti ti-trash"></i> {delete_msg_label}
+                </button>
+            </li>
+        """
+
+        complain_button = ''
+        if as_receiver:
+            complain_button = f"""
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <button class="dropdown-item text-danger"
+                            hx-get="{complain_url}"
+                            hx-target="#complaint-modal"
+                            data-bs-target="#complaint-modal"
+                            data-bs-toggle="modal"
+                            type="button">
+                        <i class="ti ti-clipboard-x"></i> {complain_label}
+                    </button>
+                </li>
+            """
+
+        return reply_button + delete_button + complain_button
 
     def _get_context(self):
         user = self.scope['user']
@@ -99,6 +123,11 @@ class TheoristChatConsumer(WebsocketConsumer):
         response.update(
             {
                 'theorist_html_actions': theorist_html_actions,
+                'for_received_theorist_html_actions': self.get_message_actions_as_html_tags(
+                    message_obj.uuid, as_receiver=True
+                )
+                if hasattr(message_obj, 'uuid')
+                else '<div></div>',
                 'room_uuid': self.room_group_uuid,
             }
         )

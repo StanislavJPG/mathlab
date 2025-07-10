@@ -1,5 +1,6 @@
 from django.contrib.contenttypes.fields import GenericForeignKey
 from django.contrib.contenttypes.models import ContentType
+from django.core.validators import MinLengthValidator
 from django.db import models
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE
@@ -10,7 +11,7 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
 class Complaint(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    complaint_text = models.TextField(_('complaint text'))
+    complaint_text = models.TextField(_('complaint text'), validators=[MinLengthValidator(35)])
     category = models.CharField(_('category'), choices=ComplaintCategoryChoices.choices, null=True)
 
     content_type = models.ForeignKey(ContentType, on_delete=models.CASCADE)

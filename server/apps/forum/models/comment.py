@@ -4,7 +4,6 @@ from django.core.exceptions import ValidationError
 from django.core.validators import MinLengthValidator, MaxLengthValidator
 from django.db import models
 from django.urls import reverse
-from django.utils import timezone
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import (
     LifecycleModel,
@@ -99,7 +98,8 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     @property
     def is_able_to_get_answers(self) -> bool:
-        time_limitations = (timezone.now() - self.created_at).days <= self.COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT
+        # time_limitations = (timezone.now() - self.created_at).days <= self.COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT # maybe not necessary
+        time_limitations = True  # const for now
         objects_limitations = self.check_is_answers_limitation
         return time_limitations and objects_limitations
 

@@ -1,21 +1,21 @@
 from braces.views import FormMessagesMixin
-from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponse
 from django.views.generic import CreateView
-from django.utils.translation import gettext_lazy as _
+from django.utils.translation import gettext_lazy as _, pgettext_lazy
 
 from server.apps.complaints.forms import ComplaintCreateForm
 from server.apps.complaints.models import Complaint
 from server.apps.forum.models import Comment, Post
+from server.apps.forum.models.comment import CommentAnswer
 from server.apps.theorist.models import Theorist
 from server.apps.theorist_chat.models import TheoristMessage
 from server.apps.theorist_drafts.models import TheoristDrafts
 from server.common.mixins.views import HXViewMixin
 
 
-class ComplaintCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CreateView):
+class ComplaintCreateView(HXViewMixin, FormMessagesMixin, CreateView):
     model = Complaint
-    template_name = 'modals/complaint_create_modal_details.html'
+    template_name = 'modals/complaint_create_modal_form.html'
     form_class = ComplaintCreateForm
     slug_url_kwarg = 'object_uuid'
     slug_field = 'uuid'
@@ -28,11 +28,12 @@ class ComplaintCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, Cr
     @staticmethod
     def _map_of_accessed_models():
         return {
-            'comment': Comment,
-            'post': Post,
-            'message': TheoristMessage,
-            'draft': TheoristDrafts,
-            'profile': Theorist,
+            'comment': (pgettext_lazy('2nd form', 'comment'), Comment),
+            'comment-answer': (_('comment answer'), CommentAnswer),
+            'post': (pgettext_lazy('2nd form', 'post'), Post),
+            'message': (_('message'), TheoristMessage),
+            'draft': (_('draft'), TheoristDrafts),
+            'profile': (_('profile'), Theorist),
         }
 
     def get_object_from_kwargs(self):
@@ -42,13 +43,26 @@ class ComplaintCreateView(LoginRequiredMixin, HXViewMixin, FormMessagesMixin, Cr
         _map = self._map_of_accessed_models()
         model = _map.get(object_label, None)
         if model is not None:
-            obj = model.objects.get(uuid=object_uuid)
+            obj = model[1].objects.get(uuid=object_uuid)
             return obj
+
+    def get_object_label_from_kwargs(self):
+        object_label = self.kwargs.get('object_label')
+        _map = self._map_of_accessed_models()
+        model = _map.get(object_label, None)
+        if model is not None:
+            i18n = model[0]
+            return i18n
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
         kwargs['object_for_co'] = self.get_object_from_kwargs()
         return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['object_label'] = self.get_object_label_from_kwargs()
+        return context
 
     def form_valid(self, form):
         form.save()

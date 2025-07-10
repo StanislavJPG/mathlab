@@ -11,7 +11,7 @@
   </div>
   <div class="col-md-8">
     <span>{% translate 'Question category' %} <small class="text-danger">({% translate 'No more than 4 categories' %}) *</small></span>
-    {% render_field form.categories|add_bootstrap_validation_classes class="selectpicker form-control" data-style="btn-default" data-live-search="true" multiple="" %}
+    {% render_field form.categories|add_bootstrap_validation_classes class="selectpicker form-control" data-max-options="4" data-style="btn-default" data-live-search="true" multiple="" %}
     {% render_field_errors form.categories %}
   </div>
   <div class="col-md-8">

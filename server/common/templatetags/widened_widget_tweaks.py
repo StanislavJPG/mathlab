@@ -28,6 +28,28 @@ def render_field_errors(field, class_='text-danger mb-2', small=False):
     return format_html(text_to_render)
 
 
+@register.simple_tag(takes_context=True)
+def render_nonfield_errors(context, small=False, autohide=True, **kwargs):
+    """
+    HTML example: `{% render_nonfield_errors class="text-warning" %}`
+    small attrs verify whether we use <small> tag for errors or not
+    """
+    form = context.get('form', None)
+    if form:
+        cls = kwargs.get('class', 'alert alert-danger')
+        hs_autohide = '_="on load wait 10s then transition my opacity to 0 then remove me"' if autohide else ''
+        text_to_render = (
+            f"""
+                <div class="{cls}" {hs_autohide}>
+                  {'<br>'.join([f'<small>{error}</small>' if small else error for error in form.non_field_errors()])}
+                </div>
+            """
+            if form.non_field_errors()
+            else ''
+        )
+        return format_html(text_to_render)
+
+
 @register.simple_tag(name='render_form_spinner_attrs')
 def render_form_attrs_with_spinner(
     target_spinner_id='wait-spinner',

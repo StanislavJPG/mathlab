@@ -8,7 +8,7 @@ from django.shortcuts import redirect, get_object_or_404
 from django.urls import reverse
 from django.utils import timezone
 from django.views.generic import DetailView, ListView
-from hitcount.models import HitCount
+from hitcount.models import HitCount, Hit
 from hitcount.views import HitCountDetailView
 
 from server.apps.theorist.models import Theorist, TheoristFriendship, TheoristFriendshipBlackList
@@ -30,17 +30,15 @@ class ProfileStatisticsData:
 
     def _aggregate_by_months(self):
         return {
-            month.lower(): Count('id', filter=Q(modified__month=num))
+            month.lower(): Count('id', filter=Q(created__month=num))
             for num, month in enumerate(self.get_analytics_categories(), start=1)
         }
 
     def get_analytics_data(self):
         ctype = ContentType.objects.get_for_model(Theorist)
-
-        stats = HitCount.objects.filter(content_type=ctype, object_pk=self.theorist.pk).aggregate(
-            **self._aggregate_by_months()
-        )
-        return [stat for stat in stats.values()]
+        hitcount = HitCount.objects.filter(content_type=ctype, object_pk=self.theorist.pk).first()
+        hits = Hit.objects.filter(hitcount=hitcount).aggregate(**self._aggregate_by_months())
+        return [stat for stat in hits.values()]
 
     def get_analytics_categories(self):
         month_num = timezone.now().month

@@ -17,11 +17,7 @@
         {% render_field form.category class="form-control" %}
         {% render_field_errors form.category %}
 
-        {% for error in form.non_field_errors %}
-          <div class="alert alert-danger">
-            <strong>{{ error }}</strong>
-          </div>
-        {% endfor %}
+        {% render_nonfield_errors small=True %}
       </div>
 
       <div class="modal-footer">

@@ -6,6 +6,8 @@ from django.utils.decorators import method_decorator
 from django.utils.encoding import force_str
 from django.utils.translation import gettext_lazy as _
 from django.views.generic import CreateView
+from django_ratelimit.core import is_ratelimited
+from django_ratelimit.decorators import ratelimit
 from honeypot.decorators import check_honeypot
 
 from server.apps.forum.models import Comment, Post
@@ -16,6 +18,7 @@ from server.common.mixins.views import HXViewMixin, CaptchaViewMixin
 
 
 @method_decorator(check_honeypot, name='post')
+@method_decorator(ratelimit(key='ip', rate='5/m', group='sharing', method='POST', block=False), name='post')
 class AbstractMessageInstanceShareView(
     LoginRequiredMixin, HXViewMixin, FormMessagesMixin, CaptchaViewMixin, CreateView
 ):
@@ -47,6 +50,9 @@ class AbstractMessageInstanceShareView(
         kwargs['sharing_instance'] = self.get_instance_to_share()
         kwargs['qs_to_filter'] = self.get_qs_to_filter()
         kwargs['i18n_obj_name'] = self.get_i18n_instance_name()
+        kwargs['is_rate_limited'] = is_ratelimited(
+            self.request, rate='5/m', key='ip', method='POST', fn='sharing', group='sharing'
+        )
         return kwargs
 
     def get_form_valid_message(self):

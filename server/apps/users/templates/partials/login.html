@@ -14,11 +14,7 @@
 
   {% include 'common/captcha.html' %}
 
-  {% for error in form.non_field_errors %}
-    <div class="alert alert-danger">
-      <strong>{{ error }}</strong>
-    </div>
-  {% endfor %}
+  {% render_nonfield_errors small=True %}
 
   <div class="row mb-4">
     <div class="col-md-6 d-flex justify-content-center">

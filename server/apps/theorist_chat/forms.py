@@ -144,6 +144,7 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
         self.sharing_instance = kwargs.pop('sharing_instance')
         self.url_to_share = kwargs.pop('url_to_share')
         self.instance = kwargs.pop('instance')
+        self.is_rate_limited = kwargs.pop('is_rate_limited')
         super().__init__(*args, **kwargs)
 
         if self.qs_to_filter.exists():
@@ -163,6 +164,12 @@ class ShareViaMessageForm(CaptchaForm, forms.Form):
 
         self.fields['receiver'].label_from_instance = lambda obj: obj.full_name
         self.fields['receiver'].to_field_name = 'uuid'
+
+    def clean(self):
+        cleaned_data = super().clean()
+        if self.is_rate_limited:
+            self.add_error(None, _('🏁 Slow down! Too many requests! Wait a while...'))
+        return cleaned_data
 
     @mark_safe
     def _get_default_share_message(self, main_text_label=None, text_label=None, button_label=None):

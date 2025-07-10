@@ -20,6 +20,8 @@
           {% include 'common/captcha.html' %}
         </div>
         {% render_honeypot_field "phonenumber" %}
+
+        {% render_nonfield_errors small=True %}
       </div>
 
       <div class="modal-footer">

@@ -24,8 +24,8 @@
                 <b>{% translate 'Modified at' %}</b> {{ comment.modified_at|timesince }} {% translate 'ago' %}</div>
             {% endif %}
           </div>
-          <div class="small d-flex align-items-center">
-            <div class="dropdown">
+          <div class="small d-flex align-items-center flex-row-reverse">
+            <div class="dropdown ms-2">
               <i data-bs-toggle="dropdown" aria-expanded="false" class="ti ti-dots-vertical"
                  style="cursor: pointer; font-size: 23px;"></i>
               <ul class="dropdown-menu">
@@ -77,29 +77,45 @@
                     </span>
                   </li>
                 {% endif %}
+                {% if comment.theorist.uuid != request.theorist.uuid %}
+                  <li>
+                    <hr class="dropdown-divider">
+                  </li>
+                  <li>
+                    <button class="dropdown-item text-danger"
+                            hx-get="{% url 'complaints:complaint-create' 'comment' comment.uuid %}"
+                            hx-target="#complaint-modal"
+                            data-bs-target="#complaint-modal"
+                            data-bs-toggle="modal"
+                            type="button">
+                      <i class="ti ti-clipboard-x"></i> {% translate 'Complain' %}
+                    </button>
+                  </li>
+                {% endif %}
               </ul>
             </div>
 
             {% if request.user.is_authenticated and comment.theorist.uuid != request.theorist.uuid %}
               {% if not request.user.is_email_verified %}
-                <a class="btn btn-sm btn-secondary text-nowrap" disabled
+                <i class="ti ti-heart-pause text-secondary opacity-50"
                    data-bs-toggle="tooltip" data-bs-placement="top"
-                   title="{% translate 'Sorry! You have to verify your email to interact.' %}">
-                  {% translate 'Thank you!' %}
-                </a>
+                   title="{% translate 'Sorry! You have to verify your email to interact.' %}"
+                   style="font-size: 23px; cursor: pointer;">
+                </i>
               {% elif comment in request.theorist.supported_comments.all %}
-                <a class="btn btn-sm btn-outline-primary text-nowrap" disabled
+                <i class="ti ti-heart-check text-danger opacity-50"
                    data-bs-toggle="tooltip" data-bs-placement="top"
-                   title="{% translate 'You have already supported this comment.' %}">
-                  {% translate 'Thank you!' %}
-                </a>
+                   title="{% translate 'You have already supported this comment.' %}"
+                   style="font-size: 23px; cursor: pointer;">
+                </i>
               {% else %}
-                <button class="btn btn-sm btn-primary text-nowrap"
-                        hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
-                        hx-swap="none"
-                        hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}">
-                  {% translate 'Thank you!' %}
-                </button>
+                <i class="ti ti-heart-filled text-danger"
+                   style="font-size: 23px; cursor: pointer;"
+                   hx-post="{% url 'forum:comments-support-update' comment.uuid %}"
+                   hx-swap="none"
+                   hx-trigger="click"
+                   hx-confirm="{% translate 'Do you want to support this answer? You will raise score for this user by doing that.' %}">
+                </i>
               {% endif %}
             {% endif %}
           </div>

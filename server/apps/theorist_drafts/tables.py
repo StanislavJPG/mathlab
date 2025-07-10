@@ -60,10 +60,6 @@ class DraftsTable(CreatedAtTableMixin, tables.Table):
         fields = ('check', 'label', 'draft', 'description', 'created_at')
         attrs = {**table_attrs.get_default_table_attrs()}
 
-    def before_render(self, request):
-        if request.theorist != self.theorist_from_url:
-            self.columns.hide('actions')
-
     @mark_safe
     def render_draft(self, record, value):
         draft = record.get_draft()

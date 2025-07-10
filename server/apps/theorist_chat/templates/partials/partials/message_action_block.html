@@ -45,6 +45,21 @@
           </button>
         {% endif %}
       </li>
+      {% if message.sender.uuid != request.theorist.uuid %}
+        <li>
+          <hr class="dropdown-divider">
+        </li>
+        <li>
+          <button class="dropdown-item text-danger"
+                  hx-get="{% url 'complaints:complaint-create' 'message' message.uuid %}"
+                  hx-target="#complaint-modal"
+                  data-bs-target="#complaint-modal"
+                  data-bs-toggle="modal"
+                  type="button">
+            <i class="ti ti-clipboard-x"></i> {% translate 'Complain' %}
+          </button>
+        </li>
+      {% endif %}
     </ul>
   </div>
 {% endif %}

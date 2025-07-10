@@ -25,6 +25,18 @@
                class="text-danger text-decoration-none ms-2">
               <i class="ti ti-trash"></i>
             </a>
+          {% else %}
+            <a href="#"
+               hx-get="{% url 'complaints:complaint-create' 'comment-answer' answer.uuid %}"
+               hx-target="#complaint-modal"
+               data-bs-target="#complaint-modal"
+               data-bs-toggle="modal"
+               hx-trigger="click"
+               title="{% translate 'Complain' %}"
+               data-toast-trigger
+               class="text-danger text-decoration-none ms-2">
+              <i class="ti ti-pencil-exclamation"></i>
+            </a>
           {% endif %}
         </div>
       </div>

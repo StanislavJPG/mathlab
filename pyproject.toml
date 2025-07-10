@@ -100,6 +100,8 @@ django-notifications-hq = { git = "https://github.com/openwisp/django-notificati
 faker = "^37.3.0"
 factory-boy = "^3.3.3"
 django-storages = {extras = ["s3"], version = "^1.14.6"}
+django-admin-shortcuts = "^3.0.1"
+django-ratelimit = "^4.1.0"
 
 [tool.poetry.group.dev.dependencies]
 django-debug-toolbar = "^5.0.1"

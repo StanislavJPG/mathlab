@@ -72,6 +72,16 @@
           {% endif %}
         {% endif %}
       {% endif %}
+      {% if request.theorist.uuid != theorist.uuid %}
+        <i class="text-danger ti ti-clipboard-x ms-2"
+           hx-get="{% url 'complaints:complaint-create' 'profile' theorist.uuid %}"
+           hx-target="#complaint-modal"
+           data-bs-target="#complaint-modal"
+           data-bs-toggle="modal"
+           title="{% translate 'Complain' %}"
+           style="font-size: 35px; cursor: pointer;">
+        </i>
+      {% endif %}
     </div>
     <div class="mb-3 mt-1" id="gallery">
       {% if theorist.custom_avatar %}

@@ -877,6 +877,20 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-shortcuts"
+version = "3.0.1"
+description = "Add simple and pretty shortcuts to the django admin homepage."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "django-admin-shortcuts-3.0.1.tar.gz", hash = "sha256:0e33671e312298372f7d9e98dd4f660ea73c8afb214588bb08307726157d989e"},
+]
+
+[package.dependencies]
+Django = ">=4.0"
+
+[[package]]
 name = "django-allauth"
 version = "65.9.0"
 description = "Integrated set of Django applications addressing authentication, registration, account management as well as 3rd party (social) account authentication."
@@ -1243,6 +1257,18 @@ files = [
 
 [package.dependencies]
 django = "*"
+
+[[package]]
+name = "django-ratelimit"
+version = "4.1.0"
+description = "Cache-based rate-limiting for Django."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "django-ratelimit-4.1.0.tar.gz", hash = "sha256:555943b283045b917ad59f196829530d63be2a39adb72788d985b90c81ba808b"},
+    {file = "django_ratelimit-4.1.0-py2.py3-none-any.whl", hash = "sha256:d047a31cf94d83ef1465d7543ca66c6fc16695559b5f8d814d1b51df15110b92"},
+]
 
 [[package]]
 name = "django-redis"
@@ -4194,4 +4220,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "005729744b4170768b7f6399044aeb9ca4469c271dcad389da1fa80921f5afc3"
+content-hash = "8561b80906a2e687f6c238feba967a452a6ea6aa058403a0fe360c8a8d38485d"

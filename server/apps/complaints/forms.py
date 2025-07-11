@@ -17,6 +17,8 @@ class ComplaintCreateForm(forms.ModelForm):
         cleaned_data = super().clean()
         if self.is_rate_limited:
             self.add_error(None, _('🏁 Slow down! Too many requests! Wait a while...'))
+        if not self.object_for_co:
+            self.add_error(None, _('Invalid object to complaint.'))
         return cleaned_data
 
     def save(self, commit=False):

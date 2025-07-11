@@ -3,7 +3,7 @@ from random import choices
 import factory
 from factory.base import T
 
-from server.apps.forum.models import PostCategory, Post
+from server.apps.forum.models import PostCategory
 from server.apps.theorist.factories import TheoristFactory
 
 
@@ -25,6 +25,7 @@ class PostFactory(factory.django.DjangoModelFactory):
 
     @classmethod
     def create(cls, **kwargs) -> T:
+        PostCategory.create_data()
         kwargs['categories'] = choices(PostCategory.objects.all(), k=3)  # default behaviour
         return super().create(**kwargs)
 
@@ -35,7 +36,7 @@ class CommentFactory(factory.django.DjangoModelFactory):
 
     comment = factory.Faker('text', max_nb_chars=2000)
 
-    post = factory.Iterator(Post.objects.all())
+    post = factory.SubFactory(PostFactory)
     theorist = factory.SubFactory(TheoristFactory)
 
 

@@ -1,5 +1,13 @@
 {% load i18n static widget_tweaks %}
 
+<style>
+  .voice-gap {
+    width: 100% !important;
+    -webkit-box-shadow: none;
+    box-shadow: none;
+  }
+</style>
+
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
 <script src="{% static 'js/init_tinymce.js' %}"></script>
 <script src="{% static 'js/eqneditor.js' %}"></script>
@@ -121,7 +129,15 @@
                   <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
-                        {{ message.message }}
+                        {% if message.audio_message %}
+                          <div class="card-body voice-gap">
+                            <audio crossorigin>
+                              <source src="{{ message.audio_message.url }}" type="audio/wav">
+                            </audio>
+                          </div>
+                        {% else %}
+                          {{ message.message }}
+                        {% endif %}
                       {% else %}
                         <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
                       {% endif %}
@@ -189,7 +205,15 @@
                   <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
-                        {{ message.message }}
+                        {% if message.audio_message %}
+                          <div class="card-body voice-gap">
+                            <audio crossorigin>
+                              <source src="{{ message.audio_message.url }}" type="audio/wav">
+                            </audio>
+                          </div>
+                        {% else %}
+                          {{ message.message }}
+                        {% endif %}
                       {% else %}
                         <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
                       {% endif %}
@@ -267,6 +291,8 @@
   </ul>
   <div class="mb-2 position-sticky">
     <div class="form-outline">
+      <button id="start-rec">🎙️ Start</button>
+      <button id="stop-rec" disabled>⏹️ Stop</button>
       <form id="msg-form">
         {% if is_blocked_by_first_member or is_blocked_by_second_member %}
           <textarea class="form-control text-danger" id="chat-message-input" rows="4"
@@ -331,9 +357,24 @@
     window.chatSockets[roomUUID] = chatSocket;
 
     chatSocket.onmessage = function (e) {
+      if (e.data instanceof Blob) {
+        const audioUrl = URL.createObjectURL(e.data);
+        const audio = document.createElement('audio');
+        audio.controls = true;
+        audio.src = audioUrl;
+
+        const messagesList = document.getElementById('msg-list-js-' + roomUUID);
+        const li = document.createElement('li');
+        li.appendChild(audio);
+        messagesList.prepend(li);
+        htmx.process(messagesList);
+        return;
+      }
+
       const data = JSON.parse(e.data);
 
       if (data.room_uuid !== roomUUID) return;
+
 
       const emptyLabel = document.getElementById('empty-label-js');
       if (emptyLabel) emptyLabel.remove();
@@ -390,7 +431,7 @@
         </div>
         </div>
         <div class="card-body">
-        <p class="mb-0">${data.message}</p>
+        <p class="mb-0">${!data.is_voice ? data.message : data.voice_html_block}</p>
         </div>
         `}
         <div class="d-flex justify-content-end p-2">
@@ -448,4 +489,40 @@
   }
 </script>
 
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+    let mediaRecorder;
 
+    document.getElementById('start-rec').onclick = async () => {
+      const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+      mediaRecorder = new MediaRecorder(stream);
+      mediaRecorder.start();
+
+      document.getElementById('start-rec').disabled = true;
+      document.getElementById('stop-rec').disabled = false;
+
+      mediaRecorder.ondataavailable = (e) => {
+        const socket = window.chatSockets[roomUUID];
+        if (socket && socket.readyState === WebSocket.OPEN) {
+          socket.send(e.data);
+        }
+      };
+    };
+
+    document.getElementById('stop-rec').onclick = () => {
+      if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+        mediaRecorder.stop();
+      }
+      document.getElementById('start-rec').disabled = false;
+      document.getElementById('stop-rec').disabled = true;
+    };
+  });
+
+  document.addEventListener('htmx:afterSettle', function () {
+    GreenAudioPlayer.init({
+      selector: '.voice-gap',
+      stopOthersOnPlay: true,
+      showTooltips: true,
+    });
+  });
+</script>

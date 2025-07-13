@@ -1,14 +1,16 @@
 import json
 
+import uuid
 from asgiref.sync import async_to_sync
 from channels.generic.websocket import WebsocketConsumer
+from django.core.files.base import ContentFile
 from django.urls import reverse
 from django.utils import dateformat, timezone
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 
 from server.apps.theorist_chat.forms import TheoristMessageForm
-from server.apps.theorist_chat.models import TheoristMessage
+from server.apps.theorist_chat.models import TheoristMessage, TheoristChatRoom
 from server.common.utils.helpers import limit_nbsp_paragraphs, is_valid_uuid
 
 
@@ -93,6 +95,18 @@ class TheoristChatConsumer(WebsocketConsumer):
         }
         return response
 
+    def _get_ready_context(self, msg):
+        theorist_html_actions = (
+            self.get_message_actions_as_html_tags(msg.uuid) if hasattr(msg, 'uuid') else '<div></div>'
+        )
+        return {
+            'theorist_html_actions': theorist_html_actions,
+            'for_received_theorist_html_actions': self.get_message_actions_as_html_tags(msg.uuid, as_receiver=True)
+            if hasattr(msg, 'uuid')
+            else '<div></div>',
+            'room_uuid': self.room_group_uuid,
+        }
+
     def save_data(self, **kwargs):
         msg = kwargs.get('message', '')
         msg_uuid_to_reply = kwargs.get('reply_message_uuid', '')
@@ -103,38 +117,55 @@ class TheoristChatConsumer(WebsocketConsumer):
             return sanitized_form.save(theorist=user.theorist, **kwargs)
 
     def receive(self, text_data=None, bytes_data=None):
-        text_data_json = json.loads(text_data)
-        message = text_data_json['message']
         response = self._get_context()
-        response['message'] = limit_nbsp_paragraphs(message)
 
-        # Prepare message as reply message if it is
-        response['reply_message_uuid'] = text_data_json['reply_message_uuid']
-        msg_uuid_to_reply = text_data_json['reply_message_uuid']
-        if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply):
-            reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply).first()
-            response['replied_to'] = {'sender_full_name': reply_msg.sender.full_name, 'message': reply_msg.message}
+        if bytes_data:
+            self.process_voice_message(bytes_data)
+            return
 
-        message_obj = self.save_data(**response)
+        if text_data:
+            text_data_json = json.loads(text_data)
+            message = text_data_json['message']
+            response['message'] = limit_nbsp_paragraphs(message)
 
-        theorist_html_actions = (
-            self.get_message_actions_as_html_tags(message_obj.uuid) if hasattr(message_obj, 'uuid') else '<div></div>'
+            # Prepare message as reply message if it is
+            response['reply_message_uuid'] = text_data_json['reply_message_uuid']
+            msg_uuid_to_reply = text_data_json['reply_message_uuid']
+            if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply):
+                reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply).first()
+                response['replied_to'] = {'sender_full_name': reply_msg.sender.full_name, 'message': reply_msg.message}
+
+            message_obj = self.save_data(**response)
+            response.update(self._get_ready_context(message_obj))
+
+            async_to_sync(self.channel_layer.group_send)(
+                self.room_group_uuid, {'type': 'chat_message', 'message': response}
+            )
+
+    def process_voice_message(self, bytes_data):
+        filename = f'{uuid.uuid4()}.wav'
+        user = self.scope['user']
+
+        room = TheoristChatRoom.objects.get(uuid=self.room_group_uuid)
+        msg = TheoristMessage.objects.create(
+            audio_message=ContentFile(bytes_data, name=filename), room=room, sender=user.theorist
         )
-        response.update(
+        context = self._get_context()
+        context.update(self._get_ready_context(msg))
+        context.update(
             {
-                'theorist_html_actions': theorist_html_actions,
-                'for_received_theorist_html_actions': self.get_message_actions_as_html_tags(
-                    message_obj.uuid, as_receiver=True
-                )
-                if hasattr(message_obj, 'uuid')
-                else '<div></div>',
-                'room_uuid': self.room_group_uuid,
+                'is_voice': True,
+                'voice_html_block': f"""
+                <div class="card-body voice-gap">
+                  <audio crossorigin>
+                    <source src="{msg.audio_message.url}" type="audio/wav">
+                  </audio>
+                </div>
+                """,
             }
         )
 
-        async_to_sync(self.channel_layer.group_send)(
-            self.room_group_uuid, {'type': 'chat_message', 'message': response}
-        )
+        async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})
 
     def chat_message(self, event):
         # Send message to WebSocket

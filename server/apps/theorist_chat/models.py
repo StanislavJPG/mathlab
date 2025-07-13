@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
+from dynamic_filenames import FilePattern
 
 from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
@@ -84,8 +85,15 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return any((blocked_by_first, blocked_by_second))
 
 
+audio_upload_to_path = FilePattern(
+    filename_pattern='{app_label:.25}/{instance.sender.full_name_slug}/audio/{uuid:s}{ext}'
+)
+
+
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    message = bleach.BleachField(max_length=500)
+    message = bleach.BleachField(max_length=500, blank=True)
+    audio_message = models.FileField(upload_to=audio_upload_to_path, null=True, blank=True)
+
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
 

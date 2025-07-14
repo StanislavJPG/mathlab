@@ -6,6 +6,10 @@
     -webkit-box-shadow: none;
     box-shadow: none;
   }
+
+    {#.controls__total-time {#}
+    {#    display: none;#}
+  #}#}
 </style>
 
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
@@ -126,11 +130,11 @@
                       {% include 'partials/partials/message_action_block.html' %}
                     </div>
                   </div>
-                  <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                  <div class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
                         {% if message.audio_message %}
-                          <div class="card-body voice-gap">
+                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}" data-voice-uuid="{{ message.uuid }}">
                             <audio crossorigin>
                               <source src="{{ message.audio_message.url }}" type="audio/wav">
                             </audio>
@@ -149,7 +153,8 @@
                   {% if not message.is_safe_deleted %}
                     <div class="card-body d-flex flex-column">
                       <div class="mb-0 d-flex flex-row justify-content-between mt-1 mb-3">
-                        <p class="fw-bold mb-0"><i class="ti ti-corner-left-down"></i> {{ message.sender.full_name }}</p>
+                        <p class="fw-bold mb-0"><i class="ti ti-corner-left-down"></i> {{ message.sender.full_name }}
+                        </p>
                         <div class="d-flex">
                           <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
                           {% include 'partials/partials/message_action_block.html' %}
@@ -202,11 +207,11 @@
                       {% include 'partials/partials/message_action_block.html' %}
                     </div>
                   </div>
-                  <div class="card-body {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                  <div class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
                         {% if message.audio_message %}
-                          <div class="card-body voice-gap">
+                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}" data-voice-uuid="{{ message.uuid }}">
                             <audio crossorigin>
                               <source src="{{ message.audio_message.url }}" type="audio/wav">
                             </audio>
@@ -219,13 +224,20 @@
                       {% endif %}
                     </p>
                   </div>
+                  <div
+                    class="d-flex justify-content-end p-2 pt-0 {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"
+                       title="{% if message.is_read %}{% translate 'Seen' %}{% else %}{% translate 'Sent' %}{% endif %}"
+                    ></i>
+                  </div>
                 </div>
               {% else %}
                 <div class="card w-100">
                   {% if not message.is_safe_deleted %}
                     <div class="card-body d-flex flex-column">
                       <div class="mb-0 d-flex flex-row justify-content-between mt-1 mb-3">
-                        <p class="fw-bold mb-0"><i class="ti ti-corner-left-down"></i> {{ message.sender.full_name }}</p>
+                        <p class="fw-bold mb-0"><i class="ti ti-corner-left-down"></i> {{ message.sender.full_name }}
+                        </p>
                         <div class="d-flex">
                           <span class="text-muted small"><i class="far fa-clock"></i> {{ message.created_at }}</span>
                           {% include 'partials/partials/message_action_block.html' %}
@@ -266,12 +278,6 @@
                       </p>
                     </div>
                   {% endif %}
-                  <div
-                    class="d-flex justify-content-end p-2 pt-0 {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
-                    <i class="ti ti-{% if message.is_read %}checks{% else %}check{% endif %}"
-                       title="{% if message.is_read %}{% translate 'Seen' %}{% else %}{% translate 'Sent' %}{% endif %}"
-                    ></i>
-                  </div>
                 </div>
               {% endif %}
               <a href="{{ message.sender.get_absolute_url }}" target="_blank">
@@ -342,6 +348,20 @@
 </script>
 
 <script>
+  function prepareAudioBlock(selector = '.voice-gap') {
+    document.querySelectorAll(selector).forEach(el => {
+      if (!el.classList.contains('green-audio-player')) {
+        GreenAudioPlayer.init({
+          selector: selector === '.voice-gap' ? `.voice-gap-${el.dataset.voiceUuid}` : selector,
+          stopOthersOnPlay: true,
+          showTooltips: true,
+        });
+      }
+    });
+  }
+</script>
+
+<script>
   var roomUUID = JSON.parse(document.getElementById('room-uuid').textContent);
 
   window.chatSockets = window.chatSockets || {};
@@ -357,24 +377,8 @@
     window.chatSockets[roomUUID] = chatSocket;
 
     chatSocket.onmessage = function (e) {
-      if (e.data instanceof Blob) {
-        const audioUrl = URL.createObjectURL(e.data);
-        const audio = document.createElement('audio');
-        audio.controls = true;
-        audio.src = audioUrl;
-
-        const messagesList = document.getElementById('msg-list-js-' + roomUUID);
-        const li = document.createElement('li');
-        li.appendChild(audio);
-        messagesList.prepend(li);
-        htmx.process(messagesList);
-        return;
-      }
-
       const data = JSON.parse(e.data);
-
       if (data.room_uuid !== roomUUID) return;
-
 
       const emptyLabel = document.getElementById('empty-label-js');
       if (emptyLabel) emptyLabel.remove();
@@ -446,8 +450,9 @@
       newMessageItem.innerHTML = messageTemplate(data, requestTheorist === data.theorist_uuid);
       messagesList.prepend(newMessageItem);
       htmx.process(newMessageItem);
+      prepareAudioBlock(`.voice-gap-${data.msg_uuid}`);
       messagesList.scrollTop = messagesList.scrollHeight;
-    };
+    }
 
     chatSocket.onclose = function () {
       console.error('Chat socket closed unexpectedly');
@@ -518,11 +523,7 @@
     };
   });
 
-  document.addEventListener('htmx:afterSettle', function () {
-    GreenAudioPlayer.init({
-      selector: '.voice-gap',
-      stopOthersOnPlay: true,
-      showTooltips: true,
-    });
+  document.addEventListener('htmx:afterSettle', () => {
+    prepareAudioBlock();
   });
 </script>

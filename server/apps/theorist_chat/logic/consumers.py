@@ -156,12 +156,13 @@ class TheoristChatConsumer(WebsocketConsumer):
             {
                 'is_voice': True,
                 'voice_html_block': f"""
-                <div class="card-body voice-gap">
+                <div class="card-body voice-gap voice-gap-{str(msg.uuid)}">
                   <audio crossorigin>
                     <source src="{msg.audio_message.url}" type="audio/wav">
                   </audio>
                 </div>
                 """,
+                'msg_uuid': str(msg.uuid),
             }
         )
 

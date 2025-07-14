@@ -7,9 +7,59 @@
     box-shadow: none;
   }
 
-    {#.controls__total-time {#}
-    {#    display: none;#}
-  #}#}
+  .breathing-button {
+    -webkit-animation: breathing 1.5s ease-out infinite normal;
+    animation: breathing 1.5s ease-out infinite normal;
+  }
+
+
+  @-webkit-keyframes breathing {
+    0% {
+      -webkit-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+
+    25% {
+      -webkit-transform: scale(1);
+      transform: scale(1);
+    }
+
+    60% {
+      -webkit-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+
+    100% {
+      -webkit-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+  }
+
+  @keyframes breathing {
+    0% {
+      -webkit-transform: scale(0.9);
+      -ms-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+
+    25% {
+      -webkit-transform: scale(1);
+      -ms-transform: scale(1);
+      transform: scale(1);
+    }
+
+    60% {
+      -webkit-transform: scale(0.9);
+      -ms-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+
+    100% {
+      -webkit-transform: scale(0.9);
+      -ms-transform: scale(0.9);
+      transform: scale(0.9);
+    }
+  }
 </style>
 
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>
@@ -130,11 +180,13 @@
                       {% include 'partials/partials/message_action_block.html' %}
                     </div>
                   </div>
-                  <div class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                  <div
+                    class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
                         {% if message.audio_message %}
-                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}" data-voice-uuid="{{ message.uuid }}">
+                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}"
+                               data-voice-uuid="{{ message.uuid }}">
                             <audio crossorigin>
                               <source src="{{ message.audio_message.url }}" type="audio/wav">
                             </audio>
@@ -168,7 +220,16 @@
                           <div class="card-body border border-top-0 rounded-end"
                                style="border-top-right-radius: 0 !important;">
                             {% if not message.replied_to.is_safe_deleted %}
-                              {{ message.replied_to.message }}
+                              {% if message.replied_to.audio_message %}
+                                <div class="card-body voice-gap voice-gap-{{ message.replied_to.uuid }}"
+                                     data-voice-uuid="{{ message.replied_to.uuid }}">
+                                  <audio crossorigin>
+                                    <source src="{{ message.replied_to.audio_message.url }}" type="audio/wav">
+                                  </audio>
+                                </div>
+                              {% else %}
+                                {{ message.replied_to.message }}
+                              {% endif %}
                             {% else %}
                               <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
                             {% endif %}
@@ -207,11 +268,13 @@
                       {% include 'partials/partials/message_action_block.html' %}
                     </div>
                   </div>
-                  <div class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
+                  <div
+                    class="card-body {% if message.audio_message %}d-flex{% endif %} {% if message.is_safe_deleted %}bg-warning-subtle{% endif %}">
                     <p class="mb-0">
                       {% if not message.is_safe_deleted %}
                         {% if message.audio_message %}
-                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}" data-voice-uuid="{{ message.uuid }}">
+                          <div class="card-body voice-gap voice-gap-{{ message.uuid }}"
+                               data-voice-uuid="{{ message.uuid }}">
                             <audio crossorigin>
                               <source src="{{ message.audio_message.url }}" type="audio/wav">
                             </audio>
@@ -251,7 +314,16 @@
                           <div class="card-body border border-top-0 rounded-end"
                                style="border-top-right-radius: 0 !important;">
                             {% if not message.replied_to.is_safe_deleted %}
-                              {{ message.replied_to.message }}
+                              {% if message.replied_to.audio_message %}
+                                <div class="card-body voice-gap voice-gap-{{ message.replied_to.uuid }}"
+                                     data-voice-uuid="{{ message.replied_to.uuid }}">
+                                  <audio crossorigin>
+                                    <source src="{{ message.replied_to.audio_message.url }}" type="audio/wav">
+                                  </audio>
+                                </div>
+                              {% else %}
+                                {{ message.replied_to.message }}
+                              {% endif %}
                             {% else %}
                               <span class="text-muted fst-italic">{% translate 'This message was removed.' %}</span>
                             {% endif %}
@@ -297,8 +369,6 @@
   </ul>
   <div class="mb-2 position-sticky">
     <div class="form-outline">
-      <button id="start-rec">🎙️ Start</button>
-      <button id="stop-rec" disabled>⏹️ Stop</button>
       <form id="msg-form">
         {% if is_blocked_by_first_member or is_blocked_by_second_member %}
           <textarea class="form-control text-danger" id="chat-message-input" rows="4"
@@ -323,17 +393,27 @@
 
           {% render_field message_as_form.message id="chat-message-input" %}
           <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
-          <button id="chat-message-submit"
-                  type="button"
-                  data-toast-trigger
-                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
-                  hx-target="#mailboxes-list-js"
-                  hx-trigger="click from:#chat-message-submit delay:0.5s"
-                  _="on click call document.getElementById('msg-form').reset()"
-                  class="btn btn-primary btn-rounded float-end mt-2">
-            <i class="ti ti-send"></i>
-            {% translate 'Send' %}
-          </button>
+          <div class="btn-group mt-2 float-end" role="group">
+            <button id="chat-message-submit"
+                    type="button"
+                    data-toast-trigger
+                    hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                    hx-target="#mailboxes-list-js"
+                    hx-trigger="click from:#chat-message-submit delay:0.5s"
+                    _="on click call document.getElementById('msg-form').reset()"
+                    class="btn btn-primary">
+              <i class="ti ti-send"></i>
+              {% translate 'Send' %}
+            </button>
+            <button type="button" title="{% translate 'Record voice message' %}" _="on click remove .d-none from #stop-rec then add .d-none"
+                    class="btn btn-outline-primary rounded-end" id="start-rec">
+              <i class="ti ti-microphone"></i>
+            </button>
+            <button type="button" title="{% translate 'Stop recording' %}" class="breathing-button btn btn-danger d-none"
+                    _="on click add .d-none then remove .d-none from #start-rec" id="stop-rec">
+              <i class="ti ti-player-stop-filled"></i>
+            </button>
+          </div>
         {% endif %}
       </form>
     </div>
@@ -388,6 +468,7 @@
       newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
 
       const messageTemplate = (data, isSender) => {
+        const cardBody = `card-body ${data.is_voice ? 'd-flex' : ''}`
         return `
         ${!isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" style="object-fit: cover;" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60" height="60"></a>` : ''}
         <div class="card w-100">
@@ -412,12 +493,12 @@
         <p class="fw-bold mb-0 small">${data.replied_to.sender_full_name}</p>
         </div>
         <div class="card-body border border-top-0 rounded-end" style="border-top-right-radius: 0 !important;">
-        ${data.replied_to.message}
+        ${!data.replied_to.is_voice ? data.replied_to.message : data.replied_to.voice_html_block}
         </div>
         </div>
         </div>
         <div class="card-body p-2">
-        <p class="mb-0">${data.message}</p>
+        <p class="mb-0">${!data.is_voice ? data.message : data.voice_html_block}</p>
         </div>
         </div>
         ` : `
@@ -434,7 +515,7 @@
         </div>
         </div>
         </div>
-        <div class="card-body">
+        <div class="${cardBody}">
         <p class="mb-0">${!data.is_voice ? data.message : data.voice_html_block}</p>
         </div>
         `}
@@ -451,6 +532,7 @@
       messagesList.prepend(newMessageItem);
       htmx.process(newMessageItem);
       prepareAudioBlock(`.voice-gap-${data.msg_uuid}`);
+      prepareAudioBlock(`.voice-gap-${data.reply_message_uuid}`);
       messagesList.scrollTop = messagesList.scrollHeight;
     }
 
@@ -497,9 +579,10 @@
 <script>
   document.addEventListener('htmx:afterSettle', function () {
     let mediaRecorder;
+    let stream;
 
     document.getElementById('start-rec').onclick = async () => {
-      const stream = await navigator.mediaDevices.getUserMedia({audio: true});
+      stream = await navigator.mediaDevices.getUserMedia({audio: true});
       mediaRecorder = new MediaRecorder(stream);
       mediaRecorder.start();
 
@@ -517,6 +600,8 @@
     document.getElementById('stop-rec').onclick = () => {
       if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
+        stream.getTracks()
+          .forEach( track => track.stop() )
       }
       document.getElementById('start-rec').disabled = false;
       document.getElementById('stop-rec').disabled = true;

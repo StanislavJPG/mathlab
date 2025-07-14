@@ -84,6 +84,17 @@ class TheoristChatConsumer(WebsocketConsumer):
 
         return reply_button + delete_button + complain_button
 
+    def get_voice_message_as_html(self, msg):
+        if msg.audio_message.name:
+            return f"""
+                <div class="card-body voice-gap voice-gap-{str(msg.uuid)}">
+                  <audio crossorigin>
+                    <source src="{msg.audio_message.url}" type="audio/wav">
+                  </audio>
+                </div>
+            """
+        return ''
+
     def _get_context(self):
         user = self.scope['user']
         response = {
@@ -133,7 +144,12 @@ class TheoristChatConsumer(WebsocketConsumer):
             msg_uuid_to_reply = text_data_json['reply_message_uuid']
             if msg_uuid_to_reply and is_valid_uuid(msg_uuid_to_reply):
                 reply_msg = TheoristMessage.objects.filter(uuid=msg_uuid_to_reply).first()
-                response['replied_to'] = {'sender_full_name': reply_msg.sender.full_name, 'message': reply_msg.message}
+                response['replied_to'] = {
+                    'sender_full_name': reply_msg.sender.full_name,
+                    'message': reply_msg.message,
+                    'voice_html_block': self.get_voice_message_as_html(reply_msg),
+                    'is_voice': reply_msg.audio_message.name != '',
+                }
 
             message_obj = self.save_data(**response)
             response.update(self._get_ready_context(message_obj))
@@ -155,13 +171,7 @@ class TheoristChatConsumer(WebsocketConsumer):
         context.update(
             {
                 'is_voice': True,
-                'voice_html_block': f"""
-                <div class="card-body voice-gap voice-gap-{str(msg.uuid)}">
-                  <audio crossorigin>
-                    <source src="{msg.audio_message.url}" type="audio/wav">
-                  </audio>
-                </div>
-                """,
+                'voice_html_block': self.get_voice_message_as_html(msg),
                 'msg_uuid': str(msg.uuid),
             }
         )

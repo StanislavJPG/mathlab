@@ -1,18 +1,6 @@
 {% load i18n static widget_tweaks %}
 
-<style>
-  .voice-gap {
-    width: 100% !important;
-    -webkit-box-shadow: none;
-    box-shadow: none;
-  }
-  .green-audio-player {
-    background-color: unset;
-  }
-  .controls__total-time {
-    display: none;  {# TODO: https://github.com/greghub/green-audio-player/issues/13 #}
-  }
-</style>
+<link type="text/css" href="{% static 'css/features/green_audio_player.css' %}" rel="stylesheet">
 <link type="text/css" href="{% static 'css/features/breathing_button.css' %}" rel="stylesheet">
 
 <script src="{% static 'tinymce/tinymce.min.js' %}"></script>

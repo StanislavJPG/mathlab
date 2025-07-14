@@ -44,6 +44,10 @@ class TheoristMessageAdmin(admin.ModelAdmin):
         'message',
         'sender',
     )
+    search_fields = (
+        'id',
+        'uuid',
+    )
     list_filter = (
         'created_at',
         'is_read',

@@ -12,8 +12,22 @@
       </div>
       <div class="vr me-3"></div>
       <p class="mb-0">
-        {{ message.message }}
+        {% if message.audio_message %}
+          <div class="card-body voice-reply-gap-{{ message.uuid }}" data-voice-uuid="{{ message.uuid }}">
+            <audio crossorigin>
+              <source src="{{ message.audio_message.url }}" type="audio/wav">
+            </audio>
+          </div>
+        {% else %}
+          {{ message.message }}
+        {% endif %}
       </p>
     </div>
   </div>
 </div>
+
+<script>
+  document.addEventListener('htmx:afterSettle', () => {
+    prepareAudioBlock('.voice-reply-gap-{{ message.uuid }}', '.voice-reply-gap-');
+  });
+</script>

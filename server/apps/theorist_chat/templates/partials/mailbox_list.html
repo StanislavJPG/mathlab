@@ -93,6 +93,8 @@
                           {% else %}
                             {% if mailbox.messages.last.is_system %}
                               <em>🌟 {% translate 'Shared content...' %}</em>
+                            {% elif mailbox.messages.last.audio_message %}
+                              <em>🎙 {% translate 'Voice message' %}</em>
                             {% else %}
                               {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                             {% endif %}
@@ -111,6 +113,8 @@
                           {% else %}
                             {% if mailbox.messages.last.is_system %}
                               <em>🌟 {% translate 'Shared content...' %}</em>
+                            {% elif mailbox.messages.last.audio_message %}
+                              <em>🎙 {% translate 'Voice message' %}</em>
                             {% else %}
                               {{ mailbox.messages.last.message|truncate_by_rows:3|truncatechars_html:25 }}
                             {% endif %}

@@ -12,6 +12,7 @@ from dynamic_filenames import FilePattern
 from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.helpers import format_relative_time
+from server.common.validators import validate_audio_ext
 
 
 class TheoristChatGroupConfiguration(UUIDModelMixin, TimeStampedModelMixin):
@@ -86,13 +87,15 @@ class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
 
 audio_upload_to_path = FilePattern(
-    filename_pattern='{app_label:.25}/{instance.sender.full_name_slug}/audio/{uuid:s}{ext}'
+    filename_pattern='{app_label:.25}/rooms/{instance.room.uuid}/{instance.sender.full_name_slug}/audio/{uuid:s}{ext}'
 )
 
 
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     message = bleach.BleachField(max_length=500, blank=True)
-    audio_message = models.FileField(upload_to=audio_upload_to_path, null=True, blank=True)
+    audio_message = models.FileField(
+        upload_to=audio_upload_to_path, validators=[validate_audio_ext], null=True, blank=True
+    )
 
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)
     room = models.ForeignKey('theorist_chat.TheoristChatRoom', on_delete=models.CASCADE, related_name='messages')
@@ -116,6 +119,12 @@ class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     def __str__(self):
         return f'{self.sender.full_name} | {self.__class__.__name__} | id - {self.id}'
+
+    def clean(self):
+        if self.sender_id not in [self.room.first_member_id, self.room.second_member_id]:
+            raise ValidationError('Sender needs to be a member in the following room.')
+        if self.message and self.audio_message:
+            raise ValidationError('Message needs to be specified whether audio or text.')
 
     def get_absolute_room_url(self, next_uuid, mailbox_page=1):
         # next_uuid is room uuid to be opened after url opening

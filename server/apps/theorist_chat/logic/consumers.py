@@ -84,16 +84,17 @@ class TheoristChatConsumer(WebsocketConsumer):
 
         return reply_button + delete_button + complain_button
 
-    def get_voice_message_as_html(self, msg):
-        if msg.audio_message.name:
-            return f"""
-                <div class="card-body voice-gap voice-gap-{str(msg.uuid)}">
-                  <audio crossorigin>
-                    <source src="{msg.audio_message.url}" type="audio/wav">
-                  </audio>
-                </div>
-            """
-        return ''
+    def get_voice_message_as_html(self, msg, is_replied=False):
+        uuid = str(msg.uuid)
+        url = msg.replied_to.audio_message.url if is_replied else msg.audio_message.url
+        return f"""
+            <div class="card-body voice-gap {f'voice-ws-reply-gap-{uuid}' if is_replied else f'voice-gap-{uuid}'}" 
+            data-voice-uuid="{uuid}">
+              <audio crossorigin>
+                <source src="{url}" type="audio/wav">
+              </audio>
+            </div>
+        """
 
     def _get_context(self):
         user = self.scope['user']
@@ -116,6 +117,7 @@ class TheoristChatConsumer(WebsocketConsumer):
             if hasattr(msg, 'uuid')
             else '<div></div>',
             'room_uuid': self.room_group_uuid,
+            'msg_uuid': str(msg.uuid) if hasattr(msg, 'uuid') else None,
         }
 
     def save_data(self, **kwargs):
@@ -147,12 +149,16 @@ class TheoristChatConsumer(WebsocketConsumer):
                 response['replied_to'] = {
                     'sender_full_name': reply_msg.sender.full_name,
                     'message': reply_msg.message,
-                    'voice_html_block': self.get_voice_message_as_html(reply_msg),
                     'is_voice': reply_msg.audio_message.name != '',
                 }
 
             message_obj = self.save_data(**response)
             response.update(self._get_ready_context(message_obj))
+
+            if response.get('replied_to', {}).get('is_voice', False):
+                response['replied_to']['voice_html_block'] = self.get_voice_message_as_html(
+                    message_obj, is_replied=True
+                )
 
             async_to_sync(self.channel_layer.group_send)(
                 self.room_group_uuid, {'type': 'chat_message', 'message': response}
@@ -172,7 +178,6 @@ class TheoristChatConsumer(WebsocketConsumer):
             {
                 'is_voice': True,
                 'voice_html_block': self.get_voice_message_as_html(msg),
-                'msg_uuid': str(msg.uuid),
             }
         )
 

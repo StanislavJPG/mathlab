@@ -6,7 +6,7 @@
       <p class="fw-bold mb-0">{% translate 'Reply to' %} {{ message.sender.full_name }}</p>
       <button type="button" class="btn-close" _="on click add .d-none to #message-reply-block-js" hx-on:click="document.querySelector('#chat-message-submit').removeAttribute('data-reply-attr-uuid')"></button>
     </div>
-    <div class="card-body d-flex">
+    <div class="card-body d-flex overflow-x-auto">
       <div class="d-flex align-items-center">
         <i class="ti ti-message-reply p-3 opacity-50" style="font-size: 40px"></i>
       </div>

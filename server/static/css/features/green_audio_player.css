@@ -17,6 +17,10 @@
     background-color: #8bb5f8 !important;
 }
 
+.volume {
+    display: block !important;
+}
+
 .volume__progress {
     background-color: #8bb5f8 !important;
 }

@@ -177,9 +177,18 @@
                           </div>
                         </div>
                       </div>
-                      <div class="card-body">
+                      <div class="card-body {% if message.audio_message %}d-flex overflow-x-auto{% endif %}">
                         <p class="mb-0">
-                          {{ message.message }}
+                          {% if message.audio_message %}
+                            <div class="card-body voice-gap voice-gap-{{ message.uuid }}"
+                                 data-voice-uuid="{{ message.uuid }}">
+                              <audio crossorigin>
+                                <source src="{{ message.audio_message.url }}" type="audio/wav">
+                              </audio>
+                            </div>
+                          {% else %}
+                            {{ message.message }}
+                          {% endif %}
                         </p>
                       </div>
                     </div>
@@ -271,9 +280,18 @@
                           </div>
                         </div>
                       </div>
-                      <div class="card-body">
+                      <div class="card-body  {% if message.audio_message %}d-flex overflow-x-auto{% endif %}">
                         <p class="mb-0">
-                          {{ message.message }}
+                          {% if message.audio_message %}
+                            <div class="card-body voice-gap voice-gap-{{ message.uuid }}"
+                                 data-voice-uuid="{{ message.uuid }}">
+                              <audio crossorigin>
+                                <source src="{{ message.audio_message.url }}" type="audio/wav">
+                              </audio>
+                            </div>
+                          {% else %}
+                            {{ message.message }}
+                          {% endif %}
                         </p>
                       </div>
                     </div>
@@ -346,12 +364,17 @@
               <i class="ti ti-send"></i>
               {% translate 'Send' %}
             </button>
-            <button type="button" title="{% translate 'Record voice message' %}" _="on click remove .d-none from #stop-rec then add .d-none"
+            <button type="button" title="{% translate 'Record voice message' %}"
+                    _="on click remove .d-none from #stop-rec then add .d-none then add .disabled to #chat-message-submit"
                     class="btn btn-outline-primary rounded-end" id="start-rec">
               <i class="ti ti-microphone"></i>
             </button>
             <button type="button" title="{% translate 'Stop recording' %}" class="breathing-button btn btn-danger d-none"
-                    _="on click add .d-none then remove .d-none from #start-rec" id="stop-rec">
+                    data-toast-trigger
+                    hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                    hx-target="#mailboxes-list-js"
+                    hx-trigger="click delay:0.5s"
+                    _="on click add .d-none then remove .d-none from #start-rec then remove .disabled from #chat-message-submit" id="stop-rec">
               <i class="ti ti-player-stop-filled"></i>
             </button>
           </div>
@@ -369,6 +392,7 @@
 </script>
 
 <script>
+
   function prepareAudioBlock(selector = '.voice-gap', greenAudioSelectorPrefix = '.voice-gap-') {
     document.querySelectorAll(selector).forEach(el => {
       if (!el.classList.contains('green-audio-player')) {
@@ -409,7 +433,7 @@
       newMessageItem.classList.add('d-flex', 'justify-content-between', 'mb-4');
 
       const messageTemplate = (data, isSender) => {
-        const cardBody = `card-body ${data.is_voice ? 'd-flex' : ''}`
+        const cardBody = `card-body ${data.is_voice ? 'd-flex overflow-x-auto' : ''}`
         return `
         ${!isSender ? `<a href="${data.theorist_profile_url}" target="_blank"><img alt="avatar" style="object-fit: cover;" src="${data.theorist_avatar_url}" class="rounded-circle d-flex align-self-start me-3 shadow-1-strong" width="60" height="60"></a>` : ''}
         <div class="card w-100">
@@ -499,12 +523,14 @@
         };
 
         submit.onclick = function () {
-          const message = input.value;
-          const replyUUID = submit.getAttribute('data-reply-attr-uuid');
-          window.chatSockets[roomUUID].send(JSON.stringify({
-            message: message,
-            reply_message_uuid: replyUUID,
-          }));
+          if (input.value.length >= 3) {
+            const message = input.value;
+            const replyUUID = submit.getAttribute('data-reply-attr-uuid');
+            window.chatSockets[roomUUID].send(JSON.stringify({
+              message: message,
+              reply_message_uuid: replyUUID,
+            }));
+          }
           input.value = '';
           submit.removeAttribute('data-reply-attr-uuid');
           if (document.getElementById('message-reply-block-js')) {
@@ -533,12 +559,30 @@
       mediaRecorder.ondataavailable = (e) => {
         const socket = window.chatSockets[roomUUID];
         if (socket && socket.readyState === WebSocket.OPEN) {
-          socket.send(e.data);
+          const reader = new FileReader();
+          reader.onload = () => {
+            const base64Audio = reader.result.split(',')[1];
+            const submit = document.querySelector('#chat-message-submit');
+            const replyUUID = submit.getAttribute('data-reply-attr-uuid');
+            const message = JSON.stringify({
+              is_voice: true,
+              reply_message_uuid: replyUUID,
+              audio_base64: base64Audio
+            });
+
+            submit.removeAttribute('data-reply-attr-uuid');
+            if (document.getElementById('message-reply-block-js')) {
+              document.getElementById('message-reply-block-js').classList.add('d-none');
+            }
+
+            socket.send(message);
+          };
+          reader.readAsDataURL(e.data);
         }
       };
     };
 
-    document.getElementById('stop-rec').onclick = () => {
+    function processStopRec () {
       if (mediaRecorder && mediaRecorder.state !== 'inactive') {
         mediaRecorder.stop();
         stream.getTracks()
@@ -546,6 +590,10 @@
       }
       document.getElementById('start-rec').disabled = false;
       document.getElementById('stop-rec').disabled = true;
+    }
+
+    document.getElementById('stop-rec').onclick = () => {
+      processStopRec();
     };
   });
 

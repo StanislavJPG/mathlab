@@ -1,5 +1,5 @@
 import django_filters as filters
-from django.db.models import Q, F
+from django.db.models import Q, F, Func, Value, CharField
 
 from django.utils.translation import gettext_lazy as _
 
@@ -50,8 +50,18 @@ class ChatMessagesFilter(filters.FilterSet):
 
     def filter_by_message(self, queryset, name, value):
         return (
-            queryset.filter(
-                message__icontains=value,
+            queryset.annotate(
+                plain_text=Func(
+                    F('message'),
+                    Value(r'<[^>]+>'),  # regex to remove tags
+                    Value(''),
+                    Value('g'),
+                    function='regexp_replace',
+                    output_field=CharField(),
+                )
+            )
+            .filter(
+                plain_text__icontains=value,
             )
             .filter_by_is_not_safe_deleted()
             .filter_is_system(is_system=False)

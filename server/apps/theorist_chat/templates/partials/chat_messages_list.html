@@ -78,6 +78,7 @@
   <div id="search-message" class="d-none">
     <form class="input-group"
           hx-get="{{ request.path }}"
+          hx-swap="outerHTML"
           hx-select="#msg-list-js-{{ view.kwargs.room_uuid }}"
           hx-target="#msg-list-js-{{ view.kwargs.room_uuid }}"
           hx-trigger="input changed from:#{{ filter.form.message.id_for_label }} delay:0.5s, reset delay:0.5s"

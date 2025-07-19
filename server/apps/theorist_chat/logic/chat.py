@@ -104,8 +104,9 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
         try:
             page = paginator.page(page_kwarg)
         except EmptyPage:
-            # preventing using last page for
-            page = paginator.page(paginate_queryset[1].number)
+            # preventing using the last page from the vanilla queryset
+            last_page = paginator.num_pages
+            page = paginator.page(last_page)
 
         return paginator, page, page.object_list, page.has_other_pages()
 

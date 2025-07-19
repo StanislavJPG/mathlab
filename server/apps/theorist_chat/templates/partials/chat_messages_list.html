@@ -392,12 +392,11 @@
 </script>
 
 <script>
-
-  function prepareAudioBlock(selector = '.voice-gap', greenAudioSelectorPrefix = '.voice-gap-') {
+  function prepareAudioBlock(selector = '.voice-gap') {
     document.querySelectorAll(selector).forEach(el => {
       if (!el.classList.contains('green-audio-player')) {
         GreenAudioPlayer.init({
-          selector: `${greenAudioSelectorPrefix}${el.dataset.voiceUuid}`,
+          selector: `${'.' + Array.from(el.classList).join('.')}`,
           stopOthersOnPlay: true,
           showTooltips: true,
         });
@@ -496,8 +495,7 @@
       newMessageItem.innerHTML = messageTemplate(data, requestTheorist === data.theorist_uuid);
       messagesList.prepend(newMessageItem);
       htmx.process(newMessageItem);
-      const arg = data.replied_to ? '.voice-ws-reply-gap-' : '.voice-gap-'
-      prepareAudioBlock('.voice-gap', arg);
+      prepareAudioBlock();
       messagesList.scrollTop = messagesList.scrollHeight;
     }
 

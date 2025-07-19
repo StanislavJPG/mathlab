@@ -26,6 +26,13 @@
       <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; font-size: 25px;"
          class="ti ti-dots-vertical z-999"></i>
       <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+               _="on click remove .d-none from #search-message"
+               data-toast-trigger
+               href="javascript:(0);"
+          ><i class="ti ti-search"></i> {% translate 'Search message' %}</a>
+        </li>
+        <li class="dropdown-divider"></li>
         {% if is_request_theorist_blocked_recipient %}
           <li><a class="dropdown-item text-success"
                  data-toast-trigger
@@ -67,6 +74,21 @@
 
   <button id="scroll-bottom-btn" class="btn btn-outline-info btn-sm mb-3 d-none" onclick="scrollBottom()"><i
     class="ti ti-arrow-down"></i></button>
+
+  <div id="search-message" class="d-none">
+    <form class="input-group"
+          hx-get="{{ request.path }}"
+          hx-select="#msg-list-js-{{ view.kwargs.room_uuid }}"
+          hx-target="#msg-list-js-{{ view.kwargs.room_uuid }}"
+          hx-trigger="input changed from:#{{ filter.form.message.id_for_label }} delay:0.5s, reset delay:0.5s"
+    >
+      {% render_field filter.form.message class="form-control" %}
+      <button class="btn btn-outline-danger" type="reset">
+        <i class="ti ti-xbox-x"></i>
+      </button>
+    </form>
+    <hr class="mt-3">
+  </div>
 
   <ul class="list-unstyled overflow-auto flex-grow-1 d-flex flex-column-reverse" style="max-height: 600px;"
       id="msg-list-js-{{ view.kwargs.room_uuid }}" data-room-uuid="{{ view.kwargs.room_uuid }}">
@@ -322,7 +344,13 @@
         {% endfor %}
       </div>
     {% else %}
-      {% include 'partials/alerts/empty_chat_alert.html' %}
+      {% if request.GET.message %}
+        <div class="p-5 mt-5">
+          {% include 'alerts/not_found_alert.html' %}
+        </div>
+      {% else %}
+        {% include 'partials/alerts/empty_chat_alert.html' %}
+      {% endif %}
     {% endif %}
     {{ room_uuid|json_script:"room-uuid" }}
   </ul>

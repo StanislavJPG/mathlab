@@ -3,7 +3,7 @@ from django.db.models import Q, F
 
 from django.utils.translation import gettext_lazy as _
 
-from server.apps.theorist_chat.models import TheoristChatRoom
+from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 
 
 class MailBoxFilter(filters.FilterSet):
@@ -35,3 +35,24 @@ class MailBoxFilter(filters.FilterSet):
                 | Q(second_member__blacklist__blocked_theorists=F('first_member'))
             )
         return queryset
+
+
+class ChatMessagesFilter(filters.FilterSet):
+    message = filters.CharFilter(method='filter_by_message')
+
+    class Meta:
+        model = TheoristMessage
+        fields = ('message',)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.filters['message'].field.widget.attrs['placeholder'] = _('Search message by lookup...')
+
+    def filter_by_message(self, queryset, name, value):
+        return (
+            queryset.filter(
+                message__icontains=value,
+            )
+            .filter_by_is_not_safe_deleted()
+            .filter_is_system(is_system=False)
+        )

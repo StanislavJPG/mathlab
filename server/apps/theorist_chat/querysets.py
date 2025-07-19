@@ -31,3 +31,6 @@ class TheoristMessageQueryset(models.QuerySet):
 
     def mark_messages_as_read(self):
         return self.update(is_read=True)
+
+    def filter_is_system(self, is_system=True):
+        return self.filter(is_system=is_system)

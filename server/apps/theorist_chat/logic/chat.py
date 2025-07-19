@@ -1,16 +1,16 @@
 from distutils.util import strtobool
 
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.core.paginator import Paginator
+from django.core.paginator import Paginator, EmptyPage
 from django.db.models import Q, F
 from django.http import HttpResponse
 from django.views import View
-from django.views.generic import TemplateView, ListView, DetailView
+from django.views.generic import TemplateView, DetailView
 from django_filters.views import FilterView
 from render_block import render_block_to_string
 
 from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
-from server.apps.theorist_chat.filters import MailBoxFilter
+from server.apps.theorist_chat.filters import MailBoxFilter, ChatMessagesFilter
 from server.apps.theorist_chat.forms import MessageMessageSingleForm
 from server.apps.theorist_chat.mixins import ChatConfigurationRequiredMixin
 from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
@@ -58,8 +58,9 @@ class MailBoxListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXView
         return kwargs
 
 
-class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, ListView):
+class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, HXViewMixin, FilterView):
     model = TheoristMessage
+    filterset_class = ChatMessagesFilter
     template_name = 'partials/chat_messages_list.html'
     context_object_name = 'messages'
     paginate_by = 15
@@ -100,7 +101,13 @@ class ChatMessagesListView(LoginRequiredMixin, ChatConfigurationRequiredMixin, H
         page_kwarg = self.kwargs.get(self.page_kwarg) or self.request.GET.get(self.page_kwarg) or last_page
 
         # Use last page to paginate by ascending by scrolling on top
-        page = paginator.page(page_kwarg)
+        try:
+            page = paginator.page(page_kwarg)
+        except EmptyPage:
+            # preventing using the last page from the vanilla queryset
+            last_page = paginator.num_pages
+            page = paginator.page(last_page)
+
         return paginator, page, page.object_list, page.has_other_pages()
 
     def get_context_data(self, **kwargs):

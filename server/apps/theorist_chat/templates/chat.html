@@ -6,6 +6,7 @@
 {% endblock page_head %}
 
 {% block page_css %}
+  <link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/gh/greghub/green-audio-player/dist/css/green-audio-player.min.css">
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/photoswipe@5.4.4/dist/photoswipe.min.css">
   <style>
     .img-bg {
@@ -57,6 +58,8 @@
 {% endblock body %}
 
 {% block page_js %}
+  <script src="https://cdn.jsdelivr.net/gh/greghub/green-audio-player/dist/js/green-audio-player.min.js"></script>
+
   <script type="module">
     import PhotoSwipeLightbox from '{% static 'js/photoswipe/photoswipe-lightbox.esm.js' %}';
 

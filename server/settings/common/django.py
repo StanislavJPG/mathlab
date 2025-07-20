@@ -27,6 +27,7 @@ INSTALLED_APPS = [
     'daphne',
     'admin_shortcuts',  # just before 'django.contrib.admin' <-- IMPORTANT
     # django's
+    'django.contrib.postgres',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

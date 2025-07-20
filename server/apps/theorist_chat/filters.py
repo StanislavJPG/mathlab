@@ -1,4 +1,5 @@
 import django_filters as filters
+from django.contrib.postgres.search import TrigramSimilarity
 from django.db.models import Q, F, Func, Value, CharField
 
 from django.utils.translation import gettext_lazy as _
@@ -58,10 +59,11 @@ class ChatMessagesFilter(filters.FilterSet):
                     Value('g'),
                     function='regexp_replace',
                     output_field=CharField(),
-                )
+                ),
+                trigram_similarity=TrigramSimilarity('plain_text', value),
             )
             .filter(
-                plain_text__icontains=value,
+                trigram_similarity__gte=0.1,  # only practical longtime analysis can change this similarity value
             )
             .filter_by_is_not_safe_deleted()
             .filter_is_system(is_system=False)

@@ -29,6 +29,6 @@
 
 <script>
   document.addEventListener('htmx:afterSettle', () => {
-    prepareAudioBlock('.voice-reply-gap-{{ message.uuid }}', '.voice-reply-gap-');
+    prepareAudioBlock('.voice-reply-gap-{{ message.uuid }}');
   });
 </script>

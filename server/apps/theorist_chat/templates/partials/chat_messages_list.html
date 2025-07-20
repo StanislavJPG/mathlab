@@ -26,6 +26,13 @@
       <i data-bs-toggle="dropdown" aria-expanded="false" style="cursor: pointer; font-size: 25px;"
          class="ti ti-dots-vertical z-999"></i>
       <ul class="dropdown-menu">
+        <li><a class="dropdown-item"
+               _="on click remove .d-none from #search-message"
+               data-toast-trigger
+               href="javascript:(0);"
+          ><i class="ti ti-search"></i> {% translate 'Search message' %}</a>
+        </li>
+        <li class="dropdown-divider"></li>
         {% if is_request_theorist_blocked_recipient %}
           <li><a class="dropdown-item text-success"
                  data-toast-trigger
@@ -68,6 +75,30 @@
   <button id="scroll-bottom-btn" class="btn btn-outline-info btn-sm mb-3 d-none" onclick="scrollBottom()"><i
     class="ti ti-arrow-down"></i></button>
 
+  <div id="search-message" class="d-none">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between p-3">
+        <p class="mb-0">{% translate 'Type below to search message' %}</p>
+        <button type="button" class="btn-close" _="on click add .d-none to #search-message"></button>
+      </div>
+      <div class="card-body w-100">
+        <form class="input-group"
+              hx-get="{{ request.path }}"
+              hx-swap="outerHTML"
+              hx-select="#msg-list-js-{{ view.kwargs.room_uuid }}"
+              hx-target="#msg-list-js-{{ view.kwargs.room_uuid }}"
+              hx-trigger="input changed from:#{{ filter.form.message.id_for_label }} delay:0.5s, reset delay:0.5s"
+        >
+          {% render_field filter.form.message class="form-control" %}
+          <button id="search-reset" class="btn btn-outline-danger" type="reset">
+            <i class="ti ti-xbox-x"></i>
+          </button>
+        </form>
+      </div>
+    </div>
+    <hr class="mt-3">
+  </div>
+
   <ul class="list-unstyled overflow-auto flex-grow-1 d-flex flex-column-reverse" style="max-height: 600px;"
       id="msg-list-js-{{ view.kwargs.room_uuid }}" data-room-uuid="{{ view.kwargs.room_uuid }}">
     {% if messages.exists %}
@@ -81,7 +112,7 @@
           </div>
         {% endif %}
         {% for message in messages %}
-          {% if forloop.first and page_obj.number > 1 %}
+          {% if forloop.first and page_obj.number > 1 and page_obj.has_next %}
             <div _="on intersection(intersecting) having threshold 0.5
                     if intersecting
                     remove .d-none from #scroll-bottom-btn
@@ -322,7 +353,13 @@
         {% endfor %}
       </div>
     {% else %}
-      {% include 'partials/alerts/empty_chat_alert.html' %}
+      {% if request.GET.message %}
+        <div class="p-5 mt-5">
+          {% include 'alerts/not_found_alert.html' %}
+        </div>
+      {% else %}
+        {% include 'partials/alerts/empty_chat_alert.html' %}
+      {% endif %}
     {% endif %}
     {{ room_uuid|json_script:"room-uuid" }}
   </ul>
@@ -359,7 +396,8 @@
                     hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
                     hx-target="#mailboxes-list-js"
                     hx-trigger="click from:#chat-message-submit delay:0.5s"
-                    _="on click call document.getElementById('msg-form').reset()"
+                    _="on click call #msg-form.reset() then
+                       if document.getElementById('id_message').value !== '' call document.getElementById('search-reset').click()"
                     class="btn btn-primary">
               <i class="ti ti-send"></i>
               {% translate 'Send' %}

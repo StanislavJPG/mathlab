@@ -13,7 +13,7 @@
 - GraphBuilder (Build any graph that you want!)
 - Forum (Fully math-integrated forum like stackoverflow.com or znanija.com)
 - Community (Almost like social media😊! Look for friends and communicate with them via chat, drafts, comments, etc.)
-- Chat (Share your achievements, posts, comments, drafts or just communicate with any theorist that you want in one place! Or just find new friends in math area!)
+- Chat (Share your achievements, posts, comments, drafts or just send audio or text-messages to the any theorist in one place! Or just find new friends in math area!)
 
 
 ### About this project

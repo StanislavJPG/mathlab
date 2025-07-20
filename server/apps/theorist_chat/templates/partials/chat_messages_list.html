@@ -76,18 +76,26 @@
     class="ti ti-arrow-down"></i></button>
 
   <div id="search-message" class="d-none">
-    <form class="input-group"
-          hx-get="{{ request.path }}"
-          hx-swap="outerHTML"
-          hx-select="#msg-list-js-{{ view.kwargs.room_uuid }}"
-          hx-target="#msg-list-js-{{ view.kwargs.room_uuid }}"
-          hx-trigger="input changed from:#{{ filter.form.message.id_for_label }} delay:0.5s, reset delay:0.5s"
-    >
-      {% render_field filter.form.message class="form-control" %}
-      <button class="btn btn-outline-danger" type="reset">
-        <i class="ti ti-xbox-x"></i>
-      </button>
-    </form>
+    <div class="card">
+      <div class="card-header d-flex justify-content-between p-3">
+        <p class="mb-0">{% translate 'Type below to search message' %}</p>
+        <button type="button" class="btn-close" _="on click add .d-none to #search-message"></button>
+      </div>
+      <div class="card-body w-100">
+        <form class="input-group"
+              hx-get="{{ request.path }}"
+              hx-swap="outerHTML"
+              hx-select="#msg-list-js-{{ view.kwargs.room_uuid }}"
+              hx-target="#msg-list-js-{{ view.kwargs.room_uuid }}"
+              hx-trigger="input changed from:#{{ filter.form.message.id_for_label }} delay:0.5s, reset delay:0.5s"
+        >
+          {% render_field filter.form.message class="form-control" %}
+          <button id="search-reset" class="btn btn-outline-danger" type="reset">
+            <i class="ti ti-xbox-x"></i>
+          </button>
+        </form>
+      </div>
+    </div>
     <hr class="mt-3">
   </div>
 
@@ -104,7 +112,7 @@
           </div>
         {% endif %}
         {% for message in messages %}
-          {% if forloop.first and page_obj.number > 1 %}
+          {% if forloop.first and page_obj.number > 1 and page_obj.has_next %}
             <div _="on intersection(intersecting) having threshold 0.5
                     if intersecting
                     remove .d-none from #scroll-bottom-btn
@@ -388,7 +396,8 @@
                     hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
                     hx-target="#mailboxes-list-js"
                     hx-trigger="click from:#chat-message-submit delay:0.5s"
-                    _="on click call document.getElementById('msg-form').reset()"
+                    _="on click call #msg-form.reset() then
+                       if document.getElementById('id_message').value !== '' call document.getElementById('search-reset').click()"
                     class="btn btn-primary">
               <i class="ti ti-send"></i>
               {% translate 'Send' %}

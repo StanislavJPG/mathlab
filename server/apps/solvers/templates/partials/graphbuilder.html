@@ -1,0 +1,50 @@
+{% load i18n widget_tweaks widened_widget_tweaks %}
+
+<style>
+  .math-font {
+    font-family: 'KaTeX_Math', serif;
+    font-style: italic;
+    font-size: 18px;
+  }
+</style>
+
+<div class="text-center">
+  <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
+    <div class="input-group mb-3">
+      <span class="input-group-text math-font" id="pre-input">y =</span>
+      <math-field class="form-control" id="math-input" placeholder="x^2"></math-field>
+      {% render_field form.function type="hidden" %}
+    </div>
+    {% render_field_errors form.function %}
+
+    {% translate 'Create graph' as btn_label %}
+    {% render_submit_button btn_label with_icon="ti ti-copy-check" %}
+  </form>
+
+  <div class="mt-5">
+    {% for elem in graph %}
+      {{ elem|safe }}
+    {% endfor %}
+  </div>
+</div>
+
+<script src="https://unpkg.com/mathlive"></script>
+<script type="module">
+  import { ComputeEngine } from 'https://unpkg.com/@cortex-js/compute-engine?module';
+
+  const engine = new ComputeEngine();
+  MathfieldElement.computeEngine = engine;
+</script>
+
+
+<script>
+  document.addEventListener('htmx:afterSettle', function () {
+    const mathField = document.getElementById('math-input');
+    const hiddenInput = document.getElementById('id_function');
+
+    // Example: Get value on input/change
+    mathField.addEventListener('input', () => {
+      hiddenInput.value = mathField.value;
+    });
+  });
+</script>

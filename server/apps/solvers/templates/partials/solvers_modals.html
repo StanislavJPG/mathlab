@@ -1,0 +1,85 @@
+{% load static i18n %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.css" integrity="sha384-o3WH+1yEhq+grOgz1BVYTZPyTlMXrDxnjN1By9/ba94JqJhva6wFm2Hb+URQX53v" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.js" integrity="sha384-C5yZTsgLOfuizO9kb+hrB8uSBwwvZ4yenKWU0KmWl+7bkL6Tph/KbcOa3S4zdoRE" crossorigin="anonymous"></script>
+
+<style>
+  .no-left-radius {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+  }
+
+  .no-right-radius {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+  }
+  body {
+    --keyboard-zindex: 3000;
+  }
+</style>
+
+<div class="modal fade" id="solverModal">
+  <div class="modal-dialog modal-lg modal-dialog-centered">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"><i class="ti ti-calculator"></i> {% translate 'Solvers' %}</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <ul class="nav nav-pills nav-fill" id="myTab" role="tablist">
+          <li class="nav-item" role="presentation">
+            <button class="nav-link active" id="equations-tab" data-bs-toggle="tab" data-bs-target="#equations" type="button" role="tab" aria-controls="equations" aria-selected="true">
+              {% translate 'Equations' %}
+            </button>
+          </li>
+          <li class="nav-item" role="presentation">
+            <button class="nav-link" id="graphbuilder-tab" data-bs-toggle="tab" data-bs-target="#graphbuilder" type="button" role="tab" aria-controls="graphbuilder" aria-selected="false">
+              {% translate 'Graphbuilder' %}
+            </button>
+          </li>
+        </ul>
+        <div class="tab-content p-3" id="myTabContent">
+          <div class="tab-pane fade show active"
+               hx-get="{% url 'mathlab:equations' %}"
+               hx-target="this"
+               hx-trigger="load once, click once from:#equations-tab"
+               id="equations"
+               role="tabpanel"
+               aria-labelledby="equations-tab"></div>
+          <div class="tab-pane fade"
+               hx-get="{% url 'mathlab:graphbuilder' %}"
+               hx-target="this"
+               hx-trigger="click once from:#graphbuilder-tab"
+               id="graphbuilder"
+               role="tabpanel"
+               aria-labelledby="graphbuilder-tab"></div>
+        </div>
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Close' %}</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal fade" tabindex="-1" id="equationExampleModal">
+  <div class="modal-dialog modal-lg">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">{% translate 'Equation solving example' %}</h5>
+        <button type="button" _="on click send click to #solverBtn" class="btn-close" data-bs-dismiss="modal" aria-hidden="true" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+        <p>
+          <img src="{% static 'img/math/solver_example.gif' %}" height="100%" width="100%">
+        </p>
+        {% blocktranslate %}
+          <em>P.S. Thanks to <a href="https://cortexjs.io/" target="_blank">CortexJS!</a></em>
+        {% endblocktranslate %}
+      </div>
+      <div class="modal-footer d-flex justify-content-center">
+        <button type="button" _="on click send click to #solverBtn" class="btn btn-secondary" aria-hidden="true" data-bs-dismiss="modal">{% translate 'Got it!' %}</button>
+      </div>
+    </div>
+  </div>
+</div>

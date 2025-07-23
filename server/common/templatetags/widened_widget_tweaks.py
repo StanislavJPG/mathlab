@@ -71,7 +71,19 @@ def render_bootstrap_spinner_submit_button(
     with_icon=None,  # add <i></i> icon to the button
     **kwargs,
 ):
-    """It's recommended to use it with `render_form_spinner_attrs` tag to add spinner while request is processing"""
+    """
+    It's recommended to use it with `render_form_spinner_attrs` tag to add spinner while request is processing
+    Example:
+        ```
+        <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
+            {% render_field form.username|add_bootstrap_validation_classes class="form-control" %}
+            {% render_field_errors form.username %}
+
+            {% translate 'Apply changes' as btn_label %}
+            {% render_submit_button btn_label %}
+        </form>
+        ```
+    """
     attrs = ' '.join([f'{k}="{v}"' for k, v in kwargs.items()])
     spinner = f'<div id="{spinner_id}" class="{spinner_class}" role="status" hidden></div>'
     icon = f'<i class="{with_icon}"></i>' if with_icon else ''

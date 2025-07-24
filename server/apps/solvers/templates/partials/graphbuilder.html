@@ -19,13 +19,14 @@
 
     {% translate 'Create graph' as btn_label %}
     {% render_submit_button btn_label with_icon="ti ti-copy-check" %}
+
+    <div class="mt-5">
+      {% for elem in graph %}
+        {{ elem|safe }}
+      {% endfor %}
+    </div>
   </form>
 
-  <div class="mt-5">
-    {% for elem in graph %}
-      {{ elem|safe }}
-    {% endfor %}
-  </div>
 </div>
 
 <script src="https://unpkg.com/mathlive"></script>
@@ -44,7 +45,8 @@
 
     // Example: Get value on input/change
     mathField.addEventListener('input', () => {
-      hiddenInput.value = mathField.value;
+      const ascii = mathField.getValue('ascii-math');
+      hiddenInput.value = ascii.replace(/\^/g, '**');
     });
   });
 </script>

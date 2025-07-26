@@ -9,24 +9,22 @@
 </style>
 
 <div class="text-center">
-  <form hx-post="{{ request.path }}" {% render_form_spinner_attrs %}>
+  <form hx-post="{{ request.path }}" hx-target="#plot-js" hx-swap="outerHTML" {% render_form_spinner_attrs %}>
     <div class="input-group mb-3">
       <span class="input-group-text math-font" id="pre-input">y =</span>
       <math-field class="form-control" id="math-input" placeholder="x^2"></math-field>
       {% render_field form.function type="hidden" %}
     </div>
-    {% render_field_errors form.function %}
 
     {% translate 'Create graph' as btn_label %}
     {% render_submit_button btn_label with_icon="ti ti-copy-check" %}
-
-    <div class="mt-5">
-      {% for elem in graph %}
-        {{ elem|safe }}
-      {% endfor %}
-    </div>
   </form>
 
+  {% block graph_block %}
+    <div class="mt-2" id="plot-js">
+      {{ graph|safe }}
+    </div>
+  {% endblock graph_block %}
 </div>
 
 <script src="https://unpkg.com/mathlive"></script>
@@ -43,10 +41,8 @@
     const mathField = document.getElementById('math-input');
     const hiddenInput = document.getElementById('id_function');
 
-    // Example: Get value on input/change
     mathField.addEventListener('input', () => {
-      const ascii = mathField.getValue('ascii-math');
-      hiddenInput.value = ascii.replace(/\^/g, '**');
+      hiddenInput.value = mathField.value;
     });
   });
 </script>

@@ -45,6 +45,17 @@ files = [
 ]
 
 [[package]]
+name = "antlr4-python3-runtime"
+version = "4.7.2"
+description = "ANTLR 4.7.2 runtime for Python 3.6.3"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "antlr4-python3-runtime-4.7.2.tar.gz", hash = "sha256:168cdcec8fb9152e84a87ca6fd261b3d54c8f6358f42ab3b813b14a7193bb50b"},
+]
+
+[[package]]
 name = "anyio"
 version = "4.4.0"
 description = "High level compatibility layer for multiple asynchronous event loop implementations"
@@ -2132,6 +2143,21 @@ yaml = ["PyYAML (>=3.10)"]
 zookeeper = ["kazoo (>=2.8.0)"]
 
 [[package]]
+name = "latex2sympy2"
+version = "1.9.1"
+description = "Convert latex to sympy with ANTLR and support Matrix, Linear Algebra and CAS functions."
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "latex2sympy2-1.9.1-py3-none-any.whl", hash = "sha256:44f24d263d235164a91173167a30d449f4360e3f0a59239ce6b843c50a41c601"},
+]
+
+[package.dependencies]
+antlr4-python3-runtime = "4.7.2"
+sympy = ">=1.4"
+
+[[package]]
 name = "libretranslatepy"
 version = "2.1.1"
 description = "Python bindings for LibreTranslate API"
@@ -4201,4 +4227,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "8561b80906a2e687f6c238feba967a452a6ea6aa058403a0fe360c8a8d38485d"
+content-hash = "37404aacf8b8121384e8faf278acf044e4eebfd47a1752e698247d030383a779"

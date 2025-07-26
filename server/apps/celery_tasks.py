@@ -2,10 +2,10 @@ from datetime import timedelta
 
 from celery.schedules import crontab
 
-from server.common.utils import celery
+from celery_simple_schedule import simplify_schedules
 
 
-@celery.tasks_decorator
+@simplify_schedules
 def provide_tasks():
     """
     pattern: ('task_dir', schedule, args(optionally))

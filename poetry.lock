@@ -361,14 +361,14 @@ zstd = ["zstandard (==0.22.0)"]
 
 [[package]]
 name = "celery-simple-schedule"
-version = "0.2.0"
+version = "0.2.1"
 description = "A lightweight Python utility that simplifies defining Celery Beat schedules using a clean, declarative function-based API."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "celery_simple_schedule-0.2.0-py3-none-any.whl", hash = "sha256:02e4b8c9c62878866c87322f03ba328fdee57a4be6a225f61afc5e9977eb927f"},
-    {file = "celery_simple_schedule-0.2.0.tar.gz", hash = "sha256:6b7fe777d3dd595a03b875227e8af0bffae61d4abb6da69c6e4fe647b1cbe9d6"},
+    {file = "celery_simple_schedule-0.2.1-py3-none-any.whl", hash = "sha256:917b7b56561247f94f9b674afc5af2dd18ab47bbab9185c322fe36748ca27be1"},
+    {file = "celery_simple_schedule-0.2.1.tar.gz", hash = "sha256:4e42db6aafb238500377134cada8ff0371d843ded2e3d823e00057741f667369"},
 ]
 
 [[package]]

@@ -1268,6 +1268,21 @@ reference = "f4918c2409a734ec1aa9798d86c3a729b505f753"
 resolved_reference = "f4918c2409a734ec1aa9798d86c3a729b505f753"
 
 [[package]]
+name = "django-page-resolver"
+version = "0.1.1"
+description = "Utility class for Django that helps determine the page number on which a specific object appears in a paginated list, either from a QuerySet or via a ForeignKey relationship."
+optional = false
+python-versions = ">=3.10"
+groups = ["main"]
+files = [
+    {file = "django_page_resolver-0.1.1-py3-none-any.whl", hash = "sha256:b8e0abf0b932ae7b05bfd7c1cc3d3a36d360308b48da21719704e3704dda76d0"},
+    {file = "django_page_resolver-0.1.1.tar.gz", hash = "sha256:955d0ab13c82de54043c443313d7ef48666832392c162719488a7cfd1a31ce7c"},
+]
+
+[package.dependencies]
+django = "*"
+
+[[package]]
 name = "django-ranged-response"
 version = "0.2.0"
 description = "Modified Django FileResponse that adds Content-Range headers."
@@ -4259,4 +4274,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "424147e544a731e62905a12812d8cc9d7ce10ca27ffaa2e0618c72e22f3e238f"
+content-hash = "d46221bf0857962ac656022a28a3b15dc38291c327602a007f73ef22da874bd1"

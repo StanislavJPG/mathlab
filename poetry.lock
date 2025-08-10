@@ -264,18 +264,18 @@ test = ["black (==23.12.1)", "check-manifest (==0.48)", "pre-commit (==3.5.0)"]
 
 [[package]]
 name = "boto3"
-version = "1.39.14"
+version = "1.40.6"
 description = "The AWS SDK for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "boto3-1.39.14-py3-none-any.whl", hash = "sha256:82c6868cad18c3bd4170915e9525f9af5f83e9779c528417f8863629558fc2d0"},
-    {file = "boto3-1.39.14.tar.gz", hash = "sha256:fabb16360a93b449d5241006485bcc761c26694e75ac01009f4459f114acc06e"},
+    {file = "boto3-1.40.6-py3-none-any.whl", hash = "sha256:7685085b8ea679dd858330834c16364c61c5830edb892c5864fb12ed68798708"},
+    {file = "boto3-1.40.6.tar.gz", hash = "sha256:3f2375b7576de603085d7b7491cf2c4ab5c57d12965a5ce295821cdd4d10e950"},
 ]
 
 [package.dependencies]
-botocore = ">=1.39.14,<1.40.0"
+botocore = ">=1.40.6,<1.41.0"
 jmespath = ">=0.7.1,<2.0.0"
 s3transfer = ">=0.13.0,<0.14.0"
 
@@ -284,14 +284,14 @@ crt = ["botocore[crt] (>=1.21.0,<2.0a0)"]
 
 [[package]]
 name = "botocore"
-version = "1.39.14"
+version = "1.40.6"
 description = "Low-level, data-driven core of boto 3."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "botocore-1.39.14-py3-none-any.whl", hash = "sha256:4ed551c77194167b7e8063f33059bc2f9b2ead0ed4ee33dc7857273648ed4349"},
-    {file = "botocore-1.39.14.tar.gz", hash = "sha256:7fc44d4ad13b524e5d8a6296785776ef5898ac026ff74df9b35313831d507926"},
+    {file = "botocore-1.40.6-py3-none-any.whl", hash = "sha256:b253f107617791a29ca81c6f0fca20ac1afdba01869eb43017022bbbb8387f34"},
+    {file = "botocore-1.40.6.tar.gz", hash = "sha256:e132eac967a7526596e31ca571d7f1ef9676c6a9c4f1322446768994ccab64aa"},
 ]
 
 [package.dependencies]
@@ -1269,14 +1269,14 @@ resolved_reference = "f4918c2409a734ec1aa9798d86c3a729b505f753"
 
 [[package]]
 name = "django-page-resolver"
-version = "0.1.1"
+version = "0.2.0"
 description = "Utility class for Django that helps determine the page number on which a specific object appears in a paginated list, either from a QuerySet or via a ForeignKey relationship."
 optional = false
 python-versions = ">=3.10"
 groups = ["main"]
 files = [
-    {file = "django_page_resolver-0.1.1-py3-none-any.whl", hash = "sha256:b8e0abf0b932ae7b05bfd7c1cc3d3a36d360308b48da21719704e3704dda76d0"},
-    {file = "django_page_resolver-0.1.1.tar.gz", hash = "sha256:955d0ab13c82de54043c443313d7ef48666832392c162719488a7cfd1a31ce7c"},
+    {file = "django_page_resolver-0.2.0-py3-none-any.whl", hash = "sha256:78437974907a8079f4924f6cbc46371307055c8d2f9897b2e601db8ec05198b5"},
+    {file = "django_page_resolver-0.2.0.tar.gz", hash = "sha256:cd117253af7118c9b3b2b7d3e4bd0647a1da73b08903414d426f8897e7857103"},
 ]
 
 [package.dependencies]
@@ -1437,14 +1437,14 @@ files = [
 
 [[package]]
 name = "djangorestframework"
-version = "3.16.0"
+version = "3.16.1"
 description = "Web APIs for Django, made easy."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "djangorestframework-3.16.0-py3-none-any.whl", hash = "sha256:bea7e9f6b96a8584c5224bfb2e4348dfb3f8b5e34edbecb98da258e892089361"},
-    {file = "djangorestframework-3.16.0.tar.gz", hash = "sha256:f022ff46613584de994c0c6a4aebbace5fd700555fbe9d33b865ebf173eba6c9"},
+    {file = "djangorestframework-3.16.1-py3-none-any.whl", hash = "sha256:33a59f47fb9c85ede792cbf88bde71893bcda0667bc573f784649521f1102cec"},
+    {file = "djangorestframework-3.16.1.tar.gz", hash = "sha256:166809528b1aced0a17dc66c24492af18049f2c9420dbd0be29422029cfc3ff7"},
 ]
 
 [package.dependencies]
@@ -1609,14 +1609,14 @@ doc = ["Sphinx", "sphinx-rtd-theme", "sphinxcontrib-spelling"]
 
 [[package]]
 name = "faker"
-version = "37.4.2"
+version = "37.5.3"
 description = "Faker is a Python package that generates fake data for you."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "faker-37.4.2-py3-none-any.whl", hash = "sha256:b70ed1af57bfe988cbcd0afd95f4768c51eaf4e1ce8a30962e127ac5c139c93f"},
-    {file = "faker-37.4.2.tar.gz", hash = "sha256:8e281bbaea30e5658895b8bea21cc50d27aaf3a43db3f2694409ca5701c56b0a"},
+    {file = "faker-37.5.3-py3-none-any.whl", hash = "sha256:386fe9d5e6132a915984bf887fcebcc72d6366a25dd5952905b31b141a17016d"},
+    {file = "faker-37.5.3.tar.gz", hash = "sha256:8315d8ff4d6f4f588bd42ffe63abd599886c785073e26a44707e10eeba5713dc"},
 ]
 
 [package.dependencies]
@@ -1837,14 +1837,14 @@ idna = ">=2.5"
 
 [[package]]
 name = "identify"
-version = "2.6.12"
+version = "2.6.13"
 description = "File identification library for Python"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "identify-2.6.12-py2.py3-none-any.whl", hash = "sha256:ad9672d5a72e0d2ff7c5c8809b62dfa60458626352fb0eb7b55e69bdc45334a2"},
-    {file = "identify-2.6.12.tar.gz", hash = "sha256:d8de45749f1efb108badef65ee8386f0f7bb19a7f26185f74de6367bffbaf0e6"},
+    {file = "identify-2.6.13-py2.py3-none-any.whl", hash = "sha256:60381139b3ae39447482ecc406944190f690d4a2997f2584062089848361b33b"},
+    {file = "identify-2.6.13.tar.gz", hash = "sha256:da8d6c828e773620e13bfa86ea601c5a5310ba4bcd65edf378198b56a1f9fb32"},
 ]
 
 [package.extras]
@@ -2745,14 +2745,14 @@ signedtoken = ["cryptography (>=3.0.0)", "pyjwt (>=2.0.0,<3)"]
 
 [[package]]
 name = "openai"
-version = "1.97.1"
+version = "1.99.6"
 description = "The official Python library for the openai API"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "openai-1.97.1-py3-none-any.whl", hash = "sha256:4e96bbdf672ec3d44968c9ea39d2c375891db1acc1794668d8149d5fa6000606"},
-    {file = "openai-1.97.1.tar.gz", hash = "sha256:a744b27ae624e3d4135225da9b1c89c107a2a7e5bc4c93e5b7b5214772ce7a4e"},
+    {file = "openai-1.99.6-py3-none-any.whl", hash = "sha256:e40d44b2989588c45ce13819598788b77b8fb80ba2f7ae95ce90d14e46f1bd26"},
+    {file = "openai-1.99.6.tar.gz", hash = "sha256:f48f4239b938ef187062f3d5199a05b69711d8b600b9a9b6a3853cd271799183"},
 ]
 
 [package.dependencies]
@@ -2927,14 +2927,14 @@ type = ["mypy (>=1.14.1)"]
 
 [[package]]
 name = "pre-commit"
-version = "4.2.0"
+version = "4.3.0"
 description = "A framework for managing and maintaining multi-language pre-commit hooks."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "pre_commit-4.2.0-py2.py3-none-any.whl", hash = "sha256:a009ca7205f1eb497d10b845e52c838a98b6cdd2102a6c8e4540e94ee75c58bd"},
-    {file = "pre_commit-4.2.0.tar.gz", hash = "sha256:601283b9757afd87d40c4c4a9b2b5de9637a8ea02eaff7adc2d0fb4e04841146"},
+    {file = "pre_commit-4.3.0-py2.py3-none-any.whl", hash = "sha256:2b0747ad7e6e967169136edffee14c16e148a778a54e4f967921aa1ebf2308d8"},
+    {file = "pre_commit-4.3.0.tar.gz", hash = "sha256:499fe450cc9d42e9d58e606262795ecb64dd05438943c62b66f6a8673da30b16"},
 ]
 
 [package.dependencies]
@@ -3472,14 +3472,14 @@ files = [
 
 [[package]]
 name = "redis"
-version = "6.2.0"
+version = "6.4.0"
 description = "Python client for Redis database and key-value store"
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "redis-6.2.0-py3-none-any.whl", hash = "sha256:c8ddf316ee0aab65f04a11229e94a64b2618451dab7a67cb2f77eb799d872d5e"},
-    {file = "redis-6.2.0.tar.gz", hash = "sha256:e821f129b75dde6cb99dd35e5c76e8c49512a5a0d8dfdc560b2fbd44b85ca977"},
+    {file = "redis-6.4.0-py3-none-any.whl", hash = "sha256:f0544fa9604264e9464cdf4814e7d4830f74b165d52f2a330a760a88dd248b7f"},
+    {file = "redis-6.4.0.tar.gz", hash = "sha256:b01bc7282b8444e28ec36b261df5375183bb47a07eb9c603f284e89cbc5ef010"},
 ]
 
 [package.dependencies]
@@ -3737,24 +3737,24 @@ test = ["coverage[toml]", "pytest", "pytest-cov", "pytest-flake8", "pytest-isort
 
 [[package]]
 name = "tornado"
-version = "6.5.1"
+version = "6.5.2"
 description = "Tornado is a Python web framework and asynchronous networking library, originally developed at FriendFeed."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "tornado-6.5.1-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:d50065ba7fd11d3bd41bcad0825227cc9a95154bad83239357094c36708001f7"},
-    {file = "tornado-6.5.1-cp39-abi3-macosx_10_9_x86_64.whl", hash = "sha256:9e9ca370f717997cb85606d074b0e5b247282cf5e2e1611568b8821afe0342d6"},
-    {file = "tornado-6.5.1-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b77e9dfa7ed69754a54c89d82ef746398be82f749df69c4d3abe75c4d1ff4888"},
-    {file = "tornado-6.5.1-cp39-abi3-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:253b76040ee3bab8bcf7ba9feb136436a3787208717a1fb9f2c16b744fba7331"},
-    {file = "tornado-6.5.1-cp39-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:308473f4cc5a76227157cdf904de33ac268af770b2c5f05ca6c1161d82fdd95e"},
-    {file = "tornado-6.5.1-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:caec6314ce8a81cf69bd89909f4b633b9f523834dc1a352021775d45e51d9401"},
-    {file = "tornado-6.5.1-cp39-abi3-musllinux_1_2_i686.whl", hash = "sha256:13ce6e3396c24e2808774741331638ee6c2f50b114b97a55c5b442df65fd9692"},
-    {file = "tornado-6.5.1-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:5cae6145f4cdf5ab24744526cc0f55a17d76f02c98f4cff9daa08ae9a217448a"},
-    {file = "tornado-6.5.1-cp39-abi3-win32.whl", hash = "sha256:e0a36e1bc684dca10b1aa75a31df8bdfed656831489bc1e6a6ebed05dc1ec365"},
-    {file = "tornado-6.5.1-cp39-abi3-win_amd64.whl", hash = "sha256:908e7d64567cecd4c2b458075589a775063453aeb1d2a1853eedb806922f568b"},
-    {file = "tornado-6.5.1-cp39-abi3-win_arm64.whl", hash = "sha256:02420a0eb7bf617257b9935e2b754d1b63897525d8a289c9d65690d580b4dcf7"},
-    {file = "tornado-6.5.1.tar.gz", hash = "sha256:84ceece391e8eb9b2b95578db65e920d2a61070260594819589609ba9bc6308c"},
+    {file = "tornado-6.5.2-cp39-abi3-macosx_10_9_universal2.whl", hash = "sha256:2436822940d37cde62771cff8774f4f00b3c8024fe482e16ca8387b8a2724db6"},
+    {file = "tornado-6.5.2-cp39-abi3-macosx_10_9_x86_64.whl", hash = "sha256:583a52c7aa94ee046854ba81d9ebb6c81ec0fd30386d96f7640c96dad45a03ef"},
+    {file = "tornado-6.5.2-cp39-abi3-manylinux_2_17_aarch64.manylinux2014_aarch64.whl", hash = "sha256:b0fe179f28d597deab2842b86ed4060deec7388f1fd9c1b4a41adf8af058907e"},
+    {file = "tornado-6.5.2-cp39-abi3-manylinux_2_5_i686.manylinux1_i686.manylinux_2_17_i686.manylinux2014_i686.whl", hash = "sha256:b186e85d1e3536d69583d2298423744740986018e393d0321df7340e71898882"},
+    {file = "tornado-6.5.2-cp39-abi3-manylinux_2_5_x86_64.manylinux1_x86_64.manylinux_2_17_x86_64.manylinux2014_x86_64.whl", hash = "sha256:e792706668c87709709c18b353da1f7662317b563ff69f00bab83595940c7108"},
+    {file = "tornado-6.5.2-cp39-abi3-musllinux_1_2_aarch64.whl", hash = "sha256:06ceb1300fd70cb20e43b1ad8aaee0266e69e7ced38fa910ad2e03285009ce7c"},
+    {file = "tornado-6.5.2-cp39-abi3-musllinux_1_2_i686.whl", hash = "sha256:74db443e0f5251be86cbf37929f84d8c20c27a355dd452a5cfa2aada0d001ec4"},
+    {file = "tornado-6.5.2-cp39-abi3-musllinux_1_2_x86_64.whl", hash = "sha256:b5e735ab2889d7ed33b32a459cac490eda71a1ba6857b0118de476ab6c366c04"},
+    {file = "tornado-6.5.2-cp39-abi3-win32.whl", hash = "sha256:c6f29e94d9b37a95013bb669616352ddb82e3bfe8326fccee50583caebc8a5f0"},
+    {file = "tornado-6.5.2-cp39-abi3-win_amd64.whl", hash = "sha256:e56a5af51cc30dd2cae649429af65ca2f6571da29504a07995175df14c18f35f"},
+    {file = "tornado-6.5.2-cp39-abi3-win_arm64.whl", hash = "sha256:d6c33dc3672e3a1f3618eb63b7ef4683a7688e7b9e6e8f0d9aa5726360a004af"},
+    {file = "tornado-6.5.2.tar.gz", hash = "sha256:ab53c8f9a0fa351e2c0741284e06c7a45da86afb544133201c5cc8578eb076a0"},
 ]
 
 [[package]]
@@ -3996,14 +3996,14 @@ files = [
 
 [[package]]
 name = "virtualenv"
-version = "20.32.0"
+version = "20.33.1"
 description = "Virtual Python Environment builder"
 optional = false
 python-versions = ">=3.8"
 groups = ["main"]
 files = [
-    {file = "virtualenv-20.32.0-py3-none-any.whl", hash = "sha256:2c310aecb62e5aa1b06103ed7c2977b81e042695de2697d01017ff0f1034af56"},
-    {file = "virtualenv-20.32.0.tar.gz", hash = "sha256:886bf75cadfdc964674e6e33eb74d787dff31ca314ceace03ca5810620f4ecf0"},
+    {file = "virtualenv-20.33.1-py3-none-any.whl", hash = "sha256:07c19bc66c11acab6a5958b815cbcee30891cd1c2ccf53785a28651a0d8d8a67"},
+    {file = "virtualenv-20.33.1.tar.gz", hash = "sha256:1b44478d9e261b3fb8baa5e74a0ca3bc0e05f21aa36167bf9cbf850e542765b8"},
 ]
 
 [package.dependencies]
@@ -4274,4 +4274,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "d46221bf0857962ac656022a28a3b15dc38291c327602a007f73ef22da874bd1"
+content-hash = "75afa36340e3451e91d7e774553873ebefe09c6f25aaf589548af7147a897aeb"

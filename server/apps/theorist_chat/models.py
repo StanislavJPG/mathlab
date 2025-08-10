@@ -7,6 +7,7 @@ from django.urls import reverse
 from django.utils import timezone
 
 from django_lifecycle import LifecycleModel, hook, BEFORE_CREATE
+from django_page_resolver.models import PageResolverModel
 from dynamic_filenames import FilePattern
 
 from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
@@ -28,7 +29,7 @@ class TheoristChatGroupConfiguration(UUIDModelMixin, TimeStampedModelMixin):
         verbose_name = 'Theorist Chat Group Configuration'
 
 
-class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+class TheoristChatRoom(UUIDModelMixin, TimeStampedModelMixin, PageResolverModel, LifecycleModel):
     first_member = models.ForeignKey(
         'theorist.Theorist', related_name='chat_rooms_initiated', null=True, on_delete=models.SET_NULL
     )

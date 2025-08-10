@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'django_cleanup.apps.CleanupConfig',
     'django_tables2',
     'notifications',
+    'django_page_resolver',
     # common
     'server.common',
     # apps

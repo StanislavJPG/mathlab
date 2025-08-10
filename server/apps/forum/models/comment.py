@@ -12,15 +12,15 @@ from django_lifecycle import (
     AFTER_DELETE,
     BEFORE_CREATE,
 )
+from django_page_resolver.models import PageResolverModel
 
 from server.apps.forum.constants import COMMENTS_LIST_PAGINATED_BY
 from server.apps.forum.managers import CommentQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.defaults import get_default_nonexistent_label
-from server.common.utils.paginator import page_resolver
 
 
-class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+class Comment(UUIDModelMixin, TimeStampedModelMixin, PageResolverModel, LifecycleModel):
     MAX_ANSWERS_LIMIT: Final[int] = 30
     COMMENT_ANSWERS_AVAILABLE_PERIOD_DAYS_LIMIT: Final[int] = 30
 
@@ -62,12 +62,8 @@ class Comment(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f'{self.__class__.__name__} | id - {self.id}'
 
     def get_absolute_url(self, post_page: int = None):
-        post_page = post_page or page_resolver.get_page_for_paginated_obj(
-            obj=self.post,
-            child_obj=self,
-            child_paginated_objs_label='comments',
-            paginate_by=COMMENTS_LIST_PAGINATED_BY,
-            ordered_by='created_at',
+        post_page = post_page or self.post.get_page_from_nested_object(
+            target_child_instance=self, order_by='created_at', items_per_page=COMMENTS_LIST_PAGINATED_BY
         )
         return (
             reverse('forum:post-details', kwargs={'pk': self.post.pk, 'slug': self.post.slug})

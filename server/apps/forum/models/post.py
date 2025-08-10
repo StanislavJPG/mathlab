@@ -4,6 +4,7 @@ from django.contrib.contenttypes.fields import GenericRelation
 from django.db import models
 from django.urls import reverse
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE, BEFORE_CREATE
+from django_page_resolver.models import PageResolverModel
 from hitcount.models import HitCountMixin
 
 from slugify import slugify
@@ -13,7 +14,7 @@ from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.defaults import get_default_nonexistent_label
 
 
-class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, HitCountMixin):
+class Post(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel, PageResolverModel, HitCountMixin):
     CATEGORIES_LIMIT: Final[int] = 4
 
     title = models.CharField(max_length=85)

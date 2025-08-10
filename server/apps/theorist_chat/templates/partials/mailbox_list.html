@@ -1,5 +1,7 @@
-{% load static i18n avatars widget_tweaks widened_notifications_tags text urls %}
+{% load static i18n avatars widget_tweaks widened_notifications_tags text urls page_resolvers %}
 
+<script src="{% static 'resolvers/js/page_resolvers.js' %}"></script>
+<link type="text/css" href="{% static 'resolvers/css/page_resolvers.css' %}" rel="stylesheet">
 <style>
 /* http://stackoverflow.com/questions/6410730/webkit-css-endless-rotation-animation-how */
   @-webkit-keyframes rotating {
@@ -69,7 +71,8 @@
         <ul class="list-unstyled mb-0 mt-3" id="mailboxes-list-js">
           {% if mailboxes %}
             {% for mailbox in mailboxes %}
-              <li class="{% classes_by_lookup_url mailbox 'next_uuid' %} p-2 border {% if mailbox.is_any_of_members_blocked_another %}border-danger{% endif %} {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox mailbox-{{ mailbox.uuid }}"
+              {% register_scroll_obj_unique_pk instance_pk=mailbox.uuid %}
+              <li class="{% classes_by_lookup_url instance_pk=mailbox.uuid url_lookup='next_uuid' %} p-2 border {% if mailbox.is_any_of_members_blocked_another %}border-danger{% endif %} {% if mailbox.uuid == room_uuid %}bg-secondary-subtle{% else %}bg-body-tertiary{% endif %} rounded mb-1 mailbox mailbox-{{ mailbox.uuid }}"
                   id="mailbox-{{ mailbox.uuid }}">
                 <div hx-get="{% url 'forum:theorist_chat:hx-chat-list' mailbox.uuid %}"
                      id="mailbox-styled-block-{{ mailbox.uuid|stringformat:"s" }}-js"
@@ -159,8 +162,6 @@
      hx-target="this">
   {% include 'partials/alerts/go_to_chat_alert.html' %}
 </div>
-
-{% include 'common/scroll_to_url_instance.html' with param='next_uuid' target_class_suffix='mailbox-' transition_settle_color="#e2e3e5" %}
 
 <script>
   document.addEventListener('htmx:afterSettle', function () {

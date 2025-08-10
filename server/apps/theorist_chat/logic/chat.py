@@ -17,7 +17,6 @@ from server.apps.theorist_chat.models import TheoristChatRoom, TheoristMessage
 from server.apps.theorist_notifications.models import TheoristNotification
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
-from server.common.utils.paginator import page_resolver
 
 
 class ChatView(LoginRequiredMixin, ChatConfigurationRequiredMixin, TemplateView):
@@ -31,8 +30,8 @@ class ChatView(LoginRequiredMixin, ChatConfigurationRequiredMixin, TemplateView)
                 room_qs = TheoristChatRoom.objects.filter(
                     Q(first_member=self.request.theorist) | Q(second_member=self.request.theorist)
                 ).order_by_last_sms_sent_relevancy()
-                context['page'] = page_resolver.get_page_for_paginated_qs(
-                    qs=room_qs, target_obj=target_room, paginate_by=DEFAULT_MAILBOX_PAGINATION
+                context['page'] = target_room.get_page_from_queryset(
+                    queryset=room_qs, items_per_page=DEFAULT_MAILBOX_PAGINATION
                 )
         return context
 

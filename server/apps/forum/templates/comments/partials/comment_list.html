@@ -1,4 +1,7 @@
-{% load i18n static widget_tweaks urls %}
+{% load i18n static widget_tweaks urls page_resolvers %}
+
+<script src="{% static 'resolvers/js/page_resolvers.js' %}"></script>
+<link type="text/css" href="{% static 'resolvers/css/page_resolvers.css' %}" rel="stylesheet">
 
 <hr class="mb-5 text-secondary">
 <div id="comment-list-body-js"
@@ -6,7 +9,8 @@
      hx-trigger="commentBlockChanged from:body delay:0.6s"
 >
   {% for comment in comments %}
-    <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url comment 'comment' %}">
+    {% register_scroll_obj_unique_pk instance_pk=comment.uuid %}
+    <div class="container full-answer-{{ comment.uuid }} mb-5 {% classes_by_lookup_url comment.uuid 'comment' %}">
       <div class="row">
         <div class="d-flex flex-column flex-md-row list-inline text-muted small text-start justify-content-between">
           <div>
@@ -159,7 +163,5 @@
   {% endfor %}
   {% include 'common/pagination.html' with htmx_target="#comment-list-body-js" %}
 </div>
-
-{% include 'common/scroll_to_url_instance.html' with param='comment' target_class_suffix='full-answer-' %}
 
 <script src="{% static 'js/actions/init_clipboard.js' %}"></script>

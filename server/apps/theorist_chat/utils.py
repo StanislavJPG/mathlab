@@ -4,7 +4,6 @@ from django.db.models import Q
 
 from server.apps.theorist_chat.constants import DEFAULT_MAILBOX_PAGINATION
 from server.apps.theorist_chat.models import TheoristChatRoom
-from server.common.utils.paginator import page_resolver
 
 
 def get_mailbox_url(*, target_room, some_member, chat_room_qs=None, paginate_by=DEFAULT_MAILBOX_PAGINATION):
@@ -15,9 +14,8 @@ def get_mailbox_url(*, target_room, some_member, chat_room_qs=None, paginate_by=
             Q(first_member=some_member) | Q(second_member=some_member)
         ).order_by_last_sms_sent_relevancy()
 
-    page_for_url = page_resolver.get_page_for_paginated_qs(
-        qs=chat_room_qs,
-        target_obj=target_room,
-        paginate_by=paginate_by,
+    page_for_url = target_room.get_page_from_queryset(
+        queryset=chat_room_qs,
+        items_per_page=paginate_by,
     )
     return target_room.get_absolute_url(next_uuid=target_room.uuid, mailbox_page=page_for_url)

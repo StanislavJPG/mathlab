@@ -17,12 +17,13 @@ from server.apps.theorist_notifications.signals import notify
 from server.common.forms import ChoicesWithAvatarsWidget, MultipleChoicesWithAvatarsWidget, CaptchaForm
 from server.common.mixins.forms import TinyMCEMediaFormMixin
 from server.common.utils.helpers import limit_nbsp_paragraphs, is_valid_uuid
-from server.common.validators import validate_audio_ext
+from server.common.validators import validate_audio_ext, validate_media_ext
 
 
 class TheoristMessageForm(forms.Form):
     message = BleachField(widget=forms.Textarea, max_length=500, min_length=1, required=False)
     audio_message = forms.FileField(required=False, validators=[validate_audio_ext])
+    media_message = forms.FileField(required=False, validators=[validate_media_ext])
 
     def __init__(self, *args, **kwargs):
         self.msg_uuid_to_reply = kwargs.pop('msg_uuid_to_reply')
@@ -73,12 +74,14 @@ class TheoristMessageForm(forms.Form):
     def save(self, theorist, **kwargs):
         message = self.cleaned_data['message']
         audio_message = self.cleaned_data['audio_message']
+        media_message = self.cleaned_data['media_message']
         room = TheoristChatRoom.objects.get(uuid=kwargs.get('room_uuid'))
         if self.validate_room(room) is True:
             instance = TheoristMessage.objects.create(
                 sender=theorist,
                 message=message,
                 audio_message=audio_message,
+                media_message=media_message,
                 room=room,
                 replied_to=self.message_to_reply,
             )

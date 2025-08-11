@@ -122,7 +122,7 @@ class BaseTheoristWebsocketConsumer(WebsocketConsumer):
 
         return reply_btn + delete_btn + complain_btn
 
-    def _process_reply(self, reply_uuid: str | None, context: dict) -> dict:
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
         """
         If the message is a reply, attach info about the replied message.
         """
@@ -132,7 +132,7 @@ class BaseTheoristWebsocketConsumer(WebsocketConsumer):
                 context['replied_to'] = {
                     'sender_full_name': reply_msg.sender.full_name,
                     'message': reply_msg.message,
-                    'is_voice': bool(reply_msg.audio_message.name),
+                    **kwargs,
                 }
         return context
 
@@ -160,6 +160,12 @@ class BaseTheoristWebsocketConsumer(WebsocketConsumer):
 
 
 class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        if reply_uuid and is_valid_uuid(reply_uuid):
+            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
+            if reply_msg:
+                return super()._process_reply(reply_uuid, context, **{'is_media': bool(reply_msg.media_message.name)})
+
     def _handle_media_message(self, payload: dict) -> None:
         """
         Process incoming media message payload.
@@ -228,6 +234,12 @@ class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
 
 
 class VoiceSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        if reply_uuid and is_valid_uuid(reply_uuid):
+            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
+            if reply_msg:
+                return super()._process_reply(reply_uuid, context, **{'is_voice': bool(reply_msg.audio_message.name)})
+
     def _handle_voice_message(self, payload: dict) -> None:
         """
         Process incoming voice message payload.

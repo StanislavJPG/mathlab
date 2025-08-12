@@ -145,7 +145,6 @@ class BaseTheoristWebsocketConsumer(WebsocketConsumer):
 
         user = self.scope['user']
         data = {'message': msg}
-
         form = TheoristMessageForm(msg_uuid_to_reply=reply_uuid, data=data, files=files)
         if form.is_valid():
             return form.save(theorist=user.theorist, room_uuid=self.room_group_uuid)
@@ -161,10 +160,12 @@ class BaseTheoristWebsocketConsumer(WebsocketConsumer):
 
 class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
     def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        context = super()._process_reply(reply_uuid, context)
         if reply_uuid and is_valid_uuid(reply_uuid):
             reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
             if reply_msg:
-                return super()._process_reply(reply_uuid, context, **{'is_media': bool(reply_msg.media_message.name)})
+                context.setdefault('replied_to', {})['is_media'] = bool(reply_msg.media_message.name)
+        return context
 
     def _handle_media_message(self, payload: dict) -> None:
         """
@@ -205,7 +206,7 @@ class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
             }
         )
 
-        if context.get('replied_to', {}).get('is_voice', False):
+        if context.get('replied_to', {}).get('is_media', False):
             context['replied_to']['media_html_block'] = self._get_media_message_html(message_obj, is_replied=True)
 
         async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})
@@ -223,22 +224,23 @@ class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
             </div>
         """
 
-    def _save_message(self, context: dict, files: dict = None) -> TheoristMessage | None:
-        media_msg = context.get('media_message', None)
-        files = {}
+    def _save_message(self, context: dict, files: dict = None):
+        media_msg = context.get('media_message')
         if media_msg:
+            if files is None:
+                files = {}
             files['media_message'] = media_msg
-        else:
-            files = None
-        return super()._save_message(context, files)
+        return super()._save_message(context=context, files=files)
 
 
 class VoiceSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
     def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        context = super()._process_reply(reply_uuid, context)
         if reply_uuid and is_valid_uuid(reply_uuid):
             reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
             if reply_msg:
-                return super()._process_reply(reply_uuid, context, **{'is_voice': bool(reply_msg.audio_message.name)})
+                context.setdefault('replied_to', {})['is_voice'] = bool(reply_msg.audio_message.name)
+        return context
 
     def _handle_voice_message(self, payload: dict) -> None:
         """
@@ -297,14 +299,13 @@ class VoiceSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
             </div>
         """
 
-    def _save_message(self, context: dict, files: dict = None) -> TheoristMessage | None:
-        audio_msg = context.get('audio_message', None)
-        files = {}
+    def _save_message(self, context: dict, files: dict = None):
+        audio_msg = context.get('audio_message')
         if audio_msg:
+            if files is None:
+                files = {}
             files['audio_message'] = audio_msg
-        else:
-            files = None
-        return super()._save_message(context, files)
+        return super()._save_message(context=context, files=files)
 
 
 class TheoristChatConsumer(VoiceSupportedWebsocketConsumer, MediaSupportedWebsocketConsumer):
@@ -333,8 +334,8 @@ class TheoristChatConsumer(VoiceSupportedWebsocketConsumer, MediaSupportedWebsoc
         message_obj = self._save_message(context)
         context.update(self._get_message_context(message_obj))
 
-        # Add voice HTML block if replying to a voice message
-        if context.get('replied_to', {}).get('is_voice', False):
-            context['replied_to']['voice_html_block'] = self._get_voice_message_html(message_obj, is_replied=True)
+        # # # Add voice HTML block if replying to a voice message
+        # if context.get('replied_to', {}).get('is_voice', False):
+        #     context['replied_to']['voice_html_block'] = self._get_voice_message_html(message_obj, is_replied=True)
 
         async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})

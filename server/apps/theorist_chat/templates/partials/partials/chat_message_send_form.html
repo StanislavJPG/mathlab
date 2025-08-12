@@ -1,0 +1,64 @@
+{% load i18n widget_tweaks %}
+
+<div class="mb-2 position-sticky">
+  <div class="form-outline">
+    <form id="msg-form">
+      {% if is_blocked_by_first_member or is_blocked_by_second_member %}
+        <textarea class="form-control text-danger" id="chat-message-input" rows="4"
+                  style="cursor: not-allowed; white-space: normal;"
+                  disabled>{% if is_request_theorist_blocked_recipient %}
+          {% translate 'This chat is unavailable because you have blocked this theorist.' %}{% else %}
+          {% translate 'This chat is unavailable because this theorist has blocked you.' %}😢{% endif %}</textarea>
+        <label class="form-label text-muted" for="chat-message-input">{% translate 'Your message' %}</label>
+        <button type="button"
+                data-toast-trigger
+                hx-get="{% url 'forum:theorist_chat:invalid-chat-message-create' %}"
+                hx-trigger="click"
+                hx-swap="none"
+                _="on click call document.getElementById('msg-form').reset()"
+                class="btn btn-primary btn-rounded float-end mt-2 disabled">
+          <i class="ti ti-send"></i>
+          {% translate 'Send' %}
+        </button>
+      {% else %}
+
+        <div id="message-reply-block" hx-target="this"></div>
+
+        {% render_field message_as_form.message id="chat-message-input" %}
+        <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
+        <div class="btn-group mt-2 float-end" role="group">
+          <button id="chat-message-submit"
+                  type="button"
+                  data-toast-trigger
+                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                  hx-target="#mailboxes-list-js"
+                  hx-trigger="click from:#chat-message-submit delay:0.5s"
+                  _="on click call #msg-form.reset() then
+                     if document.getElementById('id_message').value !== '' call document.getElementById('search-reset').click()"
+                  class="btn btn-primary">
+            <i class="ti ti-send"></i>
+            {% translate 'Send' %}
+          </button>
+          <button type="button" title="{% translate 'Record voice message' %}"
+                  _="on click remove .d-none from #stop-rec then add .d-none then add .disabled to #chat-message-submit"
+                  class="btn btn-outline-primary" id="start-rec">
+            <i class="ti ti-microphone"></i>
+          </button>
+          <button type="button" title="{% translate 'Stop recording' %}" class="breathing-button btn btn-danger d-none"
+                  data-toast-trigger
+                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                  hx-target="#mailboxes-list-js"
+                  hx-trigger="click delay:0.5s"
+                  _="on click add .d-none then remove .d-none from #start-rec then remove .disabled from #chat-message-submit"
+                  id="stop-rec">
+            <i class="ti ti-player-stop-filled"></i>
+          </button>
+          <button type="button" title="{% translate 'Record voice message' %}"
+                  class="btn btn-outline-primary rounded-end">
+            <i class="ti ti-paperclip"></i>
+          </button>
+        </div>
+      {% endif %}
+    </form>
+  </div>
+</div>

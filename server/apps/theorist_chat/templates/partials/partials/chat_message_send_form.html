@@ -1,5 +1,11 @@
 {% load i18n widget_tweaks %}
 
+<style>
+  input[type="file"] {
+    font-size: 0;
+  }
+</style>
+
 <div class="mb-2 position-sticky">
   <div class="form-outline">
     <form id="msg-form">
@@ -26,39 +32,71 @@
 
         {% render_field message_as_form.message id="chat-message-input" %}
         <label class="form-label text-muted" for="chat-message-submit">{% translate 'Your message' %}</label>
-        <div class="btn-group mt-2 float-end" role="group">
-          <button id="chat-message-submit"
-                  type="button"
-                  data-toast-trigger
-                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
-                  hx-target="#mailboxes-list-js"
-                  hx-trigger="click from:#chat-message-submit delay:0.5s"
-                  _="on click call #msg-form.reset() then
-                     if document.getElementById('id_message').value !== '' call document.getElementById('search-reset').click()"
-                  class="btn btn-primary">
-            <i class="ti ti-send"></i>
-            {% translate 'Send' %}
-          </button>
-          <button type="button" title="{% translate 'Record voice message' %}"
-                  _="on click remove .d-none from #stop-rec then add .d-none then add .disabled to #chat-message-submit"
-                  class="btn btn-outline-primary" id="start-rec">
-            <i class="ti ti-microphone"></i>
-          </button>
-          <button type="button" title="{% translate 'Stop recording' %}" class="breathing-button btn btn-danger d-none"
-                  data-toast-trigger
-                  hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
-                  hx-target="#mailboxes-list-js"
-                  hx-trigger="click delay:0.5s"
-                  _="on click add .d-none then remove .d-none from #start-rec then remove .disabled from #chat-message-submit"
-                  id="stop-rec">
-            <i class="ti ti-player-stop-filled"></i>
-          </button>
-          <button type="button" title="{% translate 'Record voice message' %}"
-                  class="btn btn-outline-primary rounded-end">
-            <i class="ti ti-paperclip"></i>
-          </button>
+        <div class="d-flex flex-column flex-sm-row justify-content-between align-items-start">
+          <div id="preview-container" class="mb-2 mb-sm-0"></div>
+          <div class="btn-group mt-2 mt-sm-0 flex-wrap" role="group">
+            <button id="chat-message-submit"
+                    type="button"
+                    data-toast-trigger
+                    hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                    hx-target="#mailboxes-list-js"
+                    hx-trigger="click from:#chat-message-submit delay:0.5s"
+                    _="on click call #msg-form.reset() then
+                       if document.getElementById('id_message').value !== '' call document.getElementById('search-reset').click()"
+                    class="btn btn-primary">
+              <i class="ti ti-send"></i>
+              {% translate 'Send' %}
+            </button>
+            <button type="button" title="{% translate 'Record voice message' %}"
+                    _="on click remove .d-none from #stop-rec then add .d-none then add .disabled to #chat-message-submit"
+                    class="btn btn-outline-primary" id="start-rec">
+              <i class="ti ti-microphone"></i>
+            </button>
+            <button type="button" title="{% translate 'Stop recording' %}" class="breathing-button btn btn-danger d-none"
+                    data-toast-trigger
+                    hx-get="{% url 'forum:theorist_chat:hx-mailbox' view.kwargs.room_uuid %}?show_blocked_chats=false"
+                    hx-target="#mailboxes-list-js"
+                    hx-trigger="click delay:0.5s"
+                    _="on click add .d-none then remove .d-none from #start-rec then remove .disabled from #chat-message-submit"
+                    id="stop-rec">
+              <i class="ti ti-player-stop-filled"></i>
+            </button>
+            <label for="media-upload" class="btn btn-outline-primary rounded-end">
+              <i class="ti ti-paperclip"></i>
+            </label>
+            <input type="file" id="media-upload" maxlength="4" accept="image/*, video/*" class="d-none">
+          </div>
         </div>
       {% endif %}
     </form>
   </div>
 </div>
+
+<script>
+  document.getElementById('media-upload').addEventListener('change', function(event) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    const container = document.getElementById('preview-container');
+    container.innerHTML = ''; // clear old preview
+
+    const url = URL.createObjectURL(file);
+
+    if (file.type.startsWith('image/')) {
+      const img = document.createElement('img');
+      img.src = url;
+      img.style.maxWidth = '200px';
+      img.style.borderRadius = '6px';
+      container.appendChild(img);
+    } else if (file.type.startsWith('video/')) {
+      const video = document.createElement('video');
+      video.src = url;
+      video.controls = true;
+      video.style.maxWidth = '300px';
+      container.appendChild(video);
+    }
+
+    // Release object URL when no longer needed
+    file.addEventListener('load', () => URL.revokeObjectURL(url));
+  });
+</script>

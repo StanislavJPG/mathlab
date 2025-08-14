@@ -3,6 +3,7 @@ import json
 import uuid
 from io import BytesIO
 
+import filetype
 from asgiref.sync import async_to_sync
 from django.core.files.base import ContentFile
 from django.core.files.uploadedfile import InMemoryUploadedFile
@@ -18,7 +19,7 @@ from server.apps.theorist_chat.models import TheoristMessage
 from server.common.utils.helpers import is_valid_uuid, limit_nbsp_paragraphs
 
 
-class TheoristChatConsumer(WebsocketConsumer):
+class BaseTheoristWebsocketConsumer(WebsocketConsumer):
     def connect(self) -> None:
         self.room_group_uuid = self.scope['url_route']['kwargs']['room_uuid']
         async_to_sync(self.channel_layer.group_add)(self.room_group_uuid, self.channel_name)
@@ -27,36 +28,127 @@ class TheoristChatConsumer(WebsocketConsumer):
     def disconnect(self, close_code: int) -> None:
         async_to_sync(self.channel_layer.group_discard)(self.room_group_uuid, self.channel_name)
 
-    def receive(self, text_data: str = None, bytes_data: bytes = None) -> None:
+    def _get_base_context(self) -> dict:
         """
-        Main entry point for incoming websocket messages.
+        Base context info common to all messages.
         """
-        if not text_data:
-            return
+        user = self.scope['user']
+        return {
+            'theorist_avatar_url': user.theorist.get_current_avatar(),
+            'theorist_uuid': str(user.theorist.uuid),
+            'theorist_full_name': user.theorist.full_name,
+            'theorist_profile_url': user.theorist.get_absolute_url(),
+            'current_time': dateformat.format(timezone.localtime(timezone.now()), 'd E Y р. H:i'),
+        }
 
-        payload = json.loads(text_data)
-        # Voice message handling
-        if payload.get('is_voice', False):
-            self._handle_voice_message(payload)
-            return
+    def _get_message_context(self, msg: TheoristMessage | None) -> dict:
+        """
+        Return message-specific context for frontend consumption.
+        """
+        if not msg or not hasattr(msg, 'uuid'):
+            return {
+                'theorist_html_actions': '<div></div>',
+                'for_received_theorist_html_actions': '<div></div>',
+                'room_uuid': self.room_group_uuid,
+                'msg_uuid': None,
+            }
 
-        # Text message handling
-        message = payload.get('message', '')
-        reply_uuid = payload.get('reply_message_uuid', '')
+        return {
+            'theorist_html_actions': self._get_message_actions_html(msg.uuid),
+            'for_received_theorist_html_actions': self._get_message_actions_html(msg.uuid, as_receiver=True),
+            'room_uuid': self.room_group_uuid,
+            'msg_uuid': str(msg.uuid),
+        }
 
-        context = self._get_base_context()
-        context['message'] = limit_nbsp_paragraphs(message)
-        context['reply_message_uuid'] = reply_uuid
-        context = self._process_reply(reply_uuid, context)
+    @mark_safe
+    def _get_message_actions_html(self, message_uuid: str, as_receiver: bool = False) -> str:
+        """
+        Generate HTML for message action buttons (Reply, Delete, Complain).
+        """
+        reply_url = reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])
+        delete_url = reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})
+        complain_url = reverse('complaints:complaint-create', args=('message', message_uuid))
 
-        message_obj = self._save_message(context)
-        context.update(self._get_message_context(message_obj))
+        delete_label = _('Delete')
+        delete_confirm = _('Are you sure you want to delete this message? You can restore it anytime after doing that.')
+        reply_label = _('Reply')
+        complain_label = _('Complain')
 
-        # Add voice HTML block if replying to a voice message
-        if context.get('replied_to', {}).get('is_voice', False):
-            context['replied_to']['voice_html_block'] = self._get_voice_message_html(message_obj, is_replied=True)
+        reply_btn = f"""
+                <li>
+                    <button type="button"
+                            data-toast-trigger
+                            class="dropdown-item"
+                            hx-get="{reply_url}"
+                            hx-on:click="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
+                            hx-target="#message-reply-block"
+                            hx-trigger="click"
+                            style="cursor: pointer">
+                        <i class="ti ti-message-reply"></i> {reply_label}
+                    </button>
+                </li>
+            """
 
-        async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})
+        delete_btn = f"""
+                <li><hr class="dropdown-divider"></li>
+                <li>
+                    <button class="dropdown-item text-danger"
+                            data-toast-trigger
+                            type="button"
+                            hx-post="{delete_url}"
+                            hx-trigger="click"
+                            hx-confirm="{delete_confirm}"
+                            style="cursor: pointer">
+                        <i class="ti ti-trash"></i> {delete_label}
+                    </button>
+                </li>
+            """
+
+        complain_btn = ''
+        if as_receiver:
+            complain_btn = f"""
+                    <li><hr class="dropdown-divider"></li>
+                    <li>
+                        <button class="dropdown-item text-danger"
+                                hx-get="{complain_url}"
+                                hx-target="#complaint-modal"
+                                data-bs-target="#complaint-modal"
+                                data-bs-toggle="modal"
+                                type="button">
+                            <i class="ti ti-clipboard-x"></i> {complain_label}
+                        </button>
+                    </li>
+                """
+
+        return reply_btn + delete_btn + complain_btn
+
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        """
+        If the message is a reply, attach info about the replied message.
+        """
+        if reply_uuid and is_valid_uuid(reply_uuid):
+            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
+            if reply_msg:
+                context['replied_to'] = {
+                    'sender_full_name': reply_msg.sender.full_name,
+                    'message': reply_msg.message,
+                    **kwargs,
+                }
+        return context
+
+    def _save_message(self, context: dict, files: dict = None) -> TheoristMessage | None:
+        """
+        Saves the message form with text/audio and returns the created message object.
+        """
+        msg = context.get('message', '')
+        reply_uuid = context.get('reply_message_uuid', '')
+
+        user = self.scope['user']
+        data = {'message': msg}
+        form = TheoristMessageForm(msg_uuid_to_reply=reply_uuid, data=data, files=files)
+        if form.is_valid():
+            return form.save(theorist=user.theorist, room_uuid=self.room_group_uuid)
+        return None
 
     def chat_message(self, event: dict) -> None:
         """
@@ -64,6 +156,91 @@ class TheoristChatConsumer(WebsocketConsumer):
         Sends data back to WebSocket client.
         """
         self.send(text_data=json.dumps(event['message']))
+
+
+class MediaSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        context = super()._process_reply(reply_uuid, context)
+        if reply_uuid and is_valid_uuid(reply_uuid):
+            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
+            if reply_msg:
+                context.setdefault('replied_to', {})['is_media'] = bool(reply_msg.media_message.name)
+        return context
+
+    def _handle_media_message(self, payload: dict) -> None:
+        """
+        Process incoming media message payload.
+        """
+        media_base64 = payload['media_base64']
+        media_bytes = base64.b64decode(media_base64)
+        kind = filetype.guess(media_bytes)
+        if kind is None:
+            return
+
+        filename = f'{uuid.uuid4()}.{kind.extension}'
+
+        content_file = ContentFile(media_bytes, name=filename)
+        uploaded_media = InMemoryUploadedFile(
+            file=BytesIO(content_file.read()),
+            field_name='media_message',
+            name=filename,
+            content_type=kind.mime,
+            size=len(media_bytes),
+            charset=None,
+        )
+
+        reply_uuid = payload.get('reply_message_uuid')
+        context = self._get_base_context()
+        context = self._process_reply(reply_uuid, context)
+        context['reply_message_uuid'] = reply_uuid
+        context['media_message'] = uploaded_media
+
+        message_obj = self._save_message(context)
+        context.pop('media_message', None)
+        context.update(self._get_message_context(message_obj))
+
+        context.update(
+            {
+                'is_media': True,
+                'media_html_block': self._get_media_message_html(message_obj),
+            }
+        )
+
+        if context.get('replied_to', {}).get('is_media', False):
+            context['replied_to']['media_html_block'] = self._get_media_message_html(message_obj, is_replied=True)
+
+        async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})
+
+    def _get_media_message_html(self, msg: TheoristMessage, is_replied: bool = False) -> str:
+        """
+        Generate HTML block for media message.
+        """
+        uuid_str = str(msg.uuid)
+        url = msg.replied_to.media_message.url if is_replied else msg.media_message.url
+
+        return f"""
+            <div class="card-body">
+                <img src="{url}" id="msg-media-{uuid_str}">
+            </div>
+        """
+
+    def _save_message(self, context: dict, files: dict = None):
+        media_msg = context.get('media_message')
+        if media_msg:
+            if files is None:
+                files = {}
+            files['media_message'] = media_msg
+        return super()._save_message(context=context, files=files)
+
+
+class VoiceSupportedWebsocketConsumer(BaseTheoristWebsocketConsumer):
+    def _process_reply(self, reply_uuid: str | None, context: dict, **kwargs) -> dict:
+        context = super()._process_reply(reply_uuid, context)
+        if reply_uuid and is_valid_uuid(reply_uuid):
+            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
+            if reply_msg:
+                context.setdefault('replied_to', {})['is_voice'] = bool(reply_msg.audio_message.name)
+        return context
 
     def _handle_voice_message(self, payload: dict) -> None:
         """
@@ -105,131 +282,6 @@ class TheoristChatConsumer(WebsocketConsumer):
 
         async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})
 
-    def _get_base_context(self) -> dict:
-        """
-        Base context info common to all messages.
-        """
-        user = self.scope['user']
-        return {
-            'theorist_avatar_url': user.theorist.get_current_avatar(),
-            'theorist_uuid': str(user.theorist.uuid),
-            'theorist_full_name': user.theorist.full_name,
-            'theorist_profile_url': user.theorist.get_absolute_url(),
-            'current_time': dateformat.format(timezone.localtime(timezone.now()), 'd E Y р. H:i'),
-        }
-
-    def _process_reply(self, reply_uuid: str | None, context: dict) -> dict:
-        """
-        If the message is a reply, attach info about the replied message.
-        """
-        if reply_uuid and is_valid_uuid(reply_uuid):
-            reply_msg = TheoristMessage.objects.filter(uuid=reply_uuid).first()
-            if reply_msg:
-                context['replied_to'] = {
-                    'sender_full_name': reply_msg.sender.full_name,
-                    'message': reply_msg.message,
-                    'is_voice': bool(reply_msg.audio_message.name),
-                }
-        return context
-
-    def _save_message(self, context: dict) -> TheoristMessage | None:
-        """
-        Saves the message form with text/audio and returns the created message object.
-        """
-        msg = context.get('message', '')
-        audio_msg = context.get('audio_message', None)
-        reply_uuid = context.get('reply_message_uuid', '')
-
-        user = self.scope['user']
-        data = {'message': msg}
-        files = {'audio_message': audio_msg} if audio_msg else None
-
-        form = TheoristMessageForm(msg_uuid_to_reply=reply_uuid, data=data, files=files or None)
-        if form.is_valid():
-            return form.save(theorist=user.theorist, room_uuid=self.room_group_uuid)
-        return None
-
-    def _get_message_context(self, msg: TheoristMessage | None) -> dict:
-        """
-        Return message-specific context for frontend consumption.
-        """
-        if not msg or not hasattr(msg, 'uuid'):
-            return {
-                'theorist_html_actions': '<div></div>',
-                'for_received_theorist_html_actions': '<div></div>',
-                'room_uuid': self.room_group_uuid,
-                'msg_uuid': None,
-            }
-
-        return {
-            'theorist_html_actions': self._get_message_actions_html(msg.uuid),
-            'for_received_theorist_html_actions': self._get_message_actions_html(msg.uuid, as_receiver=True),
-            'room_uuid': self.room_group_uuid,
-            'msg_uuid': str(msg.uuid),
-        }
-
-    @mark_safe
-    def _get_message_actions_html(self, message_uuid: str, as_receiver: bool = False) -> str:
-        """
-        Generate HTML for message action buttons (Reply, Delete, Complain).
-        """
-        reply_url = reverse('forum:theorist_chat:hx-messages-reply', args=[self.room_group_uuid, message_uuid])
-        delete_url = reverse('forum:theorist_chat:chat-message-safe-delete', kwargs={'uuid': message_uuid})
-        complain_url = reverse('complaints:complaint-create', args=('message', message_uuid))
-
-        delete_label = _('Delete')
-        delete_confirm = _('Are you sure you want to delete this message? You can restore it anytime after doing that.')
-        reply_label = _('Reply')
-        complain_label = _('Complain')
-
-        reply_btn = f"""
-            <li>
-                <button type="button"
-                        data-toast-trigger
-                        class="dropdown-item"
-                        hx-get="{reply_url}"
-                        hx-on:click="document.querySelector('#chat-message-submit').setAttribute('data-reply-attr-uuid', '{message_uuid}')"
-                        hx-target="#message-reply-block"
-                        hx-trigger="click"
-                        style="cursor: pointer">
-                    <i class="ti ti-message-reply"></i> {reply_label}
-                </button>
-            </li>
-        """
-
-        delete_btn = f"""
-            <li><hr class="dropdown-divider"></li>
-            <li>
-                <button class="dropdown-item text-danger"
-                        data-toast-trigger
-                        type="button"
-                        hx-post="{delete_url}"
-                        hx-trigger="click"
-                        hx-confirm="{delete_confirm}"
-                        style="cursor: pointer">
-                    <i class="ti ti-trash"></i> {delete_label}
-                </button>
-            </li>
-        """
-
-        complain_btn = ''
-        if as_receiver:
-            complain_btn = f"""
-                <li><hr class="dropdown-divider"></li>
-                <li>
-                    <button class="dropdown-item text-danger"
-                            hx-get="{complain_url}"
-                            hx-target="#complaint-modal"
-                            data-bs-target="#complaint-modal"
-                            data-bs-toggle="modal"
-                            type="button">
-                        <i class="ti ti-clipboard-x"></i> {complain_label}
-                    </button>
-                </li>
-            """
-
-        return reply_btn + delete_btn + complain_btn
-
     def _get_voice_message_html(self, msg: TheoristMessage, is_replied: bool = False) -> str:
         """
         Generate HTML block for voice message audio player.
@@ -246,3 +298,44 @@ class TheoristChatConsumer(WebsocketConsumer):
                 </audio>
             </div>
         """
+
+    def _save_message(self, context: dict, files: dict = None):
+        audio_msg = context.get('audio_message')
+        if audio_msg:
+            if files is None:
+                files = {}
+            files['audio_message'] = audio_msg
+        return super()._save_message(context=context, files=files)
+
+
+class TheoristChatConsumer(VoiceSupportedWebsocketConsumer, MediaSupportedWebsocketConsumer):
+    def receive(self, text_data: str = None, bytes_data: bytes = None) -> None:
+        """
+        Main entry point for incoming websocket messages.
+        """
+        if not text_data:
+            return
+
+        payload = json.loads(text_data)
+        # Voice message handling
+        if payload.get('is_voice', False):
+            self._handle_voice_message(payload)
+            return
+
+        # Text message handling
+        message = payload.get('message', '')
+        reply_uuid = payload.get('reply_message_uuid', '')
+
+        context = self._get_base_context()
+        context['message'] = limit_nbsp_paragraphs(message)
+        context['reply_message_uuid'] = reply_uuid
+        context = self._process_reply(reply_uuid, context)
+
+        message_obj = self._save_message(context)
+        context.update(self._get_message_context(message_obj))
+
+        # # # Add voice HTML block if replying to a voice message
+        # if context.get('replied_to', {}).get('is_voice', False):
+        #     context['replied_to']['voice_html_block'] = self._get_voice_message_html(message_obj, is_replied=True)
+
+        async_to_sync(self.channel_layer.group_send)(self.room_group_uuid, {'type': 'chat_message', 'message': context})

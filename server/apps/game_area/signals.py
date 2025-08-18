@@ -6,7 +6,7 @@ from server.apps.game_area.models import MathQuizScoreboard, MathQuiz
 
 
 @receiver(m2m_changed, sender=MathQuizScoreboard.solved_quizzes.through)
-def update_mathquiz_avg_time(sender, instance, action, reverse, model, pk_set, **kwargs):
+def update_mathquiz_avg_time(sender, instance, action, reverse, model, pk_set, using, **kwargs):
     if action == 'post_add':
         for quiz_id in pk_set:
             quiz = MathQuiz.objects.get(pk=quiz_id)

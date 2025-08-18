@@ -1,5 +1,4 @@
 from django.apps import AppConfig
-from django.core.signals import request_finished
 
 
 class GameAreaConfig(AppConfig):
@@ -7,6 +6,4 @@ class GameAreaConfig(AppConfig):
     name = 'server.apps.game_area'
 
     def ready(self):
-        from . import signals
-
-        request_finished.connect(signals.update_mathquiz_avg_time)
+        pass

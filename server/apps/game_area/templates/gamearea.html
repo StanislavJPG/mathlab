@@ -1,0 +1,16 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block body %}
+  <section class="py-5">
+    <div class="container px-4 px-lg-5 mt-5">
+      <div hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-playblocks' %}"
+           hx-trigger="load"
+           hx-swap="outerHTML"
+           class="d-flex justify-content-center"
+      >
+        <div id="gamearea-block-wait-spinner" class="spinner-border text-primary" role="status"></div>
+      </div>
+    </div>
+  </section>
+{% endblock %}

@@ -1,4 +1,5 @@
 from server.apps.forum.factories import PostFactory, CommentFactory, CommentAnswerFactory
+from server.apps.game_area.factories import MathQuizFactory
 from server.apps.theorist.factories import TheoristFactory, TheoristFriendshipFactory
 from server.apps.theorist_chat.factories import TheoristChatRoomFactory, TheoristMessageFactory
 from server.apps.theorist_drafts.factories import TheoristDraftsFactory
@@ -77,6 +78,10 @@ class FakeDataGenerator(BaseFakeDataGenerator):
     @classmethod
     def generate_fake_theorist_drafts(cls, iterations: int = 1, **kwargs):
         return cls._base_generator(factory_class=TheoristDraftsFactory, iterations=iterations, label='drafts', **kwargs)
+
+    @classmethod
+    def generate_fake_math_quizzes(cls, iterations: int = 1, **kwargs):
+        return cls._base_generator(factory_class=MathQuizFactory, iterations=iterations, label='quizzes', **kwargs)
 
 
 fake = FakeDataGenerator

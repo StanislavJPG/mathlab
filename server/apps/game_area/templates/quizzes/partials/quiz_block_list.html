@@ -6,19 +6,42 @@
       <div class="col mb-5">
         <div class="card h-100 border border-3">
           <img class="card-img-top"
-               src="{% if quiz.math_description_image %}{{ quiz.math_description_image.url }}{% else %}{% static 'img/base/math_quiz_default_pic.png' %}{% endif %}" alt="quiz-image">
+               src="{% if quiz.math_description_image %}{{ quiz.math_description_image.url }}{% else %}{% static 'img/base/math_quiz_default_pic.png' %}{% endif %}"
+               alt="quiz-image" style="object-fit: cover;"> {# TODO: Test styles with other images #}
           <div class="card-body p-4">
             <div class="text-center">
-              <h5 class="fw-bolder">{{ quiz.get_category_display }}</h5>
+              <h5 class="fw-bolder">
+                {% if quiz.difficulty == 'ES' %}
+                  <i title="{% translate 'Easy quiz' %}" class="ti ti-circle text-success"></i>
+                {% elif quiz.difficulty == 'NL' %}
+                  <i title="{% translate 'Normal quiz' %}" class="ti ti-square text-info"></i>
+                {% elif quiz.difficulty == 'HD' %}
+                  <i title="{% translate 'Hard quiz' %}" class="ti ti-triangle text-warning"></i>
+                {% else %}
+                  <i title="{% translate 'Extra hard quiz' %}" class="ti ti-chart-grid-dots text-danger"></i>
+                {% endif %}
+                {{ quiz.get_category_display }}</h5>
               <span class="small text-secondary" title="{% translate 'Time to finish the quiz' %}">
-                <i class="ti ti-clock-hour-9"></i> {{ quiz.max_time_to_solve }}
+                <i class="ti ti-clock-hour-9"></i>{{ quiz.max_time_to_solve }}
+              </span>
+              <span class="small text-secondary ms-2" title="{% translate 'Expressions to solve count' %}">
+                <i class="ti ti-assembly"></i>{{ quiz.math_expressions_count }}
+              </span>
+              <span class="small text-secondary ms-2" title="{% translate 'Quiz reward' %}">
+                <i class="ti ti-award"></i>{{ quiz.finish_score_reward }}
+              </span>
+              <span class="small text-secondary ms-2" title="{% translate 'Average solve time statistics' %}">
+                <i class="ti ti-chart-arrows-vertical"></i>{{ quiz.average_solve_time_statistic }}
+              </span>
+              <span class="small text-secondary ms-2" title="{% translate 'Author' %}">
+                <i class="ti ti-user"></i>{{ quiz.author.full_name|default:'Anonymous' }}
               </span>
             </div>
-          </div>
-          <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-            <div class="text-center"><a class="btn btn-primary mt-auto" href="#">
-              <i class="ti ti-player-play"></i> {% translate 'Start the quiz' %}
-            </a></div>
+            <div class="card-footer p-2 pt-0 border-top-0 bg-transparent mt-4">
+              <div class="text-center"><a class="btn btn-primary btn-lg" href="#"> <i
+                class="ti ti-player-play"></i> {% translate 'Start the quiz' %} </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>

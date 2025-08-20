@@ -1,4 +1,5 @@
 from django.db import models
+from django.db.models import Avg, Sum
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from dynamic_filenames import FilePattern
@@ -37,9 +38,10 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
         self.math_quiz.save(update_fields=['math_expressions_count'])
 
-    @hook(AFTER_SAVE, when='max_time_to_solve', has_changed=True)
+    @hook(AFTER_SAVE)
     def after_save(self):
-        self.math_quiz.max_time_to_solve += self.max_time_to_solve
+        max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
+        self.math_quiz.max_time_to_solve = max_time
         self.math_quiz.save(update_fields=['max_time_to_solve'], skip_hooks=True)
 
 
@@ -75,15 +77,47 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f'Quiz | {self.get_category_display()} | {self.__class__.__name__} | id - {self.id}'
 
 
+class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
+    math_quiz = models.ForeignKey('game_area.MathQuiz', on_delete=models.CASCADE)
+    math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
+    best_time_taken = models.DurationField(verbose_name=_('best time taken'), blank=True)
+
+    class Meta:
+        verbose_name = _('Math solved quizzes')
+        unique_together = (('math_quiz', 'math_quiz_scoreboard'),)
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        def average_pass_time(expr):
+            return self.__class__.objects.filter(**expr).aggregate(avg_pass_time=Avg('best_time_taken'))[
+                'avg_pass_time'
+            ]
+
+        if (
+            average_pass_time({'math_quiz_scoreboard': self.math_quiz_scoreboard})
+            < self.math_quiz_scoreboard.time_taken
+        ):
+            # save only best time
+            self.math_quiz.average_solve_time_statistic = average_pass_time({'math_quiz': self.math_quiz})
+            self.math_quiz_scoreboard.time_taken = average_pass_time(
+                {'math_quiz_scoreboard': self.math_quiz_scoreboard}
+            )
+
+            self.math_quiz.save(update_fields=['average_solve_time_statistic'], skip_hooks=True)
+            self.math_quiz_scoreboard.save(update_fields=['time_taken'], skip_hooks=True)
+
+
 class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     solved_expressions = models.ManyToManyField('game_area.MathExpression', blank=True)
-    solved_quizzes = models.ManyToManyField('game_area.MathQuiz', blank=True)
+    solved_quizzes = models.ManyToManyField('game_area.MathQuiz', through='game_area.MathSolvedQuizzes', blank=True)
 
     solved_by = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True)
     solved_by_name_slug = models.SlugField(max_length=255, blank=True)  # to save history while theorist being deleted
 
     most_popular_quiz_type = models.CharField(max_length=2, choices=MathQuizCategoryChoices)
-    time_taken = models.DurationField(verbose_name=_('time that was taken to solve all quizzes'), blank=True, null=True)
+    time_taken = models.DurationField(
+        verbose_name=_('time that was taken to solve all quizzes'), blank=True, null=True
+    )  # change semantic
     board_score = models.CharField(
         choices=MathQuizScoreboardScoreChoices, default=MathQuizScoreboardScoreChoices.EMPTY, max_length=2
     )

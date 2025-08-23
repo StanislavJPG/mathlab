@@ -43,7 +43,9 @@
               <div class="card h-100 border border-3 p-2">
                 <img class="card-img-top"
                      src="{% if quiz.math_description_image %}{{ quiz.math_description_image.url }}{% else %}{% static 'img/base/math_quiz_default_pic.png' %}{% endif %}"
-                     alt="quiz-image" style="object-fit: cover;">
+                     width="200px"
+                     height="250px"
+                     alt="quiz-image">
                 <div class="card-body p-4">
                   <div class="text-center">
                     <h5 class="fw-bolder">
@@ -77,7 +79,7 @@
                 </div>
                 <div class="card-footer p-2 pt-0 border-top-0 bg-transparent mt-4">
                   <div class="text-center">
-                    <a class="btn btn-primary btn-lg" href="#">
+                    <a class="btn btn-primary btn-lg" href="{% url 'mathlab:gamearea:quizzes:mathquiz-base' quiz.uuid %}">
                       <i class="ti ti-player-play"></i> {% translate 'Start the quiz' %}
                     </a>
                   </div>

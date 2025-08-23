@@ -1,0 +1,69 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block page_css %}
+  <style>
+    body {
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    .quiz-card {
+      background-color: #ffffff10;
+      border: none;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+    .btn-answer {
+      width: 100%;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+    .btn-answer:hover {
+      transform: scale(1.02);
+    }
+    .progress {
+      height: 20px;
+      background-color: #ffffff30;
+    }
+    .progress-bar {
+      background-color: #ffc107;
+    }
+  </style>
+{% endblock page_css %}
+
+{% block body %}
+  <div class="container py-5">
+    <div class="text-center mb-4">
+      <h1 class="fw-bold">🎯 {% translate 'Math quiz' %}</h1>
+      <p class="lead">Test your knowledge and beat the clock!</p>
+      {# clock will be placed here #}
+    </div>
+    <div class="card quiz-card shadow-lg"
+         hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+         hx-trigger="click from:#start-quiz-btn"
+    >
+      <div class="card-body text-center">
+        <h4 class="card-title mb-3">
+          {% blocktranslate trimmed %}
+            This test contains:
+          {% endblocktranslate %}
+        </h4>
+      </div>
+    </div>
+
+    <div class="text-center mt-4">
+      <button class="btn btn-warning px-4" id="start-quiz-btn"
+              type="button"
+              _="on click remove .d-none from #end-quiz-btn then add .d-none">
+        {% translate 'Start quiz' %}
+      </button>
+      <button class="btn btn-danger px-4 d-none"
+              type="button"
+              id="end-quiz-btn"
+      >
+        {% translate 'Finish quiz' %}
+      </button>
+    </div>
+  </div>
+{% endblock body %}

@@ -11,6 +11,7 @@ from server.apps.game_area.choices import (
     MathQuizDifficultyChoices,
     MathQuizScoreboardScoreChoices,
 )
+from server.apps.game_area.querysets import MathQuizQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
@@ -72,7 +73,7 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'))
     math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
 
-    # objects = ...
+    objects = MathQuizQuerySet.as_manager()
 
     class Meta:
         ordering = ('created_at',)

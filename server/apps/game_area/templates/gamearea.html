@@ -14,3 +14,11 @@
     </div>
   </section>
 {% endblock %}
+
+{% block page_js %}
+  <script>
+    document.addEventListener('htmx:afterSettle', function () {
+      $('.selectpicker').selectpicker();
+    })
+  </script>
+{% endblock page_js %}

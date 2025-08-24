@@ -1,5 +1,5 @@
 from django.db import models
-from django.db.models import Case, When
+from django.db.models import Case, When, Count
 
 from server.apps.game_area.choices import MathQuizDifficultyChoices
 
@@ -16,3 +16,6 @@ class MathQuizQuerySet(models.QuerySet):
                 output_field=models.IntegerField(),
             ),
         ).order_by(f'{ordering_prefix}difficulty_ranking')
+
+    def filter_by_with_expressions(self):
+        return self.alias(expr_count=Count('math_expressions')).filter(expr_count__gt=0)

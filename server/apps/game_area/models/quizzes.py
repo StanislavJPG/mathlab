@@ -37,12 +37,13 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     @hook(AFTER_SAVE)
     def after_save(self):
-        max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
-        self.math_quiz.max_time_to_solve = max_time
-        self.math_quiz.save(update_fields=['max_time_to_solve'], skip_hooks=True)
+        if self.math_quiz_id:
+            max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
+            self.math_quiz.max_time_to_solve = max_time
+            self.math_quiz.save(update_fields=['max_time_to_solve'], skip_hooks=True)
 
-        self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
-        self.math_quiz.save(update_fields=['math_expressions_count'])
+            self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
+            self.math_quiz.save(update_fields=['math_expressions_count'])
 
 
 math_description_image_upload_to = FilePattern(

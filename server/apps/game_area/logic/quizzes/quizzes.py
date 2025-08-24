@@ -6,6 +6,9 @@ from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScore
 from server.common.mixins.views import HXViewMixin
 
 
+__all__ = ['MathQuizPlayBlocksListView', 'MathQuizBaseQuizView', 'MathQuizGameMenuView']
+
+
 class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
     model = MathQuiz
     filterset_class = MathQuizPlayBlocksListFilter
@@ -14,7 +17,7 @@ class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
     paginate_by = 15
 
     def get_queryset(self):
-        return super().get_queryset().order_by_difficulty()
+        return super().get_queryset().filter_by_with_expressions().order_by_difficulty()
 
 
 class MathQuizBaseQuizView(DetailView):
@@ -25,7 +28,7 @@ class MathQuizBaseQuizView(DetailView):
     context_object_name = 'quiz'
 
 
-class MathQuizStartPlayView(HXViewMixin, DetailView):
+class MathQuizGameMenuView(HXViewMixin, DetailView):
     model = MathExpression
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
@@ -33,18 +36,26 @@ class MathQuizStartPlayView(HXViewMixin, DetailView):
     def get_queryset(self):
         return super().get_queryset().filter(math_quiz__uuid=self.kwargs['quiz_uuid'])
 
-    def _get_progress_value(self, as_percentage):
-        scoreboard = MathQuizScoreboard.objects.filter(
-            solved_by=self.request.theorist
-        ).first()  # TODO: Process for anonymousUser
-        solved_expressions_count = scoreboard.solved_expressions.filter(
-            math_quiz__uuid=self.kwargs['quiz_uuid']
-        ).count()
+    def _get_anonymous_progress(self):
+        quiz_uuid = str(self.kwargs['quiz_uuid'])
+        solved_expressions = self.request.session.get(f'expr_for_quiz_{quiz_uuid}', [])
+        return len(solved_expressions)  # TODO: Process saving expressions in session while saving by anonymous user!
 
-        if as_percentage:
-            return round((solved_expressions_count / self.get_object().math_quiz.math_expressions_count) * 100)
+    def _get_progress_value(self, as_percentage):
+        theorist = getattr(self.request, 'theorist', None)
+
+        if not theorist or not self.request.user.is_authenticated:
+            solved_expressions_count = self._get_anonymous_progress()
         else:
-            return solved_expressions_count
+            scoreboard = MathQuizScoreboard.objects.filter(solved_by=theorist).first()
+            solved_expressions_count = scoreboard.solved_expressions.filter(
+                math_quiz__uuid=self.kwargs['quiz_uuid']
+            ).count()
+
+        total_expressions = self.get_object().math_quiz.math_expressions_count
+        return (
+            round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
+        )
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

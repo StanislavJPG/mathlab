@@ -1,4 +1,5 @@
 from django.views.generic import DetailView
+from django.views.generic.edit import FormMixin
 from django_filters.views import FilterView
 
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
@@ -28,8 +29,9 @@ class MathQuizBaseQuizView(DetailView):
     context_object_name = 'quiz'
 
 
-class MathQuizGameMenuView(HXViewMixin, DetailView):
+class MathQuizGameMenuView(HXViewMixin, FormMixin, DetailView):
     model = MathExpression
+    # form_class = MathQuizGameMenuForm
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
 

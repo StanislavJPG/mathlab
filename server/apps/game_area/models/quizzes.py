@@ -15,8 +15,47 @@ from server.apps.game_area.querysets import MathQuizQuerySet
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 
 
+class MathQuizChoiceAnswer(TimeStampedModelMixin):
+    answer = models.CharField(max_length=255)
+    is_correct_answer = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Math Quiz Choice Question')
+        verbose_name_plural = _('Math Quiz Choice Questions')
+
+    def __str__(self):
+        return f'{self.answer} | {self.__class__.__name__} | id - {self.pk}'
+
+
+class MathMultipleChoiceTask(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    math_expression = models.ForeignKey(
+        'game_area.MathExpression',
+        on_delete=models.CASCADE,
+        related_name='multiple_choices_quizzes',
+    )
+    question = models.TextField()
+    answers = models.ManyToManyField(
+        'game_area.MathQuizChoiceAnswer',
+    )
+
+    class Meta:
+        verbose_name = _('Math Multiple Choice Task')
+        verbose_name_plural = _('Math Multiple Choice Task')
+
+    def __str__(self):
+        return f'{self.question} | {self.__class__.__name__} | id - {self.pk}'
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        if self.math_expression.multiple_choices_quizzes.exists():
+            self.math_expression.has_multiple_choices = True
+            self.math_expression.save(update_fields=['has_multiple_choices'], skip_hooks=True)
+
+
 class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     latex_expression = models.TextField()
+    has_multiple_choices = models.BooleanField(default=False)
+
     max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'))
     math_quiz = models.ForeignKey(
         'game_area.MathQuiz',
@@ -33,14 +72,14 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         verbose_name_plural = _('Math Expressions')
 
     def __str__(self):
-        return f'Expression | {self.latex_expression[:7]}... | {self.__class__.__name__} | id - {self.id}'
+        return f'Expression | {self.__class__.__name__} | id - {self.id}'
 
     @hook(AFTER_SAVE)
     def after_save(self):
         if self.math_quiz_id:
             max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
             self.math_quiz.max_time_to_solve = max_time
-            self.math_quiz.save(update_fields=['max_time_to_solve'], skip_hooks=True)
+            self.math_quiz.save(update_fields=['max_time_to_solve'])
 
             self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
             self.math_quiz.save(update_fields=['math_expressions_count'])
@@ -135,6 +174,10 @@ class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
         )
         self.math_quiz_scoreboard.most_popular_quiz_type = most_popular_category
         self.math_quiz_scoreboard.save(update_fields=['most_popular_quiz_type'], skip_hooks=True)
+
+
+# class MathSolvedExpressions(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
+#     pass
 
 
 class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):

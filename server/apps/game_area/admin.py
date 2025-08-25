@@ -1,12 +1,29 @@
 from django.contrib import admin
 
-from server.apps.game_area.models import MathExpression, MathQuizScoreboard, MathQuiz
-from server.apps.game_area.models.quizzes import MathSolvedQuizzes
+from server.apps.game_area.models import (
+    MathExpression,
+    MathQuizScoreboard,
+    MathSolvedQuizzes,
+    MathQuiz,
+    MathQuizChoiceAnswer,
+    MathMultipleChoiceTask,
+)
+
+
+@admin.register(MathQuizChoiceAnswer)
+class MathQuizChoiceAnswerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'answer', 'is_correct_answer')
+
+
+@admin.register(MathMultipleChoiceTask)
+class MathMultipleChoiceTaskAdmin(admin.ModelAdmin):
+    list_display = ('id', 'question')
 
 
 @admin.register(MathExpression)
 class MathExpressionAdmin(admin.ModelAdmin):
     list_display = ('id', 'latex_expression')
+    readonly_fields = ('has_multiple_choices',)
 
 
 @admin.register(MathQuiz)

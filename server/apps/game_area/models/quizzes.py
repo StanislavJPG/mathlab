@@ -138,7 +138,10 @@ class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
 
 
 class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    solved_expressions = models.ManyToManyField('game_area.MathExpression', blank=True)
+    solved_expressions = models.ManyToManyField(
+        'game_area.MathExpression', blank=True
+    )  # TODO: Add through model like in `solved_quizzes`. Because we need to watch board_score in that model.
+
     solved_quizzes = models.ManyToManyField('game_area.MathQuiz', through='game_area.MathSolvedQuizzes', blank=True)
 
     solved_by = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True)

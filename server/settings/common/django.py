@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'notifications',
     'django_page_resolver',
+    'django_admin_inline_paginator_plus',
     # common
     'server.common',
     # apps

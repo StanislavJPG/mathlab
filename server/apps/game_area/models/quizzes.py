@@ -3,6 +3,7 @@ from django.db import models
 from django.db.models import Avg, Sum, Count
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
+from django_lifecycle.conditions import WhenFieldHasChanged
 from dynamic_filenames import FilePattern
 from slugify import slugify
 
@@ -27,6 +28,16 @@ class MathQuizChoiceAnswer(TimeStampedModelMixin):
         return f'{self.answer} | {self.__class__.__name__} | id - {self.pk}'
 
 
+class MathMultipleChoiceTaskAnswer(TimeStampedModelMixin, LifecycleModel):
+    task = models.ForeignKey('game_area.MathMultipleChoiceTask', on_delete=models.CASCADE)
+    answer = models.ForeignKey('game_area.MathQuizChoiceAnswer', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _('Math Multiple Choice Task Answer')
+        verbose_name_plural = _('Math Multiple Choice Task Answers')
+        unique_together = ('task', 'answer')
+
+
 class MathMultipleChoiceTask(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     math_expression = models.ForeignKey(
         'game_area.MathExpression',
@@ -36,6 +47,7 @@ class MathMultipleChoiceTask(UUIDModelMixin, TimeStampedModelMixin, LifecycleMod
     question = models.TextField()
     answers = models.ManyToManyField(
         'game_area.MathQuizChoiceAnswer',
+        through='game_area.MathMultipleChoiceTaskAnswer',
     )
 
     class Meta:
@@ -78,8 +90,9 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def after_save(self):
         if self.math_quiz_id:
             max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
-            self.math_quiz.max_time_to_solve = max_time
-            self.math_quiz.save(update_fields=['max_time_to_solve'])
+            if self.math_quiz.max_time_to_solve >= max_time:
+                self.math_quiz.max_time_to_solve = max_time
+                self.math_quiz.save(update_fields=['max_time_to_solve'])
 
             self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
             self.math_quiz.save(update_fields=['math_expressions_count'])
@@ -108,7 +121,7 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     average_solve_time_statistic = models.DurationField(verbose_name=_('average solve time'), null=True, blank=True)
 
-    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'))
+    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True)
     math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
 
     objects = MathQuizQuerySet.as_manager()
@@ -121,10 +134,19 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def __str__(self):
         return f'Quiz | {self.get_category_display()} | {self.__class__.__name__} | id - {self.id}'
 
-    @hook(AFTER_CREATE)
-    def after_create(self):
-        self.author_name_slug = slugify(self.author.full_name)
-        self.save(update_fields=['author_name_slug'])
+    def clean(self):
+        max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
+        if self.max_time_to_solve < max_time:
+            raise ValidationError(
+                'According to the related expressions, sum of max_time is %s. Change max_time at least to it.'
+                % max_time
+            )
+
+    @hook(AFTER_SAVE, condition=WhenFieldHasChanged('author'))
+    def after_author_save(self):
+        if self.author_id:
+            self.author_name_slug = slugify(self.author.full_name)
+            self.save(update_fields=['author_name_slug'])
 
 
 class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):

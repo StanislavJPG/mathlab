@@ -5,6 +5,7 @@ __all__ = [
     'MathSolvedQuizzes',
     'MathQuizChoiceAnswer',
     'MathMultipleChoiceTask',
+    'MathMultipleChoiceTaskAnswer',
 ]
 
 from .quizzes import (
@@ -14,4 +15,5 @@ from .quizzes import (
     MathQuizChoiceAnswer,
     MathMultipleChoiceTask,
     MathSolvedQuizzes,
+    MathMultipleChoiceTaskAnswer,
 )

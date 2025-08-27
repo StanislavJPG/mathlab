@@ -1,6 +1,9 @@
+from datetime import timedelta
+
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Avg, Sum, Count
+from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from django_lifecycle.conditions import WhenFieldHasChanged
@@ -97,6 +100,10 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
             self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
             self.math_quiz.save(update_fields=['math_expressions_count'])
 
+    def get_multiple_choice_question(self):
+        if hasattr(self.multiple_choices_quizzes.first(), 'question'):
+            return self.multiple_choices_quizzes.first().question
+
 
 math_description_image_upload_to = FilePattern(
     filename_pattern='{app_label:.25}/quizzes/math_quiz/{instance.uuid}/image/{uuid:s}{ext}'
@@ -121,7 +128,7 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     average_solve_time_statistic = models.DurationField(verbose_name=_('average solve time'), null=True, blank=True)
 
-    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True)
+    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True, default=0)
     math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
 
     objects = MathQuizQuerySet.as_manager()
@@ -135,18 +142,40 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         return f'Quiz | {self.get_category_display()} | {self.__class__.__name__} | id - {self.id}'
 
     def clean(self):
-        max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
-        if self.max_time_to_solve < max_time:
-            raise ValidationError(
-                'According to the related expressions, sum of max_time is %s. Change max_time at least to it.'
-                % max_time
-            )
+        if self.pk:
+            max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time'] or timedelta(0)
+            if self.max_time_to_solve < max_time:
+                raise ValidationError(
+                    'According to the related expressions, sum of max_time is %s. Change max_time at least to it.'
+                    % max_time
+                )
 
     @hook(AFTER_SAVE, condition=WhenFieldHasChanged('author'))
     def after_author_save(self):
         if self.author_id:
             self.author_name_slug = slugify(self.author.full_name)
             self.save(update_fields=['author_name_slug'])
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time'] or timedelta(0)
+        if max_time >= self.max_time_to_solve:
+            self.max_time_to_solve = max_time
+            self.save(update_fields=['max_time_to_solve'], skip_hooks=True)
+
+    @mark_safe
+    def get_html_score_reward(self):
+        if self.finish_score_reward <= 15:
+            text_color = 'success'
+        elif self.finish_score_reward <= 30:
+            text_color = 'warning'
+        else:
+            text_color = 'danger'
+
+        html_to_return = (
+            f'<strong class="text-{text_color}" style="font-size: 27px;">{self.finish_score_reward}</strong>'
+        )
+        return html_to_return
 
 
 class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
@@ -209,7 +238,9 @@ class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     solved_quizzes = models.ManyToManyField('game_area.MathQuiz', through='game_area.MathSolvedQuizzes', blank=True)
 
-    solved_by = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True)
+    solved_by = models.OneToOneField(
+        'theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True, related_name='quiz_scoreboard'
+    )
     solved_by_name_slug = models.SlugField(max_length=255, blank=True)  # to save history while theorist being deleted
 
     most_popular_quiz_type = models.CharField(max_length=2, choices=MathQuizCategoryChoices)

@@ -58,12 +58,15 @@
               _="on click remove .d-none from #end-quiz-btn then add .d-none">
         <i class="ti ti-player-play"></i> {% translate 'Start quiz' %}
       </button>
-      <button class="btn btn-danger px-4 d-none"
-              type="button"
-              id="end-quiz-btn"
-      >
-        <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
-      </button>
+      {{ is_quiz_finished }}
+      {% if not is_quiz_finished %}
+        <button class="btn btn-danger px-4 d-none"
+                type="button"
+                id="end-quiz-btn"
+        >
+          <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
+        </button>
+      {% endif %}
     </div>
   </div>
 {% endblock body %}

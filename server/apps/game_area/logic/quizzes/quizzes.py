@@ -1,9 +1,11 @@
 from django.views.generic import DetailView
-from django.views.generic.edit import FormMixin
+from django.views.generic.edit import ModelFormMixin
 from django_filters.views import FilterView
 
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
-from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard
+from server.apps.game_area.forms import MathQuizGameMenuForm
+from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard, MathMultipleChoiceTask
+from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
@@ -28,20 +30,51 @@ class MathQuizBaseQuizView(DetailView):
     slug_field = 'uuid'
     context_object_name = 'quiz'
 
+    def get_context_data(self, **kwargs):
+        self.request: AuthenticatedHttpRequest
+        context = super().get_context_data(**kwargs)
+        self.object = self.get_object()
+        if self.request.user.is_authenticated:
+            is_quiz_finished = self.request.theorist.quiz_scoreboard.solved_quizzes.filter(
+                uuid=self.object.uuid
+            ).exists()
+        else:
+            quiz_uuid = str(self.object.uuid)
+            is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
 
-class MathQuizGameMenuView(HXViewMixin, FormMixin, DetailView):
+        context['is_quiz_finished'] = is_quiz_finished
+        return context
+
+
+class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
     model = MathExpression
-    # form_class = MathQuizGameMenuForm
+    form_class = MathQuizGameMenuForm
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
 
     def get_queryset(self):
         return super().get_queryset().filter(math_quiz__uuid=self.kwargs['quiz_uuid'])
 
+    def get_form_kwargs(self):
+        kwargs = super().get_form_kwargs()
+        kwargs['request'] = self.request
+        kwargs['instance'] = self.get_object()
+        return kwargs
+
+    def get_success_url(self):
+        return None
+
+    def post(self, request, *args, **kwargs):
+        form = self.get_form()
+        self.object = self.get_object()
+        if form.is_valid():
+            return self.form_valid(form)
+        else:
+            return self.form_invalid(form)
+
     def _get_anonymous_progress(self):
-        quiz_uuid = str(self.kwargs['quiz_uuid'])
-        solved_expressions = self.request.session.get(f'expr_for_quiz_{quiz_uuid}', [])
-        return len(solved_expressions)  # TODO: Process saving expressions in session while saving by anonymous user!
+        solved_expressions = self.request.session.get('solved_expr', [])
+        return len(solved_expressions)
 
     def _get_progress_value(self, as_percentage):
         theorist = getattr(self.request, 'theorist', None)
@@ -64,6 +97,12 @@ class MathQuizGameMenuView(HXViewMixin, FormMixin, DetailView):
         current_expression_pk = self.get_object().pk
         expressions_to_search = list(self.get_queryset().values_list('pk', flat=True))
         context['expression_pos'] = expressions_to_search.index(current_expression_pk) + 1
-        context['step'] = self._get_progress_value(as_percentage=False)
+        context['progress_as_counter'] = self._get_progress_value(as_percentage=False)
         context['progress'] = self._get_progress_value(as_percentage=True)
+        context['task'] = MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first()
+        try:
+            next_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) + 1]
+        except IndexError:
+            next_task_pk = None
+        context['next_task_pk'] = next_task_pk
         return context

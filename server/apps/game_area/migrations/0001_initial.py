@@ -8,6 +8,16 @@ import uuid
 from django.db import migrations, models
 
 
+def generate_scoreboards(apps, schema_editor):
+    MathQuizScoreboard = apps.get_model('game_area', 'MathQuizScoreboard')
+    Theorist = apps.get_model('theorist', 'Theorist')
+    to_create = []
+
+    for theorist in Theorist.objects.all():
+        to_create.append(MathQuizScoreboard(solved_by=theorist))
+    MathQuizScoreboard.objects.bulk_create(to_create)
+
+
 class Migration(migrations.Migration):
     initial = True
 
@@ -287,4 +297,5 @@ class Migration(migrations.Migration):
             name='solved_quizzes',
             field=models.ManyToManyField(blank=True, through='game_area.MathSolvedQuizzes', to='game_area.mathquiz'),
         ),
+        migrations.RunPython(generate_scoreboards, reverse_code=migrations.RunPython.noop),
     ]

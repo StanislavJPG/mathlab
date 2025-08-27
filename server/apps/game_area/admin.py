@@ -1,9 +1,11 @@
 from django import forms
 from django.contrib import admin
+from django.contrib.admin.widgets import RelatedFieldWidgetWrapper
 from django.core.exceptions import ValidationError
 from django.db.models import Q
 from django.forms import BaseInlineFormSet
 from django_admin_inline_paginator_plus.admin import TabularInlinePaginated
+from django.contrib.admin import site as admin_site
 
 from server.apps.game_area.models import (
     MathExpression,
@@ -19,6 +21,11 @@ from server.apps.game_area.models import (
 @admin.register(MathQuizChoiceAnswer)
 class MathQuizChoiceAnswerAdmin(admin.ModelAdmin):
     list_display = ('id', 'answer', 'is_correct_answer')
+
+
+@admin.register(MathMultipleChoiceTaskAnswer)
+class MathMultipleChoiceTaskAnswerAdmin(admin.ModelAdmin):
+    list_display = ('id', 'task', 'answer')
 
 
 class SingleCorrectAnswerFormSet(BaseInlineFormSet):
@@ -38,7 +45,7 @@ class MathMultipleChoiceTaskAnswerForm(forms.ModelForm):
     answer = forms.ModelChoiceField(queryset=MathQuizChoiceAnswer.objects.none())
 
     class Meta:
-        model = MathQuizChoiceAnswer
+        model = MathMultipleChoiceTaskAnswer
         fields = '__all__'
 
     def __init__(self, *args, **kwargs):
@@ -52,6 +59,8 @@ class MathMultipleChoiceTaskAnswerForm(forms.ModelForm):
             )
 
         self.fields['answer'].queryset = available_answers
+        rel = self.instance._meta.get_field('answer').remote_field
+        self.fields['answer'].widget = RelatedFieldWidgetWrapper(self.fields['answer'].widget, rel, admin_site)
 
 
 class MathMultipleChoiceTaskAnswerInline(TabularInlinePaginated):
@@ -81,7 +90,7 @@ class MathExpressionInline(TabularInlinePaginated):
 @admin.register(MathQuiz)
 class MathQuizAdmin(admin.ModelAdmin):
     list_display = ('id', 'category', 'difficulty', 'finish_score_reward')
-    readonly_fields = ('average_solve_time_statistic', 'math_expressions_count')
+    readonly_fields = ('average_solve_time_statistic',)
     inlines = (MathExpressionInline,)
 
 

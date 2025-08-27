@@ -8,7 +8,6 @@ from django.utils.translation import gettext_lazy as _
 from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
 from django_lifecycle.conditions import WhenFieldHasChanged
 from dynamic_filenames import FilePattern
-from slugify import slugify
 
 from server.apps.game_area.choices import (
     MathQuizCategoryChoices,
@@ -124,11 +123,11 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     )
 
     author = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True)
-    author_name_slug = models.SlugField(max_length=255, blank=True)  # to save history while theorist being deleted
+    author_name = models.CharField(max_length=255, blank=True)  # to save history while theorist being deleted
 
     average_solve_time_statistic = models.DurationField(verbose_name=_('average solve time'), null=True, blank=True)
 
-    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True, default=0)
+    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True, default=timedelta(0))
     math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
 
     objects = MathQuizQuerySet.as_manager()
@@ -153,8 +152,8 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     @hook(AFTER_SAVE, condition=WhenFieldHasChanged('author'))
     def after_author_save(self):
         if self.author_id:
-            self.author_name_slug = slugify(self.author.full_name)
-            self.save(update_fields=['author_name_slug'])
+            self.author_name = self.author.full_name
+            self.save(update_fields=['author_name'])
 
     @hook(AFTER_SAVE)
     def after_save(self):
@@ -181,17 +180,20 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
     math_quiz = models.ForeignKey('game_area.MathQuiz', on_delete=models.CASCADE)
     math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
-    best_time_taken = models.DurationField(verbose_name=_('best time taken to finish this quiz'), blank=True)
+    best_time_taken = models.DurationField(
+        verbose_name=_('best time taken to finish this quiz'), blank=True, default=timedelta(0)
+    )
 
     class Meta:
         verbose_name = _('Math solved quizzes')
         unique_together = (('math_quiz', 'math_quiz_scoreboard'),)
 
     def clean(self):
-        if self.best_time_taken > self.math_quiz.max_time_to_solve:
-            raise ValidationError(
-                _('You have only %s to successfully finish this quiz.') % self.math_quiz.max_time_to_solve
-            )
+        if hasattr(self, 'math_quiz'):
+            if self.best_time_taken > self.math_quiz.max_time_to_solve:
+                raise ValidationError(
+                    _('You have only %s to successfully finish this quiz.') % self.math_quiz.max_time_to_solve
+                )
 
     @hook(AFTER_SAVE)
     def after_save(self):
@@ -241,7 +243,7 @@ class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     solved_by = models.OneToOneField(
         'theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True, related_name='quiz_scoreboard'
     )
-    solved_by_name_slug = models.SlugField(max_length=255, blank=True)  # to save history while theorist being deleted
+    solved_by_name = models.CharField(max_length=255, blank=True)  # to save history while theorist being deleted
 
     most_popular_quiz_type = models.CharField(max_length=2, choices=MathQuizCategoryChoices)
     time_taken_to_solve_quizzes = models.DurationField(
@@ -257,9 +259,9 @@ class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         verbose_name_plural = _('Math Scoreboards')
 
     def __str__(self):
-        return f'Quiz Scoreboard | {self.solved_by_name_slug} | {self.__class__.__name__} | id - {self.id}'
+        return f'Quiz Scoreboard | {self.solved_by_name} | {self.__class__.__name__} | id - {self.id}'
 
     @hook(AFTER_CREATE)
     def after_create(self):
-        self.solved_by_name_slug = slugify(self.solved_by.full_name)
-        self.save(update_fields=['solved_by_name_slug'])
+        self.solved_by_name = self.solved_by.full_name
+        self.save(update_fields=['solved_by_name'])

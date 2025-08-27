@@ -1,7 +1,10 @@
+from datetime import timedelta
+
 from django import forms
+from django.db import transaction
 from django.forms import HiddenInput
 
-from server.apps.game_area.models import MathQuizScoreboard
+from server.apps.game_area.models import MathQuizScoreboard, MathSolvedQuizzes
 
 
 class MathQuizGameMenuForm(forms.Form):
@@ -16,13 +19,29 @@ class MathQuizGameMenuForm(forms.Form):
             self.fields['answer'].widget.attrs = {'class': 'form-control'}
 
     def _process_not_auth_user(self):
+        session = self.request.session
         solved_expr_uuid = str(self.instance.uuid)
-        solved = self.request.session.get('solved_expr', [])
-        if solved_expr_uuid not in solved:
-            solved.append(solved_expr_uuid)
-            self.request.session['solved_expr'] = solved
-            self.request.session.modified = True
 
+        # Update solved expressions
+        solved_expressions = set(session.get('solved_expr', []))
+        if solved_expr_uuid not in solved_expressions:
+            solved_expressions.add(solved_expr_uuid)
+            session['solved_expr'] = list(solved_expressions)
+            session.modified = True
+
+        # Check if all expressions in the quiz are solved
+        quiz = self.instance.math_quiz
+        quiz_uuid = str(quiz.uuid)
+        quiz_expression_uuids = set(quiz.math_expressions.values_list('uuid', flat=True))
+
+        if quiz_expression_uuids.issubset(solved_expressions):
+            solved_quizzes = set(session.get('solved_quizzes', []))
+            if quiz_uuid not in solved_quizzes:
+                solved_quizzes.add(quiz_uuid)
+                session['solved_quizzes'] = list(solved_quizzes)
+                session.modified = True
+
+    @transaction.atomic
     def save(self):
         answer = self.cleaned_data['answer']
 
@@ -36,6 +55,7 @@ class MathQuizGameMenuForm(forms.Form):
 
                 scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
                 scoreboard.solved_expressions.add(self.instance)
+                # self.request.theorist.quiz_scoreboard.refresh_from_db()  # because .theorist is lazy method
 
                 is_quiz_done = (
                     self.request.theorist.quiz_scoreboard.solved_expressions.filter(
@@ -43,4 +63,10 @@ class MathQuizGameMenuForm(forms.Form):
                     ).count()
                     >= self.instance.math_quiz.math_expressions.all().count()
                 )
-                print(is_quiz_done)
+                if is_quiz_done:
+                    MathSolvedQuizzes.objects.create(
+                        math_quiz=self.instance.math_quiz,
+                        math_quiz_scoreboard=scoreboard,
+                        best_time_taken=timedelta(minutes=15),  # TODO: Replace this placeholder
+                    )
+                return scoreboard

@@ -96,13 +96,24 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         context = super().get_context_data(**kwargs)
         current_expression_pk = self.get_object().pk
         expressions_to_search = list(self.get_queryset().values_list('pk', flat=True))
-        context['expression_pos'] = expressions_to_search.index(current_expression_pk) + 1
-        context['progress_as_counter'] = self._get_progress_value(as_percentage=False)
-        context['progress'] = self._get_progress_value(as_percentage=True)
-        context['task'] = MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first()
+        context.update(
+            {
+                'expression_pos': expressions_to_search.index(current_expression_pk) + 1,
+                'progress_as_counter': self._get_progress_value(as_percentage=False),
+                'progress': self._get_progress_value(as_percentage=True),
+                'task': MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first(),
+            }
+        )
         try:
             next_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) + 1]
         except IndexError:
             next_task_pk = None
+
+        if expressions_to_search.index(current_expression_pk) - 1 >= 0:
+            previous_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) - 1]
+        else:
+            previous_task_pk = None
+
         context['next_task_pk'] = next_task_pk
+        context['previous_task_pk'] = previous_task_pk
         return context

@@ -15,9 +15,7 @@
       {% endif %}
     </p>
 
-    <form {% render_form_spinner_attrs %}
-          hx-post="{{ request.path }}"
-    >
+    <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}">
       <div class="mt-4">
         {% render_field form.answer %}
 
@@ -41,18 +39,26 @@
         </div>
         <small class="text-light">{% translate 'Progress' %}: {{ progress_as_counter }}/{{ expression.math_quiz.math_expressions_count }}</small>
       </div>
-      {% if next_task_pk %}
-        <div class="d-flex flex-column align-items-center text-center mt-4">
-          {% translate 'Confirm answer' as btn_label %}
-          {% render_submit_button btn_label class="btn btn-success px-4 mb-2" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
+      <div class="d-flex flex-column align-items-center text-center mt-4">
+        {% translate 'Confirm answer' as btn_label %}
+        {% render_submit_button btn_label class="btn btn-success px-4 mb-2" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
+        {% if next_task_pk %}
           <button class="btn btn-warning px-4" id="next-quiz-btn"
                   hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
                   hx-target=".quiz-card"
                   type="button">
             <i class="ti ti-arrow-right"></i> {% translate 'Next expression' %}
           </button>
-        </div>
-      {% endif %}
+        {% endif %}
+        {% if previous_task_pk %}
+          <button class="btn btn-warning px-4 mt-2" id="previous-quiz-btn"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid previous_task_pk %}"
+                  hx-target=".quiz-card"
+                  type="button">
+            <i class="ti ti-arrow-left"></i> {% translate 'Previous expression' %}
+          </button>
+        {% endif %}
+      </div>
     </form>
   {% else %}
     <div class="pyro">

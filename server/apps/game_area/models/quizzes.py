@@ -229,14 +229,20 @@ class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
         self.math_quiz_scoreboard.save(update_fields=['most_popular_quiz_type'], skip_hooks=True)
 
 
-# class MathSolvedExpressions(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
-#     pass
+class MathSolvedExpressions(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
+    math_expression = models.ForeignKey('game_area.MathExpression', on_delete=models.CASCADE)
+    math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Math solved expressions')
+        unique_together = (('math_expression', 'math_quiz_scoreboard'),)
 
 
 class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     solved_expressions = models.ManyToManyField(
-        'game_area.MathExpression', blank=True
-    )  # TODO: Add through model like in `solved_quizzes`. Because we need to watch board_score in that model.
+        'game_area.MathExpression', through='game_area.MathSolvedExpressions', blank=True
+    )
 
     solved_quizzes = models.ManyToManyField('game_area.MathQuiz', through='game_area.MathSolvedQuizzes', blank=True)
 

@@ -16,6 +16,7 @@ from server.apps.game_area.models import (
     MathMultipleChoiceTaskAnswer,
     MathQuizChoiceAnswer,
 )
+from server.apps.game_area.models.quizzes import MathSolvedExpressions
 
 
 @admin.register(MathQuizChoiceAnswer)
@@ -94,11 +95,15 @@ class MathQuizAdmin(admin.ModelAdmin):
     inlines = (MathExpressionInline,)
 
 
-class MathQuizScoreboardInline(admin.TabularInline):
+class MathSolvedQuizzesInline(admin.TabularInline):
     model = MathSolvedQuizzes
+
+
+class MathSolvedExpressionsInline(admin.TabularInline):
+    model = MathSolvedExpressions
 
 
 @admin.register(MathQuizScoreboard)
 class MathQuizScoreboardAdmin(admin.ModelAdmin):
     list_display = ('id', 'solved_by', 'board_score')
-    inlines = (MathQuizScoreboardInline,)
+    inlines = (MathSolvedQuizzesInline, MathSolvedExpressionsInline)

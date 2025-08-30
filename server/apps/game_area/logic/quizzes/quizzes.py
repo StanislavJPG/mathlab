@@ -5,6 +5,7 @@ from django_filters.views import FilterView
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
 from server.apps.game_area.forms import MathQuizGameMenuForm
 from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard, MathMultipleChoiceTask
+from server.apps.game_area.models.quizzes import MathSolvedExpressions
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
@@ -34,14 +35,18 @@ class MathQuizBaseQuizView(DetailView):
         self.request: AuthenticatedHttpRequest
         context = super().get_context_data(**kwargs)
         self.object = self.get_object()
+
         if self.request.user.is_authenticated:
             is_quiz_finished = self.request.theorist.quiz_scoreboard.solved_quizzes.filter(
                 uuid=self.object.uuid
             ).exists()
+            scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
+            last_solved_expr = scoreboard.solved_expressions.all().last()
         else:
             quiz_uuid = str(self.object.uuid)
             is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
-
+            last_solved_expr = ...
+        context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
         context['is_quiz_finished'] = is_quiz_finished
         return context
 
@@ -53,7 +58,7 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
     context_object_name = 'expression'
 
     def get_queryset(self):
-        return super().get_queryset().filter(math_quiz__uuid=self.kwargs['quiz_uuid'])
+        return super().get_queryset().filter(math_quiz__uuid=self.kwargs['quiz_uuid']).select_related('math_quiz')
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
@@ -72,9 +77,12 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
-    def _get_anonymous_progress(self):
-        solved_expressions = self.request.session.get('solved_expr', [])
-        return len(solved_expressions)
+    def _get_anonymous_progress(self, get_correct_solved_expressions=True):
+        if get_correct_solved_expressions:
+            solved_expressions = self.request.session.get('solved_expr', [])
+            return len(solved_expressions)
+        incorrect_solved_expressions = self.request.session.get('incorrect_solved_expr', [])
+        return len(incorrect_solved_expressions)
 
     def _get_progress_value(self, as_percentage):
         theorist = getattr(self.request, 'theorist', None)
@@ -91,6 +99,28 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         return (
             round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
         )
+
+    def _get_current_task_scoreboard(self):
+        theorist = getattr(self.request, 'theorist', None)
+
+        if not theorist or not self.request.user.is_authenticated:
+            incorrect_solved_expr = self.request.session.get('incorrect_solved_expr', [])
+            solved_expressions = self.request.session.get('solved_expr', [])
+            expr_uuid = str(self.get_object().uuid)
+
+            return {
+                'current_task_is_finished': expr_uuid in incorrect_solved_expr + solved_expressions,
+                'current_task_is_successfully_finished': expr_uuid in solved_expressions,
+            }
+
+        scoreboard = MathSolvedExpressions.objects.filter(
+            math_expression=self.get_object(), math_quiz_scoreboard=self.request.theorist.quiz_scoreboard
+        )
+
+        return {
+            'current_task_is_finished': scoreboard.exists(),
+            'current_task_is_successfully_finished': scoreboard.filter(is_correct=True).exists(),
+        }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
@@ -116,4 +146,5 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
 
         context['next_task_pk'] = next_task_pk
         context['previous_task_pk'] = previous_task_pk
+        context.update(self._get_current_task_scoreboard())
         return context

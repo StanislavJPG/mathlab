@@ -1,3 +1,4 @@
+from django.contrib.sessions.backends.base import SessionBase
 from django.http import HttpRequest as HttpRequestBase
 
 from django_htmx.middleware import HtmxDetails
@@ -15,3 +16,4 @@ class AuthenticatedHttpRequest(HttpRequestBase):
     htmx: HtmxDetails
     user: CustomUser
     theorist: Theorist
+    session: SessionBase

@@ -40,7 +40,7 @@
       {# clock will be placed here #}
     </div>
     <div class="card quiz-card shadow-lg"
-         hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+         hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
          hx-trigger="click from:#start-quiz-btn"
     >
       <div class="card-body text-center">

@@ -23,8 +23,8 @@ class MathQuizChoiceAnswer(TimeStampedModelMixin):
     is_correct_answer = models.BooleanField(default=False)
 
     class Meta:
-        verbose_name = _('Math Quiz Choice Question')
-        verbose_name_plural = _('Math Quiz Choice Questions')
+        verbose_name = _('Math Quiz Choice Answer')
+        verbose_name_plural = _('Math Quiz Choice Answers')
 
     def __str__(self):
         return f'{self.answer} | {self.__class__.__name__} | id - {self.pk}'
@@ -102,10 +102,6 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def get_multiple_choice_question(self):
         if hasattr(self.multiple_choices_quizzes.first(), 'question'):
             return self.multiple_choices_quizzes.first().question
-
-    def is_expression_solved_by_theorist(self, theorist):
-        scoreboard = MathQuizScoreboard.objects.get(solved_by=theorist)
-        return scoreboard.solved_expressions.filter(uuid=self.uuid).exists()
 
 
 math_description_image_upload_to = FilePattern(

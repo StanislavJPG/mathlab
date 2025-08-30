@@ -9,7 +9,9 @@
     <div class="text-center mb-3">
       {% for stat_expression in expressions %}
         <button type="button"
-                class="btn btn{% if stat_expression.is_solved %}-success{% else %}-secondary{% endif %}
+                hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid stat_expression.pk %}"
+                hx-target=".quiz-card"
+                class="btn btn{% if stat_expression.is_solved %}-success{% elif stat_expression.is_solved_as_fail %}-danger{% else %}-secondary{% endif %}
                        {% if expression.uuid == stat_expression.uuid %}btn-lg border border-1{% endif %}">
           {{ forloop.counter }}
         </button>
@@ -64,6 +66,19 @@
       </div>
       <div class="d-flex flex-column align-items-center text-center mt-4">
         {% if not current_task_is_finished %}
+          {% if next_task_pk %}
+            <span class="d-none"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                  hx-target=".quiz-card"
+                  hx-trigger="click from:#confirm-expr-btn"
+            ></span>
+          {% else %}
+            <span class="d-none"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid previous_task_pk %}"
+                  hx-target=".quiz-card"
+                  hx-trigger="click from:#confirm-expr-btn"  {# TODO: Prepare and fix logic #}
+            ></span>
+          {% endif %}
           {% translate 'Confirm answer' as btn_label %}
           {% render_submit_button btn_label class="btn btn-success px-4 mb-2" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
         {% endif %}

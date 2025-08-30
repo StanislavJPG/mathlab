@@ -136,8 +136,19 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             }
         )
         if self.request.user.is_authenticated:
+            expr_for_stat = MathSolvedExpressions.objects.filter(
+                math_quiz_scoreboard__solved_by=self.request.theorist
+            ).values_list('math_expression__uuid', 'is_correct')
+            solved_uuids = [expr[0] for expr in expr_for_stat if expr[1]]
+            failed_expressions = [expr[0] for expr in expr_for_stat if not expr[1]]
+
             context['expressions'] = [
-                {'uuid': obj.uuid, 'is_solved': obj.is_expression_solved_by_theorist(self.request.theorist)}
+                {
+                    'pk': obj.pk,
+                    'uuid': obj.uuid,
+                    'is_solved': obj.uuid in solved_uuids,
+                    'is_solved_as_fail': obj.uuid in failed_expressions,
+                }
                 for obj in self.get_queryset()
             ]
         else:

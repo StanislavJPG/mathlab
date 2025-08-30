@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'django_tables2',
     'notifications',
     'django_page_resolver',
+    'django_admin_inline_paginator_plus',
     # common
     'server.common',
     # apps
@@ -62,6 +63,7 @@ INSTALLED_APPS = [
     'server.apps.theorist_community.apps.TheoristCommunityConfig',
     'server.apps.theorist_drafts.apps.DraftsConfig',
     'server.apps.forum.apps.ForumConfig',
+    'server.apps.game_area.apps.GameAreaConfig',
     'server.apps.math_news.apps.MathNewsConfig',
     'server.apps.solvers.apps.SolversConfig',
     'server.apps.theorist.apps.TheoristConfig',

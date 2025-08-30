@@ -900,6 +900,24 @@ argon2 = ["argon2-cffi (>=19.1.0)"]
 bcrypt = ["bcrypt"]
 
 [[package]]
+name = "django-admin-inline-paginator-plus"
+version = "0.1.4"
+description = "The 'Django Admin Inline Paginator Plus' is simple way to paginate your inlines in Django admin"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "django_admin_inline_paginator_plus-0.1.4-py3-none-any.whl", hash = "sha256:a988bf248781e06c5b5daf88dd97f8b808c6842bd935babd987a8d17bfe099f3"},
+    {file = "django_admin_inline_paginator_plus-0.1.4.tar.gz", hash = "sha256:0fb61009483d94a386a7c1c5e163551f511abc9ae41791d7af3da892a3139754"},
+]
+
+[package.dependencies]
+django = "*"
+
+[package.extras]
+dev = ["coverage", "mypy", "pytest", "ruff"]
+
+[[package]]
 name = "django-admin-shortcuts"
 version = "3.0.1"
 description = "Add simple and pretty shortcuts to the django admin homepage."
@@ -4271,4 +4289,4 @@ testing = ["coverage[toml]", "zope.event", "zope.testing"]
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.10"
-content-hash = "75afa36340e3451e91d7e774553873ebefe09c6f25aaf589548af7147a897aeb"
+content-hash = "6f4583c5687b6d4e180fcc5d2fa36d08dc126fd710021780800b29b6ba2fdf6b"

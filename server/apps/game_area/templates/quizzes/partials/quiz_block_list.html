@@ -1,0 +1,98 @@
+{% load i18n static page_resolvers widget_tweaks widened_widget_tweaks %}
+
+<div class="container-fluid mt-4" id="quiz-container">
+  <div class="row">
+    <div class="col-md-3 mb-4">
+      <div class="card border-primary">
+        <div class="card-header bg-primary text-white">
+          <h5 class="mb-0">{% translate 'Filter Quizzes' %}</h5>
+        </div>
+        <div class="card-body">
+          <form hx-get="{{ request.path }}"
+                hx-target="#quiz-container"
+                hx-select="#quiz-container"
+                hx-swap="outerHTML">
+            <div class="mb-3">
+              <label class="form-label">{% translate 'Difficulties' %}</label>
+              {% render_field filter.form.difficulties class="form-control selectpicker" data-style="btn-default" data-live-search="true" %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{% translate 'Categories' %}</label>
+              {% render_field filter.form.categories class="form-control selectpicker" data-style="btn-default" data-live-search="true" %}
+            </div>
+            <div class="mb-3">
+              <label class="form-label">{% translate 'Finish score reward' %}</label>
+              {% render_field filter.form.finish_score_reward class="form-control" %}
+            </div>
+            <div class="d-grid">
+              {% translate 'Apply' as btn_label %}
+              {% render_submit_button btn_label spinner_id="filter-block-wait-spinner" class="btn btn-primary mb-2" with_icon="ti ti-filter" %}
+              <button type="button" hx-get="{{ request.path }}" class="btn btn-outline-primary"><i
+                class="ti ti-backspace"></i> {% translate 'Clear' %}</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-md-9" id="quizzes-list-js">
+      <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-2 row-cols-xl-3 justify-content-center">
+        {% if quizzes.exists %}
+          {% for quiz in quizzes %}
+            <div class="col mb-5">
+              <div class="card h-100 border border-3 p-2">
+                <img class="card-img-top"
+                     src="{% if quiz.math_description_image %}{{ quiz.math_description_image.url }}{% else %}{% static 'img/base/math_quiz_default_pic.png' %}{% endif %}"
+                     width="200px"
+                     height="250px"
+                     alt="quiz-image">
+                <div class="card-body p-4">
+                  <div class="text-center">
+                    <h5 class="fw-bolder">
+                      {% if quiz.difficulty == 'ES' %}
+                        <i title="{% translate 'Easy quiz' %}" class="ti ti-circle text-success"></i>
+                      {% elif quiz.difficulty == 'NL' %}
+                        <i title="{% translate 'Normal quiz' %}" class="ti ti-square text-info"></i>
+                      {% elif quiz.difficulty == 'HD' %}
+                        <i title="{% translate 'Hard quiz' %}" class="ti ti-triangle text-warning"></i>
+                      {% else %}
+                        <i title="{% translate 'Extra hard quiz' %}" class="ti ti-chart-grid-dots text-danger"></i>
+                      {% endif %}
+                      {{ quiz.get_category_display }}
+                    </h5>
+                    <span class="small text-secondary" title="{% translate 'Time to finish the quiz' %}">
+                      <i class="ti ti-clock-hour-9"></i> {{ quiz.max_time_to_solve }}
+                    </span>
+                    <span class="small text-secondary ms-2" title="{% translate 'Expressions to solve count' %}">
+                      <i class="ti ti-assembly"></i> {{ quiz.math_expressions_count }}
+                    </span>
+                    <span class="small text-secondary ms-2" title="{% translate 'Quiz reward' %}">
+                      <i class="ti ti-award"></i> {{ quiz.finish_score_reward }}
+                    </span>
+                    <span class="small text-secondary ms-2" title="{% translate 'Average solve time statistics' %}">
+                      <i class="ti ti-chart-arrows-vertical"></i> {{ quiz.average_solve_time_statistic|default:0 }}
+                    </span>
+                    <span class="small text-secondary ms-2" title="{% translate 'Author' %}">
+                      <i class="ti ti-user"></i> {{ quiz.author_name|default:'Anonymous' }}
+                    </span>
+                  </div>
+                </div>
+                <div class="card-footer p-2 pt-0 border-top-0 bg-transparent mt-4">
+                  <div class="text-center">
+                    <a class="btn btn-primary btn-lg" href="{% url 'mathlab:gamearea:quizzes:mathquiz-base' quiz.uuid %}">
+                      <i class="ti ti-player-play"></i> {% translate 'Start the quiz' %}
+                    </a>
+                  </div>
+                </div>
+              </div>
+            </div>
+          {% endfor %}
+        {% else %}
+          {% translate 'Still empty! 🥱' as main_msg %}
+          {% include 'alerts/empty_alert.html' with main_msg=main_msg %}
+        {% endif %}
+      </div>
+      {% render_htmx_pagination "#quizzes-list-js" %}
+    </div>
+  </div>
+</div>

@@ -1,0 +1,126 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+{% if progress_as_counter >= expression.math_quiz.math_expressions_count %}
+  <link rel="stylesheet" href="{% static 'css/features/fireworks.css' %}">
+{% endif %}
+
+<div class="card-body">
+  {% if progress_as_counter < expression.math_quiz.math_expressions_count %}
+    <div class="text-center mb-3">
+      {% for stat_expression in expressions %}
+        <button type="button"
+                hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid stat_expression.pk %}"
+                hx-target=".quiz-card"
+                class="btn btn{% if stat_expression.is_solved %}-success{% elif stat_expression.is_solved_as_fail %}-danger{% else %}-secondary{% endif %}
+                       {% if expression.uuid == stat_expression.uuid %}btn-lg border border-1{% endif %}">
+          {{ forloop.counter }}
+        </button>
+      {% endfor %}
+    </div>
+    <h4 class="card-title mb-3">Question {{ expression_pos }} of {{ expression.math_quiz.math_expressions_count }}</h4>
+    <p class="fs-5">
+      {% if expression.has_multiple_choices %}
+        {{ expression.get_multiple_choice_question }}
+      {% else %}
+        {{ expression.latex_expression }}
+      {% endif %}
+    </p>
+
+    <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}">
+      <div class="mt-4">
+        {% render_field form.answer %}
+
+        {% if expression.has_multiple_choices %}
+          {% for answer_obj in task.answers.all %}
+            {% if not current_task_is_finished %}
+              <button type="button" class="btn btn-outline-light btn-answer" onclick="selectAnswer('{{ answer_obj.answer }}')">
+                {{ answer_obj.answer }}
+              </button>
+            {% else %}
+              <button type="button"
+                      {% if answer_obj.is_correct_answer %}
+                        class="btn btn-success btn-answer disabled"
+                      {% elif not answer_obj.is_correct_answer %}
+                        class="btn btn-danger btn-answer disabled"
+                      {% else %}
+                        class="btn btn-outline-light btn-answer disabled"
+                      {% endif %}
+              >
+                {% if answer_obj.is_correct_answer %}✅{% endif %} {{ answer_obj.answer }}
+              </button>
+            {% endif %}
+          {% endfor %}
+        {% else %}
+        {% endif %}
+      </div>
+
+      <div class="mt-4">
+        <div class="progress">
+          <div class="progress-bar" role="progressbar"
+               style="width: {{ progress }}%;"
+               aria-valuenow="30"
+               aria-valuemin="0"
+               aria-valuemax="100"></div>
+        </div>
+        <small class="text-light">{% translate 'Progress' %}: {{ progress_as_counter }}/{{ expression.math_quiz.math_expressions_count }}</small>
+      </div>
+      <div class="d-flex flex-column align-items-center text-center mt-4">
+        {% if not current_task_is_finished %}
+          {% if next_task_pk %}
+            <span class="d-none"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                  hx-target=".quiz-card"
+                  hx-trigger="click from:#confirm-expr-btn"
+            ></span>
+          {% else %}
+            <span class="d-none"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid previous_task_pk %}"
+                  hx-target=".quiz-card"
+                  hx-trigger="click from:#confirm-expr-btn"  {# TODO: Prepare and fix logic #}
+            ></span>
+          {% endif %}
+          {% translate 'Confirm answer' as btn_label %}
+          {% render_submit_button btn_label class="btn btn-success px-4 mb-2" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
+        {% endif %}
+        <div class="d-flex mt-2">
+          {% if previous_task_pk %}
+            <button class="btn btn-warning px-4 me-2 btn-sm" id="previous-quiz-btn"
+                    hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid previous_task_pk %}"
+                    hx-target=".quiz-card"
+                    type="button">
+              <i class="ti ti-arrow-left"></i> {% translate 'Previous expression' %}
+            </button>
+          {% endif %}
+          {% if next_task_pk %}
+            <button class="btn btn-warning px-4 btn-sm" id="next-quiz-btn"
+                    hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                    hx-target=".quiz-card"
+                    type="button">
+              {% translate 'Next expression' %} <i class="ti ti-arrow-right"></i>
+            </button>
+          {% endif %}
+        </div>
+      </div>
+    </form>
+  {% else %}
+    <div class="pyro">
+      <div class="before"></div>
+      <div class="after"></div>
+    </div>
+
+    <div class="text-center mb-4">
+      <p class="lead">{% translate 'Congratulations! You finished all the tasks!' %}</p>
+      <p class="lead">{% translate 'Your score award for finishing is ' %}{{ expression.math_quiz.get_html_score_reward }}!</p>
+      {# clock will be placed here #}
+    </div>
+  {% endif %}
+</div>
+
+<script>
+  function selectAnswer(value) {
+    document.getElementById('id_answer').value = value;
+
+    document.querySelectorAll('.btn-answer').forEach(btn => btn.classList.remove('active'));
+    event.target.classList.add('active');
+  }
+</script>

@@ -1,0 +1,273 @@
+from datetime import timedelta
+
+from django.core.exceptions import ValidationError
+from django.db import models
+from django.db.models import Avg, Sum, Count
+from django.utils.safestring import mark_safe
+from django.utils.translation import gettext_lazy as _
+from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
+from django_lifecycle.conditions import WhenFieldHasChanged
+from dynamic_filenames import FilePattern
+
+from server.apps.game_area.choices import (
+    MathQuizCategoryChoices,
+    MathQuizDifficultyChoices,
+    MathQuizScoreboardScoreChoices,
+)
+from server.apps.game_area.querysets import MathQuizQuerySet
+from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
+
+
+class MathQuizChoiceAnswer(TimeStampedModelMixin):
+    answer = models.CharField(max_length=255)
+    is_correct_answer = models.BooleanField(default=False)
+
+    class Meta:
+        verbose_name = _('Math Quiz Choice Answer')
+        verbose_name_plural = _('Math Quiz Choice Answers')
+
+    def __str__(self):
+        return f'{self.answer} | {self.__class__.__name__} | id - {self.pk}'
+
+
+class MathMultipleChoiceTaskAnswer(TimeStampedModelMixin, LifecycleModel):
+    task = models.ForeignKey('game_area.MathMultipleChoiceTask', on_delete=models.CASCADE)
+    answer = models.ForeignKey('game_area.MathQuizChoiceAnswer', on_delete=models.CASCADE)
+
+    class Meta:
+        verbose_name = _('Math Multiple Choice Task Answer')
+        verbose_name_plural = _('Math Multiple Choice Task Answers')
+        unique_together = ('task', 'answer')
+
+
+class MathMultipleChoiceTask(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    math_expression = models.ForeignKey(
+        'game_area.MathExpression',
+        on_delete=models.CASCADE,
+        related_name='multiple_choices_quizzes',
+    )
+    question = models.TextField()
+    answers = models.ManyToManyField(
+        'game_area.MathQuizChoiceAnswer',
+        through='game_area.MathMultipleChoiceTaskAnswer',
+    )
+
+    class Meta:
+        verbose_name = _('Math Multiple Choice Task')
+        verbose_name_plural = _('Math Multiple Choice Task')
+
+    def __str__(self):
+        return f'{self.question} | {self.__class__.__name__} | id - {self.pk}'
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        if self.math_expression.multiple_choices_quizzes.exists():
+            self.math_expression.has_multiple_choices = True
+            self.math_expression.save(update_fields=['has_multiple_choices'], skip_hooks=True)
+
+
+class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    latex_expression = models.TextField()
+    has_multiple_choices = models.BooleanField(default=False)
+
+    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'))
+    math_quiz = models.ForeignKey(
+        'game_area.MathQuiz',
+        on_delete=models.SET_NULL,
+        null=True,
+        verbose_name=_('Math Quiz'),
+        related_name='math_expressions',
+    )
+    score_reward = models.PositiveSmallIntegerField(verbose_name=_('score reward for the single expression'), default=3)
+
+    class Meta:
+        ordering = ('created_at',)
+        verbose_name = _('Math Expression')
+        verbose_name_plural = _('Math Expressions')
+
+    def __str__(self):
+        return f'Expression | {self.__class__.__name__} | id - {self.id}'
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        if self.math_quiz_id:
+            max_time = self.math_quiz.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time']
+            if self.math_quiz.max_time_to_solve >= max_time:
+                self.math_quiz.max_time_to_solve = max_time
+                self.math_quiz.save(update_fields=['max_time_to_solve'])
+
+            self.math_quiz.math_expressions_count = MathExpression.objects.filter(math_quiz=self.math_quiz).count()
+            self.math_quiz.save(update_fields=['math_expressions_count'])
+
+    def get_multiple_choice_question(self):
+        if hasattr(self.multiple_choices_quizzes.first(), 'question'):
+            return self.multiple_choices_quizzes.first().question
+
+
+math_description_image_upload_to = FilePattern(
+    filename_pattern='{app_label:.25}/quizzes/math_quiz/{instance.uuid}/image/{uuid:s}{ext}'
+)
+
+
+class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    math_description_image = models.ImageField(upload_to=math_description_image_upload_to, blank=True, null=True)
+    category = models.CharField(verbose_name='math quiz category', choices=MathQuizCategoryChoices, max_length=2)
+    difficulty = models.CharField(
+        verbose_name=_('difficulty'),
+        choices=MathQuizDifficultyChoices,
+        max_length=2,
+        default=MathQuizDifficultyChoices.NORMAL,
+    )
+    finish_score_reward = models.PositiveSmallIntegerField(
+        verbose_name=_('score reward for quiz finishing'), default=15
+    )
+
+    author = models.ForeignKey('theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True)
+    author_name = models.CharField(max_length=255, blank=True)  # to save history while theorist being deleted
+
+    average_solve_time_statistic = models.DurationField(verbose_name=_('average solve time'), null=True, blank=True)
+
+    max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True, default=timedelta(0))
+    math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
+
+    objects = MathQuizQuerySet.as_manager()
+
+    class Meta:
+        ordering = ('created_at',)
+        verbose_name = _('Math Quiz')
+        verbose_name_plural = _('Math Quizzes')
+
+    def __str__(self):
+        return f'Quiz | {self.get_category_display()} | {self.__class__.__name__} | id - {self.id}'
+
+    def clean(self):
+        if self.pk:
+            max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time'] or timedelta(0)
+            if self.max_time_to_solve < max_time:
+                raise ValidationError(
+                    'According to the related expressions, sum of max_time is %s. Change max_time at least to it.'
+                    % max_time
+                )
+
+    @hook(AFTER_SAVE, condition=WhenFieldHasChanged('author'))
+    def after_author_save(self):
+        if self.author_id:
+            self.author_name = self.author.full_name
+            self.save(update_fields=['author_name'])
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        max_time = self.math_expressions.aggregate(max_time=Sum('max_time_to_solve'))['max_time'] or timedelta(0)
+        if max_time >= self.max_time_to_solve:
+            self.max_time_to_solve = max_time
+            self.save(update_fields=['max_time_to_solve'], skip_hooks=True)
+
+    @mark_safe
+    def get_html_score_reward(self):
+        if self.finish_score_reward <= 15:
+            text_color = 'success'
+        elif self.finish_score_reward <= 30:
+            text_color = 'warning'
+        else:
+            text_color = 'danger'
+
+        html_to_return = (
+            f'<strong class="text-{text_color}" style="font-size: 27px;">{self.finish_score_reward}</strong>'
+        )
+        return html_to_return
+
+
+class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
+    math_quiz = models.ForeignKey('game_area.MathQuiz', on_delete=models.CASCADE)
+    math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
+    best_time_taken = models.DurationField(
+        verbose_name=_('best time taken to finish this quiz'), blank=True, default=timedelta(0)
+    )
+
+    class Meta:
+        verbose_name = _('Math solved quizzes')
+        unique_together = (('math_quiz', 'math_quiz_scoreboard'),)
+
+    def clean(self):
+        if hasattr(self, 'math_quiz'):
+            if self.best_time_taken > self.math_quiz.max_time_to_solve:
+                raise ValidationError(
+                    _('You have only %s to successfully finish this quiz.') % self.math_quiz.max_time_to_solve
+                )
+
+    @hook(AFTER_SAVE)
+    def after_save(self):
+        self.collect_solved_quiz_statistics()
+
+    def collect_solved_quiz_statistics(self):
+        def average_pass_time(expr):
+            return self.__class__.objects.filter(**expr).aggregate(avg_pass_time=Avg('best_time_taken'))[
+                'avg_pass_time'
+            ]
+
+        is_save_best_time = (
+            average_pass_time({'math_quiz_scoreboard': self.math_quiz_scoreboard})
+            < self.math_quiz_scoreboard.time_taken_to_solve_quizzes
+            if self.math_quiz_scoreboard.time_taken_to_solve_quizzes
+            else True
+        )  # save only best time of save anyway if there is time_taken_to_solve_quizzes is None
+        if is_save_best_time:
+            self.math_quiz.average_solve_time_statistic = average_pass_time({'math_quiz': self.math_quiz})
+            self.math_quiz_scoreboard.time_taken_to_solve_quizzes = average_pass_time(
+                {'math_quiz_scoreboard': self.math_quiz_scoreboard}
+            )
+
+            self.math_quiz.save(update_fields=['average_solve_time_statistic'], skip_hooks=True)
+            self.math_quiz_scoreboard.save(update_fields=['time_taken_to_solve_quizzes'], skip_hooks=True)
+
+        most_popular_category = (
+            self.math_quiz_scoreboard.solved_quizzes.values_list('category', flat=True)
+            .annotate(most_popular_categories=Count('category'))
+            .order_by('-most_popular_categories')[0]
+        )
+        self.math_quiz_scoreboard.most_popular_quiz_type = most_popular_category
+        self.math_quiz_scoreboard.save(update_fields=['most_popular_quiz_type'], skip_hooks=True)
+
+
+class MathSolvedExpressions(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
+    math_expression = models.ForeignKey('game_area.MathExpression', on_delete=models.CASCADE)
+    math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
+    is_correct = models.BooleanField(default=True)
+
+    class Meta:
+        verbose_name = _('Math solved expressions')
+        unique_together = (('math_expression', 'math_quiz_scoreboard'),)
+
+
+class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
+    solved_expressions = models.ManyToManyField(
+        'game_area.MathExpression', through='game_area.MathSolvedExpressions', blank=True
+    )
+
+    solved_quizzes = models.ManyToManyField('game_area.MathQuiz', through='game_area.MathSolvedQuizzes', blank=True)
+
+    solved_by = models.OneToOneField(
+        'theorist.Theorist', on_delete=models.SET_NULL, null=True, blank=True, related_name='quiz_scoreboard'
+    )
+    solved_by_name = models.CharField(max_length=255, blank=True)  # to save history while theorist being deleted
+
+    most_popular_quiz_type = models.CharField(max_length=2, choices=MathQuizCategoryChoices)
+    time_taken_to_solve_quizzes = models.DurationField(
+        verbose_name=_('time that was taken to solve all quizzes'), blank=True, null=True
+    )
+    board_score = models.CharField(
+        choices=MathQuizScoreboardScoreChoices, default=MathQuizScoreboardScoreChoices.EMPTY, max_length=2
+    )
+
+    class Meta:
+        ordering = ('created_at',)
+        verbose_name = _('Math Scoreboard')
+        verbose_name_plural = _('Math Scoreboards')
+
+    def __str__(self):
+        return f'Quiz Scoreboard | {self.solved_by_name} | {self.__class__.__name__} | id - {self.id}'
+
+    @hook(AFTER_CREATE)
+    def after_create(self):
+        self.solved_by_name = self.solved_by.full_name
+        self.save(update_fields=['solved_by_name'])

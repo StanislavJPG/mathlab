@@ -46,6 +46,7 @@ class MathQuizBaseQuizView(DetailView):
             quiz_uuid = str(self.object.uuid)
             is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
             last_solved_expr = ...
+
         context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
         context['is_quiz_finished'] = is_quiz_finished
         return context
@@ -134,6 +135,15 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
                 'task': MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first(),
             }
         )
+        if self.request.user.is_authenticated:
+            context['expressions'] = [
+                {'uuid': obj.uuid, 'is_solved': obj.is_expression_solved_by_theorist(self.request.theorist)}
+                for obj in self.get_queryset()
+            ]
+        else:
+            solved_expr = self.request.session.get('solved_expr', [])
+            context['expressions'] = self.object.math_quiz.math_expressions.filter(uuid__in=solved_expr)
+
         try:
             next_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) + 1]
         except IndexError:

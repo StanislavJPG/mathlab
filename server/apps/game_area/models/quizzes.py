@@ -103,6 +103,10 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
         if hasattr(self.multiple_choices_quizzes.first(), 'question'):
             return self.multiple_choices_quizzes.first().question
 
+    def is_expression_solved_by_theorist(self, theorist):
+        scoreboard = MathQuizScoreboard.objects.get(solved_by=theorist)
+        return scoreboard.solved_expressions.filter(uuid=self.uuid).exists()
+
 
 math_description_image_upload_to = FilePattern(
     filename_pattern='{app_label:.25}/quizzes/math_quiz/{instance.uuid}/image/{uuid:s}{ext}'

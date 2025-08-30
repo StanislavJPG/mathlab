@@ -5,13 +5,16 @@
 {% endif %}
 
 <div class="card-body">
-  <div class="text-center">
-    {{ expression.math_quiz.math_expressions_count|make_list }}
-    {% for expr_count in expression.math_quiz.math_expressions_count|make_list %}
-      <button type="button" class="btn btn-secondary">Secondary</button>
-    {% endfor %}
-  </div>
   {% if progress_as_counter < expression.math_quiz.math_expressions_count %}
+    <div class="text-center mb-3">
+      {% for stat_expression in expressions %}
+        <button type="button"
+                class="btn btn{% if stat_expression.is_solved %}-success{% else %}-secondary{% endif %}
+                       {% if expression.uuid == stat_expression.uuid %}btn-lg border border-1{% endif %}">
+          {{ forloop.counter }}
+        </button>
+      {% endfor %}
+    </div>
     <h4 class="card-title mb-3">Question {{ expression_pos }} of {{ expression.math_quiz.math_expressions_count }}</h4>
     <p class="fs-5">
       {% if expression.has_multiple_choices %}

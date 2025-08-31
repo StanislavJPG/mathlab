@@ -15,10 +15,8 @@ class MathQuizGameMenuForm(forms.Form):
         self.instance = kwargs.pop('instance')  # mathexpression obj
         super().__init__(*args, **kwargs)
         self.fields['answer'] = forms.CharField(widget=forms.Textarea)
-        if self.instance.has_multiple_choices is True:
-            self.fields['answer'].widget = HiddenInput()
-        else:
-            self.fields['answer'].widget.attrs = {'class': 'form-control'}
+        self.fields['answer'].widget = HiddenInput()
+        self.fields['answer'].help_text = _('Write your answer below:')
 
     def _process_not_auth_user(self, is_correct_answer):
         session = self.request.session

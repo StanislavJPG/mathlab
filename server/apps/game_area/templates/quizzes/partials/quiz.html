@@ -1,6 +1,10 @@
 {% load i18n static widget_tweaks widened_widget_tweaks %}
 
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.css" integrity="sha384-o3WH+1yEhq+grOgz1BVYTZPyTlMXrDxnjN1By9/ba94JqJhva6wFm2Hb+URQX53v" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.js" integrity="sha384-C5yZTsgLOfuizO9kb+hrB8uSBwwvZ4yenKWU0KmWl+7bkL6Tph/KbcOa3S4zdoRE" crossorigin="anonymous"></script>
+
 <div class="card-body">
+  <h5 class="card-title fw-italic text-center mb-2">Question {{ expression_pos }} of {{ expression.math_quiz.math_expressions_count }}</h5>
   <div class="text-center mb-3">
     {% for stat_expression in expressions %}
       <button type="button"
@@ -12,12 +16,18 @@
       </button>
     {% endfor %}
   </div>
-  <h4 class="card-title mb-3">Question {{ expression_pos }} of {{ expression.math_quiz.math_expressions_count }}</h4>
-  <p class="fs-5">
+  <small class="bg-white bg-opacity-75 p-2 rounded rounded-bottom-0 text-dark fw-bold" style="font-size: 12px;">
+    {% if expression.has_multiple_choices %}
+      {% translate 'Question' %}:
+    {% else %}
+      {% translate 'Expression' %}:
+    {% endif %}
+  </small><br/>
+  <p class="fs-4 text-dark bg-white bg-opacity-75 p-2 rounded rounded-top-left-0 mt-1" style="border-top-left-radius: 0 !important;">
     {% if expression.has_multiple_choices %}
       {{ expression.get_multiple_choice_question }}
     {% else %}
-      {{ expression.latex_expression }}
+      <math-field class="bg-transparent border-0 text-dark disabled" disabled>{{ expression.latex_expression }}</math-field>
     {% endif %}
   </p>
 
@@ -46,6 +56,8 @@
           {% endif %}
         {% endfor %}
       {% else %}
+        <small class="bg-white bg-opacity-75 rounded p-2 rounded-bottom-0 text-dark fw-bold" style="font-size: 12px;">{{ form.answer.help_text }}</small><br/>
+        <math-field id="math-expression" style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="x^2 + 15x - 10 = 0"></math-field>
       {% endif %}
     </div>
 
@@ -110,4 +122,17 @@
       window.location = '{% url 'mathlab:gamearea:quizzes:mathquiz-base' expression.math_quiz.uuid %}?next_finish_quiz=true';
     });
   }
+
+  document.getElementById('math-expression').addEventListener('input', function () {
+    document.getElementById('id_answer').value = this.value;
+    document.getElementById('confirm-expr-btn').classList.remove('d-none');
+  })
+
+</script>
+<script src="https://unpkg.com/mathlive"></script>
+<script type="module">
+  import { ComputeEngine } from 'https://unpkg.com/@cortex-js/compute-engine?module';
+
+  const engine = new ComputeEngine();
+  MathfieldElement.computeEngine = engine;
 </script>

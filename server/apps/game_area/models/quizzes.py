@@ -67,7 +67,9 @@ class MathMultipleChoiceTask(UUIDModelMixin, TimeStampedModelMixin, LifecycleMod
 
 
 class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
-    latex_expression = models.TextField()
+    latex_expression = models.TextField(blank=True)
+    latex_correct_answer = models.TextField(blank=True)
+
     has_multiple_choices = models.BooleanField(default=False)
 
     max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'))
@@ -102,6 +104,9 @@ class MathExpression(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def get_multiple_choice_question(self):
         if hasattr(self.multiple_choices_quizzes.first(), 'question'):
             return self.multiple_choices_quizzes.first().question
+
+    def compare_answer(self, input_answer: str):
+        return self.latex_correct_answer == input_answer  # TODO: Test it
 
 
 math_description_image_upload_to = FilePattern(

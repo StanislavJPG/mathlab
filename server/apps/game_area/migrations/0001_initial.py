@@ -34,7 +34,7 @@ class Migration(migrations.Migration):
                 ('created_at', models.DateTimeField(default=django.utils.timezone.now, editable=False)),
                 ('modified_at', models.DateTimeField(auto_now=True, null=True)),
                 ('uuid', models.UUIDField(default=uuid.uuid4, editable=False, unique=True)),
-                ('latex_expression', models.TextField()),
+                ('latex_expression', models.TextField(blank=True)),
                 ('has_multiple_choices', models.BooleanField(default=False)),
                 ('max_time_to_solve', models.DurationField(verbose_name='max time to solve')),
                 (
@@ -58,10 +58,7 @@ class Migration(migrations.Migration):
                 ('answer', models.CharField(max_length=255)),
                 ('is_correct_answer', models.BooleanField(default=False)),
             ],
-            options={
-                'verbose_name': 'Math Quiz Choice Question',
-                'verbose_name_plural': 'Math Quiz Choice Questions',
-            },
+            options={'verbose_name': 'Math Quiz Choice Answer', 'verbose_name_plural': 'Math Quiz Choice Answers'},
         ),
         migrations.CreateModel(
             name='MathMultipleChoiceTask',

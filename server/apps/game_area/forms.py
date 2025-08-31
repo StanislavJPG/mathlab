@@ -3,6 +3,7 @@ from datetime import timedelta
 from django import forms
 from django.db import transaction
 from django.forms import HiddenInput
+from django.utils.translation import gettext_lazy as _
 
 from server.apps.game_area.models import MathQuizScoreboard, MathSolvedQuizzes
 from server.apps.game_area.models.quizzes import MathSolvedExpressions
@@ -47,10 +48,24 @@ class MathQuizGameMenuForm(forms.Form):
                 session['solved_quizzes'] = list(solved_quizzes)
                 session.modified = True
 
+    def clean(self):
+        already_solved_msg_label = _('Error. This expression is already solved.')
+
+        if not self.request.user.is_authenticated and str(self.instance.uuid) in self.request.session.get(
+            'solved_expr', []
+        ):
+            self.add_error(None, already_solved_msg_label)
+            return
+
+        scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
+        if scoreboard.solved_expressions.filter(uuid=self.instance.uuid).exists():
+            self.add_error(None, already_solved_msg_label)
+            return
+
     @transaction.atomic
     def save(self):
         answer = self.cleaned_data['answer']
-        # TODO: Add validation check if this expression was not solved before
+
         if self.instance.has_multiple_choices is True:
             is_answer_correct = self.instance.multiple_choices_quizzes.filter(
                 answers__answer=answer, answers__is_correct_answer=True
@@ -83,6 +98,8 @@ class MathQuizGameMenuForm(forms.Form):
                     MathSolvedQuizzes.objects.create(
                         math_quiz=self.instance.math_quiz,
                         math_quiz_scoreboard=scoreboard,
-                        best_time_taken=timedelta(minutes=15),  # TODO: Replace this placeholder
+                        best_time_taken=timedelta(
+                            minutes=15
+                        ),  # TODO: Replace this placeholder by adding time quiz support
                     )
                 return scoreboard

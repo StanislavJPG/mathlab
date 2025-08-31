@@ -1,3 +1,5 @@
+from django.http import HttpResponseRedirect
+from django.urls import reverse
 from django.views.generic import DetailView
 from django.views.generic.edit import ModelFormMixin
 from django_filters.views import FilterView
@@ -24,12 +26,39 @@ class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
         return super().get_queryset().filter_by_with_expressions().order_by_difficulty()
 
 
+def _get_anonymous_progress(request, get_correct_solved_expressions=True):
+    if get_correct_solved_expressions:
+        solved_expressions = request.session.get('solved_expr', [])
+        return len(solved_expressions)
+    incorrect_solved_expressions = request.session.get('incorrect_solved_expr', [])
+    return len(incorrect_solved_expressions)
+
+
+def _get_progress_value(request, math_quiz, as_percentage):
+    theorist = getattr(request, 'theorist', None)
+
+    if not theorist or not request.user.is_authenticated:
+        solved_expressions_count = _get_anonymous_progress(request)
+    else:
+        scoreboard = MathQuizScoreboard.objects.filter(solved_by=theorist).first()
+        solved_expressions_count = scoreboard.solved_expressions.filter(math_quiz__uuid=math_quiz.uuid).count()
+
+    total_expressions = math_quiz.math_expressions_count
+    return round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
+
+
 class MathQuizBaseQuizView(DetailView):
     model = MathQuiz
     template_name = 'quizzes/base_quiz.html'
     slug_url_kwarg = 'uuid'
     slug_field = 'uuid'
     context_object_name = 'quiz'
+
+    def get(self, request, *args, **kwargs):
+        if self.request.GET.get('next_finish_quiz', False):
+            math_quiz = self.get_object()
+            return HttpResponseRedirect(reverse('mathlab:gamearea:quizzes:mathquiz-base', args=[math_quiz.uuid]))
+        return super().get(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         self.request: AuthenticatedHttpRequest
@@ -45,10 +74,11 @@ class MathQuizBaseQuizView(DetailView):
         else:
             quiz_uuid = str(self.object.uuid)
             is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
-            last_solved_expr = ...
+            last_solved_expr = ...  # TODO: Fill
 
         context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
         context['is_quiz_finished'] = is_quiz_finished
+        context['progress_as_counter'] = _get_progress_value(self.request, self.get_object(), as_percentage=False)
         return context
 
 
@@ -78,40 +108,19 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
-    def _get_anonymous_progress(self, get_correct_solved_expressions=True):
-        if get_correct_solved_expressions:
-            solved_expressions = self.request.session.get('solved_expr', [])
-            return len(solved_expressions)
-        incorrect_solved_expressions = self.request.session.get('incorrect_solved_expr', [])
-        return len(incorrect_solved_expressions)
-
-    def _get_progress_value(self, as_percentage):
-        theorist = getattr(self.request, 'theorist', None)
-
-        if not theorist or not self.request.user.is_authenticated:
-            solved_expressions_count = self._get_anonymous_progress()
-        else:
-            scoreboard = MathQuizScoreboard.objects.filter(solved_by=theorist).first()
-            solved_expressions_count = scoreboard.solved_expressions.filter(
-                math_quiz__uuid=self.kwargs['quiz_uuid']
-            ).count()
-
-        total_expressions = self.get_object().math_quiz.math_expressions_count
-        return (
-            round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
-        )
-
     def _get_current_task_scoreboard(self):
         theorist = getattr(self.request, 'theorist', None)
 
         if not theorist or not self.request.user.is_authenticated:
             incorrect_solved_expr = self.request.session.get('incorrect_solved_expr', [])
             solved_expressions = self.request.session.get('solved_expr', [])
+            all_expressions = incorrect_solved_expr + solved_expressions
             expr_uuid = str(self.get_object().uuid)
 
             return {
-                'current_task_is_finished': expr_uuid in incorrect_solved_expr + solved_expressions,
+                'current_task_is_finished': expr_uuid in all_expressions,
                 'current_task_is_successfully_finished': expr_uuid in solved_expressions,
+                'all_expressions': all_expressions,
             }
 
         scoreboard = MathSolvedExpressions.objects.filter(
@@ -121,20 +130,31 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         return {
             'current_task_is_finished': scoreboard.exists(),
             'current_task_is_successfully_finished': scoreboard.filter(is_correct=True).exists(),
+            'all_expressions': self.request.theorist.quiz_scoreboard.solved_expressions.all().values_list(
+                'uuid', flat=True
+            ),
         }
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
         current_expression_pk = self.get_object().pk
+        math_quiz = self.get_object().math_quiz
         expressions_to_search = list(self.get_queryset().values_list('pk', flat=True))
         context.update(
             {
                 'expression_pos': expressions_to_search.index(current_expression_pk) + 1,
-                'progress_as_counter': self._get_progress_value(as_percentage=False),
-                'progress': self._get_progress_value(as_percentage=True),
+                'progress_as_counter': _get_progress_value(self.request, math_quiz, as_percentage=False),
+                'progress': _get_progress_value(self.request, math_quiz, as_percentage=True),
                 'task': MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first(),
             }
         )
+        current_task_scoreboard = self._get_current_task_scoreboard()
+        context['is_last_expression_to_answer'] = (
+            not current_task_scoreboard['current_task_is_finished']
+            and math_quiz.math_expressions.filter(uuid__in=current_task_scoreboard['all_expressions']).count()
+            == math_quiz.math_expressions_count - 1
+        )
+
         if self.request.user.is_authenticated:
             expr_for_stat = MathSolvedExpressions.objects.filter(
                 math_quiz_scoreboard__solved_by=self.request.theorist

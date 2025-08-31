@@ -95,12 +95,14 @@ class MathQuizAdmin(admin.ModelAdmin):
     inlines = (MathExpressionInline,)
 
 
-class MathSolvedQuizzesInline(admin.TabularInline):
+class MathSolvedQuizzesInline(TabularInlinePaginated):
     model = MathSolvedQuizzes
+    per_page = 15
 
 
-class MathSolvedExpressionsInline(admin.TabularInline):
+class MathSolvedExpressionsInline(TabularInlinePaginated):
     model = MathSolvedExpressions
+    per_page = 15
 
 
 @admin.register(MathQuizScoreboard)

@@ -2,30 +2,38 @@
 {% load i18n static %}
 
 {% block page_css %}
+  {% if progress_as_counter >= quiz.math_expressions_count %}
+    <link rel="stylesheet" href="{% static 'css/features/fireworks.css' %}">
+  {% endif %}
   <style>
     body {
       background: linear-gradient(to right, #1e3c72, #2a5298);
       color: #fff;
       font-family: 'Segoe UI', sans-serif;
     }
+
     .quiz-card {
       background-color: #ffffff10;
       border: none;
       border-radius: 1rem;
       padding: 2rem;
     }
+
     .btn-answer {
       width: 100%;
       margin-bottom: 1rem;
       font-weight: bold;
     }
+
     .btn-answer:hover {
       transform: scale(1.02);
     }
+
     .progress {
       height: 20px;
       background-color: #ffffff30;
     }
+
     .progress-bar {
       background-color: #ffc107;
     }
@@ -39,32 +47,64 @@
       <p class="lead">Test your knowledge and beat the clock!</p>
       {# clock will be placed here #}
     </div>
-    <div class="card quiz-card shadow-lg"
-         hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
-         hx-trigger="click from:#start-quiz-btn"
+    <div
+      class="card quiz-card {% if progress_as_counter >= quiz.math_expressions_count %}bg-light bg-gradient{% endif %} shadow-lg"
+      hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
+      hx-trigger="click from:#start-quiz-btn"
     >
-      <div class="card-body text-center">
-        <h4 class="card-title mb-3">
-          {% blocktranslate trimmed %}
-            This test contains:
-          {% endblocktranslate %}
-        </h4>
-      </div>
+      {% if progress_as_counter < quiz.math_expressions_count %}
+        <div class="card-body text-center">
+          <h4 class="card-title mb-3">
+            {% blocktranslate trimmed %}
+              This test contains:
+            {% endblocktranslate %}
+          </h4>
+        </div>
+      {% else %}
+        <div class="pyro">
+          <div class="before"></div>
+          <div class="after"></div>
+        </div>
+
+        <div class="container my-5">
+          <div class="card bg-white shadow-sm border-0 text-center">
+            <div class="card-body py-5">
+              <h2 class="card-title text-success fw-bold mb-3">
+                {% translate '🎉 Congratulations!' %}
+              </h2>
+              <p class="lead text-dark mb-4">
+                {% translate 'You finished all the tasks!' %}
+              </p>
+              <p class="fs-5 text-primary">
+                {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
+              </p>
+              <!-- Clock placeholder -->
+              <div id="clock" class="mt-4"></div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
     </div>
 
     <div class="text-center mt-4">
-      <button class="btn btn-warning px-4" id="start-quiz-btn"
-              type="button"
-              _="on click remove .d-none from #end-quiz-btn then add .d-none">
-        <i class="ti ti-player-play"></i> {% translate 'Start quiz' %}
-      </button>
-      {% if not is_quiz_finished %}
-        <button class="btn btn-danger px-4 d-none"
+      {% if progress_as_counter < quiz.math_expressions_count %}
+        <button class="btn btn-warning px-4" id="start-quiz-btn"
                 type="button"
-                id="end-quiz-btn"
-        >
-          <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
+                _="on click remove .d-none from #end-quiz-btn then add .d-none">
+          <i class="ti ti-player-play"></i> {% translate 'Start quiz' %}
         </button>
+        {% if not is_quiz_finished %}
+          <button class="btn btn-danger px-4 d-none"
+                  type="button"
+                  id="end-quiz-btn"
+          >
+            <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
+          </button>
+        {% endif %}
+      {% else %}
+        <a class="btn btn-warning px-4" href="{% url 'mathlab:gamearea:gamearea-base' %}">
+          <i class="ti ti-arrow-back"></i> {% translate 'Back to the game area' %}
+        </a>
       {% endif %}
     </div>
   </div>

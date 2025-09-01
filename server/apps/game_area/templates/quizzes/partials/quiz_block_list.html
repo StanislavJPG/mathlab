@@ -24,6 +24,10 @@
               <label class="form-label">{% translate 'Finish score reward' %}</label>
               {% render_field filter.form.finish_score_reward class="form-control" %}
             </div>
+            <div class="mb-3">
+              <label class="form-label">{% translate 'Show finished quizzes' %}</label>
+              {% render_field filter.form.show_finished_quizzes class="form-control" %}
+            </div>
             <div class="d-grid">
               {% translate 'Apply' as btn_label %}
               {% render_submit_button btn_label spinner_id="filter-block-wait-spinner" class="btn btn-primary mb-2" with_icon="ti ti-filter" %}
@@ -59,6 +63,7 @@
                         <i title="{% translate 'Extra hard quiz' %}" class="ti ti-chart-grid-dots text-danger"></i>
                       {% endif %}
                       {{ quiz.get_category_display }}
+                      {% if quiz.uuid in solved_quizzes_uuids %}<i title="{% translate 'This quiz is already finished!' %}" class="ti ti-check text-success"></i>{% endif %}
                     </h5>
                     <span class="small text-secondary" title="{% translate 'Time to finish the quiz' %}">
                       <i class="ti ti-clock-hour-9"></i> {{ quiz.max_time_to_solve }}

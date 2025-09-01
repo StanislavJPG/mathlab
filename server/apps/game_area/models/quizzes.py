@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Avg, Sum, Count
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import LifecycleModel, hook, AFTER_CREATE, AFTER_SAVE
+from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
 from django_lifecycle.conditions import WhenFieldHasChanged
 from dynamic_filenames import FilePattern
 
@@ -275,7 +275,17 @@ class MathQuizScoreboard(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     def __str__(self):
         return f'Quiz Scoreboard | {self.solved_by_name} | {self.__class__.__name__} | id - {self.id}'
 
-    @hook(AFTER_CREATE)
-    def after_create(self):
+    @hook(AFTER_SAVE)
+    def after_save(self):
         self.solved_by_name = self.solved_by.full_name
-        self.save(update_fields=['solved_by_name'])
+        self.save(update_fields=['solved_by_name'], skip_hooks=True)
+
+    def get_quiz_finish_result(self, quiz):
+        solved_quiz = self.solved_quizzes.filter(uuid=quiz.uuid).first()
+        if solved_quiz:
+            successfully_finished_quizzes_count = solved_quiz.math_expressions.filter(
+                mathsolvedexpressions__is_correct=True
+            ).count()
+            math_expressions_count = solved_quiz.math_expressions_count
+
+            return round((successfully_finished_quizzes_count / math_expressions_count) * 100)

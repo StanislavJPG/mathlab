@@ -9,22 +9,12 @@ from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
 from server.apps.game_area.forms import MathQuizGameMenuForm
 from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard, MathMultipleChoiceTask
 from server.apps.game_area.models.quizzes import MathSolvedExpressions
+from server.apps.game_area.utils import get_solved_quizzes_uuids
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
 __all__ = ['MathQuizPlayBlocksListView', 'MathQuizBaseQuizView', 'MathQuizGameMenuView']
-
-
-class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
-    model = MathQuiz
-    filterset_class = MathQuizPlayBlocksListFilter
-    template_name = 'quizzes/partials/quiz_block_list.html'
-    context_object_name = 'quizzes'
-    paginate_by = 15
-
-    def get_queryset(self):
-        return super().get_queryset().filter_by_with_expressions().order_by_difficulty()
 
 
 def _get_anonymous_progress(request, get_correct_solved_expressions=True):
@@ -46,6 +36,27 @@ def _get_progress_value(request, math_quiz, as_percentage):
 
     total_expressions = math_quiz.math_expressions_count
     return round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
+
+
+class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
+    model = MathQuiz
+    filterset_class = MathQuizPlayBlocksListFilter
+    template_name = 'quizzes/partials/quiz_block_list.html'
+    context_object_name = 'quizzes'
+    paginate_by = 15
+
+    def get_queryset(self):
+        return super().get_queryset().filter_by_with_expressions().order_by_difficulty()
+
+    def get_filterset_kwargs(self, filterset_class):
+        kwargs = super().get_filterset_kwargs(filterset_class)
+        kwargs['solved_quizzes_uuids'] = get_solved_quizzes_uuids(self.request)
+        return kwargs
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['solved_quizzes_uuids'] = get_solved_quizzes_uuids(self.request)
+        return context
 
 
 class MathQuizBaseQuizView(DetailView):

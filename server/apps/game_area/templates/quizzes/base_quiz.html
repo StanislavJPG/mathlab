@@ -96,6 +96,7 @@
               <p class="lead text-dark mb-4">
                 {% translate 'You finished all the tasks!' %}
               </p>
+
               <p class="fs-5 text-primary">
                 {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
               </p>
@@ -124,7 +125,10 @@
         {% endif %}
       {% else %}
         <div class="d-flex flex-column align-items-center">
-          <button type="button" class="btn btn-outline-info px-4 mb-3">
+          <button type="button" class="btn btn-outline-info px-4 mb-3"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+                  hx-target=".quiz-card"
+          >
             <i class="ti ti-device-ipad-search"></i> {% translate 'Check my answers' %}
           </button>
           <a class="btn btn-warning px-4" href="{% url 'mathlab:gamearea:gamearea-base' %}">

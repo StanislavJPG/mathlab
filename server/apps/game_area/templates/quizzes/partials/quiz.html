@@ -31,7 +31,7 @@
     {% endif %}
   </p>
 
-  <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}">
+  <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}" id="quiz-form">
     <div class="mt-4">
       {% render_field form.answer %}
 
@@ -57,7 +57,11 @@
         {% endfor %}
       {% else %}
         <small class="bg-white bg-opacity-75 rounded p-2 rounded-bottom-0 text-dark fw-bold" style="font-size: 12px;">{{ form.answer.help_text }}</small><br/>
-        <math-field id="math-expression" style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="x^2 + 15x - 10 = 0"></math-field>
+        {% if not current_task_is_finished %}
+          <math-field id="math-expression" style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="x^2 + 15x - 10 = 0"></math-field>
+        {% else %}
+          <math-field style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="{{ expression_answer }}"></math-field>
+        {% endif %}
       {% endif %}
     </div>
 
@@ -75,7 +79,11 @@
       {% if not current_task_is_finished %}
         {% if not is_last_expression_to_answer %}
           <span class="d-none"
-                hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                {% if next_task_pk %}
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                {% else %}
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_not_solved_task_pk %}"
+                {% endif %}
                 hx-target=".quiz-card"
                 hx-trigger="click from:#confirm-expr-btn"
           ></span>

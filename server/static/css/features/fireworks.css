@@ -1,7 +1,6 @@
 body {
   margin: 0;
-  padding: 0;
-  overflow: hidden; }
+  padding: 0;}
 
 .pyro > .before, .pyro > .after {
   position: absolute;
@@ -164,21 +163,19 @@ body {
     margin-left: 80%; } }
 @keyframes position {
   0%, 19.9% {
-    margin-top: 10%;
-    margin-left: 40%; }
-
+    transform: translate(40vw, 10vh);
+  }
   20%, 39.9% {
-    margin-top: 40%;
-    margin-left: 30%; }
-
+    transform: translate(30vw, 40vh);
+  }
   40%, 59.9% {
-    margin-top: 20%;
-    margin-left: 70%; }
-
+    transform: translate(70vw, 20vh);
+  }
   60%, 79.9% {
-    margin-top: 30%;
-    margin-left: 20%; }
-
+    transform: translate(20vw, 30vh);
+  }
   80%, 99.9% {
-    margin-top: 30%;
-    margin-left: 80%; } }
+    transform: translate(80vw, 30vh);
+  }
+}
+

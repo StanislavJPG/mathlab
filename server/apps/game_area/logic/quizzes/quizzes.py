@@ -1,3 +1,4 @@
+from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import DetailView
@@ -114,6 +115,7 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         if not theorist or not self.request.user.is_authenticated:
             incorrect_solved_expr = self.request.session.get('incorrect_solved_expr', [])
             solved_expressions = self.request.session.get('solved_expr', [])
+            expressions_with_additional = self.request.session.get('expressions_with_additional', [])
             all_expressions = incorrect_solved_expr + solved_expressions
             expr_uuid = str(self.get_object().uuid)
 
@@ -121,6 +123,11 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
                 'current_task_is_finished': expr_uuid in all_expressions,
                 'current_task_is_successfully_finished': expr_uuid in solved_expressions,
                 'all_expressions': all_expressions,
+                'expression_answer': [
+                    a.get('answer') for a in expressions_with_additional if a.get('uuid') == expr_uuid
+                ]
+                if expressions_with_additional
+                else None,
             }
 
         scoreboard = MathSolvedExpressions.objects.filter(
@@ -133,6 +140,9 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             'all_expressions': self.request.theorist.quiz_scoreboard.solved_expressions.all().values_list(
                 'uuid', flat=True
             ),
+            'expression_answer': scoreboard.first().math_expression_answer
+            if hasattr(scoreboard.first(), 'math_expression_answer')
+            else None,
         }
 
     def get_context_data(self, **kwargs):
@@ -149,10 +159,12 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             }
         )
         current_task_scoreboard = self._get_current_task_scoreboard()
+        current_solved_math_expressions = math_quiz.math_expressions.filter(
+            uuid__in=current_task_scoreboard['all_expressions']
+        )
         context['is_last_expression_to_answer'] = (
             not current_task_scoreboard['current_task_is_finished']
-            and math_quiz.math_expressions.filter(uuid__in=current_task_scoreboard['all_expressions']).count()
-            == math_quiz.math_expressions_count - 1
+            and current_solved_math_expressions.count() == math_quiz.math_expressions_count - 1
         )
 
         if self.request.user.is_authenticated:
@@ -185,7 +197,21 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         else:
             previous_task_pk = None
 
+        try:
+            next_not_solved_task_pk = (
+                MathExpression.objects.filter(
+                    ~Q(pk__in=current_solved_math_expressions.values_list('pk', flat=True)),
+                    math_quiz=math_quiz,
+                )
+                .only('pk')
+                .first()
+                .pk
+            )
+        except AttributeError:
+            next_not_solved_task_pk = None
+
         context['next_task_pk'] = next_task_pk
         context['previous_task_pk'] = previous_task_pk
+        context['next_not_solved_task_pk'] = next_not_solved_task_pk
         context.update(self._get_current_task_scoreboard())
         return context

@@ -237,7 +237,10 @@ class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
 class MathSolvedExpressions(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
     math_expression = models.ForeignKey('game_area.MathExpression', on_delete=models.CASCADE)
     math_quiz_scoreboard = models.ForeignKey('game_area.MathQuizScoreboard', on_delete=models.CASCADE)
+
     is_correct = models.BooleanField(default=True)
+
+    math_expression_answer = models.TextField(blank=True)  # to store user's answers
 
     class Meta:
         verbose_name = _('Math solved expressions')

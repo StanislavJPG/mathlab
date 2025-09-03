@@ -17,22 +17,28 @@ from server.common.mixins.views import HXViewMixin
 __all__ = ['MathQuizPlayBlocksListView', 'MathQuizBaseQuizView', 'MathQuizGameMenuView']
 
 
-def _get_anonymous_progress(request, get_correct_solved_expressions=True):
-    if get_correct_solved_expressions:
-        solved_expressions = request.session.get('solved_expr', [])
-        return len(solved_expressions)
+def _get_anonymous_progress(request, get_correct_solved_expressions):
     incorrect_solved_expressions = request.session.get('incorrect_solved_expr', [])
-    return len(incorrect_solved_expressions)
+    solved_expressions = request.session.get('solved_expr', [])
+    if get_correct_solved_expressions:
+        return len(solved_expressions)
+
+    return len(incorrect_solved_expressions + solved_expressions)
 
 
-def _get_progress_value(request, math_quiz, as_percentage):
+def _get_progress_value(request, math_quiz, as_percentage, get_correct_solved_expressions=False):
     theorist = getattr(request, 'theorist', None)
 
     if not theorist or not request.user.is_authenticated:
-        solved_expressions_count = _get_anonymous_progress(request)
+        solved_expressions_count = _get_anonymous_progress(
+            request, get_correct_solved_expressions=get_correct_solved_expressions
+        )
     else:
+        add_expr = Q(mathsolvedexpressions__is_correct=True) if get_correct_solved_expressions else Q()
         scoreboard = MathQuizScoreboard.objects.filter(solved_by=theorist).first()
-        solved_expressions_count = scoreboard.solved_expressions.filter(math_quiz__uuid=math_quiz.uuid).count()
+        solved_expressions_count = scoreboard.solved_expressions.filter(
+            add_expr, math_quiz__uuid=math_quiz.uuid
+        ).count()
 
     total_expressions = math_quiz.math_expressions_count
     return round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
@@ -91,6 +97,9 @@ class MathQuizBaseQuizView(DetailView):
         context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
         context['is_quiz_finished'] = is_quiz_finished
         context['progress_as_counter'] = _get_progress_value(self.request, self.get_object(), as_percentage=False)
+        context['progress_correct_answers_counter'] = _get_progress_value(
+            self.request, self.get_object(), as_percentage=False, get_correct_solved_expressions=True
+        )
         return context
 
 
@@ -196,7 +205,16 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             ]
         else:
             solved_expr = self.request.session.get('solved_expr', [])
-            context['expressions'] = self.object.math_quiz.math_expressions.filter(uuid__in=solved_expr)
+            failed_expr = self.request.session.get('incorrect_solved_expr', [])
+            context['expressions'] = [
+                {
+                    'pk': obj.pk,
+                    'uuid': obj.uuid,
+                    'is_solved': str(obj.uuid) in solved_expr,
+                    'is_solved_as_fail': str(obj.uuid) in failed_expr,
+                }
+                for obj in self.get_queryset()
+            ]
 
         try:
             next_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) + 1]
@@ -212,6 +230,7 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             next_not_solved_task_pk = (
                 MathExpression.objects.filter(
                     ~Q(pk__in=current_solved_math_expressions.values_list('pk', flat=True)),
+                    ~Q(pk=self.get_object().pk),
                     math_quiz=math_quiz,
                 )
                 .only('pk')

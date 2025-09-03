@@ -5,7 +5,7 @@ from django.db import models
 from django.db.models import Avg, Sum, Count
 from django.utils.safestring import mark_safe
 from django.utils.translation import gettext_lazy as _
-from django_lifecycle import LifecycleModel, hook, AFTER_SAVE
+from django_lifecycle import LifecycleModel, hook, AFTER_SAVE, BEFORE_SAVE
 from django_lifecycle.conditions import WhenFieldHasChanged
 from dynamic_filenames import FilePattern
 
@@ -132,6 +132,7 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
 
     average_solve_time_statistic = models.DurationField(verbose_name=_('average solve time'), null=True, blank=True)
 
+    min_expressions_to_successfully_finish = models.PositiveSmallIntegerField(default=5, blank=True)
     max_time_to_solve = models.DurationField(verbose_name=_('max time to solve'), blank=True, default=timedelta(0))
     math_expressions_count = models.PositiveSmallIntegerField(default=0, blank=True)  # denormilized field
 
@@ -167,6 +168,13 @@ class MathQuiz(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
             self.max_time_to_solve = max_time
             self.save(update_fields=['max_time_to_solve'], skip_hooks=True)
 
+    @hook(BEFORE_SAVE)
+    def before_save(self):
+        if self.math_expressions_count == 0:
+            self.min_expressions_to_successfully_finish = 0
+        elif self.math_expressions_count < self.min_expressions_to_successfully_finish:
+            self.min_expressions_to_successfully_finish = max(1, self.math_expressions_count // 2)
+
     @mark_safe
     def get_html_score_reward(self):
         if self.finish_score_reward <= 15:
@@ -188,6 +196,8 @@ class MathSolvedQuizzes(TimeStampedModelMixin, UUIDModelMixin, LifecycleModel):
     best_time_taken = models.DurationField(
         verbose_name=_('best time taken to finish this quiz'), blank=True, default=timedelta(0)
     )
+
+    is_successfully_finished = models.BooleanField(default=True)
 
     class Meta:
         verbose_name = _('Math solved quizzes')

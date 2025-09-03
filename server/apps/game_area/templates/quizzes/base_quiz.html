@@ -70,7 +70,11 @@
     </div>
     <div
       class="card quiz-card {% if progress_as_counter >= quiz.math_expressions_count %}bg-light bg-gradient{% endif %} shadow-lg"
-      hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
+      {% if last_solved_expr.pk %}
+        hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
+      {% else %}
+        hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+      {% endif %}
       hx-trigger="click from:#start-quiz-btn"
     >
       {% if progress_as_counter < quiz.math_expressions_count %}
@@ -82,24 +86,39 @@
           </h4>
         </div>
       {% else %}
-        <div class="pyro">
-          <div class="before"></div>
-          <div class="after"></div>
-        </div>
+        {% if progress_correct_answers_counter >= quiz.min_expressions_to_successfully_finish %}
+          <div class="pyro">
+            <div class="before"></div>
+            <div class="after"></div>
+          </div>
+        {% endif %}
 
         <div class="container my-5">
           <div class="card bg-white shadow-sm border-0 text-center">
             <div class="card-body py-5">
-              <h2 class="card-title text-success fw-bold mb-3">
-                {% translate '🎉 Congratulations!' %}
-              </h2>
-              <p class="lead text-dark mb-4">
-                {% translate 'You finished all the tasks!' %}
-              </p>
+              {% if progress_correct_answers_counter >= quiz.min_expressions_to_successfully_finish %}
+                <h2 class="card-title text-success fw-bold mb-3">
+                  {% translate '🎉 Congratulations!' %}
+                </h2>
+                <p class="lead text-dark mb-4">
+                  {% translate 'You finished all the tasks!' %}
+                </p>
+                <p class="fs-5 text-primary">
+                  {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
+                </p>
+              {% else %}
+                <h2 class="card-title text-warning fw-bold mb-3">
+                  {% translate '😢 Unfortunately, you did not successfully finish this quiz...' %}
+                </h2>
+                <p class="lead text-dark mb-4">
+                  {% with quiz_math_expressions_count=quiz.math_expressions_count %}
+                    {% blocktranslate trimmed %}
+                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong>
+                    {% endblocktranslate %}
+                  {% endwith %}
+                </p>
+              {% endif %}
 
-              <p class="fs-5 text-primary">
-                {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
-              </p>
               <!-- Clock placeholder -->
               <div id="clock" class="mt-4"></div>
             </div>

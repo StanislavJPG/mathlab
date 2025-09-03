@@ -37,7 +37,7 @@ class MathQuizGameMenuForm(forms.Form):
         expressions_with_additional.append(
             {
                 'uuid': solved_expr_uuid,
-                'date': timezone.now(),
+                'date': timezone.now().isoformat(),
                 'answer': self.cleaned_data['answer'],
             }
         )
@@ -59,10 +59,9 @@ class MathQuizGameMenuForm(forms.Form):
     def clean(self):
         already_solved_msg_label = _('Error. This expression is already solved.')
 
-        if not self.request.user.is_authenticated and str(self.instance.uuid) in self.request.session.get(
-            'solved_expr', []
-        ):
-            self.add_error(None, already_solved_msg_label)
+        if not self.request.user.is_authenticated:
+            if str(self.instance.uuid) in self.request.session.get('solved_expr', []):
+                self.add_error(None, already_solved_msg_label)
             return
 
         scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
@@ -100,16 +99,20 @@ class MathQuizGameMenuForm(forms.Form):
                 solved_expr_dict['is_correct'] = False
                 MathSolvedExpressions.objects.create(**solved_expr_dict)
 
-            is_quiz_done = (
-                self.request.theorist.quiz_scoreboard.solved_expressions.filter(
-                    math_quiz=self.instance.math_quiz
-                ).count()
-                >= self.instance.math_quiz.math_expressions.all().count()
+            solved_expressions = self.request.theorist.quiz_scoreboard.solved_expressions.filter(
+                math_quiz=self.instance.math_quiz
             )
+
+            is_quiz_done = solved_expressions.count() >= self.instance.math_quiz.math_expressions.all().count()
             if is_quiz_done:
+                is_successfully_finished = (
+                    solved_expressions.filter(mathsolvedexpressions__is_correct=True).count()
+                    >= self.instance.math_quiz.min_expressions_to_successfully_finish
+                )
                 MathSolvedQuizzes.objects.create(
                     math_quiz=self.instance.math_quiz,
                     math_quiz_scoreboard=scoreboard,
                     best_time_taken=timedelta(minutes=15),  # TODO: Replace this placeholder by adding time quiz support
+                    is_successfully_finished=is_successfully_finished,
                 )
             return scoreboard

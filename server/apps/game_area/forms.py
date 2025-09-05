@@ -1,5 +1,3 @@
-from datetime import timedelta
-
 from django import forms
 from django.db import transaction
 from django.forms import HiddenInput
@@ -13,11 +11,20 @@ from server.apps.game_area.models.quizzes import MathSolvedExpressions
 class MathQuizGameMenuForm(forms.Form):
     def __init__(self, *args, **kwargs):
         self.request = kwargs.pop('request')
+        self.is_last_expression_to_answer = kwargs.pop('is_last_expression_to_answer')
         self.instance = kwargs.pop('instance')  # mathexpression obj
         super().__init__(*args, **kwargs)
+        # prepare answer field
         self.fields['answer'] = forms.CharField(widget=forms.Textarea)
         self.fields['answer'].widget = HiddenInput()
         self.fields['answer'].help_text = _('Write your answer below:')
+        # prepare time_left field
+        self.fields['time_left'] = forms.DurationField()
+        self.fields['time_left'].widget = HiddenInput()
+        self.fields['time_left'].required = False
+
+        if self.is_last_expression_to_answer:
+            self.fields['time_left'].required = True
 
     def _process_not_auth_user(self, is_correct_answer):
         session = self.request.session
@@ -112,7 +119,7 @@ class MathQuizGameMenuForm(forms.Form):
                 MathSolvedQuizzes.objects.create(
                     math_quiz=self.instance.math_quiz,
                     math_quiz_scoreboard=scoreboard,
-                    best_time_taken=timedelta(minutes=15),  # TODO: Replace this placeholder by adding time quiz support
+                    best_time_taken=self.cleaned_data['time_left'],
                     is_successfully_finished=is_successfully_finished,
                 )
             return scoreboard

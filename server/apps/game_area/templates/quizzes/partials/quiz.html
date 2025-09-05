@@ -34,6 +34,7 @@
   <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}" id="quiz-form">
     <div class="mt-4">
       {% render_field form.answer %}
+      {% render_field form.time_left %}
 
       {% if expression.has_multiple_choices %}
         {% for answer_obj in task.answers.all %}
@@ -130,6 +131,15 @@
       window.location = '{% url 'mathlab:gamearea:quizzes:mathquiz-base' expression.math_quiz.uuid %}?next_finish_quiz=true';
     });
   }
+
+  document.getElementById('quiz-form').addEventListener('submit', function (e) {
+    // We need to pass totalSeconds that was taken to solve quiz to pass it in the database for stats and etc
+    const timeStr = document.getElementById('time-left').textContent.trim(); // "0:05:21"
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+
+    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    document.getElementById('id_time_left').value = totalSeconds;
+  });
 
   document.getElementById('math-expression').addEventListener('input', function () {
     document.getElementById('id_answer').value = this.value;

@@ -116,6 +116,7 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         kwargs['instance'] = self.get_object()
+        kwargs['is_last_expression_to_answer'] = self._is_last_expression_to_answer()
         return kwargs
 
     def get_success_url(self):
@@ -128,6 +129,17 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
+
+    def _is_last_expression_to_answer(self):
+        math_quiz = self.get_object().math_quiz
+        current_task_scoreboard = self._get_current_task_scoreboard()
+        current_solved_math_expressions = math_quiz.math_expressions.filter(
+            uuid__in=current_task_scoreboard['all_expressions']
+        )
+        return (
+            not current_task_scoreboard['current_task_is_finished']
+            and current_solved_math_expressions.count() == math_quiz.math_expressions_count - 1
+        )
 
     def _get_current_task_scoreboard(self):
         theorist = getattr(self.request, 'theorist', None)
@@ -178,14 +190,7 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
                 'task': MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first(),
             }
         )
-        current_task_scoreboard = self._get_current_task_scoreboard()
-        current_solved_math_expressions = math_quiz.math_expressions.filter(
-            uuid__in=current_task_scoreboard['all_expressions']
-        )
-        context['is_last_expression_to_answer'] = (
-            not current_task_scoreboard['current_task_is_finished']
-            and current_solved_math_expressions.count() == math_quiz.math_expressions_count - 1
-        )
+        context['is_last_expression_to_answer'] = self._is_last_expression_to_answer()
 
         if self.request.user.is_authenticated:
             expr_for_stat = MathSolvedExpressions.objects.filter(
@@ -227,6 +232,10 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             previous_task_pk = None
 
         try:
+            current_task_scoreboard = self._get_current_task_scoreboard()
+            current_solved_math_expressions = math_quiz.math_expressions.filter(
+                uuid__in=current_task_scoreboard['all_expressions']
+            )
             next_not_solved_task_pk = (
                 MathExpression.objects.filter(
                     ~Q(pk__in=current_solved_math_expressions.values_list('pk', flat=True)),

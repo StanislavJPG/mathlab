@@ -113,7 +113,8 @@
                 <p class="lead text-dark mb-4">
                   {% with quiz_math_expressions_count=quiz.math_expressions_count %}
                     {% blocktranslate trimmed %}
-                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong>
+                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong><br/>
+                      Time taken to solve all the tasks: <strong>{{ quiz_best_time_taken }}</strong>
                     {% endblocktranslate %}
                   {% endwith %}
                 </p>
@@ -127,7 +128,8 @@
                 <p class="lead text-dark mb-4">
                   {% with quiz_math_expressions_count=quiz.math_expressions_count %}
                     {% blocktranslate trimmed %}
-                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong>
+                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong><br/>
+                      Time taken to solve all tasks: <strong>{{ quiz_best_time_taken }}</strong>
                     {% endblocktranslate %}
                   {% endwith %}
                 </p>

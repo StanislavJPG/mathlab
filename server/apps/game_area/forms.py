@@ -31,6 +31,7 @@ class MathQuizGameMenuForm(forms.Form):
         solved_expr_uuid = str(self.instance.uuid)
         solved_expressions = set(session.get('solved_expr', []))
         expressions_with_additional = session.get('expressions_with_additional', [])
+        quizzes_with_additional = session.get('quizzes_with_additional', [])
         incorrect_solved_expressions = set()
 
         # Update solved expressions
@@ -54,14 +55,22 @@ class MathQuizGameMenuForm(forms.Form):
         # Check if all expressions in the quiz are solved
         quiz = self.instance.math_quiz
         quiz_uuid = str(quiz.uuid)
-        quiz_expression_uuids = set(quiz.math_expressions.values_list('uuid', flat=True))
 
-        if quiz_expression_uuids.issubset(solved_expressions):
-            solved_quizzes = set(session.get('solved_quizzes', []))
-            if quiz_uuid not in solved_quizzes:
-                solved_quizzes.add(quiz_uuid)
-                session['solved_quizzes'] = list(solved_quizzes)
-                session.modified = True
+        solved_quizzes = set(session.get('solved_quizzes', []))
+        if quiz_uuid not in solved_quizzes:
+            solved_quizzes.add(quiz_uuid)
+            session['solved_quizzes'] = list(solved_quizzes)
+
+        if self.is_last_expression_to_answer:
+            quizzes_with_additional.append(
+                {
+                    'uuid': quiz_uuid,
+                    'date': timezone.now().isoformat(),
+                    'time_left': self.cleaned_data['time_left'].total_seconds(),
+                }
+            )
+            session['quizzes_with_additional'] = quizzes_with_additional
+        session.modified = True
 
     def clean(self):
         already_solved_msg_label = _('Error. This expression is already solved.')
@@ -87,10 +96,8 @@ class MathQuizGameMenuForm(forms.Form):
         else:
             is_answer_correct = self.instance.compare_answer(answer)  # bool
 
-        if not self.request.user.is_authenticated and not is_answer_correct:
-            return self._process_not_auth_user(is_correct_answer=False)
-        elif not self.request.user.is_authenticated and is_answer_correct:
-            return self._process_not_auth_user(is_correct_answer=True)
+        if not self.request.user.is_authenticated:
+            return self._process_not_auth_user(is_correct_answer=is_answer_correct)
         else:
             scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
 

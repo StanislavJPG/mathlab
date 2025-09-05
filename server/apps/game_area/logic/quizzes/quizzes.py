@@ -1,3 +1,6 @@
+from datetime import timedelta
+
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
@@ -8,7 +11,7 @@ from django_filters.views import FilterView
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
 from server.apps.game_area.forms import MathQuizGameMenuForm
 from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard, MathMultipleChoiceTask
-from server.apps.game_area.models.quizzes import MathSolvedExpressions
+from server.apps.game_area.models.quizzes import MathSolvedExpressions, MathSolvedQuizzes
 from server.apps.game_area.utils import get_solved_quizzes_uuids
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
@@ -89,11 +92,26 @@ class MathQuizBaseQuizView(DetailView):
             ).exists()
             scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
             last_solved_expr = scoreboard.solved_expressions.all().last()
+            try:
+                quiz_best_time_taken = MathSolvedQuizzes.objects.get(
+                    math_quiz=self.object, math_quiz_scoreboard=scoreboard
+                ).best_time_taken
+            except ObjectDoesNotExist:
+                quiz_best_time_taken = timedelta(0)
         else:
             quiz_uuid = str(self.object.uuid)
             is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
+            quizzes_with_additional = self.request.session.get('quizzes_with_additional', [])
             last_solved_expr = ...  # TODO: Fill
+            quiz_best_time_taken = (
+                [timedelta(seconds=a.get('time_left')) for a in quizzes_with_additional if a.get('uuid') == quiz_uuid][
+                    0
+                ]
+                if quizzes_with_additional
+                else timedelta(0)
+            )
 
+        context['quiz_best_time_taken'] = quiz_best_time_taken
         context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
         context['is_quiz_finished'] = is_quiz_finished
         context['progress_as_counter'] = _get_progress_value(self.request, self.get_object(), as_percentage=False)
@@ -145,9 +163,11 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         theorist = getattr(self.request, 'theorist', None)
 
         if not theorist or not self.request.user.is_authenticated:
-            incorrect_solved_expr = self.request.session.get('incorrect_solved_expr', [])
-            solved_expressions = self.request.session.get('solved_expr', [])
-            expressions_with_additional = self.request.session.get('expressions_with_additional', [])
+            session = self.request.session
+
+            incorrect_solved_expr = session.get('incorrect_solved_expr', [])
+            solved_expressions = session.get('solved_expr', [])
+            expressions_with_additional = session.get('expressions_with_additional', [])
             all_expressions = incorrect_solved_expr + solved_expressions
             expr_uuid = str(self.get_object().uuid)
 
@@ -231,8 +251,8 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         else:
             previous_task_pk = None
 
+        current_task_scoreboard = self._get_current_task_scoreboard()
         try:
-            current_task_scoreboard = self._get_current_task_scoreboard()
             current_solved_math_expressions = math_quiz.math_expressions.filter(
                 uuid__in=current_task_scoreboard['all_expressions']
             )
@@ -252,5 +272,5 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         context['next_task_pk'] = next_task_pk
         context['previous_task_pk'] = previous_task_pk
         context['next_not_solved_task_pk'] = next_not_solved_task_pk
-        context.update(self._get_current_task_scoreboard())
+        context.update(current_task_scoreboard)
         return context

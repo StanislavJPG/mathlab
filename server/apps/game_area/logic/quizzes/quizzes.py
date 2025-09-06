@@ -1,7 +1,6 @@
 from datetime import timedelta
 
 from django.core.exceptions import ObjectDoesNotExist
-from django.db.models import Q
 from django.http import HttpResponseRedirect
 from django.urls import reverse
 from django.views.generic import DetailView
@@ -10,41 +9,15 @@ from django_filters.views import FilterView
 
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
 from server.apps.game_area.forms import MathQuizGameMenuForm
-from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard, MathMultipleChoiceTask
-from server.apps.game_area.models.quizzes import MathSolvedExpressions, MathSolvedQuizzes
-from server.apps.game_area.utils import get_solved_quizzes_uuids
+from server.apps.game_area.logic.quizzes.adapters import QuizAdapter
+from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard
+from server.apps.game_area.models.quizzes import MathSolvedQuizzes
+from server.apps.game_area.utils import get_solved_quizzes_uuids, _get_progress_value
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
 
 __all__ = ['MathQuizPlayBlocksListView', 'MathQuizBaseQuizView', 'MathQuizGameMenuView']
-
-
-def _get_anonymous_progress(request, get_correct_solved_expressions):
-    incorrect_solved_expressions = request.session.get('incorrect_solved_expr', [])
-    solved_expressions = request.session.get('solved_expr', [])
-    if get_correct_solved_expressions:
-        return len(solved_expressions)
-
-    return len(incorrect_solved_expressions + solved_expressions)
-
-
-def _get_progress_value(request, math_quiz, as_percentage, get_correct_solved_expressions=False):
-    theorist = getattr(request, 'theorist', None)
-
-    if not theorist or not request.user.is_authenticated:
-        solved_expressions_count = _get_anonymous_progress(
-            request, get_correct_solved_expressions=get_correct_solved_expressions
-        )
-    else:
-        add_expr = Q(mathsolvedexpressions__is_correct=True) if get_correct_solved_expressions else Q()
-        scoreboard = MathQuizScoreboard.objects.filter(solved_by=theorist).first()
-        solved_expressions_count = scoreboard.solved_expressions.filter(
-            add_expr, math_quiz__uuid=math_quiz.uuid
-        ).count()
-
-    total_expressions = math_quiz.math_expressions_count
-    return round((solved_expressions_count / total_expressions) * 100) if as_percentage else solved_expressions_count
 
 
 class MathQuizPlayBlocksListView(HXViewMixin, FilterView):
@@ -124,6 +97,7 @@ class MathQuizBaseQuizView(DetailView):
 class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
     model = MathExpression
     form_class = MathQuizGameMenuForm
+    quiz_adapter = QuizAdapter
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
 
@@ -134,11 +108,15 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         kwargs['instance'] = self.get_object()
-        kwargs['is_last_expression_to_answer'] = self._is_last_expression_to_answer()
+        adapter = self.get_adapter()
+        kwargs['is_last_expression_to_answer'] = adapter.is_last_expression_to_answer()
         return kwargs
 
     def get_success_url(self):
         return None
+
+    def get_adapter(self):
+        return self.quiz_adapter(self.get_object(), self.get_queryset(), self.request)
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -148,129 +126,8 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         else:
             return self.form_invalid(form)
 
-    def _is_last_expression_to_answer(self):
-        math_quiz = self.get_object().math_quiz
-        current_task_scoreboard = self._get_current_task_scoreboard()
-        current_solved_math_expressions = math_quiz.math_expressions.filter(
-            uuid__in=current_task_scoreboard['all_expressions']
-        )
-        return (
-            not current_task_scoreboard['current_task_is_finished']
-            and current_solved_math_expressions.count() == math_quiz.math_expressions_count - 1
-        )
-
-    def _get_current_task_scoreboard(self):
-        theorist = getattr(self.request, 'theorist', None)
-
-        if not theorist or not self.request.user.is_authenticated:
-            session = self.request.session
-
-            incorrect_solved_expr = session.get('incorrect_solved_expr', [])
-            solved_expressions = session.get('solved_expr', [])
-            expressions_with_additional = session.get('expressions_with_additional', [])
-            all_expressions = incorrect_solved_expr + solved_expressions
-            expr_uuid = str(self.get_object().uuid)
-
-            return {
-                'current_task_is_finished': expr_uuid in all_expressions,
-                'current_task_is_successfully_finished': expr_uuid in solved_expressions,
-                'all_expressions': all_expressions,
-                'expression_answer': [
-                    a.get('answer') for a in expressions_with_additional if a.get('uuid') == expr_uuid
-                ]
-                if expressions_with_additional
-                else None,
-            }
-
-        scoreboard = MathSolvedExpressions.objects.filter(
-            math_expression=self.get_object(), math_quiz_scoreboard=self.request.theorist.quiz_scoreboard
-        )
-
-        return {
-            'current_task_is_finished': scoreboard.exists(),
-            'current_task_is_successfully_finished': scoreboard.filter(is_correct=True).exists(),
-            'all_expressions': self.request.theorist.quiz_scoreboard.solved_expressions.all().values_list(
-                'uuid', flat=True
-            ),
-            'expression_answer': scoreboard.first().math_expression_answer
-            if hasattr(scoreboard.first(), 'math_expression_answer')
-            else None,
-        }
-
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        current_expression_pk = self.get_object().pk
-        math_quiz = self.get_object().math_quiz
-        expressions_to_search = list(self.get_queryset().values_list('pk', flat=True))
-        context.update(
-            {
-                'expression_pos': expressions_to_search.index(current_expression_pk) + 1,
-                'progress_as_counter': _get_progress_value(self.request, math_quiz, as_percentage=False),
-                'progress': _get_progress_value(self.request, math_quiz, as_percentage=True),
-                'task': MathMultipleChoiceTask.objects.filter(math_expression=self.get_object()).first(),
-            }
-        )
-        context['is_last_expression_to_answer'] = self._is_last_expression_to_answer()
-
-        if self.request.user.is_authenticated:
-            expr_for_stat = MathSolvedExpressions.objects.filter(
-                math_quiz_scoreboard__solved_by=self.request.theorist
-            ).values_list('math_expression__uuid', 'is_correct')
-            solved_uuids = [expr[0] for expr in expr_for_stat if expr[1]]
-            failed_expressions = [expr[0] for expr in expr_for_stat if not expr[1]]
-
-            context['expressions'] = [
-                {
-                    'pk': obj.pk,
-                    'uuid': obj.uuid,
-                    'is_solved': obj.uuid in solved_uuids,
-                    'is_solved_as_fail': obj.uuid in failed_expressions,
-                }
-                for obj in self.get_queryset()
-            ]
-        else:
-            solved_expr = self.request.session.get('solved_expr', [])
-            failed_expr = self.request.session.get('incorrect_solved_expr', [])
-            context['expressions'] = [
-                {
-                    'pk': obj.pk,
-                    'uuid': obj.uuid,
-                    'is_solved': str(obj.uuid) in solved_expr,
-                    'is_solved_as_fail': str(obj.uuid) in failed_expr,
-                }
-                for obj in self.get_queryset()
-            ]
-
-        try:
-            next_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) + 1]
-        except IndexError:
-            next_task_pk = None
-
-        if expressions_to_search.index(current_expression_pk) - 1 >= 0:
-            previous_task_pk = expressions_to_search[expressions_to_search.index(current_expression_pk) - 1]
-        else:
-            previous_task_pk = None
-
-        current_task_scoreboard = self._get_current_task_scoreboard()
-        try:
-            current_solved_math_expressions = math_quiz.math_expressions.filter(
-                uuid__in=current_task_scoreboard['all_expressions']
-            )
-            next_not_solved_task_pk = (
-                MathExpression.objects.filter(
-                    ~Q(pk__in=current_solved_math_expressions.values_list('pk', flat=True)),
-                    ~Q(pk=self.get_object().pk),
-                    math_quiz=math_quiz,
-                )
-                .only('pk')
-                .first()
-                .pk
-            )
-        except AttributeError:
-            next_not_solved_task_pk = None
-
-        context['next_task_pk'] = next_task_pk
-        context['previous_task_pk'] = previous_task_pk
-        context['next_not_solved_task_pk'] = next_not_solved_task_pk
-        context.update(current_task_scoreboard)
+        adapter = self.get_adapter()
+        adapter.get_context_data(context)
         return context

@@ -9,7 +9,7 @@ from django_filters.views import FilterView
 
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
 from server.apps.game_area.forms import MathQuizGameMenuForm
-from server.apps.game_area.logic.quizzes.adapters import QuizAdapter
+from server.apps.game_area.logic.quizzes.context_builder import MathQuizContextBuilder
 from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard
 from server.apps.game_area.models.quizzes import MathSolvedQuizzes
 from server.apps.game_area.utils import get_solved_quizzes_uuids, _get_progress_value
@@ -97,7 +97,7 @@ class MathQuizBaseQuizView(DetailView):
 class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
     model = MathExpression
     form_class = MathQuizGameMenuForm
-    quiz_adapter = QuizAdapter
+    context_builder = MathQuizContextBuilder
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
 
@@ -108,15 +108,15 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
         kwargs = super().get_form_kwargs()
         kwargs['request'] = self.request
         kwargs['instance'] = self.get_object()
-        adapter = self.get_adapter()
-        kwargs['is_last_expression_to_answer'] = adapter.is_last_expression_to_answer()
+        context_builder = self.get_context_builder()
+        kwargs['is_last_expression_to_answer'] = context_builder.is_last_expression_to_answer()
         return kwargs
 
     def get_success_url(self):
         return None
 
-    def get_adapter(self):
-        return self.quiz_adapter(self.get_object(), self.get_queryset(), self.request)
+    def get_context_builder(self):
+        return self.context_builder(self.get_object(), self.get_queryset(), self.request)
 
     def post(self, request, *args, **kwargs):
         form = self.get_form()
@@ -128,6 +128,6 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        adapter = self.get_adapter()
-        adapter.get_context_data(context)
+        context_builder = self.get_context_builder()
+        context_builder.get_context_data(context)
         return context

@@ -5,7 +5,7 @@ from server.apps.game_area.models.quizzes import MathSolvedExpressions
 from server.apps.game_area.utils import _get_progress_value
 
 
-class QuizAdapter:
+class MathQuizContextBuilder:
     def __init__(self, expression_object, expression_queryset, request):
         self.object = expression_object
         self.queryset = expression_queryset

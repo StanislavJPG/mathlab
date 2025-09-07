@@ -77,13 +77,50 @@
       {% endif %}
       hx-trigger="click from:#start-quiz-btn"
     >
-      {% if progress_as_counter < quiz.math_expressions_count %}
+      {% if not is_quiz_finished %}
         <div class="card-body text-center">
-          <h4 class="card-title mb-3">
+          <h4 class="card-title mb-2 display-6 fw-semibold text-gradient">
             {% blocktranslate trimmed %}
-              This test contains:
+              Ready to test your skills?
             {% endblocktranslate %}
           </h4>
+          <p class="lead mb-4">
+            {% blocktranslate trimmed %}
+              Get ready to challenge yourself! Below are the key details of this test.
+            {% endblocktranslate %}
+          </p>
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <ul class="list-group list-group-flush text-start rounded">
+                <li class="list-group-item">
+                  <strong>🧮 {% translate 'Questions' %}:</strong> {{ quiz.math_expressions_count }} {% translate 'total' %}
+                </li>
+                <li class="list-group-item">
+                  <strong>📚 {% translate 'Category' %}:</strong> {{ quiz.get_category_display }}
+                </li>
+                <li class="list-group-item">
+                  <strong>🏆 {% translate 'Completion Score' %}:</strong> {{ quiz.finish_score_reward }} {% translate 'scores' %}
+                </li>
+                <li class="list-group-item">
+                  <strong>🔥 {% translate 'Difficulty' %}:</strong>
+                  {% if quiz.difficulty == 'ES' %}
+                    <span class="badge bg-success">{% translate 'Easy' %}</span>
+                  {% elif quiz.difficulty == 'NL' %}
+                    <span class="badge bg-primary">{% translate 'Normal' %}</span>
+                  {% elif quiz.difficulty == 'HD' %}
+                    <span class="badge bg-warning text-dark">{% translate 'Hard' %}</span>
+                  {% elif quiz.difficulty == 'EX' %}
+                    <span class="badge bg-danger">{% translate 'Extra Hard' %}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{% translate 'Unknown' %}</span>
+                  {% endif %}
+                </li>
+                <li class="list-group-item">
+                  <strong>📊 {% translate 'Average Solve Time' %}:</strong> {{ quiz.average_solve_time_statistic }}
+                </li>
+              </ul>
+            </div>
+          </div>
         </div>
       {% else %}
         {% if progress_correct_answers_counter >= quiz.min_expressions_to_successfully_finish %}
@@ -144,19 +181,23 @@
     </div>
 
     <div class="text-center mt-4">
-      {% if progress_as_counter < quiz.math_expressions_count %}
+      {% if progress_as_counter < quiz.math_expressions_count and not is_quiz_finished %}
         <button class="btn btn-warning px-4" id="start-quiz-btn"
                 type="button"
                 _="on click remove .d-none from #end-quiz-btn then add .d-none">
           <i class="ti ti-player-play"></i> {% translate 'Start quiz' %}
         </button>
-        {% if not is_quiz_finished %}
-          <button class="btn btn-danger px-4 d-none"
-                  type="button"
-                  id="end-quiz-btn"
-          >
-            <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
-          </button>
+        {% if progress_as_counter < quiz.math_expressions_count %}
+          <form id="finish-quiz-form" method="post" action="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-finish-quiz' quiz.uuid %}">
+            {% csrf_token %}
+            <input type="hidden" id="id_time_left_before_finish" name="time_left_before_finish" class="time-left">
+            <button class="btn btn-danger px-4 d-none"
+                    type="submit"
+                    id="end-quiz-btn"
+            >
+              <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
+            </button>
+          </form>
         {% endif %}
       {% else %}
         <div class="d-flex flex-column align-items-center">

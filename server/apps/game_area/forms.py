@@ -6,6 +6,12 @@ from django.utils.translation import gettext_lazy as _
 
 from server.apps.game_area.models import MathQuizScoreboard, MathSolvedQuizzes
 from server.apps.game_area.models.quizzes import MathSolvedExpressions
+from server.apps.game_area.utils import add_solved_quiz_for_anonymous_user
+from server.common.http import AuthenticatedHttpRequest
+
+
+def get_solve_time(time_left, max_time_to_solve):
+    return max_time_to_solve - time_left
 
 
 class MathQuizGameMenuForm(forms.Form):
@@ -34,6 +40,9 @@ class MathQuizGameMenuForm(forms.Form):
         quizzes_with_additional = session.get('quizzes_with_additional', [])
         incorrect_solved_expressions = set()
 
+        quiz = self.instance.math_quiz
+        quiz_uuid = str(quiz.uuid)
+
         # Update solved expressions
         if is_correct_answer:
             solved_expressions.add(solved_expr_uuid)
@@ -45,6 +54,7 @@ class MathQuizGameMenuForm(forms.Form):
         expressions_with_additional.append(
             {
                 'uuid': solved_expr_uuid,
+                'quiz_uuid': quiz_uuid,
                 'date': timezone.now().isoformat(),
                 'answer': self.cleaned_data['answer'],
             }
@@ -53,9 +63,6 @@ class MathQuizGameMenuForm(forms.Form):
         session.modified = True
 
         # Check if all expressions in the quiz are solved
-        quiz = self.instance.math_quiz
-        quiz_uuid = str(quiz.uuid)
-
         solved_quizzes = set(session.get('solved_quizzes', []))
         if quiz_uuid not in solved_quizzes:
             solved_quizzes.add(quiz_uuid)
@@ -84,6 +91,10 @@ class MathQuizGameMenuForm(forms.Form):
         if scoreboard.solved_expressions.filter(uuid=self.instance.uuid).exists():
             self.add_error(None, already_solved_msg_label)
             return
+
+    @property
+    def solve_time(self):
+        return get_solve_time(self.cleaned_data['time_left'], self.instance.math_quiz.max_time_to_solve)
 
     @transaction.atomic
     def save(self):
@@ -126,7 +137,55 @@ class MathQuizGameMenuForm(forms.Form):
                 MathSolvedQuizzes.objects.create(
                     math_quiz=self.instance.math_quiz,
                     math_quiz_scoreboard=scoreboard,
-                    best_time_taken=self.cleaned_data['time_left'],
+                    best_time_taken=self.solve_time,
                     is_successfully_finished=is_successfully_finished,
                 )
             return scoreboard
+
+
+class MathQuizFinishForm(forms.Form):
+    def __init__(self, *args, **kwargs):
+        self.request = kwargs.pop('request')
+        self.instance = kwargs.pop('instance')
+        super().__init__(*args, **kwargs)
+        # prepare time_left_before_finish field
+        self.fields['time_left_before_finish'] = forms.DurationField()
+        self.fields['time_left_before_finish'].widget = HiddenInput()
+        self.fields['time_left_before_finish'].required = False
+
+    @property
+    def solve_time(self):
+        return get_solve_time(self.cleaned_data['time_left_before_finish'], self.instance.max_time_to_solve)
+
+    def process_finishing_quiz(self):
+        self.request: AuthenticatedHttpRequest
+
+        if not self.request.user.is_authenticated:
+            quiz_uuid = str(self.instance.uuid)
+            quizzes_with_additional = self.request.session.get('quizzes_with_additional', [])
+            session = add_solved_quiz_for_anonymous_user(quiz_uuid, self.request)
+            quizzes_with_additional.append(
+                {
+                    'uuid': quiz_uuid,
+                    'date': timezone.now().isoformat(),
+                    'time_left': self.cleaned_data['time_left_before_finish'].total_seconds(),
+                }
+            )
+            session['quizzes_with_additional'] = quizzes_with_additional
+            session.modified = True
+        else:
+            scoreboard = MathQuizScoreboard.objects.get(solved_by=self.request.theorist)
+            solved_expressions = scoreboard.solved_expressions.filter(
+                math_quiz=self.instance, mathsolvedexpressions__is_correct=True
+            ).count()
+            is_successfully_finished = solved_expressions >= self.instance.min_expressions_to_successfully_finish
+
+            MathSolvedQuizzes.objects.create(
+                math_quiz=self.instance,
+                math_quiz_scoreboard=scoreboard,
+                best_time_taken=self.solve_time,
+                is_successfully_finished=is_successfully_finished,
+            )
+
+    def save(self):
+        return self.process_finishing_quiz()

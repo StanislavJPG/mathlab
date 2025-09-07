@@ -1,4 +1,4 @@
-from datetime import timedelta
+from datetime import timedelta, datetime
 
 from django.core.exceptions import ObjectDoesNotExist
 from django.http import HttpResponseRedirect
@@ -8,11 +8,15 @@ from django.views.generic.edit import ModelFormMixin
 from django_filters.views import FilterView
 
 from server.apps.game_area.filters import MathQuizPlayBlocksListFilter
-from server.apps.game_area.forms import MathQuizGameMenuForm
-from server.apps.game_area.logic.quizzes.context_builder import MathQuizContextBuilder
+from server.apps.game_area.forms import MathQuizGameMenuForm, get_solve_time
+from server.apps.game_area.mixins import MathQuizContextBuilderViewMixin
 from server.apps.game_area.models import MathQuiz, MathExpression, MathQuizScoreboard
 from server.apps.game_area.models.quizzes import MathSolvedQuizzes
-from server.apps.game_area.utils import get_solved_quizzes_uuids, _get_progress_value
+from server.apps.game_area.utils import (
+    get_solved_quizzes_uuids,
+    _get_progress_value,
+    get_quiz_time_left_for_anonymous_user,
+)
 from server.common.http import AuthenticatedHttpRequest
 from server.common.mixins.views import HXViewMixin
 
@@ -74,15 +78,14 @@ class MathQuizBaseQuizView(DetailView):
         else:
             quiz_uuid = str(self.object.uuid)
             is_quiz_finished = quiz_uuid in self.request.session.get('solved_quizzes', [])
-            quizzes_with_additional = self.request.session.get('quizzes_with_additional', [])
-            last_solved_expr = ...  # TODO: Fill
-            quiz_best_time_taken = (
-                [timedelta(seconds=a.get('time_left')) for a in quizzes_with_additional if a.get('uuid') == quiz_uuid][
-                    0
-                ]
-                if quizzes_with_additional
-                else timedelta(0)
+            expressions_with_additional = self.request.session.get('expressions_with_additional', [])
+            sorted_dates = sorted(
+                [a.get('date') for a in expressions_with_additional if a.get('quiz_uuid') == quiz_uuid],
+                key=datetime.fromisoformat,
             )
+            last_solved_expr = sorted_dates[-1] if sorted_dates else None
+            quiz_time_left = get_quiz_time_left_for_anonymous_user(quiz_uuid, self.request)
+            quiz_best_time_taken = get_solve_time(quiz_time_left, self.object.max_time_to_solve)
 
         context['quiz_best_time_taken'] = quiz_best_time_taken
         context['last_solved_expr'] = last_solved_expr or self.object.math_expressions.first()
@@ -94,10 +97,9 @@ class MathQuizBaseQuizView(DetailView):
         return context
 
 
-class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
+class MathQuizGameMenuView(HXViewMixin, MathQuizContextBuilderViewMixin, ModelFormMixin, DetailView):
     model = MathExpression
     form_class = MathQuizGameMenuForm
-    context_builder = MathQuizContextBuilder
     template_name = 'quizzes/partials/quiz.html'
     context_object_name = 'expression'
 
@@ -115,9 +117,6 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
     def get_success_url(self):
         return None
 
-    def get_context_builder(self):
-        return self.context_builder(self.get_object(), self.get_queryset(), self.request)
-
     def post(self, request, *args, **kwargs):
         form = self.get_form()
         self.object = self.get_object()
@@ -125,9 +124,3 @@ class MathQuizGameMenuView(HXViewMixin, ModelFormMixin, DetailView):
             return self.form_valid(form)
         else:
             return self.form_invalid(form)
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context_builder = self.get_context_builder()
-        context_builder.get_context_data(context)
-        return context

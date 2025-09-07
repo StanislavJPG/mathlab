@@ -86,7 +86,7 @@
                   hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
                 {% endif %}
                 hx-target=".quiz-card"
-                hx-trigger="click from:#confirm-expr-btn"
+                hx-trigger="submit from:#quiz-form delay:0.5s"
           ></span>
           {% translate 'Confirm answer' as btn_label %}
           {% render_submit_button btn_label class="btn btn-success px-4 mb-2 d-none" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
@@ -132,14 +132,21 @@
     });
   }
 
-  document.getElementById('quiz-form').addEventListener('submit', function (e) {
+  function processTime() {
     // We need to pass totalSeconds that was taken to solve quiz to pass it in the database for stats and etc
     const timeStr = document.getElementById('time-left').textContent.trim(); // "0:05:21"
     const [hours, minutes, seconds] = timeStr.split(':').map(Number);
 
     const totalSeconds = hours * 3600 + minutes * 60 + seconds;
     document.getElementById('id_time_left').value = totalSeconds;
-  });
+    document.querySelectorAll('.time-left').forEach(el => {
+      console.log(el, totalSeconds)
+      el.value = totalSeconds;
+    })
+  }
+
+  document.getElementById('quiz-form').addEventListener('submit', processTime);
+  document.getElementById('finish-quiz-form').addEventListener('submit', processTime);
 
   document.getElementById('math-expression').addEventListener('input', function () {
     document.getElementById('id_answer').value = this.value;

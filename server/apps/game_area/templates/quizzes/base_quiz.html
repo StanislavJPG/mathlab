@@ -1,0 +1,281 @@
+{% extends 'base/mathlab_base.html' %}
+{% load i18n static %}
+
+{% block page_css %}
+  <link rel="stylesheet" href="{% static 'css/features/fireworks.css' %}">
+  <style>
+    body {
+      background: linear-gradient(to right, #1e3c72, #2a5298);
+      color: #fff;
+      font-family: 'Segoe UI', sans-serif;
+    }
+
+    .quiz-card {
+      background-color: #ffffff10;
+      border: none;
+      border-radius: 1rem;
+      padding: 2rem;
+    }
+
+    .btn-answer {
+      width: 100%;
+      margin-bottom: 1rem;
+      font-weight: bold;
+    }
+
+    .btn-answer:hover {
+      transform: scale(1.02);
+    }
+
+    .progress {
+      height: 20px;
+      background-color: #ffffff30;
+    }
+
+    .progress-bar {
+      background-color: #ffc107;
+    }
+  </style>
+{% endblock page_css %}
+
+{% block body %}
+  <div class="container py-5">
+    <div class="text-center mb-4 d-flex flex-column align-items-center">
+      <h1 class="fw-bold">🎯 {% translate 'Math quiz' %}</h1>
+      <p class="lead">Test your knowledge and beat the clock!</p>
+
+      <div id="quiz-timer"
+           class="card bg-transparent text-center border-0"
+           style="width: 18rem;"
+           data-duration="300"
+           data-warning="30"
+           data-autostart="false">
+        <div class="card-body">
+          <div class="d-flex align-items-center justify-content-between mb-2">
+            <h5 class="card-title text-white mb-0">{% translate 'Time to solve' %}:</h5>
+            <div class="timer-mono fs-3 text-white" id="time-left" aria-labelledby="time-left-label">{{ quiz.max_time_to_solve }}</div>
+          </div>
+
+          <span id="time-left-label" class="visually-hidden">Time remaining</span>
+          <span id="time-aria" class="visually-hidden" aria-live="polite"></span>
+
+          <div class="progress" role="progressbar" aria-label="Quiz timer progress" aria-valuemin="0" aria-valuemax="100">
+            <div id="time-progress" class="progress-bar bg-success" style="width: 0%"></div>
+          </div>
+
+          <div id="timer-alert" class="mt-3"></div>
+        </div>
+      </div>
+
+    </div>
+    <div
+      class="card quiz-card {% if progress_as_counter >= quiz.math_expressions_count %}bg-light bg-gradient{% endif %} shadow-lg"
+      {% if last_solved_expr.pk %}
+        hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid last_solved_expr.pk %}"
+      {% else %}
+        hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+      {% endif %}
+      hx-trigger="click from:#start-quiz-btn"
+    >
+      {% if not is_quiz_finished %}
+        <div class="card-body text-center">
+          <h4 class="card-title mb-2 display-6 fw-semibold text-gradient">
+            {% blocktranslate trimmed %}
+              Ready to test your skills?
+            {% endblocktranslate %}
+          </h4>
+          <p class="lead mb-4">
+            {% blocktranslate trimmed %}
+              Get ready to challenge yourself! Below are the key details of this test.
+            {% endblocktranslate %}
+          </p>
+          <div class="row justify-content-center">
+            <div class="col-md-8">
+              <ul class="list-group list-group-flush text-start rounded">
+                <li class="list-group-item">
+                  <strong>🧮 {% translate 'Questions' %}:</strong> {{ quiz.math_expressions_count }} {% translate 'total' %}
+                </li>
+                <li class="list-group-item">
+                  <strong>📚 {% translate 'Category' %}:</strong> {{ quiz.get_category_display }}
+                </li>
+                <li class="list-group-item">
+                  <strong>🏆 {% translate 'Completion Score' %}:</strong> {{ quiz.finish_score_reward }} {% translate 'scores' %}
+                </li>
+                <li class="list-group-item">
+                  <strong>🔥 {% translate 'Difficulty' %}:</strong>
+                  {% if quiz.difficulty == 'ES' %}
+                    <span class="badge bg-success">{% translate 'Easy' %}</span>
+                  {% elif quiz.difficulty == 'NL' %}
+                    <span class="badge bg-primary">{% translate 'Normal' %}</span>
+                  {% elif quiz.difficulty == 'HD' %}
+                    <span class="badge bg-warning text-dark">{% translate 'Hard' %}</span>
+                  {% elif quiz.difficulty == 'EX' %}
+                    <span class="badge bg-danger">{% translate 'Extra Hard' %}</span>
+                  {% else %}
+                    <span class="badge bg-secondary">{% translate 'Unknown' %}</span>
+                  {% endif %}
+                </li>
+                <li class="list-group-item">
+                  <strong>📊 {% translate 'Average Solve Time' %}:</strong> {{ quiz.average_solve_time_statistic }}
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      {% else %}
+        {% if progress_correct_answers_counter >= quiz.min_expressions_to_successfully_finish %}
+          <div class="pyro">
+            <div class="before"></div>
+            <div class="after"></div>
+          </div>
+        {% endif %}
+
+        <div class="container my-5">
+          <div class="card bg-white shadow-sm border-0 text-center">
+            <div class="card-body py-5">
+              {% if progress_correct_answers_counter >= quiz.math_expressions_count %}
+                <h2 class="card-title text-success fw-bold mb-3">
+                  {% translate '🎉 Congratulations!' %}
+                </h2>
+                <p class="lead text-dark mb-4">
+                  {% translate 'You finished all the tasks!' %}
+                </p>
+                <p class="fs-5 text-primary">
+                  {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
+                </p>
+              {% elif progress_correct_answers_counter >= quiz.min_expressions_to_successfully_finish %}
+                <h2 class="card-title text-success fw-bold mb-3">
+                  {% translate '🎉 Congratulations!' %}
+                </h2>
+                <p class="lead text-dark mb-4">
+                  {% with quiz_math_expressions_count=quiz.math_expressions_count %}
+                    {% blocktranslate trimmed %}
+                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong><br/>
+                      Time taken to solve all the tasks: <strong>{{ quiz_best_time_taken }}</strong>
+                    {% endblocktranslate %}
+                  {% endwith %}
+                </p>
+                <p class="fs-5 text-primary">
+                  {% translate 'Your score award for finishing is ' %}<strong>{{ quiz.get_html_score_reward }}</strong>!
+                </p>
+              {% else %}
+                <h2 class="card-title text-warning fw-bold mb-3">
+                  {% translate '😢 Unfortunately, you did not successfully finish this quiz...' %}
+                </h2>
+                <p class="lead text-dark mb-4">
+                  {% with quiz_math_expressions_count=quiz.math_expressions_count %}
+                    {% blocktranslate trimmed %}
+                      Solved tasks: <strong>{{ progress_correct_answers_counter }}/{{ quiz_math_expressions_count }}</strong><br/>
+                      Time taken to solve all tasks: <strong>{{ quiz_best_time_taken }}</strong>
+                    {% endblocktranslate %}
+                  {% endwith %}
+                </p>
+              {% endif %}
+
+              <!-- Clock placeholder -->
+              <div id="clock" class="mt-4"></div>
+            </div>
+          </div>
+        </div>
+      {% endif %}
+    </div>
+
+    <div class="text-center mt-4">
+      {% if progress_as_counter < quiz.math_expressions_count and not is_quiz_finished %}
+        <button class="btn btn-warning px-4" id="start-quiz-btn"
+                type="button"
+                _="on click remove .d-none from #end-quiz-btn then add .d-none">
+          <i class="ti ti-player-play"></i> {% translate 'Start quiz' %}
+        </button>
+        {% if progress_as_counter < quiz.math_expressions_count %}
+          <form id="finish-quiz-form" method="post" action="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-finish-quiz' quiz.uuid %}">
+            {% csrf_token %}
+            <input type="hidden" id="id_time_left_before_finish" name="time_left_before_finish" class="time-left">
+            <button class="btn btn-danger px-4 d-none"
+                    type="submit"
+                    id="end-quiz-btn"
+            >
+              <i class="ti ti-flag-pause"></i> {% translate 'Finish quiz' %}
+            </button>
+          </form>
+        {% endif %}
+      {% else %}
+        <div class="d-flex flex-column align-items-center">
+          <button type="button" class="btn btn-outline-info px-4 mb-3"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' quiz.uuid quiz.math_expressions.first.pk %}"
+                  hx-target=".quiz-card"
+          >
+            <i class="ti ti-device-ipad-search"></i> {% translate 'Check my answers' %}
+          </button>
+          <a class="btn btn-warning px-4" href="{% url 'mathlab:gamearea:gamearea-base' %}">
+            <i class="ti ti-arrow-back"></i> {% translate 'Back to the game area' %}
+          </a>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+{% endblock body %}
+
+{% block page_js %}
+  <script>
+    function timerLogic() {
+      const duration = {{ quiz.max_time_to_solve.seconds }};
+      const warning = {% widthratio quiz.max_time_to_solve.seconds 6 1 %};  // see https://web.archive.org/web/20160525152906/http://slacy.com/blog/2010/07/using-djangos-widthratio-template-tag-for-multiplication-division/
+      let timeLeft = duration;
+      let timerId;
+
+      const timeEl = document.getElementById("time-left");
+      const barEl = document.getElementById("time-progress");
+      const alertBox = document.getElementById("timer-alert");
+      const form = document.getElementById("quiz-form");
+
+      function formatTime(sec) {
+        const h = Math.floor(sec / 3600);
+        const m = Math.floor((sec % 3600) / 60);
+        const s = sec % 60;
+        return `${h}:${String(m).padStart(2, "0")}:${String(s).padStart(2, "0")}`;
+      }
+
+      function updateUI() {
+        timeEl.textContent = formatTime(timeLeft);
+        barEl.style.width = `${((duration - timeLeft) / duration) * 100}%`;
+
+        if (timeLeft <= warning) {
+          barEl.classList.remove("bg-success");
+          barEl.classList.add("bg-warning");
+        }
+        if (timeLeft <= 0) {
+          clearInterval(timerId);
+          barEl.classList.remove("bg-warning");
+          barEl.classList.add("bg-danger");
+          alertBox.innerHTML = `<div class="alert alert-danger">Time is up!</div>`;
+          if (form) form.requestSubmit();
+        }
+      }
+
+      document.getElementById("start-quiz-btn").onclick = () => {
+        clearInterval(timerId);
+        timerId = setInterval(() => {
+          timeLeft--;
+          updateUI();
+        }, 1000);
+      };
+
+      document.getElementById("btn-reset").onclick = () => {
+        clearInterval(timerId);
+        timeLeft = duration;
+        barEl.className = "progress-bar bg-success";
+        alertBox.innerHTML = "";
+        updateUI();
+      };
+
+      updateUI(); // initial render
+    }
+
+    ['DOMContentLoaded'].forEach(el => {
+      document.addEventListener(el, timerLogic);
+    });
+
+  </script>
+
+{% endblock page_js %}

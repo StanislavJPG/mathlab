@@ -7,7 +7,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2025-07-19 13:25+0300\n"
+"POT-Creation-Date: 2025-08-25 23:16+0300\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -93,6 +93,7 @@ msgid "Impersonation"
 msgstr "Самозванство"
 
 #: server/apps/complaints/choices.py server/apps/forum/choices.py
+#: server/apps/game_area/choices.py
 msgid "Other"
 msgstr "Інше"
 
@@ -112,6 +113,7 @@ msgstr "Ваша скарга успішно відправлена! Дякує�
 #: server/apps/forum/logic/comment_answers.py
 #: server/apps/forum/logic/comment_management.py
 #: server/apps/forum/logic/post_management.py
+#: server/apps/solvers/logic/solvers.py
 #: server/apps/theorist/logic/friendship/blacklist.py
 #: server/apps/theorist/logic/friendship/friends_management.py
 #: server/apps/theorist/logic/onboarding.py
@@ -183,7 +185,7 @@ msgid "Choose the category of violation"
 msgstr "Виберіть категорію порушення"
 
 #: server/apps/complaints/templates/modals/complaint_create_modal_form.html
-#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/solvers/templates/partials/solvers_modals.html
 #: server/apps/theorist_chat/templates/modals/drafts_messages_share.html
 #: server/apps/theorist_chat/templates/modals/mailbox_create_modal.html
 #: server/apps/theorist_chat/templates/modals/messages_share_instance.html
@@ -197,67 +199,68 @@ msgstr "Закрити"
 msgid "Send complaint"
 msgstr "Відправити скаргу"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Graph Functions"
 msgstr "Графіки функцій"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Matrices"
 msgstr "Матриці"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
+#: server/apps/solvers/templates/partials/solvers_modals.html
 msgid "Equations"
 msgstr "Рівняння"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Inequalities"
 msgstr "Нерівності"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Systems of Equations"
 msgstr "Системи рівнянь"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Higher Mathematics"
 msgstr "Вища математика"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Probability Theory"
 msgstr "Теорія ймовірностей"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Combinatorics"
 msgstr "Комбінаторика"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Discrete Mathematics"
 msgstr "Дискретна математика"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Elementary Mathematics"
 msgstr "Елементарна математика"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Percentages"
 msgstr "Відсотки"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Trigonometry"
 msgstr "Тригонометрія"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Geometry"
 msgstr "Геометрія"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Probability and Statistics"
 msgstr "Ймовірність та статистика"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Algorithms"
 msgstr "Алгоритми"
 
-#: server/apps/forum/choices.py
+#: server/apps/forum/choices.py server/apps/game_area/choices.py
 msgid "Algebra"
 msgstr "Алгебра"
 
@@ -266,6 +269,7 @@ msgid "Title"
 msgstr "Назва"
 
 #: server/apps/forum/filters.py
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
 msgid "Categories"
 msgstr "Категорії"
 
@@ -445,6 +449,7 @@ msgstr "Зберегти коментар"
 
 #: server/apps/forum/templates/comments/partials/comment_list.html
 #: server/apps/forum/templates/posts/question_page.html
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
 msgid "Author"
 msgstr "Автор"
 
@@ -537,11 +542,13 @@ msgid "Advanced filter"
 msgstr "Розширений фільтр"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
 #: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 msgid "Apply"
 msgstr "Застосувати"
 
 #: server/apps/forum/templates/posts/partials/posts_list.html
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
 #: server/apps/theorist_community/templates/partials/theorist_community_base_list.html
 #: server/apps/theorist_drafts/templates/modals/create_draft_modal.html
 msgid "Clear"
@@ -611,6 +618,193 @@ msgstr "Найновіші"
 msgid "Your answer"
 msgstr "Ваша відповідь"
 
+#: server/apps/game_area/choices.py
+msgid "Math Facts"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Easy"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Normal"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Hard"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Extra Hard"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
+msgid "Empty"
+msgstr "Пусто"
+
+#: server/apps/game_area/choices.py
+msgid "Bronze"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Silver"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Gold"
+msgstr ""
+
+#: server/apps/game_area/choices.py
+msgid "Platinum"
+msgstr ""
+
+#: server/apps/game_area/filters.py
+msgid "Less or equals 5"
+msgstr ""
+
+#: server/apps/game_area/filters.py
+msgid "Greater or equals 20"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "max time to solve"
+msgstr "максимум часу для розв'язання"
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Quiz"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "score reward for the single expression"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Expression"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Expressions"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "difficulty"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "score reward for quiz finishing"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "average solve time"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Quizzes"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "best time taken to finish this quiz"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math solved quizzes"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "You have only %s to successfully finish this quiz."
+msgstr "Ви маєте лише %s для успішного завершення вікторини."
+
+#: server/apps/game_area/models/quizzes.py
+msgid "time that was taken to solve all quizzes"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Scoreboard"
+msgstr ""
+
+#: server/apps/game_area/models/quizzes.py
+msgid "Math Scoreboards"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/base_quiz.html
+msgid "Math quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/base_quiz.html
+msgid "This test contains:"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/base_quiz.html
+msgid "Start quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/base_quiz.html
+msgid "Finish quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz.html
+msgid "Progress"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz.html
+msgid "Next expression"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Filter Quizzes"
+msgstr "Фільтр Вікторин"
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Difficulties"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Finish score reward"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Easy quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Normal quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Hard quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Extra hard quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Time to finish the quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Expressions to solve count"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Quiz reward"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Average solve time statistics"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+msgid "Start the quiz"
+msgstr ""
+
+#: server/apps/game_area/templates/quizzes/partials/quiz_block_list.html
+#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
+#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
+msgid "Still empty! 🥱"
+msgstr "Все ще пусто! 🥱"
+
 #: server/apps/math_news/templates/news_base.html
 msgid "Last math-related news"
 msgstr "Останні новини зі світу Математики"
@@ -619,15 +813,23 @@ msgstr "Останні новини зі світу Математики"
 msgid "Read from origin"
 msgstr "Читати з першоджерела"
 
-#: server/apps/solvers/templates/partials/equations_modals.html
-msgid "Equations solver"
-msgstr "Розв'язувач рівнянь"
+#: server/apps/solvers/templates/partials/graphbuilder.html
+msgid "Create graph"
+msgstr "Створити графік"
 
-#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/solvers/templates/partials/solvers_modals.html
+msgid "Solvers"
+msgstr ""
+
+#: server/apps/solvers/templates/partials/solvers_modals.html
+msgid "Graphbuilder"
+msgstr ""
+
+#: server/apps/solvers/templates/partials/solvers_modals.html
 msgid "Equation solving example"
 msgstr "Приклад розв'язування рівнянь"
 
-#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/solvers/templates/partials/solvers_modals.html
 msgid ""
 "\n"
 "          <em>P.S. Thanks to <a href=\"https://cortexjs.io/\" "
@@ -639,7 +841,7 @@ msgstr ""
 "target=\"_blank\">CortexJS!</a></em>\n"
 "        "
 
-#: server/apps/solvers/templates/partials/equations_modals.html
+#: server/apps/solvers/templates/partials/solvers_modals.html
 msgid "Got it!"
 msgstr "Зрозуміло!"
 
@@ -900,10 +1102,6 @@ msgid "Unblock"
 msgstr "Розблокувати"
 
 #: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
-msgid "Empty"
-msgstr "Пусто"
-
-#: server/apps/theorist/templates/friendship/blacklist/partials/blacklist.html
 msgid "You have not any blocked theorist"
 msgstr "Ви все ще не маєте жодного заблокованого теоретика"
 
@@ -977,11 +1175,6 @@ msgstr "Ви впевнені, що хочете відмовити на зап�
 #: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
 msgid "Reject"
 msgstr "Відмовити"
-
-#: server/apps/theorist/templates/friendship/partials/private_lists/pending_list.html
-#: server/apps/theorist/templates/friendship/partials/public_lists/pending_list.html
-msgid "Still empty! 🥱"
-msgstr "Все ще пусто! 🥱"
 
 #: server/apps/theorist/templates/friendship/partials/private_lists/rejected_list.html
 msgid "Theorists which you rejected in friendship"
@@ -1378,6 +1571,10 @@ msgstr "Так"
 msgid "Find chat by name"
 msgstr "Знайти чат по імені"
 
+#: server/apps/theorist_chat/filters.py
+msgid "Search message by lookup..."
+msgstr ""
+
 #: server/apps/theorist_chat/forms.py
 msgid "Error. This theorist has blocked you."
 msgstr "Помилка. Цей теоретик заблокував Вас."
@@ -1572,6 +1769,10 @@ msgid "Choose person that you want to write to!"
 msgstr "Виберіть персону, котрій хочете написати!"
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Search message"
+msgstr "Знайти повідомлення"
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 #, python-format
 msgid "Unblock <strong>%(name)s</strong>"
 msgstr "Розблокувати <strong>%(name)s</strong>"
@@ -1598,6 +1799,10 @@ msgstr ""
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "Delete chat"
 msgstr "Видалити чат"
+
+#: server/apps/theorist_chat/templates/partials/chat_messages_list.html
+msgid "Type below to search message"
+msgstr ""
 
 #: server/apps/theorist_chat/templates/partials/chat_messages_list.html
 msgid "This message was removed."
@@ -2241,12 +2446,8 @@ msgid "Main page"
 msgstr "Головна сторінка"
 
 #: server/templates/partials/mathlab/mathlab_navbar.html
-msgid "This feature in development! Stay tuned with updates!"
-msgstr "Ця фіча ще в розробці! Слідкуй за останніми оновленнями!"
-
-#: server/templates/partials/mathlab/mathlab_navbar.html
-msgid "Build a graph"
-msgstr "Побудуй графік"
+msgid "Game area"
+msgstr ""
 
 #: tests/forum/test_comment.py tests/forum/test_comment_answer.py
 #: tests/forum/test_post.py tests/theorists/test_theorist_chat.py

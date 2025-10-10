@@ -1,0 +1,163 @@
+{% load i18n static widget_tweaks widened_widget_tweaks %}
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.css" integrity="sha384-o3WH+1yEhq+grOgz1BVYTZPyTlMXrDxnjN1By9/ba94JqJhva6wFm2Hb+URQX53v" crossorigin="anonymous">
+<script defer src="https://cdn.jsdelivr.net/npm/katex@0.16.22/dist/katex.js" integrity="sha384-C5yZTsgLOfuizO9kb+hrB8uSBwwvZ4yenKWU0KmWl+7bkL6Tph/KbcOa3S4zdoRE" crossorigin="anonymous"></script>
+
+<div class="card-body">
+  <h5 class="card-title fw-italic text-center mb-2">Question {{ expression_pos }} of {{ expression.math_quiz.math_expressions_count }}</h5>
+  <div class="text-center mb-3">
+    {% for stat_expression in expressions %}
+      <button type="button"
+              hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid stat_expression.pk %}"
+              hx-target=".quiz-card"
+              class="btn btn{% if stat_expression.is_solved %}-success{% elif stat_expression.is_solved_as_fail %}-danger{% else %}-secondary{% endif %}
+                     {% if expression.uuid == stat_expression.uuid %}btn-lg border border-1{% endif %}">
+        {{ forloop.counter }}
+      </button>
+    {% endfor %}
+  </div>
+  <small class="bg-white bg-opacity-75 p-2 rounded rounded-bottom-0 text-dark fw-bold" style="font-size: 12px;">
+    {% if expression.has_multiple_choices %}
+      {% translate 'Question' %}:
+    {% else %}
+      {% translate 'Expression' %}:
+    {% endif %}
+  </small><br/>
+  <p class="fs-4 text-dark bg-white bg-opacity-75 p-2 rounded rounded-top-left-0 mt-1" style="border-top-left-radius: 0 !important;">
+    {% if expression.has_multiple_choices %}
+      {{ expression.get_multiple_choice_question }}
+    {% else %}
+      <math-field class="bg-transparent border-0 text-dark disabled" disabled>{{ expression.latex_expression }}</math-field>
+    {% endif %}
+  </p>
+
+  <form {% render_form_spinner_attrs %} hx-post="{{ request.path }}" id="quiz-form">
+    <div class="mt-4">
+      {% render_field form.answer %}
+      {% render_field form.time_left %}
+
+      {% if expression.has_multiple_choices %}
+        {% for answer_obj in task.answers.all %}
+          {% if not current_task_is_finished %}
+            <button type="button" class="btn btn-outline-light btn-answer" onclick="selectAnswer('{{ answer_obj.answer }}')">
+              {{ answer_obj.answer }}
+            </button>
+          {% else %}
+            <button type="button"
+                    {% if answer_obj.is_correct_answer %}
+                      class="btn btn-success btn-answer disabled"
+                    {% elif not answer_obj.is_correct_answer %}
+                      class="btn btn-danger btn-answer disabled"
+                    {% else %}
+                      class="btn btn-outline-light btn-answer disabled"
+                    {% endif %}
+            >
+              {% if answer_obj.is_correct_answer %}✅{% endif %} {{ answer_obj.answer }}
+            </button>
+          {% endif %}
+        {% endfor %}
+      {% else %}
+        <small class="bg-white bg-opacity-75 rounded p-2 rounded-bottom-0 text-dark fw-bold" style="font-size: 12px;">{{ form.answer.help_text }}</small><br/>
+        {% if not current_task_is_finished %}
+          <math-field id="math-expression" style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="x^2 + 15x - 10 = 0"></math-field>
+        {% else %}
+          <math-field style="border-top-left-radius: 0 !important;" class="form-control mt-1" placeholder="{{ expression_answer }}"></math-field>
+        {% endif %}
+      {% endif %}
+    </div>
+
+    <div class="mt-4">
+      <div class="progress">
+        <div class="progress-bar" role="progressbar"
+             style="width: {{ progress }}%;"
+             aria-valuenow="30"
+             aria-valuemin="0"
+             aria-valuemax="100"></div>
+      </div>
+      <small class="text-light">{% translate 'Progress' %}: {{ progress_as_counter }}/{{ expression.math_quiz.math_expressions_count }}</small>
+    </div>
+    <div class="d-flex flex-column align-items-center text-center mt-4">
+      {% if not current_task_is_finished %}
+        {% if not is_last_expression_to_answer %}
+          <span class="d-none"
+                {% if next_not_solved_task_pk %}
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_not_solved_task_pk %}"  {# TODO: FIX #}
+                {% else %}
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                {% endif %}
+                hx-target=".quiz-card"
+                hx-trigger="submit from:#quiz-form delay:0.5s"
+          ></span>
+          {% translate 'Confirm answer' as btn_label %}
+          {% render_submit_button btn_label class="btn btn-success px-4 mb-2 d-none" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
+        {% else %}
+          {% translate 'Confirm answer and finish the quiz' as btn_label %}
+          {% render_submit_button btn_label onclick="lastQuestionFinishQuiz()" class="btn btn-success px-4 mb-2 d-none" id="confirm-expr-btn" with_icon="ti ti-progress-check" %}
+        {% endif %}
+      {% endif %}
+      <div class="d-flex mt-2">
+        {% if previous_task_pk %}
+          <button class="btn btn-warning px-4 me-2 btn-sm" id="previous-quiz-btn"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid previous_task_pk %}"
+                  hx-target=".quiz-card"
+                  type="button">
+            <i class="ti ti-arrow-left"></i> {% translate 'Previous expression' %}
+          </button>
+        {% endif %}
+        {% if next_task_pk %}
+          <button class="btn btn-warning px-4 btn-sm" id="next-quiz-btn"
+                  hx-get="{% url 'mathlab:gamearea:quizzes:hx-mathquiz-start-play' expression.math_quiz.uuid next_task_pk %}"
+                  hx-target=".quiz-card"
+                  type="button">
+            {% translate 'Next expression' %} <i class="ti ti-arrow-right"></i>
+          </button>
+        {% endif %}
+      </div>
+    </div>
+  </form>
+</div>
+
+<script>
+  function selectAnswer(value) {
+    document.getElementById('id_answer').value = value;
+
+    document.querySelectorAll('.btn-answer').forEach(btn => btn.classList.remove('active'));
+    document.getElementById('confirm-expr-btn').classList.remove('d-none');
+    event.target.classList.add('active');
+  }
+
+  function lastQuestionFinishQuiz() {
+    document.addEventListener('htmx:afterRequest', function () {
+      window.location = '{% url 'mathlab:gamearea:quizzes:mathquiz-base' expression.math_quiz.uuid %}?next_finish_quiz=true';
+    });
+  }
+
+  function processTime() {
+    // We need to pass totalSeconds that was taken to solve quiz to pass it in the database for stats and etc
+    const timeStr = document.getElementById('time-left').textContent.trim(); // "0:05:21"
+    const [hours, minutes, seconds] = timeStr.split(':').map(Number);
+
+    const totalSeconds = hours * 3600 + minutes * 60 + seconds;
+    document.getElementById('id_time_left').value = totalSeconds;
+    document.querySelectorAll('.time-left').forEach(el => {
+      console.log(el, totalSeconds)
+      el.value = totalSeconds;
+    })
+  }
+
+  document.getElementById('quiz-form').addEventListener('submit', processTime);
+  document.getElementById('finish-quiz-form').addEventListener('submit', processTime);
+
+  document.getElementById('math-expression').addEventListener('input', function () {
+    document.getElementById('id_answer').value = this.value;
+    document.getElementById('confirm-expr-btn').classList.remove('d-none');
+  })
+
+</script>
+<script src="https://unpkg.com/mathlive"></script>
+<script type="module">
+  import { ComputeEngine } from 'https://unpkg.com/@cortex-js/compute-engine?module';
+
+  const engine = new ComputeEngine();
+  MathfieldElement.computeEngine = engine;
+</script>

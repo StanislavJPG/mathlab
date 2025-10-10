@@ -1,5 +1,54 @@
 {% load i18n %}
 
+<style>
+  .game-area {
+    font-size: 26px;
+    font-weight: bold;
+    background: repeating-linear-gradient(
+      to top,
+      red 0 10px,
+      blue 10px 20px,
+      green 20px 30px,
+      orange 30px 40px
+    );
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    color: transparent;
+    display: inline !important;
+  }
+
+  .hover-underline {
+    color: #ffffff;
+    position: relative;
+    display: inline-block;
+  }
+
+  .hover-underline::after,
+  .hover-underline::before {
+    content: '';
+    position: absolute;
+    width: 100%;
+    height: 2px;
+    background: linear-gradient(to right, #ff0000, #00ffff);
+    bottom: -5px;
+    left: 0;
+    transform: scaleX(0);
+    transform-origin: right;
+    transition: transform 0.4s ease-out;
+  }
+
+  .hover-underline::before {
+    top: -5px;
+    transform-origin: left;
+  }
+
+  .hover-underline:hover::after,
+  .hover-underline:hover::before {
+    transform: scaleX(1);
+  }
+</style>
+
 <header class="navbar navbar-fixed-top d-flex justify-content-center py-3">
   <ul class="nav nav-pills d-flex justify-content-center">
     <li class="nav-item">
@@ -8,10 +57,14 @@
          aria-current="page">{% translate 'Main page' %}</a>
     </li>
     <li class="nav-item">
+      <a href="{% url 'mathlab:gamearea:gamearea-base' %}"
+         class="nav-link game-area hover-underline">{% translate 'Game area' %}</a>
+    </li>
+    <li class="nav-item d-flex align-items-center">
       <a href="{% url 'mathlab:drafts:base-drafts' %}"
          class="nav-link">{% translate 'Drafts' %}</a>
     </li>
-    <li class="nav-item">
+    <li class="nav-item d-flex align-items-center">
       <a href="{% url 'forum:base-forum-page' %}"
          class="nav-link">{% translate 'Forum' %}</a>
     </li>

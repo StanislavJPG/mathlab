@@ -13,7 +13,7 @@ from dynamic_filenames import FilePattern
 from server.apps.theorist_chat.querysets import TheoristChatRoomQuerySet, TheoristMessageQueryset
 from server.common.mixins.models import UUIDModelMixin, TimeStampedModelMixin
 from server.common.utils.helpers import format_relative_time
-from server.common.validators import validate_audio_ext
+from server.common.validators import validate_audio_ext, validate_media_ext
 
 
 class TheoristChatGroupConfiguration(UUIDModelMixin, TimeStampedModelMixin):
@@ -91,11 +91,21 @@ audio_upload_to_path = FilePattern(
     filename_pattern='{app_label:.25}/rooms/{instance.room.uuid}/{instance.sender.full_name_slug}/audio/{uuid:s}{ext}'
 )
 
+media_upload_to_path = FilePattern(
+    filename_pattern='{app_label:.25}/rooms/{instance.room.uuid}/{instance.sender.full_name_slug}/media/{uuid:s}{ext}'
+)
+
 
 class TheoristMessage(UUIDModelMixin, TimeStampedModelMixin, LifecycleModel):
     message = bleach.BleachField(max_length=500, blank=True)
     audio_message = models.FileField(
         upload_to=audio_upload_to_path, validators=[validate_audio_ext], null=True, blank=True
+    )
+    media_message = models.FileField(
+        upload_to=media_upload_to_path,
+        validators=[validate_media_ext],
+        null=True,
+        blank=True,
     )
 
     sender = models.ForeignKey('theorist.Theorist', related_name='messages', null=True, on_delete=models.SET_NULL)

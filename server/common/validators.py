@@ -1,5 +1,5 @@
 from django.contrib.auth.validators import UnicodeUsernameValidator
-from django.core.validators import MinLengthValidator
+from django.core.validators import MinLengthValidator, FileExtensionValidator
 
 username_validators = [UnicodeUsernameValidator(), MinLengthValidator(limit_value=6)]
 
@@ -13,3 +13,6 @@ def validate_audio_ext(value):
     valid_extensions = ['.wav', '.mpeg', '.mp3']
     if ext.lower() not in valid_extensions:
         raise ValidationError('Unsupported file extension.')
+
+
+validate_media_ext = FileExtensionValidator(allowed_extensions=['jpg', 'png', 'mp4', 'mov'])
